@@ -1,0 +1,93 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: timescaledb-credentials
+  namespace: freshet
+type: Opaque
+stringData:
+  POSTGRES_DB: freshet
+  POSTGRES_USER: freshet
+  # Replace before applying — `openssl rand -base64 32` generates a strong one.
+  POSTGRES_PASSWORD: REPLACE_PASSWORD
+
+---
+# Bootstrap SQL is shipped as a ConfigMap. Build/refresh from the upstream
+# bootstrap.sql with:
+#   kubectl create configmap timescaledb-bootstrap \
+#     --from-file=bootstrap.sql=../../ingesters/river-history/bootstrap.sql \
+#     -n freshet --dry-run=client -o yaml | kubectl apply -f -
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: timescaledb-bootstrap
+  namespace: freshet
+data:
+  bootstrap.sql: |
+    -- This ConfigMap is regenerated from
+    -- ingesters/river-history/bootstrap.sql in the source tree.
+    -- See the README — kubectl create configmap … --from-file=…
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: timescaledb
+  namespace: freshet
+spec:
+  clusterIP: None
+  selector: { app: timescaledb }
+  ports:
+    - port: 5432
+      targetPort: 5432
+      name: postgres
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: timescaledb
+  namespace: freshet
+spec:
+  serviceName: timescaledb
+  replicas: 1
+  selector:
+    matchLabels: { app: timescaledb }
+  template:
+    metadata:
+      labels: { app: timescaledb }
+    spec:
+      containers:
+        - name: timescaledb
+          image: timescale/timescaledb:2.16.1-pg16
+          envFrom:
+            - secretRef: { name: timescaledb-credentials }
+          env:
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+          ports:
+            - containerPort: 5432
+              name: postgres
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+            - name: bootstrap
+              mountPath: /docker-entrypoint-initdb.d
+              readOnly: true
+          readinessProbe:
+            exec:
+              command: ["pg_isready", "-U", "freshet", "-d", "freshet"]
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            requests: { cpu: 100m, memory: 256Mi }
+            limits:   { cpu: 1000m, memory: 1Gi }
+      volumes:
+        - name: bootstrap
+          configMap: { name: timescaledb-bootstrap }
+  volumeClaimTemplates:
+    - metadata: { name: data }
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests: { storage: 5Gi }

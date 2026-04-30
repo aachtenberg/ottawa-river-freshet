@@ -1,0 +1,1031 @@
+{
+  "hydro": [
+    {
+      "name": "Carillon",
+      "lat": 45.5686517,
+      "lon": -74.3830074,
+      "owner": "Hydro-Qu\u00e9bec",
+      "mw": 756,
+      "city": "Carillon",
+      "province": "Qu\u00e9bec"
+    },
+    {
+      "name": "Des-Joachims",
+      "lat": 46.182718,
+      "lon": -77.6970055,
+      "owner": "Ontario Power Generation (OPG)",
+      "mw": 429,
+      "city": "Rolphton",
+      "province": "Ontario"
+    },
+    {
+      "name": "Lower Notch",
+      "lat": 47.1389019,
+      "lon": -79.4541372,
+      "owner": "Ontario Power Generation (OPG)",
+      "mw": 274,
+      "city": "Cobalt",
+      "province": "Ontario"
+    },
+    {
+      "name": "Otto Holden",
+      "lat": 46.3784078,
+      "lon": -78.7275884,
+      "owner": "Ontario Power Generation (OPG)",
+      "mw": 243,
+      "city": "Mattawa",
+      "province": "Ontario"
+    },
+    {
+      "name": "Paugan",
+      "lat": 45.809749,
+      "lon": -75.9309214,
+      "owner": "Hydro-Qu\u00e9bec",
+      "mw": 216,
+      "city": "Low",
+      "province": "Qu\u00e9bec"
+    },
+    {
+      "name": "Chats Fall / Chute-des-Chats",
+      "lat": 45.4751942,
+      "lon": -76.2381926,
+      "owner": "Ontario Power Generation/Hydro-Qu\u00e9bec",
+      "mw": 192,
+      "city": "Fitzroy Harbour",
+      "province": "Qu\u00e9bec"
+    },
+    {
+      "name": "Stewartville",
+      "lat": 45.4071478,
+      "lon": -76.5063866,
+      "owner": "Ontario Power Generation (OPG)",
+      "mw": 182,
+      "city": "Stewartville",
+      "province": "Ontario"
+    },
+    {
+      "name": "Barrett Chute",
+      "lat": 45.2499001,
+      "lon": -76.759023,
+      "owner": "Ontario Power Generation (OPG)",
+      "mw": 176,
+      "city": "Calabogie",
+      "province": "Ontario"
+    },
+    {
+      "name": "Rapides-des-\u00celes",
+      "lat": 47.5768404,
+      "lon": -79.3546289,
+      "owner": "Hydro-Qu\u00e9bec",
+      "mw": 176,
+      "city": "Saint-Ugene-de- Guigues",
+      "province": "Qu\u00e9bec"
+    },
+    {
+      "name": "Mountain Chute",
+      "lat": 45.1956858,
+      "lon": -76.9073538,
+      "owner": "Ontario Power Generation (OPG)",
+      "mw": 170,
+      "city": "Ompah",
+      "province": "Ontario"
+    },
+    {
+      "name": "Chelsea",
+      "lat": 45.512532,
+      "lon": -75.7774758,
+      "owner": "Hydro-Qu\u00e9bec",
+      "mw": 152,
+      "city": "Chelsea",
+      "province": "Qu\u00e9bec"
+    },
+    {
+      "name": "Chenaux",
+      "lat": 45.583833,
+      "lon": -76.6738051,
+      "owner": "Ontario Power Generation (OPG)",
+      "mw": 144,
+      "city": "Portage du Fort",
+      "province": "Ontario"
+    },
+    {
+      "name": "Premi\u00e8re-Chute",
+      "lat": 47.6006594,
+      "lon": -79.4524015,
+      "owner": "Hydro-Qu\u00e9bec",
+      "mw": 131,
+      "city": "Notre Dame  Du Nord",
+      "province": "Qu\u00e9bec"
+    },
+    {
+      "name": "High Falls (Li\u00e8vre)",
+      "lat": 45.8395736,
+      "lon": -75.6456035,
+      "owner": "Evolugen",
+      "mw": 109,
+      "city": "Bowman",
+      "province": "Qu\u00e9bec"
+    },
+    {
+      "name": "Rapides-des-Quinze",
+      "lat": 47.590587,
+      "lon": -79.2943857,
+      "owner": "Hydro-Qu\u00e9bec",
+      "mw": 109,
+      "city": "Anglier",
+      "province": "Qu\u00e9bec"
+    },
+    {
+      "name": "Masson",
+      "lat": 45.5432307,
+      "lon": -75.4203113,
+      "owner": "Evolugen",
+      "mw": 105,
+      "city": "Masson",
+      "province": "Qu\u00e9bec"
+    },
+    {
+      "name": "Rapides-Farmer",
+      "lat": 45.498915,
+      "lon": -75.7632316,
+      "owner": "Hydro-Qu\u00e9bec",
+      "mw": 104,
+      "city": "Gatineau",
+      "province": "Qu\u00e9bec"
+    },
+    {
+      "name": "Arnprior",
+      "lat": 45.4186581,
+      "lon": -76.3470058,
+      "owner": "Ontario Power Generation (OPG)",
+      "mw": 82,
+      "city": "Arnprior",
+      "province": "Ontario"
+    },
+    {
+      "name": "Bryson",
+      "lat": 45.6611391,
+      "lon": -76.6318174,
+      "owner": "Hydro-Qu\u00e9bec",
+      "mw": 61,
+      "city": "Bryson",
+      "province": "Qu\u00e9bec"
+    },
+    {
+      "name": "Rapide-2",
+      "lat": 47.9336454,
+      "lon": -78.5761452,
+      "owner": "Hydro-Qu\u00e9bec",
+      "mw": 61,
+      "city": "Malartic",
+      "province": "Qu\u00e9bec"
+    },
+    {
+      "name": "Rapide-7",
+      "lat": 47.7684735,
+      "lon": -78.3101745,
+      "owner": "Hydro-Qu\u00e9bec",
+      "mw": 61,
+      "city": "Malartic",
+      "province": "Qu\u00e9bec"
+    },
+    {
+      "name": "Mercier",
+      "lat": 46.7172965,
+      "lon": -75.9824771,
+      "owner": "Hydro-Qu\u00e9bec",
+      "mw": 55,
+      "city": "Grand-Remous",
+      "province": "Qu\u00e9bec"
+    },
+    {
+      "name": "Dufferin",
+      "lat": 45.5843993,
+      "lon": -75.4178325,
+      "owner": "Evolugen",
+      "mw": 40,
+      "city": "Buckingham",
+      "province": "Qu\u00e9bec"
+    },
+    {
+      "name": "Chaudiere GS #5",
+      "lat": 45.420303,
+      "lon": -75.719815,
+      "owner": "Portage Power",
+      "mw": 29,
+      "city": "Ottawa",
+      "province": "Ontario"
+    },
+    {
+      "name": "Hull #2",
+      "lat": 45.4217334,
+      "lon": -75.7197197,
+      "owner": "Portage Power",
+      "mw": 27,
+      "city": "Gatineau",
+      "province": "Qu\u00e9bec"
+    },
+    {
+      "name": "Buckingham",
+      "lat": 45.589494,
+      "lon": -75.4222794,
+      "owner": "Fiducie Boralex \u00c9nergie/Boralex Inc",
+      "mw": 20,
+      "city": "Buckingham",
+      "province": "Qu\u00e9bec"
+    },
+    {
+      "name": "Joey-Tanenbaum",
+      "lat": 45.8781047,
+      "lon": -76.6960999,
+      "owner": "Coulonge \u00c9nergie (Soci\u00e9t\u00e9 en Commandite)/Hydro-Pontiac Inc",
+      "mw": 17,
+      "city": "Fort-Coulonge",
+      "province": "Qu\u00e9bec"
+    },
+    {
+      "name": "Hull #1",
+      "lat": 45.4235018,
+      "lon": -75.7206532,
+      "owner": "Portage Power",
+      "mw": 12,
+      "city": "Gatineau",
+      "province": "Qu\u00e9bec"
+    },
+    {
+      "name": "W.R. Beatty",
+      "lat": 45.9167024,
+      "lon": -76.9222941,
+      "owner": "Waltham \u00c9nergie, Sec/Hydro-Pontiac Inc",
+      "mw": 11.7,
+      "city": "Waltham",
+      "province": "Qu\u00e9bec"
+    },
+    {
+      "name": "Calabogie",
+      "lat": 45.3046722,
+      "lon": -76.7087221,
+      "owner": "Ontario Power Generation (OPG)",
+      "mw": 10.7,
+      "city": "Calabogie",
+      "province": "Ontario"
+    },
+    {
+      "name": "Chute-Bell",
+      "lat": 45.7740335,
+      "lon": -74.6843707,
+      "owner": "Hydro-Qu\u00e9bec",
+      "mw": 10,
+      "city": "Rivington",
+      "province": "Qu\u00e9bec"
+    },
+    {
+      "name": "Matabitchuan",
+      "lat": 47.1232726,
+      "lon": -79.4946362,
+      "owner": "Ontario Power Generation (OPG)",
+      "mw": 10,
+      "city": "Cobalt",
+      "province": "Ontario"
+    },
+    {
+      "name": "Rapides-des-C\u00e8dres",
+      "lat": 46.1008978,
+      "lon": -75.6480356,
+      "owner": "\u00c9nergie La Li\u00e8vre, SEC",
+      "mw": 9,
+      "city": "Notre Dame du Laus",
+      "province": "Qu\u00e9bec"
+    },
+    {
+      "name": "Hound Chute",
+      "lat": 47.3046728,
+      "lon": -79.6966207,
+      "owner": "Umh Energy Partnership, An Ontario General Partnership of Ontario Power Generation Inc and Umh Energy Inc",
+      "mw": 9,
+      "city": "Cobalt",
+      "province": "Ontario"
+    },
+    {
+      "name": "Chaudiere GS #2",
+      "lat": 45.4191275,
+      "lon": -75.7138604,
+      "owner": "Portage Power",
+      "mw": 8,
+      "city": "Ottawa",
+      "province": "Ontario"
+    },
+    {
+      "name": "Chaudiere GS #4",
+      "lat": 45.420427,
+      "lon": -75.7148528,
+      "owner": "Portage Power",
+      "mw": 8,
+      "city": "Ottawa",
+      "province": "Ontario"
+    },
+    {
+      "name": "Ragged Chute",
+      "lat": 47.2763396,
+      "lon": -79.671369,
+      "owner": "TransAlta",
+      "mw": 6.6,
+      "city": "Cobalt",
+      "province": "Ontario"
+    },
+    {
+      "name": "Almonte",
+      "lat": 45.225834,
+      "lon": -76.1980641,
+      "owner": "Mississippi River Power Corp",
+      "mw": 5,
+      "city": "Mississipi Mills",
+      "province": "Ontario"
+    },
+    {
+      "name": "Ayers-1",
+      "lat": 45.6366631,
+      "lon": -74.3605308,
+      "owner": "Ayers Limit\u00e9e",
+      "mw": 4.8,
+      "city": "Lachute",
+      "province": "Qu\u00e9bec"
+    },
+    {
+      "name": "Thomas Low",
+      "lat": 45.4795537,
+      "lon": -76.6894418,
+      "owner": "Renfrew Power Generation Inc",
+      "mw": 4,
+      "city": "Renfrew",
+      "province": "Ontario"
+    },
+    {
+      "name": "High Falls",
+      "lat": 44.9537637,
+      "lon": -76.6086924,
+      "owner": "Ontario Power Generation (OPG)",
+      "mw": 3,
+      "city": "McDonalds Corners",
+      "province": "Ontario"
+    },
+    {
+      "name": "Misema",
+      "lat": 47.8996035,
+      "lon": -79.875862,
+      "owner": "TransAlta",
+      "mw": 3,
+      "city": "Englehart",
+      "province": "Ontario"
+    },
+    {
+      "name": "Daniel-Larocque (Mont-Laurier)",
+      "lat": 46.5547033,
+      "lon": -75.4999218,
+      "owner": "Algonquin Power",
+      "mw": 2.7,
+      "city": "Mont Laurier",
+      "province": "Qu\u00e9bec"
+    },
+    {
+      "name": "Belleterre",
+      "lat": 47.5739178,
+      "lon": -78.5576397,
+      "owner": "Algonquin Power",
+      "mw": 2.2,
+      "city": "Laforce",
+      "province": "Qu\u00e9bec"
+    },
+    {
+      "name": "Merrickville",
+      "lat": 44.9178237,
+      "lon": -75.8372621,
+      "owner": "Ontario Power Generation (OPG)",
+      "mw": 2,
+      "city": "Merrickville",
+      "province": "Ontario"
+    },
+    {
+      "name": "Rideau Falls",
+      "lat": 45.442157,
+      "lon": -75.6959411,
+      "owner": "Fortis Generation East LP",
+      "mw": 2,
+      "city": "Ottawa",
+      "province": "Ontario"
+    },
+    {
+      "name": "Galetta",
+      "lat": 45.4261723,
+      "lon": -76.2536504,
+      "owner": "Canadian Hydro Developers, Inc",
+      "mw": 1.6,
+      "city": "Arnprior",
+      "province": "Ontario"
+    },
+    {
+      "name": "Appleton",
+      "lat": 45.1828616,
+      "lon": -76.1266672,
+      "owner": "Canadian Hydro Developers, Inc",
+      "mw": 1.4,
+      "city": "Almonte",
+      "province": "Ontario"
+    },
+    {
+      "name": "Ayers-2",
+      "lat": 45.643632,
+      "lon": -74.3539024,
+      "owner": "Ayers Limit\u00e9e",
+      "mw": 1,
+      "city": "Lachute",
+      "province": "Qu\u00e9bec"
+    }
+  ],
+  "major_dams": [
+    {
+      "name": "Lower Notch",
+      "lat": 47.1388767,
+      "lon": -79.4539432,
+      "year": 1971,
+      "river": "Montreal",
+      "height_m": 132,
+      "purpose": "H",
+      "res_volume_mil_m3": null,
+      "province": "Ontario"
+    },
+    {
+      "name": "Stewartville",
+      "lat": 45.4070333,
+      "lon": -76.5066481,
+      "year": 1948,
+      "river": "Madawaska",
+      "height_m": 62,
+      "purpose": "H",
+      "res_volume_mil_m3": 173,
+      "province": "Ontario"
+    },
+    {
+      "name": "Mountain Chute Main",
+      "lat": 45.1983559,
+      "lon": -76.9081725,
+      "year": 1967,
+      "river": "Madawaska",
+      "height_m": 55,
+      "purpose": "H",
+      "res_volume_mil_m3": 187,
+      "province": "Ontario"
+    },
+    {
+      "name": "Des Joachims Main",
+      "lat": 46.1826445,
+      "lon": -77.6971694,
+      "year": 1950,
+      "river": "Ottawa",
+      "height_m": 52,
+      "purpose": "H",
+      "res_volume_mil_m3": 579,
+      "province": "Ontario"
+    },
+    {
+      "name": "Paugan - Principal",
+      "lat": 45.8131133,
+      "lon": -75.9352144,
+      "year": 1928,
+      "river": "Gatineau",
+      "height_m": 46,
+      "purpose": "H",
+      "res_volume_mil_m3": null,
+      "province": "Quebec"
+    },
+    {
+      "name": "Rapides Des \u00celes",
+      "lat": 47.5693799,
+      "lon": -79.3508882,
+      "year": 1967,
+      "river": "Rivi\u00e8re Des Quinze",
+      "height_m": 45,
+      "purpose": "H",
+      "res_volume_mil_m3": 105,
+      "province": "Quebec"
+    },
+    {
+      "name": "Arnprior - Main Dam",
+      "lat": 45.4182447,
+      "lon": -76.347683,
+      "year": 1976,
+      "river": "Madawaska",
+      "height_m": 35,
+      "purpose": "H",
+      "res_volume_mil_m3": 135,
+      "province": "Ontario"
+    },
+    {
+      "name": "Otto Holden",
+      "lat": 46.3787954,
+      "lon": -78.7243634,
+      "year": 1952,
+      "river": "Ottawa",
+      "height_m": 34,
+      "purpose": "H",
+      "res_volume_mil_m3": 245,
+      "province": "Ontario"
+    },
+    {
+      "name": "Premiere Chute",
+      "lat": 47.5997407,
+      "lon": -79.4527203,
+      "year": 1969,
+      "river": "Outaouais, Des",
+      "height_m": 32,
+      "purpose": "H",
+      "res_volume_mil_m3": 115,
+      "province": "Quebec"
+    },
+    {
+      "name": "Chelsea",
+      "lat": 45.5131667,
+      "lon": -75.7752531,
+      "year": 1927,
+      "river": "Gatineau",
+      "height_m": 31,
+      "purpose": "H",
+      "res_volume_mil_m3": null,
+      "province": "Quebec"
+    },
+    {
+      "name": "Rapide 2",
+      "lat": 47.9330711,
+      "lon": -78.5767903,
+      "year": 1954,
+      "river": "Outaouais, Des -",
+      "height_m": 31,
+      "purpose": "H",
+      "res_volume_mil_m3": null,
+      "province": "Quebec"
+    },
+    {
+      "name": "Carillon",
+      "lat": 45.5683806,
+      "lon": -74.3832793,
+      "year": 1963,
+      "river": "Outaouais, Des - Inf.",
+      "height_m": 30,
+      "purpose": "H",
+      "res_volume_mil_m3": 183,
+      "province": "Quebec"
+    },
+    {
+      "name": "Mercier",
+      "lat": 46.717002,
+      "lon": -75.98300325,
+      "year": 1927,
+      "river": "Gatineau",
+      "height_m": 29.4,
+      "purpose": "H",
+      "res_volume_mil_m3": null,
+      "province": "Quebec"
+    },
+    {
+      "name": "Barrett Chute",
+      "lat": 45.2414514,
+      "lon": -76.7597888,
+      "year": 1942,
+      "river": "Madawaska",
+      "height_m": 28,
+      "purpose": "H",
+      "res_volume_mil_m3": null,
+      "province": "Ontario"
+    },
+    {
+      "name": "Rapide-Des-Cedres",
+      "lat": 46.1005164,
+      "lon": -75.6489007,
+      "year": 1930,
+      "river": "Li\u00e8vre, Du",
+      "height_m": 27,
+      "purpose": "HC",
+      "res_volume_mil_m3": 24,
+      "province": "Quebec"
+    },
+    {
+      "name": "R\u00e9servoir Baskatong - Castor",
+      "lat": 46.7527191,
+      "lon": -75.9467318,
+      "year": 1927,
+      "river": "Gatineau",
+      "height_m": 26,
+      "purpose": null,
+      "res_volume_mil_m3": null,
+      "province": "Quebec"
+    },
+    {
+      "name": "Rapides-Farmer",
+      "lat": 45.4989958,
+      "lon": -75.76317444,
+      "year": 1927,
+      "river": "Gatineau",
+      "height_m": 25.6,
+      "purpose": "H",
+      "res_volume_mil_m3": null,
+      "province": "Quebec"
+    },
+    {
+      "name": "Jean Marchand",
+      "lat": 45.7274573,
+      "lon": -74.2726079,
+      "year": 1971,
+      "river": "Williams",
+      "height_m": 25,
+      "purpose": "S",
+      "res_volume_mil_m3": null,
+      "province": "Quebec"
+    },
+    {
+      "name": "Bryson, Barrage De",
+      "lat": 45.6626095,
+      "lon": -76.6298766,
+      "year": 1925,
+      "river": "Outaouais, Des - Inf.",
+      "height_m": 23,
+      "purpose": "H",
+      "res_volume_mil_m3": null,
+      "province": "Quebec"
+    },
+    {
+      "name": "Chenaux Main Dam",
+      "lat": 45.5836995,
+      "lon": -76.6739015,
+      "year": 1950,
+      "river": "Ottawa",
+      "height_m": 21,
+      "purpose": "H",
+      "res_volume_mil_m3": 82,
+      "province": "Ontario"
+    },
+    {
+      "name": "Bark Lake",
+      "lat": 45.4160431,
+      "lon": -77.7876593,
+      "year": 1942,
+      "river": "Madawaska",
+      "height_m": 20,
+      "purpose": "H",
+      "res_volume_mil_m3": 49,
+      "province": "Ontario"
+    },
+    {
+      "name": "Masson",
+      "lat": 45.5613629,
+      "lon": -75.4222997,
+      "year": 1933,
+      "river": "Li\u00e8vre, Du",
+      "height_m": 20,
+      "purpose": "H",
+      "res_volume_mil_m3": 36,
+      "province": "Quebec"
+    },
+    {
+      "name": "Rapide 7 (Main Dam)",
+      "lat": 47.7687923,
+      "lon": -78.3076346,
+      "year": 1949,
+      "river": "Outaouais, Des -",
+      "height_m": 20,
+      "purpose": "H",
+      "res_volume_mil_m3": 47,
+      "province": "Quebec"
+    },
+    {
+      "name": "Rapides-Des-Quinze, \u00c9vacuateur Des (Principal)",
+      "lat": 47.581153,
+      "lon": -79.2821915,
+      "year": 1923,
+      "river": "Outaouais, Des - Sup. (Rapides Des Quinz",
+      "height_m": 20,
+      "purpose": "H",
+      "res_volume_mil_m3": null,
+      "province": "Quebec"
+    },
+    {
+      "name": "Loutre (Ruisseau De La)",
+      "lat": 47.9397028,
+      "lon": -79.4677625,
+      "year": 1942,
+      "river": "Loutre, De La",
+      "height_m": 19.8,
+      "purpose": "H/C",
+      "res_volume_mil_m3": null,
+      "province": "Quebec"
+    },
+    {
+      "name": "High Falls (2) - Grandes Chutes",
+      "lat": 45.8412199,
+      "lon": -75.6506084,
+      "year": 1929,
+      "river": "Li\u00e8vre, Du",
+      "height_m": 19,
+      "purpose": "H",
+      "res_volume_mil_m3": null,
+      "province": "Quebec"
+    },
+    {
+      "name": "Kiamika #2",
+      "lat": 46.6137969,
+      "lon": -75.1205359,
+      "year": 1953,
+      "river": "Kiamika",
+      "height_m": 19,
+      "purpose": "H/C",
+      "res_volume_mil_m3": 82,
+      "province": "Quebec"
+    },
+    {
+      "name": "Chats Falls Main",
+      "lat": 45.475102,
+      "lon": -76.2381956,
+      "year": 1931,
+      "river": "Ottawa",
+      "height_m": 18,
+      "purpose": "H",
+      "res_volume_mil_m3": 147,
+      "province": "Ontario"
+    },
+    {
+      "name": "Chute Bell",
+      "lat": 45.7739702,
+      "lon": -74.6842719,
+      "year": 1942,
+      "river": "Rouge",
+      "height_m": 18,
+      "purpose": "H",
+      "res_volume_mil_m3": null,
+      "province": "Quebec"
+    },
+    {
+      "name": "Bourque",
+      "lat": 47.612826,
+      "lon": -77.3081137,
+      "year": 1948,
+      "river": "Outaouais, Des -",
+      "height_m": 17,
+      "purpose": "H",
+      "res_volume_mil_m3": 102,
+      "province": "Quebec"
+    },
+    {
+      "name": "Chutes Wilson",
+      "lat": 45.8040296,
+      "lon": -74.0258416,
+      "year": 1924,
+      "river": "Nord, Du",
+      "height_m": 17,
+      "purpose": "H",
+      "res_volume_mil_m3": null,
+      "province": "Quebec"
+    },
+    {
+      "name": "Mitchinamecus",
+      "lat": 47.2148754,
+      "lon": -75.1756599,
+      "year": 1942,
+      "river": "Mitchinamecus",
+      "height_m": 17,
+      "purpose": "H/C",
+      "res_volume_mil_m3": null,
+      "province": "Quebec"
+    },
+    {
+      "name": "Parent",
+      "lat": 47.8526371,
+      "lon": -74.6979221,
+      "year": 1956,
+      "river": "Bazin",
+      "height_m": 17,
+      "purpose": null,
+      "res_volume_mil_m3": 1000,
+      "province": "Quebec"
+    },
+    {
+      "name": "Ayers 1",
+      "lat": 45.6368348,
+      "lon": -74.3610826,
+      "year": 1927,
+      "river": "Nord, Du",
+      "height_m": 16,
+      "purpose": "H",
+      "res_volume_mil_m3": null,
+      "province": "Quebec"
+    },
+    {
+      "name": "Laniel",
+      "lat": 47.041222,
+      "lon": -79.271306,
+      "year": 2010,
+      "river": "Kipawa",
+      "height_m": 15.2,
+      "purpose": "Regulation",
+      "res_volume_mil_m3": null,
+      "province": "Quebec"
+    },
+    {
+      "name": "Camatose",
+      "lat": 47.3237524,
+      "lon": -76.9379731,
+      "year": 1943,
+      "river": "Camatose",
+      "height_m": 15,
+      "purpose": "R",
+      "res_volume_mil_m3": null,
+      "province": "Quebec"
+    },
+    {
+      "name": "Hull 2",
+      "lat": 45.421743,
+      "lon": -75.7200283,
+      "year": 1920,
+      "river": "Outaouais, Des - Inf.",
+      "height_m": 15,
+      "purpose": "H",
+      "res_volume_mil_m3": null,
+      "province": "Quebec"
+    },
+    {
+      "name": "Long Island Control Dam",
+      "lat": 45.2491454,
+      "lon": -75.7031391,
+      "year": 1978,
+      "river": "Rideau",
+      "height_m": 15,
+      "purpose": "C/N",
+      "res_volume_mil_m3": 5,
+      "province": "Ontario"
+    },
+    {
+      "name": "Matabitchuan Control",
+      "lat": 47.1212036,
+      "lon": -79.4980679,
+      "year": 1910,
+      "river": "Matabitchuan",
+      "height_m": 15,
+      "purpose": "H",
+      "res_volume_mil_m3": null,
+      "province": "Ontario"
+    },
+    {
+      "name": "Cabonga",
+      "lat": 47.3093872,
+      "lon": -76.4685984,
+      "year": 1929,
+      "river": "Gens De Terre",
+      "height_m": 14,
+      "purpose": "H",
+      "res_volume_mil_m3": 9,
+      "province": "Quebec"
+    },
+    {
+      "name": "Lac David",
+      "lat": 46.4585688,
+      "lon": -76.4632127,
+      "year": 1927,
+      "river": "Hibou, Au",
+      "height_m": 12.6,
+      "purpose": "R",
+      "res_volume_mil_m3": null,
+      "province": "Quebec"
+    },
+    {
+      "name": "W.R. Beatty (Waltham)",
+      "lat": 45.9252415,
+      "lon": -76.9195595,
+      "year": 1937,
+      "river": "Noire",
+      "height_m": 11.7,
+      "purpose": "H",
+      "res_volume_mil_m3": null,
+      "province": "Quebec"
+    },
+    {
+      "name": "Quinzes, Barrage Des",
+      "lat": 47.5535105,
+      "lon": -79.2390857,
+      "year": 1911,
+      "river": "Outaouais, Des - Sup.",
+      "height_m": 11,
+      "purpose": "C/H",
+      "res_volume_mil_m3": null,
+      "province": "Quebec"
+    }
+  ],
+  "reservoirs": [
+    {
+      "name": "Decelles-Rapid VII",
+      "river": "Ottawa",
+      "lat": 47.716859331157394,
+      "lon": -78.12574869373825,
+      "capacity_mcm": 371,
+      "year": 1941,
+      "agency": "Hydro-Qu\u00e9bec"
+    },
+    {
+      "name": "Dozois",
+      "river": "Ottawa",
+      "lat": 47.4805506473455,
+      "lon": -77.10889578399345,
+      "capacity_mcm": 1863,
+      "year": 1949,
+      "agency": "Hydro-Qu\u00e9bec"
+    },
+    {
+      "name": "Quinze",
+      "river": "Ottawa",
+      "lat": 47.592382126712245,
+      "lon": -78.98251151795125,
+      "capacity_mcm": 1308,
+      "year": 1914,
+      "agency": "Minist\u00e8re de l\u2019Environnement et de la Lutte contre les changements climatiques of Quebec"
+    },
+    {
+      "name": "Cabonga",
+      "river": "Gens de Terre",
+      "lat": 47.31706500049543,
+      "lon": -76.58105017959572,
+      "capacity_mcm": 1565,
+      "year": 1928,
+      "agency": "Hydro-Qu\u00e9bec"
+    },
+    {
+      "name": "Kipawa",
+      "river": "Kipawa",
+      "lat": 46.95821282902507,
+      "lon": -79.02917812071817,
+      "capacity_mcm": 673,
+      "year": 1912,
+      "agency": "Minist\u00e8re de l\u2019Environnement et de la Lutte contre les changements climatiques of Quebec"
+    },
+    {
+      "name": "Baskatong",
+      "river": "Gatineau",
+      "lat": 46.80927396270819,
+      "lon": -75.85856636812873,
+      "capacity_mcm": 3049,
+      "year": 1926,
+      "agency": "Hydro-Qu\u00e9bec"
+    },
+    {
+      "name": "Mitchinamecus",
+      "river": "Mitchinamecus",
+      "lat": 47.336740669433624,
+      "lon": -75.0999838808608,
+      "capacity_mcm": 554,
+      "year": 1942,
+      "agency": "Minist\u00e8re de l\u2019Environnement et de la Lutte contre les changements climatiques of Quebec"
+    },
+    {
+      "name": "Kiamika",
+      "river": "Kiamika",
+      "lat": 46.66359083701718,
+      "lon": -75.074127294531,
+      "capacity_mcm": 379,
+      "year": 1954,
+      "agency": "Minist\u00e8re de l\u2019Environnement et de la Lutte contre les changements climatiques of Quebec"
+    },
+    {
+      "name": "Bark Lake",
+      "river": "Madawaska",
+      "lat": 45.46270116769112,
+      "lon": -77.86262295609644,
+      "capacity_mcm": 374,
+      "year": 1942,
+      "agency": "Ontario Power Generation"
+    },
+    {
+      "name": "Poisson Blanc",
+      "river": "Lievre",
+      "lat": 45.98596096935062,
+      "lon": -75.73745698823224,
+      "capacity_mcm": 625,
+      "year": 1930,
+      "agency": "Minist\u00e8re de l\u2019Environnement et de la Lutte contre les changements climatiques of Quebec"
+    },
+    {
+      "name": "Timiskaming",
+      "river": "Ottawa",
+      "lat": 47.39834239000619,
+      "lon": -79.52727454317217,
+      "capacity_mcm": 1217,
+      "year": 1911,
+      "agency": "Public Services and Procurement Canada"
+    },
+    {
+      "name": "Des Joachims",
+      "river": "Ottawa",
+      "lat": 46.229719856152805,
+      "lon": -77.9878500384758,
+      "capacity_mcm": 229,
+      "year": 1950,
+      "agency": "Ontario Power Generation"
+    }
+  ],
+  "_source": "ArcGIS webmap ab7d7778cb9b4730959f6903c576c6cd - \"Dams in the Ottawa River watershed\""
+}

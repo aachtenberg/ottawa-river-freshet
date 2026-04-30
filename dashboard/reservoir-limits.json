@@ -1,0 +1,22 @@
+{
+  "_doc": "Operating limits for percent-full computation. low_limit/high_limit in MASL (geodetic reference, matching ORRPB's published gauge readings). capacity_mcm = total live storage at 100% full. Operating limits sourced from ottawariver.ca per-reservoir pages (the 'Operation · All Year' row of the System Constraints table on each location page). capacity_mcm values are still operator-derived estimates and should be cross-checked against HQ/OPG/MELCCFP documentation if a precise volume is needed.",
+  "_calibrated": true,
+  "_calibration_date": "2026-04-30",
+  "_calibration_source": "ottawariver.ca/location/<reservoir>/ — System Constraints table (Operation · All Year, Lower/Upper Limit columns)",
+  "_source_url": "https://www.ottawariver.ca/conditions/?display=reservoir",
+  "reservoirs": {
+    "dozois":                 { "name": "Dozois",                  "agency": "HQ",       "low_limit": 336.80, "high_limit": 345.95, "capacity_mcm": 2530 },
+    "rapide_7":               { "name": "Rapide-7",                "agency": "HQ",       "low_limit": 307.24, "high_limit": 309.37, "capacity_mcm": 549  },
+    "quinze":                 { "name": "Quinze",                  "agency": "MELCCFP",  "low_limit": 259.94, "high_limit": 263.59, "capacity_mcm": 1910 },
+    "lady_evelyn":            { "name": "Lady Evelyn",             "agency": "OPG",      "low_limit": 284.40, "high_limit": 289.51, "capacity_mcm": 370  },
+    "kipawa":                 { "name": "Kipawa",                  "agency": "MELCCFP",  "low_limit": 267.45, "high_limit": 269.75, "capacity_mcm": 974  },
+    "timiskaming":            { "name": "Timiskaming",             "agency": "WSC/PSPC", "low_limit": 175.50, "high_limit": 179.56, "capacity_mcm": 1520 },
+    "des_joachims":           { "name": "Des Joachims",            "agency": "OPG",      "low_limit": 149.40, "high_limit": 152.40, "capacity_mcm": 588  },
+    "bark_lake":              { "name": "Bark Lake",               "agency": "OPG",      "low_limit": 304.50, "high_limit": 313.94, "capacity_mcm": 400  },
+    "cabonga":                { "name": "Cabonga",                 "agency": "HQ",       "low_limit": 356.16, "high_limit": 360.88, "capacity_mcm": 1960 },
+    "baskatong":              { "name": "Baskatong",               "agency": "HQ",       "low_limit": 207.60, "high_limit": 223.14, "capacity_mcm": 3950 },
+    "mitchinamecus":          { "name": "Mitchinamecus",           "agency": "MELCCFP",  "low_limit": 370.33, "high_limit": 383.44, "capacity_mcm": 832  },
+    "kiamika":                { "name": "Kiamika",                 "agency": "MELCCFP",  "low_limit": 260.00, "high_limit": 270.66, "capacity_mcm": 783  },
+    "poisson_blanc":          { "name": "Poisson Blanc",           "agency": "EG",       "low_limit": 192.14, "high_limit": 201.90, "capacity_mcm": 673  }
+  }
+}

@@ -1,0 +1,51 @@
+---
+# Refresh script ConfigMap with:
+#   kubectl create configmap reservoir-ingest-script \
+#     --from-file=scrape.py=../../ingesters/reservoir-ingest/scrape.py \
+#     -n freshet --dry-run=client -o yaml | kubectl apply -f -
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: reservoir-ingest-script
+  namespace: freshet
+data:
+  scrape.py: |
+    # Replaced at deploy time
+
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: reservoir-ingest
+  namespace: freshet
+spec:
+  # ORRPB updates mid-afternoon Eastern; run at 21:30 UTC (~17:30 EDT/16:30 EST).
+  schedule: "30 21 * * *"
+  timeZone: "Etc/UTC"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      ttlSecondsAfterFinished: 86400
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: scrape
+              image: python:3.12-alpine
+              command: ["python", "/app/scrape.py"]
+              env:
+                - name: POSTGREST_URL
+                  value: http://postgrest.freshet.svc.cluster.local:3000
+              volumeMounts:
+                - name: script
+                  mountPath: /app
+                  readOnly: true
+              resources:
+                requests: { cpu: 10m, memory: 32Mi }
+                limits:   { cpu: 200m, memory: 128Mi }
+          volumes:
+            - name: script
+              configMap: { name: reservoir-ingest-script }

@@ -1,0 +1,55 @@
+---
+# Refresh script ConfigMap with:
+#   kubectl create configmap freshet-alerter-script \
+#     --from-file=alerter.py=../../alerter/alerter.py \
+#     -n freshet --dry-run=client -o yaml | kubectl apply -f -
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: freshet-alerter-script
+  namespace: freshet
+data:
+  alerter.py: |
+    # Replaced at deploy time
+
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: freshet-alerter
+  namespace: freshet
+spec:
+  # Vigilance refreshes hourly; run a few minutes after each refresh.
+  schedule: "15 * * * *"
+  timeZone: "Etc/UTC"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      ttlSecondsAfterFinished: 3600
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: alerter
+              image: python:3.12-alpine
+              command: ["python", "/app/alerter.py"]
+              env:
+                - name: NTFY_URL
+                  value: "https://ntfy.sh"
+                - name: NTFY_TOPIC
+                  value: "REPLACE_WITH_PRIVATE_TOPIC"
+                - name: STATION_ID
+                  value: "1195"
+              volumeMounts:
+                - name: script
+                  mountPath: /app
+                  readOnly: true
+              resources:
+                requests: { cpu: 10m, memory: 32Mi }
+                limits:   { cpu: 100m, memory: 64Mi }
+          volumes:
+            - name: script
+              configMap: { name: freshet-alerter-script }

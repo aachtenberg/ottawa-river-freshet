@@ -1,0 +1,56 @@
+---
+# Script ConfigMap — refresh from source with:
+#   kubectl create configmap river-history-script \
+#     --from-file=ingest.py=../../ingesters/river-history/ingest.py \
+#     -n freshet --dry-run=client -o yaml | kubectl apply -f -
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: river-history-script
+  namespace: freshet
+data:
+  ingest.py: |
+    # Replaced at deploy time — see the README.
+
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: river-history-ingest
+  namespace: freshet
+spec:
+  schedule: "12 * * * *"
+  timeZone: "Etc/UTC"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      ttlSecondsAfterFinished: 3600
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: ingest
+              image: python:3.12-alpine
+              command: ["python", "/app/ingest.py"]
+              env:
+                - name: POSTGREST_URL
+                  value: http://postgrest.freshet.svc.cluster.local:3000
+                - name: STATION_IDS
+                  value: "1195,1004,951,545,1279,984,548,550,981,1264"
+                - name: MVCA_STATIONS
+                  value: ""
+                - name: MVCA_LOOKBACK_HOURS
+                  value: "24"
+              volumeMounts:
+                - name: script
+                  mountPath: /app
+                  readOnly: true
+              resources:
+                requests: { cpu: 10m, memory: 32Mi }
+                limits:   { cpu: 200m, memory: 128Mi }
+          volumes:
+            - name: script
+              configMap: { name: river-history-script }

@@ -1,0 +1,60 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgrest
+  namespace: freshet
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: postgrest }
+  template:
+    metadata:
+      labels: { app: postgrest }
+    spec:
+      containers:
+        - name: postgrest
+          image: postgrest/postgrest:v12.2.0
+          ports:
+            - containerPort: 3000
+              name: http
+          env:
+            - name: PGRST_DB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: timescaledb-credentials
+                  key: POSTGRES_PASSWORD
+                  # Build URI inline below — see also the workaround:
+            - name: POSTGRES_USER
+              valueFrom: { secretKeyRef: { name: timescaledb-credentials, key: POSTGRES_USER } }
+            - name: POSTGRES_PASSWORD
+              valueFrom: { secretKeyRef: { name: timescaledb-credentials, key: POSTGRES_PASSWORD } }
+            - name: POSTGRES_DB
+              valueFrom: { secretKeyRef: { name: timescaledb-credentials, key: POSTGRES_DB } }
+            - name: PGRST_DB_SCHEMA
+              value: public
+            - name: PGRST_DB_ANON_ROLE
+              valueFrom: { secretKeyRef: { name: timescaledb-credentials, key: POSTGRES_USER } }
+          # Build PGRST_DB_URI from the broken-out parts using a sh wrapper:
+          command:
+            - sh
+            - -c
+            - |
+              export PGRST_DB_URI="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@timescaledb.freshet.svc.cluster.local:5432/${POSTGRES_DB}"
+              exec postgrest
+          resources:
+            requests: { cpu: 50m, memory: 64Mi }
+            limits:   { cpu: 500m, memory: 256Mi }
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgrest
+  namespace: freshet
+spec:
+  selector: { app: postgrest }
+  ports:
+    - port: 3000
+      targetPort: 3000
+      name: http

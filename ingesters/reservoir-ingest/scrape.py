@@ -1,0 +1,262 @@
+"""ORRPB reservoir conditions scraper.
+
+Pulls https://www.ottawariver.ca/conditions/?display=reservoir, parses the
+8-day reservoir levels-and-flows table, and upserts into the
+reservoir_readings hypertable via PostgREST.
+
+Stdlib-only (urllib + html.parser) — no pip install at runtime, matching
+the river-history-ingest pattern.
+"""
+
+import json
+import os
+import re
+import sys
+import urllib.request
+from datetime import datetime, timezone, timedelta
+from html.parser import HTMLParser
+
+ORRPB_URL = 'https://www.ottawariver.ca/conditions/?display=reservoir'
+USER_AGENT = os.environ.get(
+    'SCRAPE_USER_AGENT',
+    'freshet/1.0 (+https://github.com/example/ottawa-river-freshet; community flood monitoring)',
+)
+POSTGREST = os.environ.get('POSTGREST_URL', 'http://postgrest:3000')
+
+# ORRPB table-label → our reservoir_id slug. The ORRPB-published name is
+# whatever shows up in the first column of the reservoir levels table.
+RESERVOIR_KEY_MAP = {
+    'Dozois':                          'dozois',
+    'Rapide-7':                        'rapide_7',
+    'Quinze':                          'quinze',
+    'Lady Evelyn':                     'lady_evelyn',
+    'Kipawa':                          'kipawa',
+    'Timiskaming at Temiscaming':      'timiskaming',
+    'Timiskaming at Haileybury':       'timiskaming_haileybury',
+    'Des Joachims':                    'des_joachims',
+    'Bark Lake':                       'bark_lake',
+    'Cabonga':                         'cabonga',
+    'Baskatong':                       'baskatong',
+    'Mitchinamecus':                   'mitchinamecus',
+    'Kiamika':                         'kiamika',
+    'Poisson Blanc':                   'poisson_blanc',
+}
+
+
+class TableExtractor(HTMLParser):
+    """Pull every <table>'s rows-of-cells from an HTML stream.
+
+    We don't try to identify the specific reservoir table at parse time —
+    we capture all tables and pick the right one by content afterwards.
+    """
+
+    def __init__(self):
+        super().__init__()
+        self.tables = []
+        self._cur_table = None
+        self._cur_row = None
+        self._cur_cell = None
+        self._depth = 0
+
+    def handle_starttag(self, tag, attrs):
+        if tag == 'table':
+            self._cur_table = []
+            self.tables.append(self._cur_table)
+        elif tag == 'tr' and self._cur_table is not None:
+            self._cur_row = []
+            self._cur_table.append(self._cur_row)
+        elif tag in ('td', 'th') and self._cur_row is not None:
+            self._cur_cell = []
+            self._cur_row.append(self._cur_cell)
+
+    def handle_endtag(self, tag):
+        if tag == 'table':
+            self._cur_table = None
+        elif tag == 'tr':
+            self._cur_row = None
+        elif tag in ('td', 'th'):
+            self._cur_cell = None
+
+    def handle_data(self, data):
+        if self._cur_cell is not None:
+            self._cur_cell.append(data)
+
+
+def cell_text(cell):
+    if not cell:
+        return ''
+    return re.sub(r'\s+', ' ', ''.join(cell).strip())
+
+
+def find_reservoir_table(tables):
+    """Return the parsed table that looks like the reservoir levels table.
+
+    We pick the first table whose first cell mentions 'Water levels' or
+    'Reservoir', or whose later rows include a 'Level - <agency>' or
+    'Flow - <agency>' second-column cell.
+    """
+    for tbl in tables:
+        if not tbl:
+            continue
+        # Header signal in the first cell or row text:
+        first_row_txt = ' '.join(cell_text(c) for c in tbl[0]).lower()
+        if 'water level' in first_row_txt or 'reservoir' in first_row_txt:
+            return tbl
+        # Or a second-column label that looks like our reservoir rows:
+        for row in tbl[1:6]:
+            if len(row) >= 2 and re.match(r'^(Level|Flow)\s*-\s*\S+', cell_text(row[1])):
+                return tbl
+    return None
+
+
+def parse_dates_from_header(header_row):
+    """Extract date columns from the reservoir table's header row.
+
+    The first two cells are descriptors ('Reservoir', 'Type'); the rest
+    are calendar dates like '2026-04-30'.
+    """
+    cells = [cell_text(c) for c in header_row]
+    dates = []
+    for cell in cells[2:]:
+        # ORRPB sometimes formats as 'Apr 30' or '2026-04-30'; try both.
+        m = re.match(r'^(\d{4})-(\d{2})-(\d{2})$', cell)
+        if m:
+            d = datetime(int(m.group(1)), int(m.group(2)), int(m.group(3)),
+                         tzinfo=timezone.utc)
+            dates.append(d)
+            continue
+        m = re.match(r'^([A-Za-z]+)\s+(\d{1,2})$', cell)
+        if m:
+            month_name, day = m.group(1), int(m.group(2))
+            try:
+                month = datetime.strptime(month_name[:3], '%b').month
+            except ValueError:
+                continue
+            today = datetime.now(timezone.utc)
+            year = today.year
+            # ORRPB's window is the past few days through tomorrow — if the
+            # parsed date is ahead of "now + 4d" assume it's last year.
+            d = datetime(year, month, day, tzinfo=timezone.utc)
+            if d - today > timedelta(days=10):
+                d = d.replace(year=year - 1)
+            dates.append(d)
+    return dates
+
+
+def parse_table(tbl):
+    """Walk the reservoir table and emit reading rows.
+
+    Returns a list of dicts with keys: time, reservoir_id, level_m,
+    flow_cms, agency.
+    """
+    if len(tbl) < 2:
+        return []
+    dates = parse_dates_from_header(tbl[0])
+    if not dates:
+        print(f'no dates parsed from header: {tbl[0]!r}', file=sys.stderr)
+        return []
+
+    readings = {}  # (reservoir_id, ts_iso) -> dict
+    current_label = None
+
+    for row in tbl[1:]:
+        if len(row) < 3:
+            continue
+        first = cell_text(row[0])
+        first = re.sub(r'Graph View.*', '', first).strip()
+        type_cell = cell_text(row[1])
+        m = re.match(r'^(Level|Flow)\s*-\s*(.+)$', type_cell)
+        if not m:
+            # Reservoir name on a row by itself (rare layout).
+            if first:
+                current_label = first
+            continue
+        kind, agency = m.group(1), m.group(2).strip()
+        if first:
+            current_label = first
+        if not current_label:
+            continue
+        rid = RESERVOIR_KEY_MAP.get(current_label)
+        if not rid:
+            continue
+
+        for i, cell in enumerate(row[2:]):
+            if i >= len(dates):
+                break
+            txt = cell_text(cell)
+            if not txt or txt in ('—', '-', 'N/A'):
+                continue
+            try:
+                val = float(txt.replace(',', ''))
+            except ValueError:
+                continue
+            ts = dates[i].isoformat()
+            key = (rid, ts)
+            r = readings.setdefault(key, {
+                'time': ts, 'reservoir_id': rid,
+                'level_m': None, 'flow_cms': None, 'agency': agency,
+            })
+            if kind == 'Level':
+                r['level_m'] = val
+            else:
+                r['flow_cms'] = val
+                # Prefer the flow agency for consistency where they differ.
+                r['agency'] = agency
+    return list(readings.values())
+
+
+def fetch_html():
+    req = urllib.request.Request(ORRPB_URL, headers={
+        'User-Agent': USER_AGENT,
+        'Accept': 'text/html,application/xhtml+xml',
+    })
+    with urllib.request.urlopen(req, timeout=30) as r:
+        return r.read().decode('utf-8', errors='replace')
+
+
+def post_rows(table, rows):
+    if not rows:
+        return 0
+    body = json.dumps(rows).encode('utf-8')
+    req = urllib.request.Request(
+        f'{POSTGREST}/{table}',
+        data=body,
+        method='POST',
+        headers={
+            'Content-Type': 'application/json',
+            'Prefer': 'resolution=merge-duplicates,return=minimal',
+        },
+    )
+    with urllib.request.urlopen(req, timeout=30) as r:
+        print(f'  POST /{table} -> HTTP {r.status} ({len(rows)} rows)')
+        return len(rows)
+
+
+def main():
+    print(f'Fetching {ORRPB_URL}')
+    html = fetch_html()
+    print(f'Got {len(html)} bytes')
+
+    parser = TableExtractor()
+    parser.feed(html)
+    print(f'Found {len(parser.tables)} tables on page')
+
+    tbl = find_reservoir_table(parser.tables)
+    if tbl is None:
+        print('Could not locate reservoir table — page structure may have changed.', file=sys.stderr)
+        return 2
+
+    rows = parse_table(tbl)
+    if not rows:
+        print('Parsed 0 reading rows from reservoir table.', file=sys.stderr)
+        return 3
+
+    print(f'Parsed {len(rows)} reading rows across '
+          f'{len({r["reservoir_id"] for r in rows})} reservoirs.')
+    posted = post_rows('reservoir_readings', rows)
+    print(f'Reservoir: {posted} rows upserted.')
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())
