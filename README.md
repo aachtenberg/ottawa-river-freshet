@@ -32,7 +32,7 @@ PostgREST API + a handful of Python cron jobs.
 ## Quick start (Docker Compose)
 
 ```bash
-git clone https://github.com/<your-username>/ottawa-river-freshet.git
+git clone https://github.com/aachtenberg/ottawa-river-freshet.git
 cd ottawa-river-freshet/deploy/docker-compose
 cp .env.example .env   # edit DB password, station list, etc.
 docker compose up -d

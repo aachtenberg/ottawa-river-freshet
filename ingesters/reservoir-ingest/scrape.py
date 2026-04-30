@@ -19,7 +19,7 @@ from html.parser import HTMLParser
 ORRPB_URL = 'https://www.ottawariver.ca/conditions/?display=reservoir'
 USER_AGENT = os.environ.get(
     'SCRAPE_USER_AGENT',
-    'freshet/1.0 (+https://github.com/example/ottawa-river-freshet; community flood monitoring)',
+    'freshet/1.0 (+https://github.com/aachtenberg/ottawa-river-freshet; community flood monitoring)',
 )
 POSTGREST = os.environ.get('POSTGREST_URL', 'http://postgrest:3000')
 
