@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Exhibit C — Storage Capacity Contradiction</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,700;9..144,900&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink: #14171a;
+  --ink-soft: #2c333a;
+  --paper: #f4ede0;
+  --paper-bright: #fbf6eb;
+  --rule: #14171a;
+  --rule-soft: rgba(20, 23, 26, 0.18);
+  --accent: #b3261e;
+  --accent-soft: rgba(179, 38, 30, 0.08);
+  --accent-strong: #8a1c14;
+  --neutral: #2c333a;
+  --water: #4a6b7c;
+  --water-light: #7a9caf;
+}
+
+html, body {
+  background: #2a2520;
+  font-family: 'IBM Plex Sans', sans-serif;
+  color: var(--ink);
+}
+
+.page {
+  width: 1200px;
+  min-height: 1500px;
+  background: var(--paper);
+  position: relative;
+  padding: 64px 72px 72px;
+  margin: 0 auto;
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(0,0,0,0.04) 1px, transparent 0);
+  background-size: 14px 14px;
+}
+
+.kicker {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 14px;
+  margin-bottom: 28px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.kicker .file { font-weight: 500; }
+.kicker .meta { font-weight: 400; opacity: 0.7; }
+
+.headline {
+  font-family: 'Fraunces', serif;
+  font-weight: 900;
+  font-size: 60px;
+  line-height: 0.96;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  margin-bottom: 18px;
+}
+.headline .accent {
+  color: var(--accent);
+  font-style: italic;
+}
+
+.deck {
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: 21px;
+  line-height: 1.4;
+  color: var(--ink-soft);
+  max-width: 950px;
+  margin-bottom: 36px;
+  letter-spacing: -0.005em;
+}
+
+/* The contrast quote band */
+.contrast-band {
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: 22px 0;
+  margin-bottom: 36px;
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 26px;
+  align-items: center;
+}
+.contrast-band .label-stack {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-strong);
+  font-weight: 600;
+  line-height: 1.4;
+}
+.contrast-band .quote {
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  font-weight: 500;
+  font-style: italic;
+  line-height: 1.35;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.contrast-band .quote .source {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  color: var(--accent-strong);
+  display: block;
+  margin-top: 8px;
+  letter-spacing: 0;
+}
+
+/* Comparison block */
+.comparison-block {
+  margin-bottom: 32px;
+}
+.comparison-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  margin-bottom: 6px;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+.comparison-subtitle {
+  font-family: 'Fraunces', serif;
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 22px;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.comparison-wrap {
+  background: var(--paper-bright);
+  border: 1px solid var(--rule-soft);
+  padding: 32px 40px;
+}
+
+/* Two-column comparison */
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+  align-items: end;
+  margin-bottom: 28px;
+}
+.compare-col { position: relative; }
+.compare-col .col-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+.compare-col .col-name {
+  font-family: 'Fraunces', serif;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+.compare-col .col-name .designation {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 400;
+  font-size: 13px;
+  color: var(--ink-soft);
+  display: block;
+  margin-top: 2px;
+  letter-spacing: 0;
+}
+
+/* Visual proportional bars - vertical */
+.proportion-viz {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 220px;
+  margin-bottom: 20px;
+  position: relative;
+}
+.proportion-bar {
+  flex: 1;
+  position: relative;
+  border-radius: 2px 2px 0 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 14px;
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-size: 32px;
+  letter-spacing: -0.02em;
+}
+.proportion-bar.dj {
+  background: var(--neutral);
+  color: var(--paper);
+  height: 75.6%; /* 229/302.16 */
+}
+.proportion-bar.lc {
+  background: var(--accent);
+  color: var(--paper);
+  height: 100%;
+}
+.proportion-bar .vol-label {
+  text-align: center;
+  line-height: 1;
+}
+.proportion-bar .vol-label .unit {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  display: block;
+  margin-top: 4px;
+  opacity: 0.85;
+  letter-spacing: 0;
+}
+
+/* Stats list under each */
+.col-stats {
+  border-top: 1px solid var(--rule-soft);
+  padding-top: 12px;
+}
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 13px;
+  border-bottom: 1px solid rgba(20,23,26,0.05);
+}
+.stat-row:last-child {
+  border-bottom: none;
+  padding-top: 8px;
+  margin-top: 4px;
+  border-top: 1px solid var(--rule);
+  font-weight: 600;
+}
+.stat-row .key { color: var(--ink-soft); }
+.stat-row .val { color: var(--ink); font-family: 'IBM Plex Mono', monospace; font-weight: 500; }
+
+/* Use vs not-use status badge */
+.usage-status {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 4px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 13px;
+  line-height: 1.45;
+  font-weight: 500;
+}
+.usage-status.used {
+  background: rgba(44,51,58,0.08);
+  border-left: 3px solid var(--ink);
+  color: var(--ink);
+}
+.usage-status.not-used {
+  background: rgba(179,38,30,0.08);
+  border-left: 3px solid var(--accent);
+  color: var(--ink);
+}
+.usage-status .label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 700;
+  display: block;
+  margin-bottom: 4px;
+}
+.usage-status.used .label { color: var(--ink-soft); }
+.usage-status.not-used .label { color: var(--accent-strong); }
+
+/* Math callout */
+.math-callout {
+  margin-top: 28px;
+  padding: 18px 22px;
+  background: rgba(20,23,26,0.04);
+  border-left: 3px solid var(--ink);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.math-callout strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+.math-callout .ratio {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-size: 28px;
+  color: var(--accent);
+  display: block;
+  margin: 6px 0;
+  letter-spacing: -0.02em;
+}
+
+/* Methodology / closing */
+.method-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+.method-block {
+  border-top: 2px solid var(--ink);
+  padding-top: 16px;
+}
+.method-block .label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  margin-bottom: 10px;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+.method-block p {
+  font-family: 'Fraunces', serif;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.45;
+  color: var(--ink);
+  margin-bottom: 8px;
+  letter-spacing: -0.005em;
+}
+.method-block .source {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-soft);
+}
+
+.footer {
+  border-top: 1px solid var(--rule);
+  padding-top: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 11px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.footer .left { max-width: 720px; }
+.footer .right {
+  text-align: right;
+  font-family: 'IBM Plex Mono', monospace;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 10px;
+  white-space: nowrap;
+}
+.footer strong { color: var(--ink); font-weight: 600; }
+
+.divider {
+  width: 36px;
+  height: 1px;
+  background: var(--ink);
+  margin: 4px 0 12px;
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+<div class="kicker">
+  <span class="file">EXHIBIT C · STORAGE CAPACITY · LAC COULONGE vs DES JOACHIMS</span>
+  <span class="meta">Northern Reservoirs Flood Watch · Compiled April 2026</span>
+</div>
+
+<h1 class="headline">
+  The reservoir they say has<br>
+  no flood benefit holds <span class="accent">more water</span><br>
+  than the one they use.
+</h1>
+
+<p class="deck">
+  The Planning Board's official answer to "why aren't water levels lowered at Lac Coulonge before the freshet?" is that the available storage is too small to matter. Measurements taken from public satellite imagery show otherwise. The reach behind Bryson Dam holds 1.32 times the storage capacity of Des Joachims — the reservoir the Board enthusiastically uses for flood mitigation every spring.
+</p>
+
+<!-- THE OFFICIAL POSITION (verbatim quote) -->
+<div class="contrast-band">
+  <div class="label-stack">
+    THE OFFICIAL<br>
+    POSITION
+  </div>
+  <div class="quote">
+    "Lowering levels in February then provides no benefit and does not reduce the flooding. Additionally, the storage volume available on the main stem of the river is far too small compared to the volume of water flowing through the river during high flow periods, to reduce flooding on the river system."
+    <span class="source">— Ottawa River Regulation Planning Board, FAQ Q5 Part D · ottawariver.ca</span>
+  </div>
+</div>
+
+<!-- COMPARISON VISUAL -->
+<div class="comparison-block">
+  <div class="comparison-title">Figure 3 · Storage capacity comparison</div>
+  <div class="comparison-subtitle">Two reservoirs available for pre-freshet drawdown. Only one is used.</div>
+  <div class="comparison-wrap">
+
+    <div class="compare-grid">
+      <!-- DES JOACHIMS COLUMN -->
+      <div class="compare-col">
+        <div class="col-label">Reservoir 1 · 40% basin</div>
+        <div class="col-name">Des Joachims
+          <span class="designation">Run-of-river facility · Ottawa Power Generation</span>
+        </div>
+
+        <div class="proportion-viz">
+          <div class="proportion-bar dj">
+            <div class="vol-label">
+              229
+              <span class="unit">million m³</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-stats">
+          <div class="stat-row"><span class="key">Surface area</span><span class="val">75.71 km²</span></div>
+          <div class="stat-row"><span class="key">Operating range</span><span class="val">2.70 m</span></div>
+          <div class="stat-row"><span class="key">Storage capacity</span><span class="val">229,000,000 m³</span></div>
+        </div>
+
+        <div class="usage-status used">
+          <span class="label">Used for flood mitigation</span>
+          ORRPB describes a deliberate "two-stage refill" strategy at Des Joachims to reduce flooding upstream and downstream. (FAQ Q6)
+        </div>
+      </div>
+
+      <!-- LAC COULONGE COLUMN -->
+      <div class="compare-col">
+        <div class="col-label">Reservoir 2 · 40% basin</div>
+        <div class="col-name">Lac Coulonge reach
+          <span class="designation">Run-of-river facility · Bryson Dam · Hydro-Québec</span>
+        </div>
+
+        <div class="proportion-viz">
+          <div class="proportion-bar lc">
+            <div class="vol-label">
+              302
+              <span class="unit">million m³</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-stats">
+          <div class="stat-row"><span class="key">Surface area</span><span class="val">227.19 km²</span></div>
+          <div class="stat-row"><span class="key">Operating range</span><span class="val">1.33 m</span></div>
+          <div class="stat-row"><span class="key">Storage capacity</span><span class="val">302,162,700 m³</span></div>
+        </div>
+
+        <div class="usage-status not-used">
+          <span class="label">Not used for flood mitigation</span>
+          ORRPB position: lowering levels here "provides no benefit" and the available storage is "far too small." (FAQ Q5 Part D)
+        </div>
+      </div>
+    </div>
+
+    <div class="math-callout">
+      <strong>The contradiction.</strong>
+      Des Joachims operates as a flood-mitigation tool every spring under ORRPB's two-stage refill protocol. Its storage capacity is 229 million m³.
+      The Lac Coulonge reach behind Bryson Dam has 227 km² of surface area — three times that of Des Joachims — across four mapped sections from Rapides-des-Joachims down to Bryson. With its 1.33 m operating range, the reach holds:
+      <span class="ratio">302,162,700 m³ — 1.32× the storage of Des Joachims.</span>
+      The "far too small" justification cannot apply to one without applying to both. Only one is being used.
+    </div>
+
+  </div>
+</div>
+
+<!-- METHODOLOGY -->
+<div class="method-grid">
+  <div class="method-block">
+    <div class="label">How the Lac Coulonge area was measured</div>
+    <div class="divider"></div>
+    <p>Surface area was measured directly from Google Earth's distance and area tool, applied to four contiguous sections of the Ottawa River between Rapides-des-Joachims and Bryson Dam. Sections totalled 73.89 + 89.34 + 12.44 + 51.52 = 227.19 km². The 1.33 m drawdown range is the difference between the yearly average level (106.40 m) and the historical lower limit (105.07 m).</p>
+    <div class="source">— Method by André Boisvert, presented to flood watch group · April 2026</div>
+  </div>
+
+  <div class="method-block">
+    <div class="label">Sanity check on the method</div>
+    <div class="divider"></div>
+    <p>Applying the same calculation to Des Joachims (75.71 km² × 2.70 m drawdown) yields 204.4 million m³ — within 11% of the published official capacity of 229 million m³. The small difference reflects that real reservoirs aren't perfect prisms; the method consistently produces conservative estimates. The Lac Coulonge figure is therefore likely a low-end estimate of available storage.</p>
+    <div class="source">— Independent verification using ORRPB published figures</div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="left">
+    <strong>The question this raises.</strong> ORRPB's stated reason for not lowering Lac Coulonge before the freshet is that the available storage is too small. The same Board enthusiastically uses an upstream reservoir of comparable capacity for the same purpose. This is not an accusation of bad faith — it is a request for analytical consistency. If a 229 million m³ reservoir at Des Joachims is operationally meaningful for flood mitigation, a 302 million m³ reach at Lac Coulonge cannot be dismissed as "too small."
+  </div>
+  <div class="right">
+    freshet.xgrunt.com<br>
+    <span style="opacity:0.5">v1 · APR 2026</span>
+  </div>
+</div>
+
+</div>
+
+</body>
+</html>

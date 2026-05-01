@@ -1,0 +1,12 @@
+slug,title,measure_type,unit,source_url,row_count,first_year,last_year,output_csv
+lake-timiskaming,Lake Timiskaming at Haileybury,water_level,metres,https://www.ottawariver.ca/information/historical-data-summaries-water-levels-and-flows/lake-timiskaming/,76,1950,2025,lake-timiskaming.csv
+ottawa-river-at-mattawa,Ottawa River at Mattawa,water_level,metres,https://www.ottawariver.ca/information/historical-data-summaries-water-levels-and-flows/ottawa-river-at-mattawa/,76,1950,2025,ottawa-river-at-mattawa.csv
+ottawa-river-at-pembroke,Ottawa River at Pembroke,water_level,metres,https://www.ottawariver.ca/information/historical-data-summaries-water-levels-and-flows/ottawa-river-at-pembroke/,75,1950,2025,ottawa-river-at-pembroke.csv
+lake-coulonge,Lake Coulonge,water_level,metres,https://www.ottawariver.ca/information/historical-data-summaries-water-levels-and-flows/lake-coulonge/,54,1972,2025,lake-coulonge.csv
+chats-lake-at-arnprior,Chats Lake at Arnprior,water_level,metres,https://www.ottawariver.ca/information/historical-data-summaries-water-levels-and-flows/chats-lake-at-arnprior/,75,1950,2025,chats-lake-at-arnprior.csv
+ottawa-river-at-britannia,Ottawa River at Britannia,water_level,metres,https://www.ottawariver.ca/information/historical-data-summaries-water-levels-and-flows/ottawa-river-at-britannia/,76,1950,2025,ottawa-river-at-britannia.csv
+ottawa-river-at-gatineau,Ottawa River at Gatineau (Hull),water_level,metres,https://www.ottawariver.ca/information/historical-data-summaries-water-levels-and-flows/ottawa-river-at-gatineau/,61,1965,2025,ottawa-river-at-gatineau.csv
+ottawa-river-at-thurso,Ottawa River at Thurso,water_level,metres,https://www.ottawariver.ca/information/historical-data-summaries-water-levels-and-flows/ottawa-river-at-thurso/,35,1991,2025,ottawa-river-at-thurso.csv
+ottawa-river-at-grenville,Ottawa River at Grenville,water_level,metres,https://www.ottawariver.ca/information/historical-data-summaries-water-levels-and-flows/ottawa-river-at-grenville/,93,1933,2025,ottawa-river-at-grenville.csv
+ottawa-river-at-carillon,Ottawa River at Carillon,discharge,cubic_metres_per_second,https://www.ottawariver.ca/information/historical-data-summaries-water-levels-and-flows/ottawa-river-at-carillon/,62,1964,2025,ottawa-river-at-carillon.csv
+gatineau-river-at-maniwaki,Gatineau River at Maniwaki,water_level,metres,https://www.ottawariver.ca/information/historical-data-summaries-water-levels-and-flows/gatineau-river-at-maniwaki/,76,1950,2025,gatineau-river-at-maniwaki.csv

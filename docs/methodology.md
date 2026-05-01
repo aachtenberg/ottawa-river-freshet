@@ -106,7 +106,7 @@ users know it's not Vigilance-canonical.
 
 The map's Lac Coulonge callout shows e.g. *"94 th %ile (1972–2025)"* — the
 season's peak ranked against the 54-year ORRPB record stored in
-[`data/lac-coulonge-monthly-1972-2025.csv`](../data/lac-coulonge-monthly-1972-2025.csv).
+[`data/lac-coulonge-monthly-1972-2026.csv`](../data/lac-coulonge-monthly-1972-2026.csv).
 
 Computed as:
 

@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Lac Coulonge Winter Baseline Infographic</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,700;9..144,900&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink: #14171a;
+  --ink-soft: #2c333a;
+  --paper: #f4ede0;
+  --paper-bright: #fbf6eb;
+  --rule: #14171a;
+  --rule-soft: rgba(20, 23, 26, 0.18);
+  --accent: #b3261e;
+  --accent-soft: rgba(179, 38, 30, 0.08);
+  --accent-strong: #8a1c14;
+  --neutral: #2c333a;
+}
+
+html, body {
+  background: #2a2520;
+  font-family: 'IBM Plex Sans', sans-serif;
+  color: var(--ink);
+}
+
+.page {
+  width: 1200px;
+  min-height: 1500px;
+  background: var(--paper);
+  position: relative;
+  padding: 64px 72px 72px;
+  margin: 0 auto;
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(0,0,0,0.04) 1px, transparent 0);
+  background-size: 14px 14px;
+}
+
+.kicker {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 14px;
+  margin-bottom: 28px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.kicker .file { font-weight: 500; }
+.kicker .meta { font-weight: 400; opacity: 0.7; }
+
+.headline {
+  font-family: 'Fraunces', serif;
+  font-weight: 900;
+  font-size: 68px;
+  line-height: 0.95;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  margin-bottom: 18px;
+}
+.headline .accent {
+  color: var(--accent);
+  font-style: italic;
+}
+
+.deck {
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: 22px;
+  line-height: 1.35;
+  color: var(--ink-soft);
+  max-width: 920px;
+  margin-bottom: 36px;
+  letter-spacing: -0.005em;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 36px;
+}
+.stat {
+  padding: 18px 22px 18px 0;
+  border-right: 1px solid var(--rule-soft);
+  position: relative;
+}
+.stat:last-child {
+  border-right: none;
+  padding-right: 0;
+}
+.stat:not(:first-child) {
+  padding-left: 22px;
+}
+.stat .label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--ink-soft);
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+.stat .figure {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-size: 44px;
+  line-height: 1;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+.stat.hot .figure {
+  color: var(--accent);
+}
+.stat .unit {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: var(--ink-soft);
+  margin-top: 4px;
+}
+
+.chart-block {
+  margin-bottom: 36px;
+}
+.chart-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  margin-bottom: 6px;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+.chart-subtitle {
+  font-family: 'Fraunces', serif;
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 16px;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.chart-wrap {
+  position: relative;
+  background: var(--paper-bright);
+  border: 1px solid var(--rule-soft);
+  padding: 22px 26px 16px;
+}
+svg.chart {
+  width: 100%;
+  display: block;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.evidence-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+.evidence {
+  border-top: 2px solid var(--ink);
+  padding-top: 16px;
+}
+.evidence .label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  margin-bottom: 10px;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+.evidence .quote {
+  font-family: 'Fraunces', serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--ink);
+  margin-bottom: 12px;
+  letter-spacing: -0.005em;
+}
+.evidence .source {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-soft);
+}
+.evidence.contrast {
+  border-top-color: var(--accent);
+}
+.evidence.contrast .label,
+.evidence.contrast .source {
+  color: var(--accent-strong);
+}
+
+.footer {
+  border-top: 1px solid var(--rule);
+  padding-top: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 11px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.footer .left { max-width: 720px; }
+.footer .right {
+  text-align: right;
+  font-family: 'IBM Plex Mono', monospace;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 10px;
+  white-space: nowrap;
+}
+.footer strong { color: var(--ink); font-weight: 600; }
+
+.divider {
+  width: 36px;
+  height: 1px;
+  background: var(--ink);
+  margin: 4px 0 16px;
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+<div class="kicker">
+  <span class="file">EXHIBIT B · LAC COULONGE · WINTER BASELINE LEVELS · JAN–FEB</span>
+  <span class="meta">Northern Reservoirs Flood Watch · Compiled April 2026</span>
+</div>
+
+<h1 class="headline">
+  Before the snow even melted,<br>
+  the river was already <span class="accent">too high.</span>
+</h1>
+
+<p class="deck">
+  Lac Coulonge spent January and February 2026 sitting consistently above its prior-decade winter band.
+  This is before any spring runoff. It is the level the freshet starts from. A higher starting line means a higher peak — every centimetre.
+</p>
+
+<div class="stats">
+  <div class="stat">
+    <div class="label">2026 Winter avg</div>
+    <div class="figure">106.56</div>
+    <div class="unit">metres above sea level<br>(Jan 1 – Feb 27)</div>
+  </div>
+  <div class="stat">
+    <div class="label">2017–2025 avg</div>
+    <div class="figure">106.42</div>
+    <div class="unit">metres above sea level<br>(prior nine years)</div>
+  </div>
+  <div class="stat hot">
+    <div class="label">Baseline shift</div>
+    <div class="figure">+14<span style="font-size:24px">cm</span></div>
+    <div class="unit">2026 winter mean above<br>recent-decade winter mean</div>
+  </div>
+  <div class="stat hot">
+    <div class="label">Translates to</div>
+    <div class="figure">+14<span style="font-size:24px">cm</span></div>
+    <div class="unit">on the freshet peak,<br>under same melt conditions</div>
+  </div>
+</div>
+
+<div class="chart-block">
+  <div class="chart-title">Figure 2 · Daily water level at Lac Coulonge · Jan 1 – Feb 27</div>
+  <div class="chart-subtitle">Each line is one year. 2026 in bold. The river ran higher all winter than in any recent year.</div>
+  <div class="chart-wrap">
+    <svg class="chart" viewBox="0 0 1080 460" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+      <g id="chart-content"></g>
+    </svg>
+  </div>
+</div>
+
+<div class="evidence-grid">
+  <div class="evidence">
+    <div class="label">Posted to the flood watch group · Feb 28, 2026</div>
+    <div class="divider"></div>
+    <div class="quote">
+      "Here we are folks, heading into March in preparation for the 2026 freshet. Lac Coulonge level as of today is at its highest level in 10 years for this time of year. If our elected officials don't act now, I'm afraid we could possibly face the worst flooding ever for this section of the Ottawa River."
+    </div>
+    <div class="source">— André Boisvert · 28 February 2026 · two months before the peak</div>
+  </div>
+
+  <div class="evidence contrast">
+    <div class="label">What followed</div>
+    <div class="divider" style="background: var(--accent);"></div>
+    <div class="quote">
+      Lac Coulonge peaked at <strong>108.63 m</strong> on April 20 — the fourth-highest peak in the modern era. The 2026 winter baseline was approximately 14 cm above the recent-decade average. The 2026 freshet peak was approximately 14 cm above the average of the four super-flood years.
+    </div>
+    <div class="source">— Source: ORRPB and Quebec MSP Vigilance gauge data (station 1195)</div>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="left">
+    <strong>Source data</strong> · Daily Lac Coulonge water level readings, January 1 to February 27, for each year 2016–2026. Compiled from Hydro-Québec gauge records published via the Ottawa River Regulation Planning Board and Quebec MSP Vigilance API (station 1195).
+    <strong>Why this matters</strong> · Winter baseline cannot be explained by snowmelt or spring rain — neither has occurred yet. It reflects how much water is being held in the upstream reservoirs and run-of-river headponds before the freshet starts. A higher pre-freshet baseline means less buffer to absorb spring runoff and a higher peak under any given snowmelt scenario. The shift visible here is an operational signal, not a weather signal.
+  </div>
+  <div class="right">
+    freshet.xgrunt.com<br>
+    <span style="opacity:0.5">v1 · APR 2026</span>
+  </div>
+</div>
+
+</div>
+
+<script>
+const dataRaw = {"days": ["Jan 01", "Jan 02", "Jan 03", "Jan 04", "Jan 05", "Jan 06", "Jan 07", "Jan 08", "Jan 09", "Jan 10", "Jan 11", "Jan 12", "Jan 13", "Jan 14", "Jan 15", "Jan 16", "Jan 17", "Jan 18", "Jan 19", "Jan 20", "Jan 21", "Jan 22", "Jan 23", "Jan 24", "Jan 25", "Jan 26", "Jan 27", "Jan 28", "Jan 29", "Jan 30", "Jan 31", "Feb 01", "Feb 02", "Feb 03", "Feb 04", "Feb 05", "Feb 06", "Feb 07", "Feb 08", "Feb 09", "Feb 10", "Feb 11", "Feb 12", "Feb 13", "Feb 14", "Feb 15", "Feb 16", "Feb 17", "Feb 18", "Feb 19", "Feb 20", "Feb 21", "Feb 22", "Feb 23", "Feb 24", "Feb 25", "Feb 26", "Feb 27"], "years": {"2016": [106.63, 106.55, 106.48, 106.5, 106.51, 106.53, 106.55, 106.55, 106.55, 106.5, 106.55, 106.6, 106.62, 106.71, 106.73, 106.74, 106.76, 106.81, 106.83, 106.85, 106.84, 106.78, 106.7, 106.65, 106.6, 106.59, 106.61, 106.63, 106.64, 106.62, 106.62, 106.63, 106.61, 106.6, 106.55, 106.55, 106.58, 106.6, 106.58, 106.55, 106.55, 106.56, 106.55, 106.54, 106.53, 106.55, 106.56, 106.57, 106.56, 106.54, 106.52, 106.5, 106.45, 106.42, 106.43, 106.42, 106.4, 106.3], "2017": [106.18, 106.17, 106.17, 106.18, 106.18, 106.2, 106.18, 106.16, 106.18, 106.2, 106.22, 106.24, 106.27, 106.3, 106.33, 106.36, 106.4, 106.42, 106.44, 106.45, 106.46, 106.45, 106.46, 106.45, 106.44, 106.45, 106.46, 106.47, 106.48, 106.48, 106.46, 106.46, 106.46, 106.45, 106.44, 106.42, 106.4, 106.38, 106.42, 106.45, 106.46, 106.46, 106.46, 106.46, 106.46, 106.46, 106.47, 106.47, 106.46, 106.45, 106.46, 106.47, 106.47, 106.46, 106.46, 106.46, 106.47, 106.47], "2018": [106.55, 106.5, 106.45, 106.42, 106.4, 106.38, 106.42, 106.5, 106.5, 106.5, 106.5, 106.5, 106.42, 106.4, 106.4, 106.42, 106.45, 106.42, 106.4, 106.42, 106.45, 106.46, 106.48, 106.5, 106.52, 106.5, 106.45, 106.45, 106.45, 106.45, 106.5, 106.5, 106.48, 106.42, 106.42, 106.45, 106.5, 106.55, 106.55, 106.55, 106.55, 106.55, 106.5, 106.45, 106.42, 106.42, 106.42, 106.45, 106.45, 106.45, 106.4, 106.38, 106.3, 106.27, 106.25, 106.3, 106.32, 106.3], "2019": [106.47, 106.46, 106.45, 106.44, 106.42, 106.42, 106.5, 106.5, 106.55, 106.6, 106.55, 106.5, 106.5, 106.5, 106.51, 106.49, 106.48, 106.47, 106.45, 106.5, 106.55, 106.5, 106.48, 106.45, 106.45, 106.43, 106.44, 106.45, 106.46, 106.46, 106.46, 106.46, 106.45, 106.45, 106.46, 106.5, 106.5, 106.55, 106.6, 106.58, 106.5, 106.45, 106.45, 106.5, 106.55, 106.55, 106.55, 106.5, 106.5, 106.55, 106.5, 106.48, 106.46, 106.45, 106.46, 106.48, 106.5, 106.46], "2020": [106.34, 106.33, 106.32, 106.3, 106.3, 106.27, 106.27, 106.3, 106.34, 106.42, 106.45, 106.5, 106.51, 106.52, 106.5, 106.48, 106.5, 106.49, 106.45, 106.45, 106.5, 106.5, 106.5, 106.5, 106.51, 106.5, 106.51, 106.51, 106.5, 106.51, 106.51, 106.5, 106.51, 106.5, 106.5, 106.55, 106.5, 106.5, 106.46, 106.46, 106.45, 106.46, 106.5, 106.5, 106.55, 106.52, 106.51, 106.5, 106.51, 106.5, 106.48, 106.47, 106.46, 106.45, 106.43, 106.45, 106.48, 106.5], "2021": [106.35, 106.34, 106.35, 106.32, 106.3, 106.3, 106.32, 106.34, 106.3, 106.29, 106.28, 106.29, 106.3, 106.32, 106.3, 106.27, 106.3, 106.32, 106.31, 106.32, 106.3, 106.32, 106.32, 106.32, 106.32, 106.32, 106.32, 106.45, 106.42, 106.45, 106.46, 106.45, 106.42, 106.4, 106.42, 106.42, 106.42, 106.43, 106.43, 106.42, 106.45, 106.45, 106.45, 106.46, 106.46, 106.46, 106.5, 106.5, 106.5, 106.5, 106.51, 106.49, 106.46, 106.43, 106.43, 106.46, 106.5, 106.49], "2022": [106.15, 106.14, 106.18, 106.2, 106.3, 106.34, 106.4, 106.42, 106.42, 106.4, 106.42, 106.45, 106.45, 106.42, 106.4, 106.39, 106.42, 106.45, 106.45, 106.42, 106.42, 106.45, 106.5, 106.55, 106.55, 106.5, 106.5, 106.5, 106.5, 106.55, 106.5, 106.42, 106.42, 106.45, 106.5, 106.5, 106.5, 106.55, 106.55, 106.55, 106.55, 106.55, 106.55, 106.55, 106.55, 106.5, 106.45, 106.42, 106.4, 106.42, 106.45, 106.42, 106.42, 106.42, 106.42, 106.4, 106.4, 106.4], "2023": [106.18, 106.18, 106.2, 106.2, 106.2, 106.22, 106.22, 106.3, 106.3, 106.27, 106.25, 106.27, 106.3, 106.3, 106.3, 106.3, 106.32, 106.32, 106.32, 106.31, 106.3, 106.32, 106.32, 106.3, 106.27, 106.27, 106.27, 106.3, 106.32, 106.32, 106.32, 106.32, 106.32, 106.3, 106.32, 106.3, 106.32, 106.32, 106.3, 106.31, 106.32, 106.3, 106.3, 106.3, 106.3, 106.3, 106.32, 106.3, 106.32, 106.3, 106.3, 106.32, 106.45, 106.45, 106.46, 106.45, 106.45, 106.46], "2024": [106.24, 106.27, 106.42, 106.5, 106.46, 106.5, 106.55, 106.42, 106.42, 106.45, 106.5, 106.5, 106.45, 106.45, 106.42, 106.42, 106.45, 106.45, 106.46, 106.45, 106.42, 106.4, 106.42, 106.4, 106.42, 106.42, 106.4, 106.4, 106.42, 106.4, 106.36, 106.38, 106.4, 106.4, 106.36, 106.34, 106.34, 106.32, 106.34, 106.36, 106.34, 106.36, 106.36, 106.34, 106.34, 106.34, 106.4, 106.42, 106.43, 106.45, 106.45, 106.45, 106.42, 106.4, 106.4, 106.43, 106.45, 106.25], "2025": [106.46, 106.43, 106.42, 106.44, 106.42, 106.45, 106.46, 106.5, 106.52, 106.52, 106.52, 106.52, 106.52, 106.5, 106.5, 106.51, 106.52, 106.53, 106.53, 106.53, 106.5, 106.5, 106.5, 106.45, 106.46, 106.45, 106.45, 106.42, 106.42, 106.46, 106.5, 106.5, 106.45, 106.45, 106.45, 106.45, 106.45, 106.5, 106.52, 106.52, 106.52, 106.5, 106.5, 106.45, 106.45, 106.5, 106.52, 106.52, 106.52, 106.52, 106.52, 106.52, 106.52, 106.52, 106.52, 106.52, 106.52, 106.53], "2026": [106.35, 106.39, 106.42, 106.45, 106.49, 106.52, 106.54, 106.55, 106.54, 106.54, 106.53, 106.53, 106.54, 106.56, 106.56, 106.57, 106.57, 106.58, 106.59, 106.6, 106.6, 106.58, 106.56, 106.55, 106.55, 106.57, 106.59, 106.59, 106.58, 106.58, 106.57, 106.55, 106.54, 106.55, 106.55, 106.57, 106.58, 106.58, 106.58, 106.58, 106.58, 106.58, 106.59, 106.58, 106.57, 106.58, 106.58, 106.58, 106.58, 106.58, 106.59, 106.59, 106.6, 106.61, 106.61, 106.6, 106.59, 106.59]}};
+const days = dataRaw.days;
+const yearsData = dataRaw.years;
+const yearKeys = Object.keys(yearsData).map(Number).sort();
+
+const SVG_NS = 'http://www.w3.org/2000/svg';
+const svg = document.querySelector('svg.chart');
+const content = svg.querySelector('#chart-content');
+
+const W = 1080, H = 460;
+const margin = { top: 24, right: 100, bottom: 50, left: 56 };
+const plotW = W - margin.left - margin.right;
+const plotH = H - margin.top - margin.bottom;
+
+const N = days.length;
+const x = i => margin.left + (i / (N - 1)) * plotW;
+const yMin = 106.10, yMax = 106.90;
+const y = v => margin.top + plotH - ((v - yMin) / (yMax - yMin)) * plotH;
+
+// Background tint to highlight winter
+const bg = document.createElementNS(SVG_NS, 'rect');
+bg.setAttribute('x', margin.left);
+bg.setAttribute('y', margin.top);
+bg.setAttribute('width', plotW);
+bg.setAttribute('height', plotH);
+bg.setAttribute('fill', 'rgba(20,23,26,0.025)');
+content.appendChild(bg);
+
+// Y-axis grid + labels
+const yTicks = [106.1, 106.2, 106.3, 106.4, 106.5, 106.6, 106.7, 106.8, 106.9];
+yTicks.forEach(t => {
+  const yy = y(t);
+  const line = document.createElementNS(SVG_NS, 'line');
+  line.setAttribute('x1', margin.left);
+  line.setAttribute('x2', margin.left + plotW);
+  line.setAttribute('y1', yy);
+  line.setAttribute('y2', yy);
+  line.setAttribute('stroke', 'rgba(20,23,26,0.07)');
+  line.setAttribute('stroke-width', '1');
+  content.appendChild(line);
+
+  const lbl = document.createElementNS(SVG_NS, 'text');
+  lbl.setAttribute('x', margin.left - 8);
+  lbl.setAttribute('y', yy + 3);
+  lbl.setAttribute('text-anchor', 'end');
+  lbl.setAttribute('font-size', '10');
+  lbl.setAttribute('fill', '#2c333a');
+  lbl.textContent = t.toFixed(1);
+  content.appendChild(lbl);
+});
+
+// Draw a band representing the prior-decade range (excluding 2026)
+// Compute min and max across years 2016-2025 for each day
+const bandMin = [];
+const bandMax = [];
+for (let i = 0; i < N; i++) {
+  const vals = yearKeys.filter(yr => yr !== 2026).map(yr => yearsData[yr][i]);
+  bandMin.push(Math.min(...vals));
+  bandMax.push(Math.max(...vals));
+}
+
+// Build band path
+let bandPath = '';
+for (let i = 0; i < N; i++) {
+  bandPath += (i === 0 ? 'M' : 'L') + x(i) + ',' + y(bandMax[i]);
+}
+for (let i = N - 1; i >= 0; i--) {
+  bandPath += 'L' + x(i) + ',' + y(bandMin[i]);
+}
+bandPath += 'Z';
+const band = document.createElementNS(SVG_NS, 'path');
+band.setAttribute('d', bandPath);
+band.setAttribute('fill', 'rgba(44, 51, 58, 0.10)');
+band.setAttribute('stroke', 'none');
+content.appendChild(band);
+
+// Draw individual prior-year lines very faintly
+yearKeys.filter(yr => yr !== 2026).forEach(yr => {
+  let path = '';
+  for (let i = 0; i < N; i++) {
+    path += (i === 0 ? 'M' : 'L') + x(i) + ',' + y(yearsData[yr][i]);
+  }
+  const line = document.createElementNS(SVG_NS, 'path');
+  line.setAttribute('d', path);
+  line.setAttribute('fill', 'none');
+  line.setAttribute('stroke', 'rgba(44,51,58,0.28)');
+  line.setAttribute('stroke-width', '0.9');
+  content.appendChild(line);
+});
+
+// Draw 2026 in bold red
+let path2026 = '';
+for (let i = 0; i < N; i++) {
+  path2026 += (i === 0 ? 'M' : 'L') + x(i) + ',' + y(yearsData[2026][i]);
+}
+const line2026 = document.createElementNS(SVG_NS, 'path');
+line2026.setAttribute('d', path2026);
+line2026.setAttribute('fill', 'none');
+line2026.setAttribute('stroke', '#b3261e');
+line2026.setAttribute('stroke-width', '3');
+line2026.setAttribute('stroke-linejoin', 'round');
+line2026.setAttribute('stroke-linecap', 'round');
+content.appendChild(line2026);
+
+// X-axis date labels (weekly)
+const dateTicks = [0, 7, 14, 21, 28, 34, 41, 48, 57]; // every 7 days plus end markers
+const tickLabels = ['Jan 1', 'Jan 8', 'Jan 15', 'Jan 22', 'Jan 29', 'Feb 4', 'Feb 11', 'Feb 18', 'Feb 27'];
+dateTicks.forEach((di, idx) => {
+  const xx = x(di);
+  const tick = document.createElementNS(SVG_NS, 'line');
+  tick.setAttribute('x1', xx);
+  tick.setAttribute('x2', xx);
+  tick.setAttribute('y1', margin.top + plotH);
+  tick.setAttribute('y2', margin.top + plotH + 4);
+  tick.setAttribute('stroke', '#2c333a');
+  tick.setAttribute('stroke-width', '1');
+  content.appendChild(tick);
+
+  const lbl = document.createElementNS(SVG_NS, 'text');
+  lbl.setAttribute('x', xx);
+  lbl.setAttribute('y', margin.top + plotH + 18);
+  lbl.setAttribute('text-anchor', 'middle');
+  lbl.setAttribute('font-size', '10');
+  lbl.setAttribute('fill', '#2c333a');
+  lbl.textContent = tickLabels[idx];
+  content.appendChild(lbl);
+});
+
+// Y axis label
+const ylab = document.createElementNS(SVG_NS, 'text');
+ylab.setAttribute('x', 14);
+ylab.setAttribute('y', margin.top + plotH / 2);
+ylab.setAttribute('transform', `rotate(-90, 14, ${margin.top + plotH / 2})`);
+ylab.setAttribute('text-anchor', 'middle');
+ylab.setAttribute('font-size', '10');
+ylab.setAttribute('letter-spacing', '0.14em');
+ylab.setAttribute('fill', '#2c333a');
+ylab.textContent = 'METRES ABOVE SEA LEVEL';
+content.appendChild(ylab);
+
+// Right-side annotation: where 2026 ends
+const lastVal = yearsData[2026][N - 1];
+const endpointX = x(N - 1);
+const endpointY = y(lastVal);
+
+// 2026 endpoint dot
+const dot = document.createElementNS(SVG_NS, 'circle');
+dot.setAttribute('cx', endpointX);
+dot.setAttribute('cy', endpointY);
+dot.setAttribute('r', '4');
+dot.setAttribute('fill', '#b3261e');
+content.appendChild(dot);
+
+// Annotation: 2026 label
+const annoLbl = document.createElementNS(SVG_NS, 'text');
+annoLbl.setAttribute('x', endpointX + 10);
+annoLbl.setAttribute('y', endpointY - 4);
+annoLbl.setAttribute('text-anchor', 'start');
+annoLbl.setAttribute('font-size', '13');
+annoLbl.setAttribute('font-weight', '700');
+annoLbl.setAttribute('fill', '#b3261e');
+annoLbl.setAttribute('font-family', "'Fraunces', serif");
+annoLbl.textContent = '2026';
+content.appendChild(annoLbl);
+
+// Annotation: Feb 27 value
+const annoVal = document.createElementNS(SVG_NS, 'text');
+annoVal.setAttribute('x', endpointX + 10);
+annoVal.setAttribute('y', endpointY + 11);
+annoVal.setAttribute('text-anchor', 'start');
+annoVal.setAttribute('font-size', '10');
+annoVal.setAttribute('fill', '#b3261e');
+annoVal.setAttribute('font-weight', '500');
+annoVal.textContent = lastVal.toFixed(2) + ' m';
+content.appendChild(annoVal);
+
+// Annotation for the prior years band — pick a representative endpoint
+// Use the median of all prior-year final values
+const priorFinals = yearKeys.filter(yr => yr !== 2026).map(yr => yearsData[yr][N - 1]).sort((a,b) => a-b);
+const medianPriorFinal = priorFinals[Math.floor(priorFinals.length / 2)];
+const priorY = y(medianPriorFinal);
+const priorAnno = document.createElementNS(SVG_NS, 'text');
+priorAnno.setAttribute('x', endpointX + 10);
+priorAnno.setAttribute('y', priorY - 4);
+priorAnno.setAttribute('text-anchor', 'start');
+priorAnno.setAttribute('font-size', '11');
+priorAnno.setAttribute('font-weight', '600');
+priorAnno.setAttribute('fill', '#2c333a');
+priorAnno.setAttribute('font-family', "'Fraunces', serif");
+priorAnno.textContent = '2016–2025';
+content.appendChild(priorAnno);
+
+const priorRange = document.createElementNS(SVG_NS, 'text');
+priorRange.setAttribute('x', endpointX + 10);
+priorRange.setAttribute('y', priorY + 11);
+priorRange.setAttribute('text-anchor', 'start');
+priorRange.setAttribute('font-size', '10');
+priorRange.setAttribute('fill', '#2c333a');
+priorRange.setAttribute('font-weight', '500');
+priorRange.textContent = 'prior decade';
+content.appendChild(priorRange);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Lac Coulonge Regime Change Infographic</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,700;9..144,900&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink: #14171a;
+  --ink-soft: #2c333a;
+  --paper: #f4ede0;
+  --paper-bright: #fbf6eb;
+  --rule: #14171a;
+  --rule-soft: rgba(20, 23, 26, 0.18);
+  --accent: #b3261e;
+  --accent-soft: rgba(179, 38, 30, 0.08);
+  --accent-strong: #8a1c14;
+  --neutral-bar: #2c333a;
+  --highlight-bar: #b3261e;
+}
+
+html, body {
+  background: #2a2520;
+  font-family: 'IBM Plex Sans', sans-serif;
+  color: var(--ink);
+}
+
+.page {
+  width: 1200px;
+  min-height: 1500px;
+  background: var(--paper);
+  position: relative;
+  padding: 64px 72px 72px;
+  margin: 0 auto;
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(0,0,0,0.04) 1px, transparent 0);
+  background-size: 14px 14px;
+}
+
+/* ===== HEADER ===== */
+.kicker {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 14px;
+  margin-bottom: 28px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.kicker .file { font-weight: 500; }
+.kicker .meta { font-weight: 400; opacity: 0.7; }
+
+.headline {
+  font-family: 'Fraunces', serif;
+  font-weight: 900;
+  font-size: 68px;
+  line-height: 0.95;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  margin-bottom: 18px;
+}
+.headline .accent {
+  color: var(--accent);
+  font-style: italic;
+}
+
+.deck {
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: 22px;
+  line-height: 1.35;
+  color: var(--ink-soft);
+  max-width: 920px;
+  margin-bottom: 36px;
+  letter-spacing: -0.005em;
+}
+
+/* ===== STATS BAND ===== */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 36px;
+}
+.stat {
+  padding: 18px 22px 18px 0;
+  border-right: 1px solid var(--rule-soft);
+  position: relative;
+}
+.stat:last-child {
+  border-right: none;
+  padding-right: 0;
+}
+.stat:not(:first-child) {
+  padding-left: 22px;
+}
+.stat .label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--ink-soft);
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+.stat .figure {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-size: 44px;
+  line-height: 1;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+.stat.hot .figure {
+  color: var(--accent);
+}
+.stat .unit {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: var(--ink-soft);
+  margin-top: 4px;
+}
+
+/* ===== CHART ===== */
+.chart-block {
+  margin-bottom: 36px;
+}
+.chart-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  margin-bottom: 6px;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+.chart-subtitle {
+  font-family: 'Fraunces', serif;
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 16px;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.chart-wrap {
+  position: relative;
+  background: var(--paper-bright);
+  border: 1px solid var(--rule-soft);
+  padding: 22px 26px 16px;
+}
+svg.chart {
+  width: 100%;
+  display: block;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+/* ===== EVIDENCE PANELS ===== */
+.evidence-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+.evidence {
+  border-top: 2px solid var(--ink);
+  padding-top: 16px;
+}
+.evidence .label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  margin-bottom: 10px;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+.evidence .quote {
+  font-family: 'Fraunces', serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--ink);
+  margin-bottom: 12px;
+  letter-spacing: -0.005em;
+}
+.evidence .source {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-soft);
+}
+.evidence.contrast {
+  border-top-color: var(--accent);
+}
+.evidence.contrast .label,
+.evidence.contrast .source {
+  color: var(--accent-strong);
+}
+.evidence.contrast .quote {
+  color: var(--ink);
+}
+
+/* ===== FOOTER ===== */
+.footer {
+  border-top: 1px solid var(--rule);
+  padding-top: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 11px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.footer .left { max-width: 720px; }
+.footer .right {
+  text-align: right;
+  font-family: 'IBM Plex Mono', monospace;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 10px;
+  white-space: nowrap;
+}
+.footer strong { color: var(--ink); font-weight: 600; }
+
+/* Badge in upper right */
+.classification {
+  position: absolute;
+  top: 64px;
+  right: 72px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  padding: 4px 10px;
+  font-weight: 500;
+  display: none; /* keep restrained — disabled */
+}
+
+/* small ornament */
+.divider {
+  width: 36px;
+  height: 1px;
+  background: var(--ink);
+  margin: 4px 0 16px;
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+<!-- KICKER -->
+<div class="kicker">
+  <span class="file">EXHIBIT A · LAC COULONGE · YEARLY PEAK LEVELS · 1972–2026</span>
+  <span class="meta">Northern Reservoirs Flood Watch · Compiled April 2026</span>
+</div>
+
+<!-- HEADLINE -->
+<h1 class="headline">
+  In <span class="accent">10 years</span>, the Ottawa River<br>
+  flooded as often as it did in <span class="accent">45.</span>
+</h1>
+
+<p class="deck">
+  Lac Coulonge crossed 108.5&nbsp;m once between 1972 and 2016 — a forty-five-year span.
+  It has crossed that level four times in the ten years since. The pattern is too abrupt to be climate alone.
+  The Planning Board's official document treats it as cyclical natural variation.
+</p>
+
+<!-- STATS BAND -->
+<div class="stats">
+  <div class="stat">
+    <div class="label">1972–2016</div>
+    <div class="figure">2.2<span style="font-size:24px">%</span></div>
+    <div class="unit">of years exceeded 108.5&nbsp;m<br>(1 in 45)</div>
+  </div>
+  <div class="stat hot">
+    <div class="label">2017–2026</div>
+    <div class="figure">40.0<span style="font-size:24px">%</span></div>
+    <div class="unit">of years exceeded 108.5&nbsp;m<br>(4 in 10)</div>
+  </div>
+  <div class="stat hot">
+    <div class="label">Rate ratio</div>
+    <div class="figure">18×</div>
+    <div class="unit">increase in super-flood<br>frequency</div>
+  </div>
+  <div class="stat">
+    <div class="label">Mean peak shift</div>
+    <div class="figure">+61<span style="font-size:24px">cm</span></div>
+    <div class="unit">average annual peak<br>between the two eras</div>
+  </div>
+</div>
+
+<!-- CHART -->
+<div class="chart-block">
+  <div class="chart-title">Figure 1 · Yearly peak water level at Lac Coulonge</div>
+  <div class="chart-subtitle">Each bar is one year. The dashed line marks the 108.5 m super-flood threshold.</div>
+  <div class="chart-wrap">
+    <svg class="chart" viewBox="0 0 1080 460" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+      <!-- chart will be generated by JS / inline below -->
+      <defs>
+        <pattern id="hatch" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)">
+          <line x1="0" y1="0" x2="0" y2="6" stroke="rgba(20,23,26,0.06)" stroke-width="3"/>
+        </pattern>
+      </defs>
+      <!-- Background regions for two periods -->
+      <rect id="bg-period1" />
+      <rect id="bg-period2" />
+      <!-- Horizontal grid + axis labels added below -->
+      <g id="chart-content"></g>
+    </svg>
+  </div>
+</div>
+
+<!-- EVIDENCE PANELS -->
+<div class="evidence-grid">
+  <div class="evidence">
+    <div class="label">What the data shows</div>
+    <div class="divider"></div>
+    <div class="quote">
+      "From 2017 to 2026, a span of 10 years versus 45 years for 1972 to 2016, we have experienced 300% more super-floods for Lac Coulonge. This is not a gradual trend upwards due to climate change. It's a major shift in management regime."
+    </div>
+    <div class="source">— André Boisvert, Northern Reservoirs Flood Watch · 28 April 2026</div>
+  </div>
+
+  <div class="evidence contrast">
+    <div class="label">What the Planning Board says</div>
+    <div class="divider" style="background: var(--accent);"></div>
+    <div class="quote">
+      "Flooding is NOT expected to happen every second year. Flooding is driven by weather, and weather can be cyclical. Then flooding can be cyclical too. Flood events can be clustered."
+    </div>
+    <div class="source">— ORRPB, "Flow Management in the Ottawa River Basin," Slide 17 · April 2026</div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="left">
+    <strong>Source data</strong> · Lac Coulonge yearly peaks compiled from Ottawa River Regulation Planning Board historical records, 1972–2026 (n = 55).
+    Super-flood threshold of 108.5 m is the official Quebec MSP Vigilance major-flood designation for the station (id 1195).
+    <strong>Statistical note</strong> · If the long-run flood rate had stayed the same, the odds of seeing 4 super-floods in any given 10-year window are less than 1 in 20,000. The shape of the change is a step function, not a trend — the signature of a regime change rather than a climate signal.
+  </div>
+  <div class="right">
+    freshet.xgrunt.com<br>
+    <span style="opacity:0.5">v1 · APR 2026</span>
+  </div>
+</div>
+
+</div>
+
+<!-- Generate the chart inline -->
+<script>
+const peaks = {
+  1972: 107.64, 1973: 107.84, 1974: 108.27, 1975: 107.32, 1976: 107.52,
+  1977: 106.65, 1978: 107.85, 1979: 108.85, 1980: 108.16, 1981: 107.02,
+  1982: 106.85, 1983: 107.65, 1984: 107.27, 1985: 107.20, 1986: 108.40,
+  1987: 107.21, 1988: 106.66, 1989: 107.79, 1990: 107.36, 1991: 106.66,
+  1992: 106.74, 1993: 106.46, 1994: 106.65, 1995: 107.27, 1996: 107.78,
+  1997: 107.85, 1998: 106.74, 1999: 106.86, 2000: 107.55, 2001: 106.86,
+  2002: 107.20, 2003: 106.93, 2004: 107.46, 2005: 107.40, 2006: 107.68,
+  2007: 107.95, 2008: 108.32, 2009: 107.49, 2010: 106.61, 2011: 108.00,
+  2012: 107.51, 2013: 107.72, 2014: 107.55, 2015: 107.55, 2016: 106.59,
+  2017: 108.52, 2018: 107.49, 2019: 109.17, 2020: 107.40, 2021: 107.48,
+  2022: 107.84, 2023: 108.77, 2024: 106.67, 2025: 108.15, 2026: 108.63
+};
+
+const SVG_NS = 'http://www.w3.org/2000/svg';
+const svg = document.querySelector('svg.chart');
+const content = svg.querySelector('#chart-content');
+
+// Layout constants
+const W = 1080, H = 460;
+const margin = { top: 24, right: 24, bottom: 44, left: 56 };
+const plotW = W - margin.left - margin.right;
+const plotH = H - margin.top - margin.bottom;
+
+const years = Object.keys(peaks).map(Number).sort((a,b)=>a-b);
+const yMin = 106.0, yMax = 109.5;
+const x = year => margin.left + ((year - years[0]) / (years[years.length-1] - years[0])) * plotW;
+const y = val => margin.top + plotH - ((val - yMin) / (yMax - yMin)) * plotH;
+const barW = (plotW / years.length) - 3;
+
+// Draw period 1 / period 2 background tints
+const periodSplit = 2016.5;
+const xSplit = margin.left + ((periodSplit - years[0]) / (years[years.length-1] - years[0])) * plotW;
+const bg1 = document.createElementNS(SVG_NS, 'rect');
+bg1.setAttribute('x', margin.left);
+bg1.setAttribute('y', margin.top);
+bg1.setAttribute('width', xSplit - margin.left);
+bg1.setAttribute('height', plotH);
+bg1.setAttribute('fill', 'rgba(20,23,26,0.025)');
+content.appendChild(bg1);
+
+const bg2 = document.createElementNS(SVG_NS, 'rect');
+bg2.setAttribute('x', xSplit);
+bg2.setAttribute('y', margin.top);
+bg2.setAttribute('width', margin.left + plotW - xSplit);
+bg2.setAttribute('height', plotH);
+bg2.setAttribute('fill', 'rgba(179,38,30,0.06)');
+content.appendChild(bg2);
+
+// Y-axis grid + labels
+const ticks = [106.0, 106.5, 107.0, 107.5, 108.0, 108.5, 109.0, 109.5];
+ticks.forEach(t => {
+  const yy = y(t);
+  const isSuperFlood = (Math.abs(t - 108.5) < 0.001);
+  const line = document.createElementNS(SVG_NS, 'line');
+  line.setAttribute('x1', margin.left);
+  line.setAttribute('x2', margin.left + plotW);
+  line.setAttribute('y1', yy);
+  line.setAttribute('y2', yy);
+  if (isSuperFlood) {
+    line.setAttribute('stroke', '#b3261e');
+    line.setAttribute('stroke-width', '1.2');
+    line.setAttribute('stroke-dasharray', '6 4');
+  } else {
+    line.setAttribute('stroke', 'rgba(20,23,26,0.08)');
+    line.setAttribute('stroke-width', '1');
+  }
+  content.appendChild(line);
+
+  const lbl = document.createElementNS(SVG_NS, 'text');
+  lbl.setAttribute('x', margin.left - 8);
+  lbl.setAttribute('y', yy + 3);
+  lbl.setAttribute('text-anchor', 'end');
+  lbl.setAttribute('font-size', '10');
+  lbl.setAttribute('fill', isSuperFlood ? '#b3261e' : '#2c333a');
+  lbl.setAttribute('font-weight', isSuperFlood ? '600' : '400');
+  lbl.textContent = t.toFixed(1);
+  content.appendChild(lbl);
+});
+
+// Super-flood label - positioned well below the line, in clear empty space (1990s)
+const sfLabel = document.createElementNS(SVG_NS, 'text');
+sfLabel.setAttribute('x', x(1995));
+sfLabel.setAttribute('y', y(108.5) - 8);
+sfLabel.setAttribute('text-anchor', 'middle');
+sfLabel.setAttribute('font-size', '10');
+sfLabel.setAttribute('font-weight', '600');
+sfLabel.setAttribute('letter-spacing', '0.12em');
+sfLabel.setAttribute('fill', '#b3261e');
+sfLabel.textContent = 'SUPER-FLOOD THRESHOLD · 108.5 m';
+content.appendChild(sfLabel);
+
+// Bars
+years.forEach(yr => {
+  const v = peaks[yr];
+  const isPeriod2 = yr >= 2017;
+  const isSuperFlood = v >= 108.5;
+  const bx = x(yr) - barW/2;
+  const by = y(v);
+  const bh = (margin.top + plotH) - by;
+  const rect = document.createElementNS(SVG_NS, 'rect');
+  rect.setAttribute('x', bx);
+  rect.setAttribute('y', by);
+  rect.setAttribute('width', barW);
+  rect.setAttribute('height', bh);
+  // Color logic
+  let fill;
+  if (isSuperFlood) {
+    fill = '#b3261e';
+  } else if (isPeriod2) {
+    fill = '#7a4244';
+  } else {
+    fill = '#2c333a';
+  }
+  rect.setAttribute('fill', fill);
+  content.appendChild(rect);
+
+  // Label super-flood years
+  if (isSuperFlood) {
+    const yrLbl = document.createElementNS(SVG_NS, 'text');
+    yrLbl.setAttribute('x', x(yr));
+    yrLbl.setAttribute('y', by - 6);
+    yrLbl.setAttribute('text-anchor', 'middle');
+    yrLbl.setAttribute('font-size', '10');
+    yrLbl.setAttribute('font-weight', '700');
+    yrLbl.setAttribute('fill', '#b3261e');
+    yrLbl.textContent = yr;
+    content.appendChild(yrLbl);
+  }
+});
+
+// X-axis (decade ticks)
+const xTicks = [1975, 1985, 1995, 2005, 2015, 2025];
+xTicks.forEach(t => {
+  const xx = x(t);
+  const tick = document.createElementNS(SVG_NS, 'line');
+  tick.setAttribute('x1', xx);
+  tick.setAttribute('x2', xx);
+  tick.setAttribute('y1', margin.top + plotH);
+  tick.setAttribute('y2', margin.top + plotH + 4);
+  tick.setAttribute('stroke', '#2c333a');
+  tick.setAttribute('stroke-width', '1');
+  content.appendChild(tick);
+
+  const lbl = document.createElementNS(SVG_NS, 'text');
+  lbl.setAttribute('x', xx);
+  lbl.setAttribute('y', margin.top + plotH + 18);
+  lbl.setAttribute('text-anchor', 'middle');
+  lbl.setAttribute('font-size', '10');
+  lbl.setAttribute('fill', '#2c333a');
+  lbl.textContent = t;
+  content.appendChild(lbl);
+});
+
+// Period divider line
+const divider = document.createElementNS(SVG_NS, 'line');
+divider.setAttribute('x1', xSplit);
+divider.setAttribute('x2', xSplit);
+divider.setAttribute('y1', margin.top - 4);
+divider.setAttribute('y2', margin.top + plotH);
+divider.setAttribute('stroke', '#14171a');
+divider.setAttribute('stroke-width', '1.5');
+divider.setAttribute('stroke-dasharray', '4 3');
+content.appendChild(divider);
+
+// Period labels
+const period1Lbl = document.createElementNS(SVG_NS, 'text');
+period1Lbl.setAttribute('x', margin.left + (xSplit - margin.left) / 2);
+period1Lbl.setAttribute('y', margin.top + plotH + 36);
+period1Lbl.setAttribute('text-anchor', 'middle');
+period1Lbl.setAttribute('font-size', '10');
+period1Lbl.setAttribute('font-weight', '600');
+period1Lbl.setAttribute('letter-spacing', '0.08em');
+period1Lbl.setAttribute('fill', '#2c333a');
+period1Lbl.textContent = '1972 — 2016 · 45 YRS · 1 SUPER-FLOOD';
+content.appendChild(period1Lbl);
+
+const period2Lbl = document.createElementNS(SVG_NS, 'text');
+period2Lbl.setAttribute('x', xSplit + (margin.left + plotW - xSplit) / 2);
+period2Lbl.setAttribute('y', margin.top + plotH + 36);
+period2Lbl.setAttribute('text-anchor', 'middle');
+period2Lbl.setAttribute('font-size', '10');
+period2Lbl.setAttribute('font-weight', '700');
+period2Lbl.setAttribute('letter-spacing', '0.08em');
+period2Lbl.setAttribute('fill', '#b3261e');
+period2Lbl.textContent = '2017 — 2026 · 10 YRS · 4 SUPER-FLOODS';
+content.appendChild(period2Lbl);
+
+// Y axis label
+const ylab = document.createElementNS(SVG_NS, 'text');
+ylab.setAttribute('x', 14);
+ylab.setAttribute('y', margin.top + plotH / 2);
+ylab.setAttribute('transform', `rotate(-90, 14, ${margin.top + plotH / 2})`);
+ylab.setAttribute('text-anchor', 'middle');
+ylab.setAttribute('font-size', '10');
+ylab.setAttribute('letter-spacing', '0.14em');
+ylab.setAttribute('fill', '#2c333a');
+ylab.textContent = 'METRES ABOVE SEA LEVEL';
+content.appendChild(ylab);
+</script>
+
+</body>
+</html>

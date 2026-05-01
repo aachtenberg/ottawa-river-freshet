@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Exhibit D — Bryson Refurbishment Timeline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,700;9..144,900&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink: #14171a;
+  --ink-soft: #2c333a;
+  --paper: #f4ede0;
+  --paper-bright: #fbf6eb;
+  --rule: #14171a;
+  --rule-soft: rgba(20, 23, 26, 0.18);
+  --accent: #b3261e;
+  --accent-soft: rgba(179, 38, 30, 0.08);
+  --accent-strong: #8a1c14;
+  --neutral: #2c333a;
+}
+
+html, body {
+  background: #2a2520;
+  font-family: 'IBM Plex Sans', sans-serif;
+  color: var(--ink);
+}
+
+.page {
+  width: 1200px;
+  min-height: 1500px;
+  background: var(--paper);
+  position: relative;
+  padding: 64px 72px 72px;
+  margin: 0 auto;
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(0,0,0,0.04) 1px, transparent 0);
+  background-size: 14px 14px;
+}
+
+.kicker {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 14px;
+  margin-bottom: 28px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.kicker .file { font-weight: 500; }
+.kicker .meta { font-weight: 400; opacity: 0.7; }
+
+.headline {
+  font-family: 'Fraunces', serif;
+  font-weight: 900;
+  font-size: 60px;
+  line-height: 0.96;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  margin-bottom: 18px;
+}
+.headline .accent {
+  color: var(--accent);
+  font-style: italic;
+}
+
+.deck {
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: 21px;
+  line-height: 1.4;
+  color: var(--ink-soft);
+  max-width: 950px;
+  margin-bottom: 36px;
+  letter-spacing: -0.005em;
+}
+
+/* Verified statements band */
+.evidence-band {
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: 22px 0;
+  margin-bottom: 36px;
+}
+.evidence-band .header {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+.evidence-quotes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+.eq {
+  padding-left: 16px;
+  border-left: 2px solid var(--ink);
+}
+.eq .quote {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--ink);
+  margin-bottom: 10px;
+  letter-spacing: -0.005em;
+}
+.eq .source {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ink-soft);
+}
+.eq .source strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* Timeline section */
+.timeline-block {
+  margin-bottom: 36px;
+}
+.timeline-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  margin-bottom: 6px;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+.timeline-subtitle {
+  font-family: 'Fraunces', serif;
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 22px;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.timeline-wrap {
+  background: var(--paper-bright);
+  border: 1px solid var(--rule-soft);
+  padding: 26px 32px;
+}
+svg.timeline {
+  width: 100%;
+  display: block;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+/* Two parallel facts panels */
+.parallel-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+.parallel-block {
+  background: var(--paper-bright);
+  border: 1px solid var(--rule-soft);
+  padding: 22px 26px;
+}
+.parallel-block.accent {
+  border-left: 3px solid var(--accent);
+}
+.parallel-block .label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  margin-bottom: 12px;
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+.parallel-block.accent .label {
+  color: var(--accent-strong);
+}
+.parallel-block .figure {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-size: 36px;
+  line-height: 1;
+  color: var(--ink);
+  letter-spacing: -0.025em;
+  margin-bottom: 8px;
+}
+.parallel-block.accent .figure { color: var(--accent); }
+.parallel-block p {
+  font-family: 'Fraunces', serif;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--ink);
+  margin-bottom: 8px;
+  letter-spacing: -0.005em;
+}
+.parallel-block .source {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ink-soft);
+}
+
+/* Hydraulic continuity block */
+.hydraulic-block {
+  margin-bottom: 32px;
+}
+.hydraulic-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  margin-bottom: 6px;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+.hydraulic-subtitle {
+  font-family: 'Fraunces', serif;
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 18px;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.hydraulic-wrap {
+  background: var(--paper-bright);
+  border: 1px solid var(--rule-soft);
+  padding: 24px 32px;
+  margin-bottom: 14px;
+}
+svg.hydraulic {
+  width: 100%;
+  display: block;
+  font-family: 'IBM Plex Mono', monospace;
+}
+.hydraulic-takeaway {
+  font-family: 'Fraunces', serif;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--ink);
+  letter-spacing: -0.005em;
+  padding: 18px 22px;
+  background: rgba(20,23,26,0.04);
+  border-left: 3px solid var(--ink);
+}
+.hydraulic-takeaway strong {
+  font-weight: 600;
+}
+
+/* What-the-data-shows metrics grid */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.metric-tile {
+  background: var(--paper-bright);
+  border: 1px solid var(--rule-soft);
+  padding: 18px 20px;
+}
+.metric-tile.shifted {
+  border-left: 3px solid var(--accent);
+}
+.metric-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--ink-soft);
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+.metric-tile.shifted .metric-label {
+  color: var(--accent-strong);
+}
+.metric-figure {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 1;
+  color: var(--ink-soft);
+  letter-spacing: -0.025em;
+  margin-bottom: 6px;
+}
+.metric-tile.shifted .metric-figure {
+  color: var(--accent);
+}
+.metric-detail {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.metric-context {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 11px;
+  color: var(--ink-soft);
+}
+
+/* Question callout */
+.question-callout {
+  margin-bottom: 28px;
+  padding: 24px 28px;
+  background: rgba(179,38,30,0.06);
+  border-left: 3px solid var(--accent);
+}
+.question-callout .label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  margin-bottom: 10px;
+  color: var(--accent-strong);
+  font-weight: 700;
+}
+.question-callout .question {
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  margin-bottom: 8px;
+}
+.question-callout p {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+/* Footer */
+.footer {
+  border-top: 1px solid var(--rule);
+  padding-top: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 11px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.footer .left { max-width: 720px; }
+.footer .right {
+  text-align: right;
+  font-family: 'IBM Plex Mono', monospace;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 10px;
+  white-space: nowrap;
+}
+.footer strong { color: var(--ink); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+<div class="kicker">
+  <span class="file">EXHIBIT D · BRYSON REFURBISHMENT · TIMELINE EVIDENCE</span>
+  <span class="meta">Northern Reservoirs Flood Watch · Compiled April 2026</span>
+</div>
+
+<h1 class="headline">
+  The dam was refurbished.<br>
+  The river runs <span class="accent">higher.</span><br>
+  The Board hasn't said why.
+</h1>
+
+<p class="deck">
+  Bryson Generating Station was rehabilitated between 2017 and 2023. Hydro-Québec's own website acknowledges that refurbishment work "may therefore change the water head value." A November 2025 official notice confirmed the headpond was raised 30–50 cm for testing — felt as far upstream as Lac Coulonge. The same decade saw super-flood frequency increase 18-fold. The connection is unanswered.
+</p>
+
+<!-- VERIFIED EVIDENCE BAND -->
+<div class="evidence-band">
+  <div class="header">DIRECT QUOTES · VERIFIED FROM PRIMARY SOURCES</div>
+  <div class="evidence-quotes">
+    <div class="eq">
+      <div class="quote">"The head of water shown corresponds to the largest value (greatest height), if there are several values. The head varies with each generating unit. <strong style="color: var(--accent);">Refurbishment work may therefore change the water head value.</strong>"</div>
+      <div class="source"><strong>— Hydro-Québec Generation</strong> · Generating Stations page · last updated January 1, 2026 · hydroquebec.com</div>
+    </div>
+    <div class="eq">
+      <div class="quote">"Hydropower generation is more efficient with a high water level upstream of the dam and low water levels downstream."</div>
+      <div class="source"><strong>— Ottawa River Regulation Planning Board</strong> · FAQ Q12 · ottawariver.ca</div>
+    </div>
+  </div>
+</div>
+
+<!-- TIMELINE -->
+<div class="timeline-block">
+  <div class="timeline-title">Figure 4 · Bryson refurbishment timeline against Lac Coulonge super-flood frequency</div>
+  <div class="timeline-subtitle">Twelve years of refurbishment work coincide with a step-change in flood pattern.</div>
+  <div class="timeline-wrap">
+    <svg class="timeline" viewBox="0 0 1080 280" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+      <g id="timeline-content"></g>
+    </svg>
+  </div>
+</div>
+
+<!-- HYDRAULIC CONTINUITY PANEL -->
+<div class="hydraulic-block">
+  <div class="hydraulic-title">Figure 5 · The reach affected by Bryson headpond decisions</div>
+  <div class="hydraulic-subtitle">There are no flow controls between Bryson Dam and Rapides-des-Joachims. Raise the head here, you raise it everywhere above.</div>
+  <div class="hydraulic-wrap">
+    <svg class="hydraulic" viewBox="0 0 1080 320" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+      <g id="hydraulic-content"></g>
+    </svg>
+  </div>
+  <div class="hydraulic-takeaway">
+    <strong>The hydraulic point.</strong> The Ottawa River between Rapides-des-Joachims and Bryson is one continuous reach with no intermediate flow controls — André's storage capacity calculation summed it as four contiguous sections totalling 227 km². When the headpond at Bryson is held higher to increase generating efficiency, water backs up across the entire 130 km reach. There is no operational decision at Bryson that benefits hydropower revenue without raising baseline levels for every community above it. <strong>The trade-off is not "Bryson revenue vs nothing." It is "Bryson revenue vs flood buffer for ten communities across two provinces."</strong>
+  </div>
+</div>
+
+<!-- PARALLEL FACTS -->
+<div class="parallel-grid">
+  <div class="parallel-block">
+    <div class="label">The pre-refurbishment era</div>
+    <div class="figure">1972–2016</div>
+    <p>Bryson Dam ran on its original 1924–1925 turbines (with the third unit added in 1949). One super-flood at Lac Coulonge in 45 years.</p>
+    <div class="source">— ORRPB historical records, Lac Coulonge gauge</div>
+  </div>
+  <div class="parallel-block accent">
+    <div class="label">The refurbishment era</div>
+    <div class="figure">2017–2026</div>
+    <p>Refurbishment planning, then unit-by-unit replacement (2020–2023). Higher-head testing announced November 2025. Four super-floods at Lac Coulonge in 10 years.</p>
+    <div class="source">— Hydro-Québec project documentation; ORRPB historical records</div>
+  </div>
+</div>
+
+<!-- WHAT THE DATA SHOWS -->
+<div class="hydraulic-block">
+  <div class="hydraulic-title">Figure 6 · What Lac Coulonge level data shows (1972–2026)</div>
+  <div class="hydraulic-subtitle">If the headpond were raised year-round, every metric would shift. Only the freshet peak has.</div>
+  <div class="metrics-grid">
+    <div class="metric-tile shifted">
+      <div class="metric-label">Annual peak (daily max)</div>
+      <div class="metric-figure">+59 cm</div>
+      <div class="metric-detail">107.44 → 108.03 m</div>
+      <div class="metric-context">Spring freshet maximum</div>
+    </div>
+    <div class="metric-tile">
+      <div class="metric-label">Annual mean</div>
+      <div class="metric-figure">+2.6 cm</div>
+      <div class="metric-detail">106.36 → 106.39 m</div>
+      <div class="metric-context">Year-round average</div>
+    </div>
+    <div class="metric-tile">
+      <div class="metric-label">Annual minimum</div>
+      <div class="metric-figure">+1.0 cm</div>
+      <div class="metric-detail">105.82 → 105.83 m</div>
+      <div class="metric-context">Operational floor</div>
+    </div>
+    <div class="metric-tile">
+      <div class="metric-label">Off-season (Aug–Dec)</div>
+      <div class="metric-figure">≈ 0 cm</div>
+      <div class="metric-detail">Unchanged or slightly lower</div>
+      <div class="metric-context">Pure operations, no freshet</div>
+    </div>
+  </div>
+  <div class="hydraulic-takeaway">
+    <strong>The pattern.</strong> The +59 cm shift in annual peaks is concentrated in the spring freshet. Annual mean, annual minimum, and off-season monthly levels are essentially unchanged. The headpond is not being held higher year-round — the operating regime <em>during peak inflow</em> has changed. This is consistent with later drawdown, slower refill, or holding water during the freshet itself — operational decisions during spring runoff, not a permanent headpond raise. <strong>Pre-2017 baseline:</strong> 1972–2016, N=45. <strong>Post-2017:</strong> 2017–2026, N=10. Source: ORRPB monthly summaries, Lac Coulonge gauge.
+  </div>
+</div>
+
+<!-- THE QUESTION -->
+<div class="question-callout">
+  <div class="label">The unanswered question</div>
+  <div class="question">What changed about the freshet operating regime at Bryson Dam after 2017? Was the impact on Lac Coulonge flood buffer evaluated before the change was made?</div>
+  <p>The November 2025 MRC Pontiac notice — titled "notice of temporary water-level increase, Bryson Dam" — confirms 30–50 cm higher-head operations have been <em>tested</em>. Hydro-Québec acknowledges that refurbishment changes water head values. ORRPB acknowledges that higher headponds are more efficient for hydropower. But neither agency has publicly disclosed how Bryson's freshet-period operating decisions changed during or after the refurbishment, or what flood-buffer analysis informed those changes.</p>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="left">
+    <strong>Sources verified.</strong> Hydro-Québec generating stations page (hydroquebec.com/generation/generating-stations.html, last updated 2026-01-01); Bryson refurbishment project page (hydroquebec.com/projects/project-bryson/); MRC Pontiac notice of November 19, 2025 (mrcpontiac.qc.ca/en/notice-of-temporary-water-level-increase-bryson-dam-hydro-quebec/); ORRPB FAQ Q5 Part D and Q12 (ottawariver.ca/about-us/faq/); Lac Coulonge monthly + annual data 1972–2026 from ORRPB historical records, compiled in <code>data/lac-coulonge-monthly-1972-2026.csv</code> and analysed by <code>ingesters/climate-history/lac_coulonge_peak_stats.py</code>.
+    <strong>What this is not.</strong> An accusation. The available facts are documented but incomplete. The community is asking for the missing pieces.
+  </div>
+  <div class="right">
+    freshet.xgrunt.com<br>
+    <span style="opacity:0.5">v1 · APR 2026</span>
+  </div>
+</div>
+
+</div>
+
+<!-- TIMELINE GENERATION SCRIPT -->
+<script>
+const SVG_NS = 'http://www.w3.org/2000/svg';
+const svg = document.querySelector('svg.timeline');
+const content = svg.querySelector('#timeline-content');
+
+const W = 1080, H = 280;
+const margin = { top: 48, right: 24, bottom: 24, left: 24 };
+const plotW = W - margin.left - margin.right;
+const plotH = H - margin.top - margin.bottom;
+
+// Year range: 2010-2026
+const yearStart = 2010, yearEnd = 2026;
+const x = year => margin.left + ((year - yearStart) / (yearEnd - yearStart)) * plotW;
+
+// === ROW 1 (TOP): SUPER-FLOODS as red bars ===
+// Place super-flood bars proudly at the top. Bar height proportional to peak level above 108.5 baseline.
+const sfBaselineY = margin.top + 90; // bottom of super-flood bars
+const superFloods = [
+  { year: 2017, level: 108.52 },
+  { year: 2019, level: 109.17 },
+  { year: 2023, level: 108.77 },
+  { year: 2026, level: 108.63 }
+];
+
+// Scale: max bar height for level 109.17 (2019)
+const maxSfHeight = 80;
+const minSfHeight = 12;
+const sfRange = 109.17 - 108.50;
+
+// Period 1 super-flood (1979) — only one but include for context if it falls in range; 1979 is outside our 2010 start
+// So only show post-2017 super-floods
+
+// Super-flood bars
+const sfBarW = 32;
+superFloods.forEach(sf => {
+  const sfx = x(sf.year);
+  const heightProp = (sf.level - 108.50) / sfRange;
+  const barHeight = minSfHeight + heightProp * (maxSfHeight - minSfHeight);
+  
+  // Bar
+  const bar = document.createElementNS(SVG_NS, 'rect');
+  bar.setAttribute('x', sfx - sfBarW / 2);
+  bar.setAttribute('y', sfBaselineY - barHeight);
+  bar.setAttribute('width', sfBarW);
+  bar.setAttribute('height', barHeight);
+  bar.setAttribute('fill', '#b3261e');
+  bar.setAttribute('rx', '2');
+  content.appendChild(bar);
+  
+  // Year label - inside the bar if tall enough, else above the level label
+  if (barHeight >= 32) {
+    const yrLbl = document.createElementNS(SVG_NS, 'text');
+    yrLbl.setAttribute('x', sfx);
+    yrLbl.setAttribute('y', sfBaselineY - barHeight + 16);
+    yrLbl.setAttribute('text-anchor', 'middle');
+    yrLbl.setAttribute('font-size', '11');
+    yrLbl.setAttribute('font-weight', '700');
+    yrLbl.setAttribute('fill', 'white');
+    yrLbl.setAttribute('font-family', "'IBM Plex Mono', monospace");
+    yrLbl.textContent = sf.year;
+    content.appendChild(yrLbl);
+    
+    // Level label above bar
+    const lvlLbl = document.createElementNS(SVG_NS, 'text');
+    lvlLbl.setAttribute('x', sfx);
+    lvlLbl.setAttribute('y', sfBaselineY - barHeight - 6);
+    lvlLbl.setAttribute('text-anchor', 'middle');
+    lvlLbl.setAttribute('font-size', '11');
+    lvlLbl.setAttribute('font-weight', '700');
+    lvlLbl.setAttribute('fill', '#b3261e');
+    lvlLbl.setAttribute('font-family', "'Fraunces', serif");
+    lvlLbl.textContent = sf.level.toFixed(2) + ' m';
+    content.appendChild(lvlLbl);
+  } else {
+    // Short bar - stack year + level above it
+    const yrLbl = document.createElementNS(SVG_NS, 'text');
+    yrLbl.setAttribute('x', sfx);
+    yrLbl.setAttribute('y', sfBaselineY - barHeight - 22);
+    yrLbl.setAttribute('text-anchor', 'middle');
+    yrLbl.setAttribute('font-size', '12');
+    yrLbl.setAttribute('font-weight', '700');
+    yrLbl.setAttribute('fill', '#b3261e');
+    yrLbl.setAttribute('font-family', "'Fraunces', serif");
+    yrLbl.textContent = sf.year;
+    content.appendChild(yrLbl);
+    
+    const lvlLbl = document.createElementNS(SVG_NS, 'text');
+    lvlLbl.setAttribute('x', sfx);
+    lvlLbl.setAttribute('y', sfBaselineY - barHeight - 8);
+    lvlLbl.setAttribute('text-anchor', 'middle');
+    lvlLbl.setAttribute('font-size', '10');
+    lvlLbl.setAttribute('font-weight', '500');
+    lvlLbl.setAttribute('fill', '#2c333a');
+    lvlLbl.setAttribute('font-family', "'IBM Plex Mono', monospace");
+    lvlLbl.textContent = sf.level.toFixed(2) + ' m';
+    content.appendChild(lvlLbl);
+  }
+});
+
+// Super-flood category label (left side, vertical alignment with bars)
+const sfCatLbl = document.createElementNS(SVG_NS, 'text');
+sfCatLbl.setAttribute('x', margin.left);
+sfCatLbl.setAttribute('y', sfBaselineY - maxSfHeight + 4);
+sfCatLbl.setAttribute('text-anchor', 'start');
+sfCatLbl.setAttribute('font-size', '10');
+sfCatLbl.setAttribute('font-weight', '700');
+sfCatLbl.setAttribute('fill', '#b3261e');
+sfCatLbl.setAttribute('letter-spacing', '0.14em');
+sfCatLbl.textContent = 'SUPER-FLOODS AT LAC COULONGE';
+content.appendChild(sfCatLbl);
+
+const sfCatLbl2 = document.createElementNS(SVG_NS, 'text');
+sfCatLbl2.setAttribute('x', margin.left);
+sfCatLbl2.setAttribute('y', sfBaselineY - maxSfHeight + 18);
+sfCatLbl2.setAttribute('text-anchor', 'start');
+sfCatLbl2.setAttribute('font-size', '10');
+sfCatLbl2.setAttribute('font-weight', '500');
+sfCatLbl2.setAttribute('fill', '#2c333a');
+sfCatLbl2.textContent = '(level above 108.5 m threshold)';
+content.appendChild(sfCatLbl2);
+
+// === ROW 2 (MIDDLE): TIME AXIS ===
+const axisY = sfBaselineY + 22;
+const axis = document.createElementNS(SVG_NS, 'line');
+axis.setAttribute('x1', margin.left);
+axis.setAttribute('x2', margin.left + plotW);
+axis.setAttribute('y1', axisY);
+axis.setAttribute('y2', axisY);
+axis.setAttribute('stroke', '#14171a');
+axis.setAttribute('stroke-width', '1.5');
+content.appendChild(axis);
+
+// Tick marks for every year
+for (let yr = yearStart; yr <= yearEnd; yr++) {
+  const tick = document.createElementNS(SVG_NS, 'line');
+  tick.setAttribute('x1', x(yr));
+  tick.setAttribute('x2', x(yr));
+  tick.setAttribute('y1', axisY - 3);
+  tick.setAttribute('y2', axisY + 3);
+  tick.setAttribute('stroke', '#14171a');
+  tick.setAttribute('stroke-width', '1');
+  content.appendChild(tick);
+}
+
+// Year labels (every 4 years for cleanliness; skip super-flood years to avoid collision)
+[2010, 2014, 2020, 2026].forEach(yr => {
+  const lbl = document.createElementNS(SVG_NS, 'text');
+  lbl.setAttribute('x', x(yr));
+  lbl.setAttribute('y', axisY + 16);
+  lbl.setAttribute('text-anchor', 'middle');
+  lbl.setAttribute('font-size', '11');
+  lbl.setAttribute('font-weight', '600');
+  lbl.setAttribute('fill', '#2c333a');
+  lbl.textContent = yr;
+  content.appendChild(lbl);
+});
+
+// === ROW 3 (BOTTOM): REFURBISHMENT BAND ===
+const refBandTop = axisY + 30;
+const refBandHeight = 38;
+const refStart = x(2017);
+const refEnd = x(2023);
+
+// The band itself
+const refRect = document.createElementNS(SVG_NS, 'rect');
+refRect.setAttribute('x', refStart);
+refRect.setAttribute('y', refBandTop);
+refRect.setAttribute('width', refEnd - refStart);
+refRect.setAttribute('height', refBandHeight);
+refRect.setAttribute('fill', '#14171a');
+refRect.setAttribute('rx', '3');
+content.appendChild(refRect);
+
+// Phase markers within the band
+const phases = [
+  { year: 2020.8, label: 'Unit 1' },
+  { year: 2022, label: 'Unit 2' },
+  { year: 2023, label: 'Unit 3' }
+];
+phases.forEach(ph => {
+  const px = x(ph.year);
+  // White vertical tick across the band
+  const tk = document.createElementNS(SVG_NS, 'line');
+  tk.setAttribute('x1', px);
+  tk.setAttribute('x2', px);
+  tk.setAttribute('y1', refBandTop + 4);
+  tk.setAttribute('y2', refBandTop + refBandHeight - 4);
+  tk.setAttribute('stroke', 'white');
+  tk.setAttribute('stroke-width', '1');
+  tk.setAttribute('opacity', '0.4');
+  content.appendChild(tk);
+});
+
+// Refurbishment band main label
+const refLbl = document.createElementNS(SVG_NS, 'text');
+refLbl.setAttribute('x', (refStart + refEnd) / 2);
+refLbl.setAttribute('y', refBandTop + refBandHeight / 2 - 2);
+refLbl.setAttribute('text-anchor', 'middle');
+refLbl.setAttribute('font-size', '12');
+refLbl.setAttribute('font-weight', '700');
+refLbl.setAttribute('fill', 'white');
+refLbl.setAttribute('letter-spacing', '0.1em');
+refLbl.textContent = 'BRYSON DAM REFURBISHMENT';
+content.appendChild(refLbl);
+
+// Sub label with date range
+const refLbl2 = document.createElementNS(SVG_NS, 'text');
+refLbl2.setAttribute('x', (refStart + refEnd) / 2);
+refLbl2.setAttribute('y', refBandTop + refBandHeight / 2 + 12);
+refLbl2.setAttribute('text-anchor', 'middle');
+refLbl2.setAttribute('font-size', '10');
+refLbl2.setAttribute('font-weight', '500');
+refLbl2.setAttribute('fill', 'white');
+refLbl2.setAttribute('opacity', '0.75');
+refLbl2.setAttribute('font-family', "'IBM Plex Mono', monospace");
+refLbl2.textContent = '2017 — 2023 · planning, then unit 1, unit 2, unit 3';
+content.appendChild(refLbl2);
+
+// === Nov 2025 testing event - red bar extending after refurbishment ===
+const testStart = x(2025.6);
+const testEnd = x(2026);
+const testRect = document.createElementNS(SVG_NS, 'rect');
+testRect.setAttribute('x', testStart);
+testRect.setAttribute('y', refBandTop);
+testRect.setAttribute('width', testEnd - testStart);
+testRect.setAttribute('height', refBandHeight);
+testRect.setAttribute('fill', '#b3261e');
+testRect.setAttribute('rx', '3');
+content.appendChild(testRect);
+
+// Test label - positioned above the band but pulled left so it doesn't clip the right edge
+const testLbl = document.createElementNS(SVG_NS, 'text');
+testLbl.setAttribute('x', testEnd);
+testLbl.setAttribute('y', refBandTop - 6);
+testLbl.setAttribute('text-anchor', 'end');
+testLbl.setAttribute('font-size', '10');
+testLbl.setAttribute('font-weight', '700');
+testLbl.setAttribute('fill', '#b3261e');
+testLbl.setAttribute('letter-spacing', '0.05em');
+testLbl.textContent = 'NOV 2025: 30-50 cm headpond rise tested ↓';
+content.appendChild(testLbl);
+
+// === LEFT SIDE LABEL for the band ===
+const refCatLbl = document.createElementNS(SVG_NS, 'text');
+refCatLbl.setAttribute('x', margin.left);
+refCatLbl.setAttribute('y', refBandTop + refBandHeight / 2 - 2);
+refCatLbl.setAttribute('text-anchor', 'start');
+refCatLbl.setAttribute('font-size', '10');
+refCatLbl.setAttribute('font-weight', '700');
+refCatLbl.setAttribute('fill', '#2c333a');
+refCatLbl.setAttribute('letter-spacing', '0.14em');
+refCatLbl.textContent = 'OPERATOR ACTIVITY';
+content.appendChild(refCatLbl);
+
+const refCatLbl2 = document.createElementNS(SVG_NS, 'text');
+refCatLbl2.setAttribute('x', margin.left);
+refCatLbl2.setAttribute('y', refBandTop + refBandHeight / 2 + 12);
+refCatLbl2.setAttribute('text-anchor', 'start');
+refCatLbl2.setAttribute('font-size', '10');
+refCatLbl2.setAttribute('font-weight', '500');
+refCatLbl2.setAttribute('fill', '#2c333a');
+refCatLbl2.textContent = 'AT BRYSON DAM';
+content.appendChild(refCatLbl2);
+
+// === DROPDOWN LINES connecting super-flood years to time axis ===
+// These tie the upper bars to specific years on the axis
+superFloods.forEach(sf => {
+  const sfx = x(sf.year);
+  const dl = document.createElementNS(SVG_NS, 'line');
+  dl.setAttribute('x1', sfx);
+  dl.setAttribute('x2', sfx);
+  dl.setAttribute('y1', sfBaselineY);
+  dl.setAttribute('y2', axisY);
+  dl.setAttribute('stroke', '#b3261e');
+  dl.setAttribute('stroke-width', '1');
+  dl.setAttribute('stroke-dasharray', '2 2');
+  dl.setAttribute('opacity', '0.5');
+  content.appendChild(dl);
+});
+</script>
+
+<!-- HYDRAULIC SCHEMATIC SCRIPT -->
+<script>
+(function() {
+  const SVG_NS = 'http://www.w3.org/2000/svg';
+  const svg = document.querySelector('svg.hydraulic');
+  const content = svg.querySelector('#hydraulic-content');
+  
+  const W = 1080, H = 320;
+  
+  // Layout: river runs across, with Rapides-des-Joachims at LEFT and Bryson Dam at RIGHT
+  // (matches geographic reality - water flows left to right, downstream)
+  const margin = { top: 50, right: 165, bottom: 60, left: 80 };
+  const plotW = W - margin.left - margin.right;
+  const plotH = H - margin.top - margin.bottom;
+  
+  // Communities along the 130 km reach, ordered upstream (left) to downstream (right)
+  // Approximate relative positions along the reach
+  const communities = [
+    { pos: 0.00, name: 'Rapides-des-\nJoachims', sublabel: '(Rolphton)', isControl: true, side: 'top' },
+    { pos: 0.10, name: 'Deux-Rivières', side: 'bottom' },
+    { pos: 0.22, name: 'Petawawa', side: 'bottom' },
+    { pos: 0.32, name: 'Pembroke', side: 'top' },
+    { pos: 0.43, name: 'Allumette\nIsland', side: 'bottom' },
+    { pos: 0.54, name: 'Chapeau', side: 'top' },
+    { pos: 0.64, name: 'Sheenboro', side: 'bottom' },
+    { pos: 0.74, name: 'Waltham', side: 'top' },
+    { pos: 0.84, name: 'Fort-Coulonge\n/ Mansfield', side: 'bottom' },
+    { pos: 0.93, name: 'Bryson', side: 'top' },
+    { pos: 1.00, name: 'Bryson Dam', sublabel: '(control point)', isControl: true, side: 'bottom' }
+  ];
+  
+  const x = pos => margin.left + pos * plotW;
+  
+  // === Scale label at top: "130 km reach" ===
+  const scaleLine = document.createElementNS(SVG_NS, 'line');
+  scaleLine.setAttribute('x1', margin.left);
+  scaleLine.setAttribute('x2', margin.left + plotW);
+  scaleLine.setAttribute('y1', 18);
+  scaleLine.setAttribute('y2', 18);
+  scaleLine.setAttribute('stroke', '#2c333a');
+  scaleLine.setAttribute('stroke-width', '1');
+  content.appendChild(scaleLine);
+  
+  // Scale end caps
+  [margin.left, margin.left + plotW].forEach(xx => {
+    const cap = document.createElementNS(SVG_NS, 'line');
+    cap.setAttribute('x1', xx);
+    cap.setAttribute('x2', xx);
+    cap.setAttribute('y1', 14);
+    cap.setAttribute('y2', 22);
+    cap.setAttribute('stroke', '#2c333a');
+    cap.setAttribute('stroke-width', '1');
+    content.appendChild(cap);
+  });
+  
+  // Scale label
+  const scaleLbl = document.createElementNS(SVG_NS, 'text');
+  scaleLbl.setAttribute('x', margin.left + plotW / 2);
+  scaleLbl.setAttribute('y', 12);
+  scaleLbl.setAttribute('text-anchor', 'middle');
+  scaleLbl.setAttribute('font-size', '11');
+  scaleLbl.setAttribute('font-weight', '700');
+  scaleLbl.setAttribute('fill', '#2c333a');
+  scaleLbl.setAttribute('letter-spacing', '0.12em');
+  scaleLbl.textContent = '130 KM REACH · NO INTERMEDIATE FLOW CONTROLS';
+  content.appendChild(scaleLbl);
+  
+  // === Water levels ===
+  // "Raised headpond" level - upper red surface
+  const raisedY = margin.top + 30;
+  // "Lower headpond" level (flood-mitigation drawdown) - lower neutral surface
+  const loweredY = margin.top + 70;
+  // River bottom
+  const bottomY = margin.top + 130;
+  
+  // Raised headpond water - red translucent
+  const raisedWater = document.createElementNS(SVG_NS, 'path');
+  // From left (slightly tapered up because it's slightly natural at the upstream end)
+  // to right (full headpond level at Bryson)
+  const raisedPath = `M ${margin.left} ${raisedY + 4} 
+                      L ${margin.left + plotW} ${raisedY}
+                      L ${margin.left + plotW} ${bottomY}
+                      L ${margin.left} ${bottomY} Z`;
+  raisedWater.setAttribute('d', raisedPath);
+  raisedWater.setAttribute('fill', 'rgba(179,38,30,0.22)');
+  raisedWater.setAttribute('stroke', 'none');
+  content.appendChild(raisedWater);
+  
+  // Top edge of raised water - solid red line
+  const raisedTop = document.createElementNS(SVG_NS, 'line');
+  raisedTop.setAttribute('x1', margin.left);
+  raisedTop.setAttribute('y1', raisedY + 4);
+  raisedTop.setAttribute('x2', margin.left + plotW);
+  raisedTop.setAttribute('y2', raisedY);
+  raisedTop.setAttribute('stroke', '#b3261e');
+  raisedTop.setAttribute('stroke-width', '2');
+  content.appendChild(raisedTop);
+  
+  // Lower water (flood-mitigation drawdown) - darker fill below
+  const loweredWater = document.createElementNS(SVG_NS, 'path');
+  const loweredPath = `M ${margin.left} ${loweredY + 8} 
+                       L ${margin.left + plotW} ${loweredY}
+                       L ${margin.left + plotW} ${bottomY}
+                       L ${margin.left} ${bottomY} Z`;
+  loweredWater.setAttribute('d', loweredPath);
+  loweredWater.setAttribute('fill', 'rgba(74,107,124,0.45)');
+  loweredWater.setAttribute('stroke', 'none');
+  content.appendChild(loweredWater);
+  
+  // Top edge of lower water
+  const loweredTop = document.createElementNS(SVG_NS, 'line');
+  loweredTop.setAttribute('x1', margin.left);
+  loweredTop.setAttribute('y1', loweredY + 8);
+  loweredTop.setAttribute('x2', margin.left + plotW);
+  loweredTop.setAttribute('y2', loweredY);
+  loweredTop.setAttribute('stroke', '#4a6b7c');
+  loweredTop.setAttribute('stroke-width', '1.5');
+  loweredTop.setAttribute('stroke-dasharray', '4 3');
+  content.appendChild(loweredTop);
+  
+  // === Annotations: water level labels on right ===
+  // Raised headpond label
+  const raisedLbl = document.createElementNS(SVG_NS, 'text');
+  raisedLbl.setAttribute('x', margin.left + plotW + 6);
+  raisedLbl.setAttribute('y', raisedY + 1);
+  raisedLbl.setAttribute('text-anchor', 'start');
+  raisedLbl.setAttribute('font-size', '10');
+  raisedLbl.setAttribute('font-weight', '700');
+  raisedLbl.setAttribute('fill', '#b3261e');
+  raisedLbl.textContent = 'HEADPOND RAISED';
+  content.appendChild(raisedLbl);
+  
+  const raisedLbl2 = document.createElementNS(SVG_NS, 'text');
+  raisedLbl2.setAttribute('x', margin.left + plotW + 6);
+  raisedLbl2.setAttribute('y', raisedY + 13);
+  raisedLbl2.setAttribute('text-anchor', 'start');
+  raisedLbl2.setAttribute('font-size', '9');
+  raisedLbl2.setAttribute('font-weight', '500');
+  raisedLbl2.setAttribute('fill', '#8a1c14');
+  raisedLbl2.textContent = '(generation mode)';
+  content.appendChild(raisedLbl2);
+  
+  // Lower headpond label
+  const loweredLbl = document.createElementNS(SVG_NS, 'text');
+  loweredLbl.setAttribute('x', margin.left + plotW + 6);
+  loweredLbl.setAttribute('y', loweredY + 1);
+  loweredLbl.setAttribute('text-anchor', 'start');
+  loweredLbl.setAttribute('font-size', '10');
+  loweredLbl.setAttribute('font-weight', '700');
+  loweredLbl.setAttribute('fill', '#2c333a');
+  loweredLbl.textContent = 'HEADPOND LOWERED';
+  content.appendChild(loweredLbl);
+  
+  const loweredLbl2 = document.createElementNS(SVG_NS, 'text');
+  loweredLbl2.setAttribute('x', margin.left + plotW + 6);
+  loweredLbl2.setAttribute('y', loweredY + 13);
+  loweredLbl2.setAttribute('text-anchor', 'start');
+  loweredLbl2.setAttribute('font-size', '9');
+  loweredLbl2.setAttribute('font-weight', '500');
+  loweredLbl2.setAttribute('fill', '#2c333a');
+  loweredLbl2.textContent = '(flood-mitigation mode)';
+  content.appendChild(loweredLbl2);
+  
+  // === Difference indicator on left ===
+  // Vertical double-headed arrow showing the difference at the upstream end
+  const diffX = margin.left + 8;
+  const diffArrow = document.createElementNS(SVG_NS, 'line');
+  diffArrow.setAttribute('x1', diffX);
+  diffArrow.setAttribute('x2', diffX);
+  diffArrow.setAttribute('y1', raisedY + 4);
+  diffArrow.setAttribute('y2', loweredY + 8);
+  diffArrow.setAttribute('stroke', '#14171a');
+  diffArrow.setAttribute('stroke-width', '1.5');
+  content.appendChild(diffArrow);
+  
+  // Arrow caps
+  [raisedY + 4, loweredY + 8].forEach(yy => {
+    const cap = document.createElementNS(SVG_NS, 'line');
+    cap.setAttribute('x1', diffX - 4);
+    cap.setAttribute('x2', diffX + 4);
+    cap.setAttribute('y1', yy);
+    cap.setAttribute('y2', yy);
+    cap.setAttribute('stroke', '#14171a');
+    cap.setAttribute('stroke-width', '1.5');
+    content.appendChild(cap);
+  });
+  
+  const diffLbl = document.createElementNS(SVG_NS, 'text');
+  diffLbl.setAttribute('x', diffX + 8);
+  diffLbl.setAttribute('y', (raisedY + 4 + loweredY + 8) / 2 + 3);
+  diffLbl.setAttribute('text-anchor', 'start');
+  diffLbl.setAttribute('font-size', '9');
+  diffLbl.setAttribute('font-weight', '600');
+  diffLbl.setAttribute('fill', '#14171a');
+  diffLbl.textContent = 'baseline';
+  content.appendChild(diffLbl);
+  
+  const diffLbl2 = document.createElementNS(SVG_NS, 'text');
+  diffLbl2.setAttribute('x', diffX + 8);
+  diffLbl2.setAttribute('y', (raisedY + 4 + loweredY + 8) / 2 + 14);
+  diffLbl2.setAttribute('text-anchor', 'start');
+  diffLbl2.setAttribute('font-size', '9');
+  diffLbl2.setAttribute('font-weight', '600');
+  diffLbl2.setAttribute('fill', '#14171a');
+  diffLbl2.textContent = 'shift';
+  content.appendChild(diffLbl2);
+  
+  // === Direction of flow arrow ===
+  const arrowY = bottomY + 18;
+  const arrowStart = margin.left + 30;
+  const arrowEnd = margin.left + plotW - 30;
+  
+  const flowArrow = document.createElementNS(SVG_NS, 'line');
+  flowArrow.setAttribute('x1', arrowStart);
+  flowArrow.setAttribute('x2', arrowEnd);
+  flowArrow.setAttribute('y1', arrowY);
+  flowArrow.setAttribute('y2', arrowY);
+  flowArrow.setAttribute('stroke', '#2c333a');
+  flowArrow.setAttribute('stroke-width', '1');
+  flowArrow.setAttribute('stroke-dasharray', '3 3');
+  content.appendChild(flowArrow);
+  
+  // Arrow head pointing right (downstream)
+  const arrowHead = document.createElementNS(SVG_NS, 'polygon');
+  arrowHead.setAttribute('points', `${arrowEnd},${arrowY} ${arrowEnd - 7},${arrowY - 4} ${arrowEnd - 7},${arrowY + 4}`);
+  arrowHead.setAttribute('fill', '#2c333a');
+  content.appendChild(arrowHead);
+  
+  // Direction label
+  const dirLbl = document.createElementNS(SVG_NS, 'text');
+  dirLbl.setAttribute('x', margin.left + plotW / 2);
+  dirLbl.setAttribute('y', arrowY - 6);
+  dirLbl.setAttribute('text-anchor', 'middle');
+  dirLbl.setAttribute('font-size', '9');
+  dirLbl.setAttribute('font-weight', '500');
+  dirLbl.setAttribute('fill', '#2c333a');
+  dirLbl.setAttribute('font-style', 'italic');
+  dirLbl.textContent = 'direction of flow';
+  content.appendChild(dirLbl);
+  
+  // === Community markers ===
+  communities.forEach(c => {
+    const cx = x(c.pos);
+    
+    // Position labels alternating top/bottom for clarity
+    const isTop = c.side === 'top';
+    const labelBaseY = isTop ? margin.top - 4 : bottomY + 36;
+    
+    // For control points (Rapides-des-Joachims and Bryson Dam), use red squares
+    // For communities, use small dots
+    if (c.isControl) {
+      const sq = document.createElementNS(SVG_NS, 'rect');
+      sq.setAttribute('x', cx - 4);
+      sq.setAttribute('y', isTop ? raisedY - 6 : bottomY - 4);
+      sq.setAttribute('width', 8);
+      sq.setAttribute('height', 8);
+      sq.setAttribute('fill', '#14171a');
+      content.appendChild(sq);
+      
+      // Vertical tick connecting to label
+      const tk = document.createElementNS(SVG_NS, 'line');
+      tk.setAttribute('x1', cx);
+      tk.setAttribute('x2', cx);
+      tk.setAttribute('y1', isTop ? raisedY - 6 : bottomY + 4);
+      tk.setAttribute('y2', isTop ? labelBaseY + 8 : labelBaseY - 4);
+      tk.setAttribute('stroke', '#14171a');
+      tk.setAttribute('stroke-width', '1');
+      content.appendChild(tk);
+    } else {
+      const dot = document.createElementNS(SVG_NS, 'circle');
+      dot.setAttribute('cx', cx);
+      dot.setAttribute('cy', isTop ? raisedY - 2 : bottomY + 2);
+      dot.setAttribute('r', 2.5);
+      dot.setAttribute('fill', '#2c333a');
+      content.appendChild(dot);
+      
+      const tk = document.createElementNS(SVG_NS, 'line');
+      tk.setAttribute('x1', cx);
+      tk.setAttribute('x2', cx);
+      tk.setAttribute('y1', isTop ? raisedY - 2 : bottomY + 2);
+      tk.setAttribute('y2', isTop ? labelBaseY + 6 : labelBaseY - 8);
+      tk.setAttribute('stroke', '#2c333a');
+      tk.setAttribute('stroke-width', '0.8');
+      tk.setAttribute('opacity', '0.5');
+      content.appendChild(tk);
+    }
+    
+    // Label text
+    const nameLines = c.name.split('\n');
+    nameLines.forEach((line, idx) => {
+      const lbl = document.createElementNS(SVG_NS, 'text');
+      // For the rightmost control point, anchor end so it doesn't clip
+      const isRightEdge = c.pos >= 0.99;
+      const isLeftEdge = c.pos <= 0.01;
+      lbl.setAttribute('x', cx);
+      const baseLineY = isTop ? labelBaseY + idx * 11 : labelBaseY + idx * 11;
+      lbl.setAttribute('y', baseLineY);
+      lbl.setAttribute('text-anchor', 'middle');
+      lbl.setAttribute('font-size', c.isControl ? '11' : '10');
+      lbl.setAttribute('font-weight', c.isControl ? '700' : '500');
+      lbl.setAttribute('fill', '#14171a');
+      lbl.setAttribute('font-family', c.isControl ? "'Fraunces', serif" : "'IBM Plex Sans', sans-serif");
+      lbl.textContent = line;
+      content.appendChild(lbl);
+    });
+    
+    // Sublabel for control points
+    if (c.sublabel) {
+      const sub = document.createElementNS(SVG_NS, 'text');
+      sub.setAttribute('x', cx);
+      sub.setAttribute('y', isTop ? labelBaseY + nameLines.length * 11 : labelBaseY + nameLines.length * 11);
+      sub.setAttribute('text-anchor', 'middle');
+      sub.setAttribute('font-size', '9');
+      sub.setAttribute('font-weight', '500');
+      sub.setAttribute('fill', '#2c333a');
+      sub.setAttribute('font-style', 'italic');
+      sub.textContent = c.sublabel;
+      content.appendChild(sub);
+    }
+  });
+  
+  // === Affected communities label ===
+  const affectedLbl = document.createElementNS(SVG_NS, 'text');
+  affectedLbl.setAttribute('x', margin.left + plotW / 2);
+  affectedLbl.setAttribute('y', bottomY + 70);
+  affectedLbl.setAttribute('text-anchor', 'middle');
+  affectedLbl.setAttribute('font-size', '11');
+  affectedLbl.setAttribute('font-weight', '700');
+  affectedLbl.setAttribute('fill', '#b3261e');
+  affectedLbl.setAttribute('letter-spacing', '0.14em');
+  affectedLbl.textContent = 'TEN COMMUNITIES · TWO PROVINCES · NONE CONSULTED';
+  content.appendChild(affectedLbl);
+})();
+</script>
+
+
+</body>
+</html>

@@ -1,13 +1,53 @@
 # Reference data
 
-Archival CSVs used by the dashboard for historical context. None of these
-are queried at runtime by the ingesters — they're either bundled into the
-dashboard's JS constants or kept here as the canonical source for those
-constants.
+Archival CSVs used by the dashboard for historical context, plus the
+primary-source climate and hydrometric series that back the freshet
+climate-regression analysis. The dashboard datasets are not queried at
+runtime by the ingesters — they're either bundled into the dashboard's
+JS constants or kept here as the canonical source for those constants.
+The analysis datasets are consumed by ad-hoc analysis scripts only.
 
-## Files
+## Datasets for analysis (primary sources)
 
-### `lac-coulonge-monthly-1972-2025.csv`
+### `eccc-climate/`
+
+Daily precipitation, temperature, and snow records from 12 ECCC stations
+covering the watersheds that drain to Lac Coulonge (1972–2026). Replaces
+the meteostat-based pull from the earlier web-client analysis. See
+[`eccc-climate/README.md`](eccc-climate/README.md) for stations, coverage
+caveats, and re-run instructions.
+
+### `wsc-hydrometric/`
+
+Daily flow and water-level records from 7 WSC HYDAT stations on the
+Ottawa River basin (Britannia, Coulonge tributary, Bryson dam, etc.).
+See [`wsc-hydrometric/README.md`](wsc-hydrometric/README.md) — note the
+critical post-1994 coverage gap for Lac Coulonge area flow data, which
+constrains the rating-curve verification question.
+
+## Dashboard reference files
+
+### `orrpb-historical-summaries/`
+
+Scraped archival CSVs from the ORRPB historical-summary station pages. Includes
+11 per-station CSVs plus a `manifest.csv` with source URLs, units, and year
+coverage.
+
+Schema for each station CSV:
+
+| Column | Unit | Notes |
+|---|---|---|
+| `year` | — | Calendar year |
+| `jan`–`dec` | page-dependent | Monthly means from the published ORRPB table |
+| `annual_mean` | page-dependent | Annual mean |
+| `daily_max` | page-dependent | Annual maximum daily value |
+| `daily_min` | page-dependent | Annual minimum daily value |
+
+Measure types currently present:
+- `water_level` in `metres`
+- `discharge` in `cubic_metres_per_second` (Carillon)
+
+### `lac-coulonge-monthly-1972-2026.csv`
 
 ORRPB monthly mean levels for **Lake Coulonge at Fort-Coulonge**, 54 years
 (1972–2025). Schema:

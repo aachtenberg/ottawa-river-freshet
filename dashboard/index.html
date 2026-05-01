@@ -598,7 +598,7 @@ const STATIONS = {
 
 // Property thresholds. `histCount` = number of years out of HISTORICAL_RECORD_YEARS
 // where the annual daily max equalled or exceeded `level`. Sourced from
-// data/lac-coulonge-monthly-1972-2025.csv.
+// data/lac-coulonge-monthly-1972-2026.csv.
 const PROPERTY_THRESHOLDS = [
   { level: 108.30, desc: 'Water approaching property (2019: Apr 25)',     histCount: 6 },
   { level: 108.48, desc: 'Water in backyard, driveway, big tree (2019: Apr 26)', histCount: 4 },
@@ -607,7 +607,7 @@ const PROPERTY_THRESHOLDS = [
   { level: 109.01, desc: 'WATER INSIDE cottage, garage, RV (2019: Apr 28)', histCount: 1 },
   { level: 109.17, desc: '2019 record — all-time high',                   histCount: 1 }
 ];
-const HISTORICAL_RECORD_YEARS = 54; // 1972-2025
+const HISTORICAL_RECORD_YEARS = 55; // 1972-2026
 
 // All 54 annual daily-maximum levels, sorted descending. Used to rank the
 // current season's peak against history.
@@ -1477,7 +1477,7 @@ function renderProperty(lcLatest, trendPerHour) {
       else if (trendPerHour != null && Math.abs(trendPerHour) <= 0.00005) etaHtml = `<span class="eta">→ stable</span>`;
     }
     const rate = ((t.histCount / HISTORICAL_RECORD_YEARS) * 100).toFixed(t.histCount < 4 ? 1 : 0);
-    const baseRate = `<span class="base-rate" title="Annual peak ≥ this level in ${t.histCount} of ${HISTORICAL_RECORD_YEARS} years on record (1972–2025)">${t.histCount}/${HISTORICAL_RECORD_YEARS} yrs · ${rate}%</span>`;
+    const baseRate = `<span class="base-rate" title="Annual peak ≥ this level in ${t.histCount} of ${HISTORICAL_RECORD_YEARS} years on record (1972–2026)">${t.histCount}/${HISTORICAL_RECORD_YEARS} yrs · ${rate}%</span>`;
     return `<div class="thresh-row"><span class="level">${t.level.toFixed(2)} m</span><span class="desc">${t.desc} ${baseRate}</span><span class="status ${cls}">${status}${etaHtml}</span></div>`;
   }).join('');
 }
@@ -1955,7 +1955,7 @@ function buildStationCard(id) {
     const peakLevel = (seasonPk && seasonPk.valeur > latest.valeur) ? seasonPk.valeur : latest.valeur;
     const rank = rankPeak(peakLevel);
     const pctl = Math.round(((HISTORICAL_RECORD_YEARS - rank + 1) / HISTORICAL_RECORD_YEARS) * 100);
-    pctlChip = `<span class="pctl-chip ${pctl >= 90 ? 'high' : ''}" title="Season peak ranks ${ordinal(rank)} of ${HISTORICAL_RECORD_YEARS} on record (1972–2025)">${pctl}th %ile (1972–2025)</span>`;
+    pctlChip = `<span class="pctl-chip ${pctl >= 90 ? 'high' : ''}" title="Season peak ranks ${ordinal(rank)} of ${HISTORICAL_RECORD_YEARS} on record (1972–2026)">${pctl}th %ile (1972–2026)</span>`;
   } else if (m.label && WSC_ID_PATTERN.test(m.label) && eccPeakCache[m.label]) {
     const peaks = eccPeakCache[m.label];
     const above = peaks.filter(p => latest.valeur >= p).length;
@@ -2434,8 +2434,8 @@ const MAP_LABELS = {
     fr: 'La <strong>couleur de la pulsation</strong> indique la tendance horaire : rouge si ≥ +1 mm/h en hausse, vert si ≤ −1 mm/h en baisse, gris sinon.'
   },
   about_pctl: {
-    en: '<strong>%ile</strong> on Lac Coulonge\'s callout = rank of this season\'s peak among 54 historical annual peaks (1972–2025). 94th %ile means it would beat all but ~3 historical years.',
-    fr: '<strong>Centile</strong> sur la fiche Lac Coulonge = rang du pic saisonnier parmi 54 pics annuels historiques (1972–2025). 94ᵉ centile signifie qu\'il dépasse tous sauf ~3 années historiques.'
+    en: '<strong>%ile</strong> on Lac Coulonge\'s callout = rank of this season\'s peak among 54 historical annual peaks (1972–2026). 94th %ile means it would beat all but ~3 historical years.',
+    fr: '<strong>Centile</strong> sur la fiche Lac Coulonge = rang du pic saisonnier parmi 54 pics annuels historiques (1972–2026). 94ᵉ centile signifie qu\'il dépasse tous sauf ~3 années historiques.'
   },
   about_orrpb: {
     en: '<strong>ORRPB ref</strong> compares the current level to the 2017 / 2019 / 2023 freshet peaks at that station — useful shorthand for "is this a 2019-level event?".',
@@ -2607,7 +2607,7 @@ async function renderMapMarkers() {
       const rank = rankPeak(peakLevel);
       const pctl = Math.round(((HISTORICAL_RECORD_YEARS - rank + 1) / HISTORICAL_RECORD_YEARS) * 100);
       const cls = pctl >= 90 ? 'percentile high' : 'percentile';
-      percentileLine = `<div class="${cls}" title="Season peak ${peakLevel.toFixed(2)} m ranks ${ordinal(rank)} of ${HISTORICAL_RECORD_YEARS} on record (1972–2025)"><strong>${pctl}th %ile</strong> · 1972–2025</div>`;
+      percentileLine = `<div class="${cls}" title="Season peak ${peakLevel.toFixed(2)} m ranks ${ordinal(rank)} of ${HISTORICAL_RECORD_YEARS} on record (1972–2026)"><strong>${pctl}th %ile</strong> · 1972–2026</div>`;
     }
     // Card divIcon — placed at an offset latLng we recompute on zoom/pan.
     const dispCurrent = displayLevel(station.metadata, latest.valeur);
