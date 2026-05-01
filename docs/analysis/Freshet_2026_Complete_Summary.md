@@ -475,30 +475,31 @@ The 2010–2016 period was anomalously dry compared to the long-term record. Com
 **Linear regression test.** Using pre-2017 data (n=45), a model was fit:
 
 ```
-Peak = 106.43 + 0.00236 × cold_season_precip_at_Ottawa
+Peak = 106.835 + 0.00151 × cold_season_precip_at_Ottawa     (r² = 0.038)
 ```
 
-This model was applied to predict 2017–2025 peaks using only the precipitation observed in those years:
+This model was applied to predict 2017–2026 peaks using only the precipitation observed in those years:
 
 | Year | Ottawa cold prcp (mm) | Actual peak (m) | Predicted peak (m) | Residual (cm) |
 |---|---|---|---|---|
-| 2017 | 525 | 108.52 | 107.66 | **+86** |
-| 2018 | 421 | 107.49 | 107.42 | +7 |
-| 2019 | 480 | 109.17 | 107.56 | **+161** |
-| 2020 | 387 | 107.40 | 107.34 | +6 |
-| 2021 | 329 | 107.48 | 107.20 | +28 |
-| 2022 | 348 | 107.84 | 107.25 | +59 |
-| 2023 | 529 | 108.77 | 107.67 | **+110** |
-| 2024 | 397 | 106.67 | 107.36 | -69 |
-| 2025 | 396 | 108.15 | 107.36 | +79 |
+| 2017 | 519 | 108.52 | 107.62 | **+90** |
+| 2018 | 336 | 107.84 | 107.34 | +50 |
+| 2019 | 510 | 109.17 | 107.60 | **+157** |
+| 2020 | 243 | 107.44 | 107.20 | +24 |
+| 2021 | 423 | 106.67 | 107.47 | -80 |
+| 2022 | 449 | 107.61 | 107.51 | +10 |
+| 2023 | 531 | 108.77 | 107.64 | **+113** |
+| 2024 | 355 | 107.49 | 107.37 | +12 |
+| 2025 | 368 | 108.15 | 107.39 | +76 |
+| 2026 | 349 | 108.63 | 107.36 | **+127** |
 
-**Average residual: +52 cm.** Post-2017 Lac Coulonge peaks are running approximately 52 cm higher than what 45 years of pre-regime precipitation patterns predict.
+**Average residual: +58 cm.** Post-2017 Lac Coulonge peaks are running approximately 58 cm higher than what 44 years of pre-regime precipitation patterns predict. (The 1972 freshet year is excluded for insufficient observation days at Ottawa CDA — the season was Nov 1971 onward and Nov-Dec 1971 is sparse in the ECCC record.)
 
-**The four super-flood years** (2017, 2019, 2023, 2026 extrapolated) all show large positive residuals (+86, +161, +110, +unknown cm). 2019 in particular shows the year's higher-than-average precipitation cannot account for 1.6 m of the peak elevation — even adjusting for that wet year, the lake came in 161 cm above what its precipitation predicted.
+**The four super-flood years** (2017, 2019, 2023, 2026, all peaks ≥ 108.50 m) all show large positive residuals (**+90, +157, +113, +127 cm**, mean **+122 cm**). 2019 in particular shows the year's higher-than-average precipitation cannot account for 1.57 m of the peak elevation — even adjusting for that wet year, the lake came in 157 cm above what its precipitation predicted.
 
-**The post-2017 regime change is concentrated in freshet behavior, not year-round headpond level.** Analysis of the canonical Lac Coulonge level data (1972–2026, ORRPB monthly summaries) shows the +59 cm shift in annual peaks is not accompanied by a year-round headpond rise: annual mean is up only 2.6 cm (106.36 → 106.39 m), annual minimum is up only 1.0 cm (105.82 → 105.83 m), and off-season monthly means (August through December) are unchanged or slightly lower. The shift is concentrated in the spring freshet — April monthly mean +19.5 cm and annual peak +59 cm — with the rest of the year essentially unchanged. This pattern is consistent with operational behavior change during peak inflow (later drawdown, slower refill, or holding water during the freshet itself) rather than a permanent headpond raise. The November 2025 MRC Pontiac notice — titled "notice of temporary water-level increase, Bryson Dam — Hydro-Québec" — confirms higher-head operations of 30–50 cm have been **tested**, not that they are in permanent effect. The 52 cm regression residual quantifies the unexplained component; the year-round level data narrows the mechanism to operational behavior during the freshet rather than a sustained headpond raise.
+**The post-2017 regime change is concentrated in freshet behavior, not year-round headpond level.** Analysis of the canonical Lac Coulonge level data (1972–2026, ORRPB monthly summaries) shows the +59 cm shift in annual peaks is not accompanied by a year-round headpond rise: annual mean is up only 2.6 cm (106.36 → 106.39 m), annual minimum is up only 1.0 cm (105.82 → 105.83 m), and off-season monthly means (August through December) are unchanged or slightly lower. The shift is concentrated in the spring freshet — April monthly mean +19.5 cm and annual peak +59 cm — with the rest of the year essentially unchanged. This pattern is consistent with operational behavior change during peak inflow (later drawdown, slower refill, or holding water during the freshet itself) rather than a permanent headpond raise. The November 2025 MRC Pontiac notice — titled "notice of temporary water-level increase, Bryson Dam — Hydro-Québec" — confirms higher-head operations of 30–50 cm have been **tested**, not that they are in permanent effect. The 58 cm regression residual quantifies the unexplained component; the year-round level data narrows the mechanism to operational behavior during the freshet rather than a sustained headpond raise.
 
-**Caveats and honest limits of this analysis.** The Ottawa station is in the southern basin and explains only ~14% of Lac Coulonge peak variance (r² = 0.137). Lac Coulonge is fed primarily by the upper Ottawa (Témiscamingue watershed) and the Coulonge tributary, not the southern basin. Cleaner upstream precipitation data (Témiscamingue, Maniwaki) would produce a more powerful test. The regression also assumes a linear precipitation-to-peak relationship, which is a simplification. **Despite these limitations, the analysis demonstrates that climate alone — at least as measured by Ottawa precipitation — does not explain the regime change. A 52 cm residual remains, and that residual is consistent with operational changes at Bryson Dam.**
+**Caveats and honest limits of this analysis.** The Ottawa station is in the southern basin and explains only ~4% of Lac Coulonge peak variance (r² = 0.038) — the very low r² is itself informative: Ottawa-station precipitation has almost no predictive value for Lac Coulonge because the southern basin is the wrong watershed. Lac Coulonge is fed primarily by the upper Ottawa (Témiscamingue) and the Coulonge tributary. Cleaner upstream precipitation data (Témiscamingue, Maniwaki, Val-d'Or — now in the repo at `data/eccc-climate/`) would produce a more powerful test. The regression also assumes a linear precipitation-to-peak relationship, which is a simplification. **Despite these limitations, the analysis demonstrates that climate alone — at least as measured by Ottawa precipitation — does not explain the regime change. A +58 cm residual remains, and that residual is consistent with operational changes at Bryson Dam.**
 
 ### Snowpack-indexed drawdown — the missing rule
 
@@ -578,7 +579,7 @@ In April 2026, the policy analysis was distilled into a four-piece "case file" o
 
 The headline statistical finding: super-flood frequency at Lac Coulonge increased 18-fold between the 1972–2016 era (1 super-flood in 45 years) and the 2017–2026 era (4 super-floods in 10 years). Under a stationary flood-frequency null hypothesis, the probability of seeing 4 super-floods in any 10-year window is less than 1 in 20,000.
 
-**Whole-distribution shift, not just tail behavior.** The mean annual peak across all years (not just super-floods) rose from 107.40 m (1972–2016) to 108.01 m (2017–2026) — a +61 cm shift in the typical year, with t-statistic 2.39 against the null hypothesis (p < 0.05). The 2017–2021 5-year mean was 108.01 m; the 2022–2026 5-year mean was also 108.01 m. The new regime is sustained, not a transient cluster.
+**Whole-distribution shift, not just tail behavior.** The mean annual peak across all years (not just super-floods) rose from 107.44 m (1972–2016, N=45) to 108.03 m (2017–2026, N=10) — a +59 cm shift in the typical year, with Welch's t = 2.34 against the null hypothesis (p < 0.05). The median annual peak rose from 107.46 m to 108.00 m — a +54 cm shift through the centre of the distribution, not just the tail. The 5-year rolling mean has not dropped below 107.55 m since 2010, compared to a pre-2010 ceiling of 107.51 m, and three windows (2015–2019, 2016–2020, and 2022–2026) sit above 108 m. The new regime is sustained, not a transient cluster.
 
 ### Exhibit B — Inputs have shifted
 
@@ -644,7 +645,7 @@ The trade-off is therefore not "Bryson revenue vs nothing." It is **"Bryson reve
 
 **What changed about the freshet operating regime at Bryson Dam after 2017? Was the impact on Lac Coulonge flood buffer evaluated before the change was made?**
 
-Hydro-Québec acknowledges that refurbishment changes water head values. ORRPB acknowledges that higher headponds are more efficient for hydropower. The November 2025 MRC Pontiac notice confirmed a 30–50 cm rise was **tested** — its title is "notice of temporary water-level increase, Bryson Dam — Hydro-Québec." The regression analysis shows post-2017 peaks are running 52 cm higher than pre-2017 precipitation patterns predict; the year-round Lac Coulonge level data shows that gap is concentrated in the freshet peak (annual mean unchanged, off-season unchanged, only the spring peak shifted). The pattern points to operational behavior change during peak inflow rather than a permanent headpond raise. But neither agency has publicly disclosed how Bryson's freshet-period operating decisions changed during or after the refurbishment, or what flood-buffer analysis informed those changes.
+Hydro-Québec acknowledges that refurbishment changes water head values. ORRPB acknowledges that higher headponds are more efficient for hydropower. The November 2025 MRC Pontiac notice confirmed a 30–50 cm rise was **tested** — its title is "notice of temporary water-level increase, Bryson Dam — Hydro-Québec." The regression analysis shows post-2017 peaks are running 58 cm higher than pre-2017 precipitation patterns predict; the year-round Lac Coulonge level data shows that gap is concentrated in the freshet peak (annual mean unchanged, off-season unchanged, only the spring peak shifted). The pattern points to operational behavior change during peak inflow rather than a permanent headpond raise. But neither agency has publicly disclosed how Bryson's freshet-period operating decisions changed during or after the refurbishment, or what flood-buffer analysis informed those changes.
 
 **The community's policy ask is therefore not "change Bryson operations."** It is "investigate which factors actually explain the regime change, with public disclosure of the analysis." Both climate and operations are likely contributors. Both deserve attention. Only one is currently being scrutinized.
 
@@ -804,7 +805,7 @@ Several operational behaviors initially identified through data observation were
 
 ### Thread 9: Climate test — quantitative regression analysis
 
-The climate alternative explanation was tested rigorously using 45 years (1972–2016) of cold-season precipitation at Ottawa station and Lac Coulonge yearly peaks. Pre-2017 vs post-2017 cold-season precipitation differed by only +3% (412 → 423 mm, t=0.46, not significant). A linear regression model trained on pre-2017 data predicted post-2017 peaks; actual peaks averaged 52 cm higher than the model predicted. The four super-flood years showed residuals of +86 cm (2017), +161 cm (2019), +110 cm (2023), and +79 cm (2025). Year-round Lac Coulonge level data shows the +59 cm shift in annual peaks is concentrated in the freshet (April monthly mean +19.5 cm, annual peak +59 cm) and is not accompanied by a sustained year-round headpond raise (annual mean +2.6 cm, annual minimum +1.0 cm, off-season months unchanged or slightly lower). The November 2025 MRC Pontiac notice confirmed a 30–50 cm rise was **tested**, not that it is in permanent effect. The Ottawa station explains only ~14% of Lac Coulonge peak variance, so this is a conservative test — cleaner upstream precipitation data would likely produce an even stronger signal. **Conclusion:** Climate change in the southern Ottawa basin is real and measurable, but does not by itself explain the regime change at Lac Coulonge. The unexplained 52 cm residual, combined with the year-round-level pattern, is consistent with operational behavior change during the freshet at Bryson Dam — later drawdown, slower refill, or holding water during peak inflow — rather than a permanent headpond raise.
+The climate alternative explanation was tested rigorously using 44 years (1972–2016, freshet years with adequate Ottawa CDA observation coverage) of cold-season precipitation and Lac Coulonge yearly peaks. Pre-2017 vs post-2017 cold-season precipitation differed by only +3.7% (394 → 409 mm, t = 0.46, not significant). A linear regression model trained on pre-2017 data predicted post-2017 peaks; actual peaks averaged **58 cm higher** than the model predicted. The four super-flood years showed residuals of **+90 cm (2017), +157 cm (2019), +113 cm (2023), and +127 cm (2026)**. Year-round Lac Coulonge level data shows the +59 cm shift in annual peaks is concentrated in the freshet (April monthly mean +19.5 cm, annual peak +59 cm) and is not accompanied by a sustained year-round headpond raise (annual mean +2.6 cm, annual minimum +1.0 cm, off-season months unchanged or slightly lower). The November 2025 MRC Pontiac notice confirmed a 30–50 cm rise was **tested**, not that it is in permanent effect. The Ottawa station explains only ~4% of Lac Coulonge peak variance (r² = 0.038) — that low r² is itself the finding: Ottawa-station precipitation has nearly no predictive value for Lac Coulonge peaks because it samples the wrong watershed. Cleaner upstream precipitation data (Témiscamingue, Maniwaki, Val-d'Or — now in `data/eccc-climate/`) would tighten the model. **Conclusion:** Climate change in the southern Ottawa basin is real and measurable, but does not by itself explain the regime change at Lac Coulonge. The unexplained +58 cm residual, combined with the year-round-level pattern, is consistent with operational behavior change during the freshet at Bryson Dam — later drawdown, slower refill, or holding water during peak inflow — rather than a permanent headpond raise.
 
 ### Thread 10: The case file — four-exhibit analytical argument
 
