@@ -1,5 +1,6 @@
 ---
-# Script ConfigMap — refresh from source with:
+# Script ConfigMap — kept in sync with ingesters/river-history/ingest.py.
+# If you edit the source, regenerate with:
 #   kubectl create configmap river-history-script \
 #     --from-file=ingest.py=../../ingesters/river-history/ingest.py \
 #     -n freshet --dry-run=client -o yaml | kubectl apply -f -
@@ -10,8 +11,231 @@ metadata:
   namespace: freshet
 data:
   ingest.py: |
-    # Replaced at deploy time — see the README.
+    import os, json, sys, urllib.request
+    from datetime import datetime, timezone, timedelta
 
+    VIGILANCE = 'https://inedit-ro.geo.msp.gouv.qc.ca'
+    OPEN_METEO = 'https://api.open-meteo.com/v1/forecast'
+    KIWIS = 'https://waterdata.quinteconservation.ca/KiWIS/KiWIS'
+    POSTGREST = os.environ.get('POSTGREST_URL', 'http://postgrest:3000')
+    STATIONS = [int(x) for x in os.environ.get('STATION_IDS', '1195,1004,951,545,1279,984,548,550,981,1264').split(',') if x.strip()]
+
+    # MVCA / Kisters KiWIS stations (Mississippi Valley Conservation Authority).
+    # These don't appear in Vigilance — they're published via MVCA's water-levels
+    # portal, which fronts a public KiWIS API. We map each to a synthetic
+    # river_readings.station_id (>=99000) shared with the dashboard so existing
+    # query patterns (filter by station_id) just work.
+    # Format: "stationId:kiwisTsId:Label" — one entry per station, comma-separated.
+    MVCA_STATIONS_RAW = os.environ.get('MVCA_STATIONS', '99001:48242042:Buckhams Bay')
+    # Hours of MVCA history to pull each run. Default covers cron lateness; override
+    # to large values for one-shot backfill (e.g. 40000 for ~4.5 years).
+    MVCA_LOOKBACK_HOURS = int(os.environ.get('MVCA_LOOKBACK_HOURS', '24'))
+
+    # Basin weather stations — mirrors the dashboard's FREEZE_STATIONS list.
+    # Upstream stations drive the snowmelt freeze-night signal; downstream stations
+    # provide local forecast context for visitors looking at the lower-corridor gauges.
+    UPSTREAM_WX = [
+        {'key': 'val-dor-qc',            'lat': 48.77, 'lon': -77.79},
+        {'key': 'rouyn-noranda-qc',      'lat': 48.10, 'lon': -79.02},
+        {'key': 'temiskaming-shores-on', 'lat': 47.49, 'lon': -79.72},
+        {'key': 'pembroke-on',           'lat': 45.82, 'lon': -77.11},
+        {'key': 'ottawa-gatineau',       'lat': 45.42, 'lon': -75.70},
+        {'key': 'hawkesbury-on',         'lat': 45.61, 'lon': -74.61},
+    ]
+
+    def fetch_json(url):
+        req = urllib.request.Request(url, headers={'Accept': 'application/json'})
+        with urllib.request.urlopen(req, timeout=20) as r:
+            return json.load(r)
+
+    def post_rows(path, rows):
+        if not rows:
+            return 0
+        body = json.dumps(rows).encode('utf-8')
+        req = urllib.request.Request(
+            f'{POSTGREST}/{path}',
+            data=body,
+            method='POST',
+            headers={
+                'Content-Type': 'application/json',
+                'Prefer': 'resolution=ignore-duplicates',
+            },
+        )
+        with urllib.request.urlopen(req, timeout=30) as r:
+            print(f'  POST /{path} -> HTTP {r.status} ({len(rows)} rows)')
+        return len(rows)
+
+    def normalize_ts(ts):
+        # Vigilance emits UTC in naked ISO form; pin with Z
+        if ts.endswith('Z') or (len(ts) >= 6 and (ts[-6] in '+-')):
+            return ts
+        return ts + 'Z'
+
+    total_readings = 0
+    stations_done = 0
+    for sid in STATIONS:
+        try:
+            md = fetch_json(f'{VIGILANCE}/station_details_metadata_api?id=eq.{sid}')
+            rd = fetch_json(f'{VIGILANCE}/station_details_readings_api?id=eq.{sid}')
+        except Exception as e:
+            print(f'station {sid}: fetch failed: {e}', file=sys.stderr)
+            continue
+        if not md or not rd:
+            print(f'station {sid}: empty response')
+            continue
+        m = md[0]
+        vals = rd[0].get('valeurs_niv') or []
+
+        rows = []
+        for v in vals:
+            lvl = v.get('valeur')
+            if lvl is None:
+                continue
+            rows.append({
+                'time': normalize_ts(v['date_prise_valeur']),
+                'station_id': sid,
+                'level_m': lvl,
+            })
+
+        try:
+            total_readings += post_rows('river_readings', rows)
+            stations_done += 1
+        except Exception as e:
+            print(f'station {sid}: upsert failed: {e}', file=sys.stderr)
+            continue
+
+        # Upsert station metadata (best-effort)
+        try:
+            post_rows('river_stations', [{
+                'station_id': sid,
+                'label': m.get('label'),
+                'description': m.get('description'),
+                'water_body': m.get('plan_deau'),
+                'provider': m.get('fournisseur_nom'),
+            }])
+        except Exception as e:
+            print(f'station {sid}: metadata upsert failed: {e}', file=sys.stderr)
+
+    print(f'River: {total_readings} readings across {stations_done}/{len(STATIONS)} stations.')
+
+    # -------- MVCA / KiWIS stations (Buckhams Bay etc.) --------
+    # Same river_readings table; synthetic station_id (99xxx) avoids collision
+    # with Vigilance ids. Also writes a row to river_stations with provider='MVCA'.
+    mvca_specs = []
+    for entry in MVCA_STATIONS_RAW.split(','):
+        entry = entry.strip()
+        if not entry:
+            continue
+        parts = entry.split(':')
+        if len(parts) < 2:
+            print(f'mvca: skipping malformed entry "{entry}"', file=sys.stderr)
+            continue
+        sid, ts_id = int(parts[0]), int(parts[1])
+        label = parts[2] if len(parts) > 2 else f'MVCA-{ts_id}'
+        mvca_specs.append((sid, ts_id, label))
+
+    mvca_total = 0
+    mvca_done = 0
+    mvca_since = (datetime.now(timezone.utc) - timedelta(hours=MVCA_LOOKBACK_HOURS)).strftime('%Y-%m-%dT%H:%M:%SZ')
+    for sid, ts_id, label in mvca_specs:
+        url = (
+            f'{KIWIS}?service=kisters&type=queryServices&request=getTimeseriesValues'
+            f'&datasource=0&format=json&ts_id={ts_id}&header=true&metadata=true'
+            '&md_returnfields=station_name,parametertype_name,station_latitude,station_longitude'
+            f'&dateformat=UNIX&from={mvca_since}'
+        )
+        try:
+            payload = fetch_json(url)
+        except Exception as e:
+            print(f'mvca {sid}: fetch failed: {e}', file=sys.stderr)
+            continue
+        if not isinstance(payload, list) or not payload:
+            print(f'mvca {sid}: empty payload')
+            continue
+        ts = payload[0]
+        rows = []
+        for row in ts.get('data') or []:
+            if not isinstance(row, list) or len(row) < 2:
+                continue
+            t_ms, lvl = row[0], row[1]
+            if lvl is None:
+                continue
+            rows.append({
+                'time': datetime.fromtimestamp(t_ms / 1000, tz=timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
+                'station_id': sid,
+                'level_m': lvl,
+            })
+        try:
+            mvca_total += post_rows('river_readings', rows)
+            mvca_done += 1
+        except Exception as e:
+            print(f'mvca {sid}: upsert failed: {e}', file=sys.stderr)
+            continue
+        try:
+            post_rows('river_stations', [{
+                'station_id': sid,
+                'label': label,
+                'description': ts.get('station_name'),
+                'water_body': 'Ottawa River',
+                'provider': 'MVCA',
+            }])
+        except Exception as e:
+            print(f'mvca {sid}: metadata upsert failed: {e}', file=sys.stderr)
+
+    print(f'MVCA: {mvca_total} readings across {mvca_done}/{len(mvca_specs)} stations (lookback {MVCA_LOOKBACK_HOURS}h).')
+
+    # -------- Basin weather observations (open-meteo) --------
+    # One multi-location call to avoid the per-IP rate limit on parallel single-
+    # location requests. Comma-separated lat/lon → response is a list of objects,
+    # one per location, in input order.
+    now_utc = datetime.now(timezone.utc)
+    wx_rows_total = 0
+    wx_stations_done = 0
+    lats = ','.join(str(s['lat']) for s in UPSTREAM_WX)
+    lons = ','.join(str(s['lon']) for s in UPSTREAM_WX)
+    url = (f"{OPEN_METEO}?latitude={lats}&longitude={lons}"
+           '&hourly=temperature_2m,precipitation'
+           '&past_days=2&forecast_days=1'
+           '&timezone=UTC')
+    try:
+        payload = fetch_json(url)
+    except Exception as e:
+        print(f"weather: bulk fetch failed: {e}", file=sys.stderr)
+        payload = []
+    items = payload if isinstance(payload, list) else [payload]
+    for s, data in zip(UPSTREAM_WX, items):
+        h = (data or {}).get('hourly') or {}
+        times = h.get('time') or []
+        temps = h.get('temperature_2m') or []
+        precs = h.get('precipitation') or []
+        rows = []
+        for i, t in enumerate(times):
+            # open-meteo with timezone=UTC emits naked ISO as UTC wall-clock.
+            ts = t if (t.endswith('Z') or (len(t) >= 6 and t[-6] in '+-')) else t + 'Z'
+            try:
+                t_dt = datetime.fromisoformat(ts.replace('Z', '+00:00'))
+            except Exception:
+                continue
+            # Only ingest past hours (observations) — skip future forecast rows.
+            if t_dt >= now_utc:
+                continue
+            temp = temps[i] if i < len(temps) else None
+            precip = precs[i] if i < len(precs) else None
+            if temp is None and precip is None:
+                continue
+            rows.append({
+                'time': ts,
+                'station': s['key'],
+                'temp_c': temp,
+                'precip_mm': precip,
+            })
+        try:
+            wx_rows_total += post_rows('weather_observations', rows)
+            wx_stations_done += 1
+        except Exception as e:
+            print(f"weather {s['key']}: upsert failed: {e}", file=sys.stderr)
+
+    print(f'Weather: {wx_rows_total} observations across {wx_stations_done}/{len(UPSTREAM_WX)} stations.')
 ---
 apiVersion: batch/v1
 kind: CronJob
