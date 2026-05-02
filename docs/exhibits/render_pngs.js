@@ -6,8 +6,8 @@ const puppeteer = require('puppeteer');
 const path = require('path');
 
 const exhibits = [
-  'Regime_Change_Infographic.html',
-  'Winter_Baseline_Infographic.html',
+  'Exhibit_A_Regime_Change.html',
+  'Exhibit_B_Winter_Baseline.html',
   'Exhibit_C_Storage_Capacity.html',
   'Exhibit_D_Bryson_Timeline.html',
   'Exhibit_E_Climate_Tested.html',

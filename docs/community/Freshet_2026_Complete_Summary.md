@@ -650,8 +650,8 @@ Hydro-Québec acknowledges that refurbishment changes water head values. ORRPB a
 
 ### Files for the case file
 
-- `Regime_Change_Infographic.png` / `.html` — Exhibit A (regime change chart)
-- `Winter_Baseline_Infographic.png` / `.html` — Exhibit B (winter baseline elevation)
+- `Exhibit_A_Regime_Change.png` / `.html` — Exhibit A (regime change chart)
+- `Exhibit_B_Winter_Baseline.png` / `.html` — Exhibit B (winter baseline elevation)
 - `Exhibit_C_Storage_Capacity.png` / `.html` — Exhibit C (storage capacity contradiction)
 - `Exhibit_D_Bryson_Timeline.png` / `.html` — Exhibit D (Bryson refurbishment timeline + hydraulic continuity)
 

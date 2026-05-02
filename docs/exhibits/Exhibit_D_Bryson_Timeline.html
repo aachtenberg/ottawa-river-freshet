@@ -344,7 +344,104 @@ svg.hydraulic {
   color: var(--ink-soft);
 }
 
-/* Cascade comparison figure (Figure 7) */
+/* Regression + step-change figure (Figure 7) — climate refutation */
+.regression-block {
+  margin-bottom: 28px;
+  padding: 22px 26px 24px;
+  background: var(--paper-bright);
+  border: 1px solid var(--rule);
+}
+.regression-title {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: 18px;
+  letter-spacing: -0.01em;
+  margin-bottom: 6px;
+  color: var(--ink);
+}
+.regression-subtitle {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 12px;
+  color: var(--ink-soft);
+  line-height: 1.55;
+  margin-bottom: 16px;
+  max-width: 920px;
+}
+.regression-subtitle strong { color: var(--ink); font-weight: 600; }
+.regression-finding-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.regression-finding {
+  border: 1px solid var(--rule-soft);
+  padding: 14px 16px;
+  background: var(--paper);
+}
+.regression-finding .k {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-soft);
+  margin-bottom: 6px;
+}
+.regression-finding .v {
+  font-family: 'Fraunces', serif;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--ink);
+  margin-bottom: 4px;
+  letter-spacing: -0.01em;
+}
+.regression-finding.refutes .v { color: var(--accent-strong); }
+.regression-finding .ctx {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 11px;
+  color: var(--ink-soft);
+  line-height: 1.45;
+}
+.stepchange-table {
+  margin-top: 4px;
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+}
+.stepchange-table th {
+  font-weight: 600;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-soft);
+  text-align: right;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--rule);
+}
+.stepchange-table th:first-child { text-align: left; }
+.stepchange-table td {
+  padding: 4px 8px;
+  text-align: right;
+  color: var(--ink-soft);
+  border-bottom: 1px dotted var(--rule-soft);
+}
+.stepchange-table td:first-child { text-align: left; color: var(--ink); }
+.stepchange-table tr.peak td { color: var(--ink); font-weight: 700; background: rgba(179,38,30,0.06); }
+.stepchange-table tr.peak td:first-child { color: var(--accent-strong); }
+.regression-caption {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule-soft);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+.regression-caption strong { color: var(--ink); font-weight: 600; }
+
+/* Cascade comparison figure (Figure 8) */
 .cascade-block {
   margin-bottom: 28px;
   padding: 22px 26px 24px;
@@ -558,7 +655,7 @@ svg.hydraulic {
 </h1>
 
 <p class="deck">
-  Bryson Generating Station was rehabilitated between 2017 and 2023. Lac Coulonge year-round levels — annual mean, annual minimum, off-season months — are essentially unchanged. The freshet peak has risen +59 cm. The shift is in <em>how the dam is operated during spring runoff</em>, not in a permanent headpond raise. Hydro-Québec acknowledges refurbishment "may therefore change the water head value"; the November 2025 MRC Pontiac notice confirms 30–50 cm higher-head operations have been tested. The same decade saw super-flood frequency increase 18-fold. The connection is unanswered.
+  Bryson Generating Station was rehabilitated between 2017 and 2023. Lac Coulonge year-round levels — annual mean, annual minimum, off-season months — are essentially unchanged. The freshet peak has risen +59 cm and super-flood frequency has gone up 18-fold. <strong>The "climate did it" answer doesn't fit the data:</strong> the basin-flow step is sharply concentrated at 2017, the climate forcing it would require did not step-change in the same year, and the per-event lake response is unchanged (Figure 7). What did change is observable now — hour by hour — in Hydro-Québec's own open-data feed: <strong>the headpond is being held high during peak inflow</strong> (Figure 8 + live observation panel). <strong>The community is not asking whether climate is real. It is asking whether the operator's response to a changing freshet regime has been reviewed, and what trade-offs were weighed.</strong>
 </p>
 
 <!-- VERIFIED EVIDENCE BAND -->
@@ -652,9 +749,62 @@ svg.hydraulic {
   </div>
 </div>
 
-<!-- CASCADE COMPARISON (Figure 7) -->
+<!-- REGRESSION + STEP-CHANGE (Figure 7) — climate refutation, sharper -->
+<div class="regression-block">
+  <div class="regression-title">Figure 7 · Climate is not the explanation — and even if it were, operations would still need to adapt</div>
+  <div class="regression-subtitle">
+    The +59 cm shift in average annual peak (Figure 6) and the four super-floods in 10 years (Exhibit A) raise an obvious counter-argument: <em>maybe the climate just delivers bigger freshets now.</em> We tested that two ways. Both fail. And even if some climate signal does exist, <strong>continuing to operate the dam the same way under larger inflows is itself the policy failure the case file is asking about.</strong>
+  </div>
+
+  <div class="regression-finding-grid">
+    <div class="regression-finding refutes">
+      <div class="k">Test 1 · Per-event amplification</div>
+      <div class="v">Lake response unchanged</div>
+      <div class="ctx">Pre-2017 fit: Lac Coulonge peak (m) = 105.42 + 0.000619 × Britannia peak. Post-2017 fit: 105.37 + 0.000631 ×. <strong>Δ at common inflow ≈ 0–2 cm.</strong> Mean residual of post-2017 years from the pre-2017 line: <strong>+0.1 cm</strong>. The lake reacts to inflow exactly as it always has — the per-event amplification thesis fails.</div>
+    </div>
+    <div class="regression-finding refutes">
+      <div class="k">Test 2 · Step location</div>
+      <div class="v">Sharpest break at 2017</div>
+      <div class="ctx">Tested every breakpoint year 2000–2020. Median Britannia peak shift maximizes at <strong>2017 (+19.3%)</strong> and decays both directions (2018: +11%, 2019: +6%, 2020: 0%). A 30-year drought of super-floods (1980s–2000s, zero each decade) ends abruptly in the year Bryson refurbishment planning began.</div>
+    </div>
+    <div class="regression-finding refutes">
+      <div class="k">Test 3 · Climate forcing</div>
+      <div class="v">No coherent step</div>
+      <div class="ctx">Apr+May precipitation across watershed ECCC stations: ranges <strong>−4% (Parent) to +36% (Rouyn)</strong>. March snow on ground: <strong>−15% at Témiscamingue, +20% at Ottawa CDA</strong>. Mixed, station-dependent, with snow trending <em>down</em> at the upper basin. No step-change signal in the climate forcing that could mathematically explain a +19% step in basin flow.</div>
+    </div>
+  </div>
+
+  <table class="stepchange-table">
+    <thead>
+      <tr>
+        <th>Britannia annual-peak step-change test</th>
+        <th>Pre n</th>
+        <th>Pre median (m³/s)</th>
+        <th>Post n</th>
+        <th>Post median (m³/s)</th>
+        <th>Shift</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Breakpoint at 2010</td><td>50</td><td>3,075</td><td>15</td><td>3,510</td><td>+14.1%</td></tr>
+      <tr><td>Breakpoint at 2015</td><td>54</td><td>3,075</td><td>11</td><td>3,600</td><td>+17.1%</td></tr>
+      <tr class="peak"><td>Breakpoint at 2017</td><td>57</td><td>3,080</td><td>8</td><td>3,675</td><td>+19.3%</td></tr>
+      <tr><td>Breakpoint at 2018</td><td>58</td><td>3,100</td><td>7</td><td>3,450</td><td>+11.3%</td></tr>
+      <tr><td>Breakpoint at 2019</td><td>59</td><td>3,120</td><td>6</td><td>3,315</td><td>+6.2%</td></tr>
+      <tr><td>Breakpoint at 2020</td><td>60</td><td>3,165</td><td>5</td><td>3,180</td><td>+0.5%</td></tr>
+    </tbody>
+  </table>
+
+  <div class="regression-caption">
+    <strong>What the analysis means.</strong> The +59 cm shift in average annual peak is real, but it comes from <em>more years now produce big freshets</em> — not from <em>each freshet now produces a higher peak</em>. The sharpness of the 2017 breakpoint, combined with the absence of a matching climate step, is hard to square with a pure climate story. <strong>Whatever the upstream cause of larger inflows, the operator has agency over headpond elevation, drawdown timing, and spillway scheduling. A dam built to manage river flow has an obligation to adjust as inflow patterns change. Continuing the same operating posture — or, per the live data in Figure 8 below, moving to a posture that holds the headpond <em>higher</em> — under those conditions is the choice the community is asking to be reviewed.</strong>
+    <br><br>
+    Source: <code>data/wsc-hydrometric/britannia-ottawa-river/daily.csv</code> + <code>data/lac-coulonge-monthly-1972-2026.csv</code>; analysis scripts in <code>ingesters/climate-history/lc_brit_regression.py</code> and <code>stepchange_analysis.py</code>.
+  </div>
+</div>
+
+<!-- CASCADE COMPARISON (Figure 8) -->
 <div class="cascade-block">
-  <div class="cascade-title">Figure 7 · How Bryson is being run vs. its neighbours · 2026-05-02</div>
+  <div class="cascade-title">Figure 8 · How Bryson is being run vs. its neighbours · 2026-05-02</div>
   <div class="cascade-subtitle">
     <strong>Plain-language summary.</strong> Every Hydro-Québec dam can do two things with the water it receives: send it through the turbines (which generates power) or open the spillway gates and let it bypass the turbines (which generates nothing). On May 2, 2026, the upstream dams on the Ottawa River are doing what you'd expect — running their turbines first, opening the spillway only for what doesn't fit. <strong>Bryson is doing the opposite</strong>: turbines almost off, spillway wide open. This is a deliberate choice by the operator, not a forced response to too much water — the upstream dams are receiving the same freshet and choosing to turbine it.
   </div>
@@ -726,7 +876,7 @@ svg.hydraulic {
     </div>
   </div>
   <div class="body">
-    <p><strong>The bottom line.</strong> Until 2026, the case file's argument was based on indirect evidence — Lac Coulonge gauge readings, Bryson refurbishment dates, the November 2025 MRC notice. None of that showed how Bryson is actually being operated day-to-day. The Hydro-Québec open-data feed now does. We can see, hour by hour, that the lake behind the dam (Lac Coulonge itself) is being held high during peak inflow rather than drawn down to absorb it. That matches the "later drawdown, slower refill, holding water through peak inflow" hypothesis from Figure 6 — we now have direct evidence of the mechanism. The spillway is how the dam keeps the lake from rising past 104.7 m; the operating choice the case file is asking about is <em>why hold it that high in the first place</em>, instead of drawing it lower before peak inflow arrives.</p>
+    <p><strong>The bottom line.</strong> Until 2026, the case file's argument was based on indirect evidence — Lac Coulonge gauge readings, Bryson refurbishment dates, the November 2025 MRC notice. None of that showed how Bryson is actually being operated day-to-day. The Hydro-Québec open-data feed now does. We can see, hour by hour, that the lake behind the dam (Lac Coulonge itself) is being held high during peak inflow rather than drawn down to absorb it. The spillway is how the dam keeps the lake from rising past 104.7 m; the operating choice the case file is asking about is <em>why hold it at 104.5 m at all</em>, instead of drawing it 50–80 cm lower before peak inflow arrives. <strong>Especially now, when bigger freshets are arriving more often regardless of cause</strong> (Figure 7), the trade-off has changed and the operating posture should be reviewed against it.</p>
     <p><strong>What we still need.</strong> The same dataset for the years before 2017. Hydro-Québec's open feed only goes back ~10 days. Until we know how Bryson was operated through, say, the 2014 freshet, we can describe the new regime but can't quantify how much it changed. <strong>That is the specific information the community is asking the operators and ORRPB to disclose.</strong></p>
     <p><strong>Verify it yourself.</strong> The numbers in this panel are reproducible from the source CSVs in <code>data/hq-opendata/</code> (snapshot taken 2026-05-02 22:23 UTC). The live versions are visible in real time at <code>freshet.xgrunt.com#operations</code> — the Operations tab shows the same data updating hourly.</p>
   </div>
@@ -735,9 +885,9 @@ svg.hydraulic {
 <!-- THE QUESTION -->
 <div class="question-callout">
   <div class="label">The unanswered question</div>
-  <div class="question">How was Bryson operated through the freshet before 2017, and was the flood-buffer impact on Lac Coulonge evaluated before that operating regime changed?</div>
-  <p>The November 2025 MRC Pontiac notice confirms higher-head operations have been tested, and Figure 7 plus the live-observation panel above show those operations are happening right now. What's still missing is the <strong>before</strong> picture: the Bryson headpond elevation through the 1972–2016 freshets. Without it, we can describe the new regime but can't put a number on how much it has changed.</p>
-  <p>The data exists — Hydro-Québec records headpond elevation continuously and has done so for decades. It is simply not published. Releasing the historical record is what would let the affected communities, the regulator, and Hydro-Québec itself evaluate the trade-off in plain numbers.</p>
+  <div class="question">As basin inflow rises — for whatever upstream cause — what was the operating-regime review at Bryson, and was the flood-buffer impact on Lac Coulonge evaluated before adopting the higher-headpond posture documented in the live data above?</div>
+  <p>The 2026 freshet shows Bryson holding its headpond — and therefore Lac Coulonge — high through 10 days of peak inflow, with the spillway carrying 86% of release while turbines run at half their installed capacity. The November 2025 MRC Pontiac notice confirms higher-head operations have been tested. The cascade comparison in Figure 8 shows every upstream HQ peer choosing a different operating posture for the same freshet. <strong>The community is not asking whether climate is real. It is asking whether the operator's response to bigger freshets has been reviewed by anyone with flood-mitigation authority — and if so, what trade-offs were weighed.</strong></p>
+  <p><strong>Two specific disclosures would close the loop:</strong> (1) the pre-2017 Bryson headpond elevation history (held internally by HQ; not published); (2) any technical review or regulatory directive establishing the post-refurbishment headpond target as the operationally-correct value <em>given</em> the new freshet regime. Both are within the regulator's authority to obtain and the operator's authority to release.</p>
 </div>
 
 <!-- FOOTER -->

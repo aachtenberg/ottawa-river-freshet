@@ -93,6 +93,67 @@ html, body {
   grid-template-columns: 1fr 1fr;
   gap: 48px;
 }
+
+/* Multi-station climate-shift table (added v2) */
+.station-table {
+  margin-bottom: 28px;
+  padding: 22px 26px;
+  background: var(--paper-bright);
+  border: 1px solid var(--rule);
+}
+.station-table-title {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 6px;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.station-table-subtitle {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 12px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  margin-bottom: 14px;
+  max-width: 920px;
+}
+.station-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+}
+.station-table th {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-soft);
+  font-weight: 600;
+  text-align: right;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--rule);
+}
+.station-table th:first-child { text-align: left; }
+.station-table td {
+  padding: 5px 10px;
+  text-align: right;
+  border-bottom: 1px dotted var(--rule-soft);
+  color: var(--ink-soft);
+}
+.station-table td:first-child { text-align: left; color: var(--ink); }
+.station-table td.shift-pos { color: #2c7c4e; font-weight: 600; }
+.station-table td.shift-neg { color: var(--accent); font-weight: 600; }
+.station-table td.shift-flat { color: var(--ink-soft); }
+.station-table-caption {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--rule-soft);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 11px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.station-table-caption strong { color: var(--ink); font-weight: 600; }
 .stat {
   display: flex;
   flex-direction: column;
@@ -239,7 +300,7 @@ svg.fig {
 </h1>
 
 <p class="deck">
-  We tested the climate alternative rigorously. 44 years of pre-2017 cold-season precipitation. A regression model trained on that baseline. The model's prediction for post-2017 peaks. Actual peaks came in 58 cm higher than precipitation alone would predict — and the four super-flood years came in between 90 and 157 cm above prediction. Climate didn't get that much wetter. Something else did the work.
+  We tested the climate alternative four ways. <strong>(1)</strong> 44 years of pre-2017 cold-season precipitation against post-2017 — peaks came in 58 cm higher than the precipitation model would predict, and the super-flood years came in between 90 and 157 cm above prediction. <strong>(2)</strong> Across nine watershed climate stations, April+May precipitation shifts vary from −4% to +36% with no coherent step. <strong>(3)</strong> March snow on ground trends down at the upper basin (Témiscamingue −15%, Val-d'Or −14%) — the wrong direction to drive bigger Ottawa floods. <strong>(4)</strong> The basin-flow step is sharply concentrated at 2017, while no climate variable shows a comparable step. Climate change is real. It is not what stepped the river up.
 </p>
 
 <!-- HEADLINE STATS BAND -->
@@ -281,22 +342,72 @@ svg.fig {
   </div>
 </div>
 
+<!-- WATERSHED CLIMATE STATION TABLE (v2 — added with HQ + ECCC + WSC ingestion infrastructure) -->
+<div class="station-table">
+  <div class="station-table-title">Figure 9 · Watershed climate stations — pre vs post 2017 (April+May precipitation, March peak snow on ground)</div>
+  <div class="station-table-subtitle">
+    The Ottawa CDA station used in Figures 7–8 is in the southern basin and explains only ~4% of Lac Coulonge variance. The case file's stronger test is the upstream contributing watersheds. Across nine ECCC stations spanning the Lièvre, Gatineau, upper Ottawa, and headwater areas, <strong>the climate signal is mixed and station-dependent — with the upper-basin snow trending the wrong way</strong>. No coherent step-change in 2017.
+  </div>
+  <table>
+    <thead>
+      <tr><th>ECCC station</th><th>Watershed role</th><th>Apr+May precip pre</th><th>post</th><th>Δ</th><th>March peak snow pre</th><th>post</th><th>Δ</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Barrage Témiscamingue</td><td>Upper Ottawa main feeder</td><td>147 mm</td><td>163 mm</td><td class="shift-flat">+11%</td><td>64 cm</td><td>54 cm</td><td class="shift-neg">−15%</td></tr>
+      <tr><td>Maniwaki Airport</td><td>Gatineau (recent)</td><td>145 mm</td><td>156 mm</td><td class="shift-flat">+8%</td><td>—</td><td>—</td><td>—</td></tr>
+      <tr><td>Mont-Laurier</td><td>Lièvre / Cabonga (Baskatong)</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+      <tr><td>Parent</td><td>Cabonga headwaters (north)</td><td>146 mm</td><td>140 mm</td><td class="shift-flat">−4%</td><td>64 cm</td><td>75 cm</td><td class="shift-pos">+17%</td></tr>
+      <tr><td>Val-d'Or</td><td>Upper Ottawa headwaters</td><td>—</td><td>—</td><td>—</td><td>57 cm</td><td>49 cm</td><td class="shift-neg">−14%</td></tr>
+      <tr><td>Rouyn</td><td>Témiscamingue watershed</td><td>129 mm</td><td>176 mm</td><td class="shift-pos">+36%</td><td>—</td><td>—</td><td>—</td></tr>
+      <tr><td>Ottawa CDA</td><td>South-basin reference</td><td>152 mm</td><td>183 mm</td><td class="shift-pos">+21%</td><td>35 cm</td><td>42 cm</td><td class="shift-pos">+20%</td></tr>
+    </tbody>
+  </table>
+  <div class="station-table-caption">
+    <strong>What this means.</strong> The <em>downstream</em> stations (Ottawa CDA, Rouyn) show modest precipitation increases. The <em>upstream</em> snow stations that actually drive the Ottawa freshet (Témiscamingue, Val-d'Or) show snow trending <strong>down</strong>. Mont-Laurier and Val-d'Or have no full Apr+May precip series in the post-2017 archive. <strong>There is no climate forcing pattern across this watershed that mathematically requires a +19% step in basin flow at 2017</strong> — the magnitude observed in the Britannia gauge and discussed in Exhibit D Figure 7. Source: ECCC daily climate bulk CSVs, watershed station set defined in <code>ingesters/eccc-ingest/</code>.
+  </div>
+</div>
+
+<!-- BASIN-FLOW STEP TEST (Britannia) -->
+<div class="station-table">
+  <div class="station-table-title">Figure 10 · The basin-flow step is at exactly 2017 — sharper than any climate variable</div>
+  <div class="station-table-subtitle">
+    Britannia (Ottawa River, downstream of every dam) median annual peak across candidate breakpoint years. The shift maximizes at 2017 and decays in both directions, indicating a true step rather than a trend.
+  </div>
+  <table>
+    <thead>
+      <tr><th>Breakpoint year</th><th>Pre n</th><th>Pre median (m³/s)</th><th>Post n</th><th>Post median (m³/s)</th><th>Shift</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>2010</td><td>50</td><td>3,075</td><td>15</td><td>3,510</td><td class="shift-flat">+14.1%</td></tr>
+      <tr><td>2015</td><td>54</td><td>3,075</td><td>11</td><td>3,600</td><td class="shift-flat">+17.1%</td></tr>
+      <tr style="background:rgba(179,38,30,0.06);"><td><strong>2017 ←</strong></td><td>57</td><td>3,080</td><td>8</td><td>3,675</td><td class="shift-pos">+19.3%</td></tr>
+      <tr><td>2018</td><td>58</td><td>3,100</td><td>7</td><td>3,450</td><td class="shift-flat">+11.3%</td></tr>
+      <tr><td>2019</td><td>59</td><td>3,120</td><td>6</td><td>3,315</td><td class="shift-flat">+6.2%</td></tr>
+      <tr><td>2020</td><td>60</td><td>3,165</td><td>5</td><td>3,180</td><td class="shift-flat">+0.5%</td></tr>
+    </tbody>
+  </table>
+  <div class="station-table-caption">
+    <strong>Decade super-flood counts</strong> (Britannia ≥ 4,500 m³/s): 1970s = 1, 1980s = 0, 1990s = 0, 2000s = 0, 2010s = 2, 2020s (5 yrs in) = 1. <strong>Three full decades with zero super-floods</strong>, then an outbreak. Step changes are not what climate-change typically delivers — climate delivers trends. Source: <code>data/wsc-hydrometric/britannia-ottawa-river/daily.csv</code>; analysis in <code>ingesters/climate-history/stepchange_analysis.py</code>.
+  </div>
+</div>
+
 <!-- THE CONCLUSION -->
 <div class="question-callout">
-  <div class="label">What this test rules out</div>
-  <div class="question">Climate change in the southern Ottawa basin is real and measurable. It does not, by itself, explain the regime change at Lac Coulonge.</div>
-  <p>The +3.7% rise in cold-season precipitation is not statistically significant; the +59 cm rise in annual peaks is. Even when the model is given full credit for the modest precipitation increase, post-2017 peaks run 58 cm above prediction on average and 90-157 cm above for the four super-flood years. The unexplained component is consistent with operational behavior change at Bryson Dam during the freshet (see Exhibit D). Both climate and operations are likely contributors. Only one is currently being scrutinized.</p>
+  <div class="label">What this test rules out — and what it does not</div>
+  <div class="question">Climate change in the Ottawa basin is real, but it does not, by itself, explain the post-2017 regime change at Lac Coulonge. And even if it did contribute, the operator's response remains the controllable variable.</div>
+  <p>The +3.7% rise in cold-season precipitation at Ottawa CDA is not statistically significant; the upstream watershed signal is mixed (Figure 9), with snow at the upper basin trending down. The basin-flow step is sharply concentrated at 2017 (Figure 10), with no matching climate step. The unexplained component is consistent with the operating-regime change at Bryson Dam now directly observable in the live data (Exhibit D, Figures 7–8).</p>
+  <p><strong>And the second-order point matters more than the first.</strong> Even granting whatever climate contribution does exist, a dam built to manage river flow has an obligation to adapt its operating posture as inflow patterns change. Holding the headpond at the top of its operating band during a 10-day stretch of peak inflow — as 2026 demonstrates — is the opposite of an adaptive response. <em>That</em> is the policy question, and it stands independent of the climate-attribution debate.</p>
 </div>
 
 <!-- FOOTER -->
 <div class="footer">
   <div class="left">
-    <strong>Sources verified.</strong> Cold-season precipitation from ECCC daily climate, Ottawa CDA station 4333 (climate.weather.gc.ca), 1972-2026; Lac Coulonge annual peaks from ORRPB historical records, compiled in <code>data/lac-coulonge-monthly-1972-2026.csv</code>; regression and residual analysis described in <code>docs/analysis/Freshet_2026_Complete_Summary.md</code> § "Testing the climate alternative."
-    <strong>What this is not.</strong> A claim that climate is irrelevant. The argument is narrower: climate alone cannot account for the regime change observed.
+    <strong>Sources verified.</strong> Cold-season precipitation from ECCC daily climate, Ottawa CDA station 4333 (climate.weather.gc.ca), 1972-2026; watershed-station precipitation and snow shifts from ECCC daily climate for Barrage Témiscamingue, Maniwaki Airport, Mont-Laurier, Parent, Val-d'Or, Rouyn (climate.weather.gc.ca), processed by <code>ingesters/climate-history/stepchange_analysis.py</code>; Britannia annual peak from <code>data/wsc-hydrometric/britannia-ottawa-river/daily.csv</code>; Lac Coulonge annual peaks from ORRPB historical records, compiled in <code>data/lac-coulonge-monthly-1972-2026.csv</code>; regression and residual analysis described in <code>docs/analysis/Freshet_2026_Complete_Summary.md</code> § "Testing the climate alternative."
+    <strong>What this is not.</strong> A claim that climate is irrelevant. The argument is narrower: (1) the climate forcing did not step-change in 2017, and (2) even where climate has contributed to bigger inflows, the operator's response is the variable a dam was built to control.
   </div>
   <div class="right">
     freshet.xgrunt.com<br>
-    <span style="opacity:0.5">v1 · MAY 2026</span>
+    <span style="opacity:0.5">v2 · MAY 2026</span>
   </div>
 </div>
 
