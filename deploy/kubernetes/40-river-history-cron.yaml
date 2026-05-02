@@ -263,7 +263,9 @@ spec:
                 - name: POSTGREST_URL
                   value: http://postgrest.freshet.svc.cluster.local:3000
                 - name: STATION_IDS
-                  value: "1195,1004,951,545,1279,984,548,550,981,1264"
+                  # Main stem + Gatineau + Lièvre tributary cascade. See
+                  # ingesters/river-history/README.md for what each ID covers.
+                  value: "1195,1004,951,545,1279,984,548,550,981,1264,442,994,982,983,522,196,211,300"
                 - name: MVCA_STATIONS
                   value: ""
                 - name: MVCA_LOOKBACK_HOURS

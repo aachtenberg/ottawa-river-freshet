@@ -93,6 +93,122 @@ data:
     FROM reservoir_readings
     ORDER BY reservoir_id, time DESC;
 
+    -- Hydro-Québec generating-station release telemetry.
+    -- Source: Donnees_VUE_CENTRALES_ET_OUVRAGES.json (~10 days hourly per pull,
+    -- public open-data feed referenced from hydroquebec.com/production/debits-niveaux-eau.html).
+    -- site_id is HQ's stable identifier ('3-46' = Bryson, '3-60' = Carillon, etc.).
+    CREATE TABLE IF NOT EXISTS dam_releases (
+      time           timestamptz NOT NULL,
+      site_id        text        NOT NULL,
+      total_cms      double precision,
+      turbined_cms   double precision,
+      spilled_cms    double precision,
+      PRIMARY KEY (site_id, time)
+    );
+
+    SELECT create_hypertable('dam_releases', 'time', if_not_exists => TRUE);
+
+    CREATE INDEX IF NOT EXISTS dam_releases_site_time_idx
+      ON dam_releases (site_id, time DESC);
+
+    -- Daily filtered local incremental inflows for each HQ generating station
+    -- (apport filtré). Distinct from dam_releases because cadence differs.
+    CREATE TABLE IF NOT EXISTS dam_inflows (
+      time         timestamptz NOT NULL,
+      site_id      text        NOT NULL,
+      inflow_cms   double precision,
+      PRIMARY KEY (site_id, time)
+    );
+
+    SELECT create_hypertable('dam_inflows', 'time', if_not_exists => TRUE);
+
+    -- Hydro-Québec basin water-level stations.
+    -- Source: Donnees_VUE_STATIONS_ET_TARAGES.json. station_id is HQ's identifier
+    -- ('1-2964' = Bryson amont / headpond, '1-2965' = Bryson aval / tailwater, etc.).
+    -- Filtered to Ottawa basin (lat 45-48, lon -80 to -74) by the ingester.
+    CREATE TABLE IF NOT EXISTS dam_levels (
+      time         timestamptz NOT NULL,
+      station_id   text        NOT NULL,
+      level_m      double precision,
+      PRIMARY KEY (station_id, time)
+    );
+
+    SELECT create_hypertable('dam_levels', 'time', if_not_exists => TRUE);
+
+    CREATE INDEX IF NOT EXISTS dam_levels_station_time_idx
+      ON dam_levels (station_id, time DESC);
+
+    -- Combined metadata for HQ centrales and stations.
+    CREATE TABLE IF NOT EXISTS dam_sites (
+      site_id      text PRIMARY KEY,
+      nom          text,
+      kind         text,             -- 'centrale' | 'station'
+      region       text,
+      region_code  text,
+      lat          double precision,
+      lon          double precision,
+      date_debut   date,
+      date_fin     date,
+      updated_at   timestamptz DEFAULT now()
+    );
+
+    CREATE OR REPLACE VIEW latest_dam_releases AS
+    SELECT DISTINCT ON (site_id)
+      site_id, time, total_cms, turbined_cms, spilled_cms
+    FROM dam_releases
+    ORDER BY site_id, time DESC;
+
+    CREATE OR REPLACE VIEW latest_dam_levels AS
+    SELECT DISTINCT ON (station_id)
+      station_id, time, level_m
+    FROM dam_levels
+    ORDER BY station_id, time DESC;
+
+    -- Water Survey of Canada real-time hydrometric readings.
+    -- Source: wateroffice.ec.gc.ca/services/real_time_data/csv/inline endpoint.
+    -- station_code is the WSC alphanumeric (e.g. '02KF005' = Ottawa River at Britannia).
+    CREATE TABLE IF NOT EXISTS wsc_readings (
+      time          timestamptz NOT NULL,
+      station_code  text        NOT NULL,
+      level_m       double precision,
+      flow_cms      double precision,
+      PRIMARY KEY (station_code, time)
+    );
+
+    SELECT create_hypertable('wsc_readings', 'time', if_not_exists => TRUE);
+
+    CREATE INDEX IF NOT EXISTS wsc_readings_station_time_idx
+      ON wsc_readings (station_code, time DESC);
+
+    CREATE OR REPLACE VIEW latest_wsc_readings AS
+    SELECT DISTINCT ON (station_code)
+      station_code, time, level_m, flow_cms
+    FROM wsc_readings
+    ORDER BY station_code, time DESC;
+
+    -- ECCC Climate Data daily observations.
+    -- Source: climate.weather.gc.ca bulk CSV endpoint.
+    -- station_id is the ECCC numeric identifier (e.g. 4337 = Maniwaki).
+    CREATE TABLE IF NOT EXISTS eccc_climate_daily (
+      time         date NOT NULL,
+      station_id   integer NOT NULL,
+      station_name text,
+      max_temp_c   double precision,
+      min_temp_c   double precision,
+      mean_temp_c  double precision,
+      total_precip_mm    double precision,
+      total_rain_mm      double precision,
+      total_snow_cm      double precision,
+      snow_on_ground_cm  double precision,
+      PRIMARY KEY (station_id, time)
+    );
+
+    SELECT create_hypertable('eccc_climate_daily', 'time', if_not_exists => TRUE,
+      chunk_time_interval => INTERVAL '1 year');
+
+    CREATE INDEX IF NOT EXISTS eccc_climate_daily_station_time_idx
+      ON eccc_climate_daily (station_id, time DESC);
+
     NOTIFY pgrst, 'reload schema';
 ---
 apiVersion: v1

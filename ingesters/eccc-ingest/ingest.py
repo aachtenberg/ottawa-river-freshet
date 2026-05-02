@@ -1,0 +1,148 @@
+"""
+ECCC daily climate ingester.
+
+Pulls the current-year (and optionally prior-year) daily climate CSV from
+ECCC's bulk endpoint for the watershed stations relevant to Lac Coulonge
+freshet analysis, and writes to eccc_climate_daily.
+
+Each pull is a small per-station CSV (~365 rows × 8 active stations). Upserts
+are merge-duplicates so the latest values overwrite older provisional ones.
+"""
+
+import os, sys, csv, io, urllib.request
+from datetime import date, datetime, timezone
+
+ENDPOINT = (
+    'https://climate.weather.gc.ca/climate_data/bulk_data_e.html'
+    '?format=csv&stationID={sid}&Year={year}&Month=1&Day=1&timeframe=2'
+)
+USER_AGENT = 'freshet-eccc-ingest/1.0 (https://freshet.xgrunt.com)'
+POSTGREST = os.environ.get('POSTGREST_URL', 'http://postgrest.data.svc.cluster.local:3000')
+
+# Watershed climate stations — kept in sync with the static historical
+# script at freshet-public/ingesters/climate-history/eccc_pull.py.
+# (slug, station_id, name, province, watershed_role, first_year, last_year)
+STATIONS = [
+    ('ottawa-cda',            4333,  'OTTAWA CDA',             'ON', 'reference', 1972, 2026),
+    ('maniwaki-airport',      5606,  'MANIWAKI AIRPORT',       'QC', 'Gatineau (recent)', 1993, 2026),
+    ('barrage-temiscamingue', 5977,  'BARRAGE TEMISCAMINGUE',  'QC', 'Upper Ottawa', 1972, 2026),
+    ('mont-laurier',          5615,  'MONT LAURIER',           'QC', 'Lievre/Cabonga', 1972, 2026),
+    ('parent',                5966,  'PARENT',                 'QC', 'Cabonga headwaters', 1972, 2026),
+    ('val-dor',               30172, "VAL-D'OR",               'QC', 'Upper Ottawa (recent)', 2008, 2026),
+    ('rouyn',                 10849, 'ROUYN',                  'QC', 'Temiscaming', 1994, 2026),
+    ('north-bay-a',           52318, 'NORTH BAY A',            'ON', 'Mid-basin', 2014, 2026),
+    ('pembroke-climate',      49068, 'PEMBROKE CLIMATE',       'ON', 'Mid-basin south', 2010, 2026),
+]
+
+YEARS_BACK = int(os.environ.get('ECCC_YEARS_BACK', '1'))  # current + N prior years
+POST_BATCH = int(os.environ.get('ECCC_POST_BATCH', '500'))
+
+CURRENT_YEAR = date.today().year
+
+
+def fetch_csv(sid, year):
+    url = ENDPOINT.format(sid=sid, year=year)
+    req = urllib.request.Request(url, headers={'User-Agent': USER_AGENT, 'Accept': 'text/csv'})
+    with urllib.request.urlopen(req, timeout=60) as r:
+        return r.read().decode('utf-8', errors='replace')
+
+
+def parse_csv(text, station_id, station_name):
+    """ECCC bulk CSV: header on line 1 (preceded by a UTF-8 BOM), data on
+    line 2+. Column names are stable across stations/years."""
+    if text.startswith('﻿'):
+        text = text[1:]
+    reader = csv.reader(io.StringIO(text))
+    rows = list(reader)
+    if len(rows) < 2:
+        return []
+    header_idx = 0
+    header = [h.strip() for h in rows[header_idx]]
+    col = {h: i for i, h in enumerate(header)}
+
+    def get(row, *names):
+        for n in names:
+            if n in col and col[n] < len(row):
+                v = row[col[n]].strip()
+                if v != '':
+                    try:
+                        return float(v)
+                    except ValueError:
+                        return None
+        return None
+
+    out = []
+    for row in rows[header_idx + 1:]:
+        if not row or not row[0]:
+            continue
+        # Columns include "Date/Time" or "Date/Time (LST)" in YYYY-MM-DD form.
+        dt_raw = row[col.get('Date/Time', 0)] if 'Date/Time' in col else (
+            row[col.get('Date/Time (LST)', 0)] if 'Date/Time (LST)' in col else row[0]
+        )
+        dt_raw = dt_raw.strip()
+        if not dt_raw:
+            continue
+        try:
+            d = datetime.strptime(dt_raw[:10], '%Y-%m-%d').date().isoformat()
+        except ValueError:
+            continue
+        out.append({
+            'time':              d,
+            'station_id':        station_id,
+            'station_name':      station_name,
+            'max_temp_c':        get(row, 'Max Temp (°C)', 'Max Temp (°C)'),
+            'min_temp_c':        get(row, 'Min Temp (°C)', 'Min Temp (°C)'),
+            'mean_temp_c':       get(row, 'Mean Temp (°C)', 'Mean Temp (°C)'),
+            'total_precip_mm':   get(row, 'Total Precip (mm)'),
+            'total_rain_mm':     get(row, 'Total Rain (mm)'),
+            'total_snow_cm':     get(row, 'Total Snow (cm)'),
+            'snow_on_ground_cm': get(row, 'Snow on Grnd (cm)'),
+        })
+    return out
+
+
+def post_rows(rows):
+    if not rows:
+        return 0
+    import json
+    sent = 0
+    for i in range(0, len(rows), POST_BATCH):
+        chunk = rows[i:i + POST_BATCH]
+        body = json.dumps(chunk).encode('utf-8')
+        req = urllib.request.Request(
+            f'{POSTGREST}/eccc_climate_daily',
+            data=body, method='POST',
+            headers={'Content-Type': 'application/json',
+                     'Prefer': 'resolution=merge-duplicates'},
+        )
+        with urllib.request.urlopen(req, timeout=60) as r:
+            sent += len(chunk)
+            print(f'  POST /eccc_climate_daily -> HTTP {r.status} ({len(chunk)} rows, cumulative {sent}/{len(rows)})')
+    return sent
+
+
+def main():
+    started = datetime.now(timezone.utc)
+    all_rows = []
+    for slug, sid, name, prov, role, first_year, last_year in STATIONS:
+        if CURRENT_YEAR < first_year or CURRENT_YEAR > last_year:
+            print(f'{slug}: outside active range ({first_year}-{last_year}), skipping')
+            continue
+        for year in range(max(first_year, CURRENT_YEAR - YEARS_BACK), CURRENT_YEAR + 1):
+            try:
+                text = fetch_csv(sid, year)
+            except Exception as e:
+                print(f'{slug} {year}: fetch failed: {e}', file=sys.stderr)
+                continue
+            rows = parse_csv(text, sid, name)
+            print(f'{slug} ({sid}) {year}: parsed {len(rows)} daily rows')
+            all_rows.extend(rows)
+
+    print(f'ECCC: {len(all_rows)} total rows from {len(STATIONS)} stations')
+    post_rows(all_rows)
+    elapsed = (datetime.now(timezone.utc) - started).total_seconds()
+    print(f'ECCC ingest complete in {elapsed:.1f}s')
+
+
+if __name__ == '__main__':
+    main()
