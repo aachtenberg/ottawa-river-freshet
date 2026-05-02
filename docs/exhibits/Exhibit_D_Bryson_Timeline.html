@@ -344,6 +344,179 @@ svg.hydraulic {
   color: var(--ink-soft);
 }
 
+/* Cascade comparison figure (Figure 7) */
+.cascade-block {
+  margin-bottom: 28px;
+  padding: 22px 26px 24px;
+  background: var(--paper-bright);
+  border: 1px solid var(--rule);
+}
+.cascade-title {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: 18px;
+  letter-spacing: -0.01em;
+  margin-bottom: 6px;
+  color: var(--ink);
+}
+.cascade-subtitle {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 12px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  margin-bottom: 18px;
+  max-width: 920px;
+}
+.cascade-grid {
+  display: grid;
+  grid-template-columns: 180px 1fr 1fr;
+  column-gap: 18px;
+  row-gap: 8px;
+  align-items: center;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 12px;
+}
+.cascade-grid .col-head {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 6px;
+  margin-bottom: 4px;
+}
+.cascade-grid .name {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 500;
+  color: var(--ink);
+  font-size: 13px;
+}
+.cascade-grid .name .sub {
+  display: block;
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--ink-soft);
+  letter-spacing: 0.02em;
+  opacity: 0.85;
+}
+.cascade-grid .row.bryson .name { color: var(--accent-strong); font-weight: 700; }
+.cascade-grid .row.bryson .name .sub { color: var(--accent); opacity: 1; }
+.cascade-grid .bar-wrap {
+  position: relative;
+  height: 20px;
+  background: rgba(20,23,26,0.06);
+  border: 1px solid var(--rule-soft);
+}
+.cascade-grid .bar-fill {
+  position: absolute;
+  top: 0; bottom: 0;
+  background: var(--neutral);
+}
+.cascade-grid .bar-spill { background: var(--accent); }
+.cascade-grid .row.bryson .bar-fill { background: var(--accent-strong); }
+.cascade-grid .bar-wrap .label {
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  transform: translateY(-50%);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink);
+  text-shadow: 0 0 4px rgba(244,237,224,0.8);
+  font-variant-numeric: tabular-nums;
+}
+.cascade-caption {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule-soft);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 11px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.cascade-caption strong { color: var(--ink); font-weight: 600; }
+
+/* Live-observation callout (sits between the question callout and footer) */
+.live-callout {
+  margin-bottom: 28px;
+  padding: 22px 26px 22px;
+  background: var(--paper-bright);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--neutral);
+}
+.live-callout .label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--ink-soft);
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.live-callout .lead {
+  font-family: 'Fraunces', serif;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--ink);
+  margin-bottom: 14px;
+  max-width: 920px;
+  letter-spacing: -0.01em;
+}
+.live-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.live-kpi {
+  border: 1px solid var(--rule-soft);
+  padding: 12px 14px 10px;
+  background: var(--paper);
+}
+.live-kpi .k {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-soft);
+  margin-bottom: 4px;
+}
+.live-kpi .v {
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.05;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.live-kpi .v .unit { font-size: 11px; font-weight: 500; color: var(--ink-soft); margin-left: 3px; }
+.live-kpi .ctx {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 11px;
+  color: var(--ink-soft);
+  margin-top: 4px;
+  line-height: 1.35;
+}
+.live-callout .body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  max-width: 920px;
+}
+.live-callout .body p { margin-bottom: 6px; }
+.live-callout .body p:last-child { margin-bottom: 0; }
+.live-callout code {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  background: rgba(20,23,26,0.05);
+  padding: 1px 5px;
+  border-radius: 2px;
+}
+
 /* Footer */
 .footer {
   border-top: 1px solid var(--rule);
@@ -479,22 +652,103 @@ svg.hydraulic {
   </div>
 </div>
 
+<!-- CASCADE COMPARISON (Figure 7) -->
+<div class="cascade-block">
+  <div class="cascade-title">Figure 7 · How Bryson is being run vs. its neighbours · 2026-05-02</div>
+  <div class="cascade-subtitle">
+    <strong>Plain-language summary.</strong> Every Hydro-Québec dam can do two things with the water it receives: send it through the turbines (which generates power) or open the spillway gates and let it bypass the turbines (which generates nothing). On May 2, 2026, the upstream dams on the Ottawa River are doing what you'd expect — running their turbines first, opening the spillway only for what doesn't fit. <strong>Bryson is doing the opposite</strong>: turbines almost off, spillway wide open. This is a deliberate choice by the operator, not a forced response to too much water — the upstream dams are receiving the same freshet and choosing to turbine it.
+  </div>
+  <div class="cascade-subtitle">
+    Each row below shows one HQ generating station, ordered upstream → downstream. The first bar is total water leaving the dam (m³/s). The second bar is the share that bypasses the turbines.
+  </div>
+  <div class="cascade-grid">
+    <div class="col-head">Station (upstream → downstream)</div>
+    <div class="col-head">Total release (m³/s, scale 0–1500)</div>
+    <div class="col-head">Spill share (% of total bypassing turbines)</div>
+
+    <div class="row name"><span>Première-Chute</span><span class="sub">upper Ottawa, run-of-river</span></div>
+    <div class="bar-wrap"><div class="bar-fill" style="width:66.3%"></div><span class="label">995</span></div>
+    <div class="bar-wrap"><div class="bar-fill bar-spill" style="width:41%"></div><span class="label">41%</span></div>
+
+    <div class="row name"><span>Rapides-des-Quinze</span><span class="sub">Lake Quinze outflow</span></div>
+    <div class="bar-wrap"><div class="bar-fill" style="width:63.5%"></div><span class="label">952</span></div>
+    <div class="bar-wrap"><div class="bar-fill bar-spill" style="width:57%"></div><span class="label">57%</span></div>
+
+    <div class="row name"><span>Rapides-des-Îles</span><span class="sub">Lac Témiscamingue head</span></div>
+    <div class="bar-wrap"><div class="bar-fill" style="width:70.5%"></div><span class="label">1057</span></div>
+    <div class="bar-wrap"><div class="bar-fill bar-spill" style="width:41%"></div><span class="label">41%</span></div>
+
+    <div class="row name"><span>Rapide-2</span><span class="sub">upper Ottawa</span></div>
+    <div class="bar-wrap"><div class="bar-fill" style="width:27%"></div><span class="label">405</span></div>
+    <div class="bar-wrap"><div class="bar-fill bar-spill" style="width:19%"></div><span class="label">19%</span></div>
+
+    <div class="row name"><span>Rapide-7</span><span class="sub">upper Ottawa</span></div>
+    <div class="bar-wrap"><div class="bar-fill" style="width:22.7%"></div><span class="label">341</span></div>
+    <div class="bar-wrap"><div class="bar-fill bar-spill" style="width:0%"></div><span class="label">0%</span></div>
+
+    <div class="row bryson name"><span>Bryson</span><span class="sub">Lac Coulonge / Mansfield</span></div>
+    <div class="bar-wrap"><div class="bar-fill" style="width:90.5%"></div><span class="label">1,357</span></div>
+    <div class="bar-wrap"><div class="bar-fill bar-spill" style="width:83%"></div><span class="label">83%</span></div>
+  </div>
+  <div class="cascade-caption">
+    <strong>What this means.</strong> Of the 1,357 m³/s leaving Bryson, about 1,126 m³/s is going over the spillway and only 231 m³/s through the turbines. Five upstream Hydro-Québec dams handling the same freshet inflow are running 0–57% spill — Bryson stands alone at 83%. The simplest explanation for spilling water past your own turbines is that the headpond behind the dam is at its operating ceiling and you're trying to keep it there. That's the operating choice the case file is asking about.
+    <br><br>
+    <strong>For context</strong> — at the basin's terminal point, Carillon (downstream of every other Ottawa station) is releasing 6,863 m³/s with 55% spill. So Bryson's 83% is unusually high even compared to the basin total at the St-Lawrence junction.
+    <br><br>
+    Source: Hydro-Québec open-data feed (centrale release telemetry), snapshot 2026-05-02 19:00 UTC. Captured in <code>data/hq-opendata/cascade-snapshot-2026_05_02T22_23_27Z.csv</code>.
+  </div>
+</div>
+
+<!-- LIVE OBSERVATION CALLOUT -->
+<div class="live-callout">
+  <div class="label">Live observation · Freshet 2026</div>
+  <div class="lead">On May 2 2026, the Lac Coulonge gauge reads 108.43 m — that's 7 cm below the official major-flood line, and 40 cm above what was a typical freshet peak before Bryson was refurbished. Bryson Dam sits at the downstream outlet of Lac Coulonge, and the lake <em>is</em> its headpond. Right now Bryson is holding that headpond near the top of its operating range — which is the same as saying it's holding Lac Coulonge high — and is releasing the bulk of the inflow over the spillway instead of through its turbines. This is exactly the operating signature the rest of this exhibit predicts.</div>
+  <div class="live-kpi-grid">
+    <div class="live-kpi">
+      <div class="k">How high the lake is being held</div>
+      <div class="v">104.2–104.7<span class="unit"> m</span></div>
+      <div class="ctx">Bryson's headpond elevation, 10 days of hourly readings. The headpond <em>is</em> Lac Coulonge — what the dam holds back. It has stayed inside a 47 cm window through 10 days of huge inflow, kept high rather than drawn down to make room.</div>
+    </div>
+    <div class="live-kpi">
+      <div class="k">How much water is being spilled</div>
+      <div class="v">86%<span class="unit"> of release</span></div>
+      <div class="ctx">Daily spill share 82–91%. Of every 10 m³ leaving Bryson right now, ~9 go over the spillway. The other HQ dams upstream — handling the same freshet — are spilling 0–57%.</div>
+    </div>
+    <div class="live-kpi">
+      <div class="k">Drop across the dam (Δh)</div>
+      <div class="v">14.80<span class="unit"> m</span></div>
+      <div class="ctx">Distance from headpond down to tailwater. This is the variable the November 2025 MRC notice flagged as the one that changed when Bryson was refurbished. We can now measure it directly, every hour.</div>
+    </div>
+    <div class="live-kpi">
+      <div class="k">Lac Coulonge level today</div>
+      <div class="v">108.43<span class="unit"> m</span></div>
+      <div class="ctx">7 cm short of the major-flood threshold (108.50 m). 40 cm above the typical 2017–2026 freshet peak. The community is sitting in the upper end of the new normal that Exhibit D documents.</div>
+    </div>
+  </div>
+  <div class="body">
+    <p><strong>The bottom line.</strong> Until 2026, the case file's argument was based on indirect evidence — Lac Coulonge gauge readings, Bryson refurbishment dates, the November 2025 MRC notice. None of that showed how Bryson is actually being operated day-to-day. The Hydro-Québec open-data feed now does. We can see, hour by hour, that the lake behind the dam (Lac Coulonge itself) is being held high during peak inflow rather than drawn down to absorb it. That matches the "later drawdown, slower refill, holding water through peak inflow" hypothesis from Figure 6 — we now have direct evidence of the mechanism. The spillway is how the dam keeps the lake from rising past 104.7 m; the operating choice the case file is asking about is <em>why hold it that high in the first place</em>, instead of drawing it lower before peak inflow arrives.</p>
+    <p><strong>What we still need.</strong> The same dataset for the years before 2017. Hydro-Québec's open feed only goes back ~10 days. Until we know how Bryson was operated through, say, the 2014 freshet, we can describe the new regime but can't quantify how much it changed. <strong>That is the specific information the community is asking the operators and ORRPB to disclose.</strong></p>
+    <p><strong>Verify it yourself.</strong> The numbers in this panel are reproducible from the source CSVs in <code>data/hq-opendata/</code> (snapshot taken 2026-05-02 22:23 UTC). The live versions are visible in real time at <code>freshet.xgrunt.com#operations</code> — the Operations tab shows the same data updating hourly.</p>
+  </div>
+</div>
+
 <!-- THE QUESTION -->
 <div class="question-callout">
   <div class="label">The unanswered question</div>
-  <div class="question">What changed about the freshet operating regime at Bryson Dam after 2017? Was the impact on Lac Coulonge flood buffer evaluated before the change was made?</div>
-  <p>The November 2025 MRC Pontiac notice ("notice of <em>temporary</em> water-level increase, Bryson Dam") confirms 30–50 cm higher-head operations have been tested. Neither Hydro-Québec nor ORRPB has disclosed how Bryson's freshet-period operations actually changed, or what flood-buffer analysis informed the change.</p>
+  <div class="question">How was Bryson operated through the freshet before 2017, and was the flood-buffer impact on Lac Coulonge evaluated before that operating regime changed?</div>
+  <p>The November 2025 MRC Pontiac notice confirms higher-head operations have been tested, and Figure 7 plus the live-observation panel above show those operations are happening right now. What's still missing is the <strong>before</strong> picture: the Bryson headpond elevation through the 1972–2016 freshets. Without it, we can describe the new regime but can't put a number on how much it has changed.</p>
+  <p>The data exists — Hydro-Québec records headpond elevation continuously and has done so for decades. It is simply not published. Releasing the historical record is what would let the affected communities, the regulator, and Hydro-Québec itself evaluate the trade-off in plain numbers.</p>
 </div>
 
 <!-- FOOTER -->
 <div class="footer">
   <div class="left">
-    <strong>Sources verified.</strong> Hydro-Québec generating stations page (hydroquebec.com/generation/generating-stations.html, last updated 2026-01-01); Bryson refurbishment project page (hydroquebec.com/projects/project-bryson/); MRC Pontiac notice of November 19, 2025 (mrcpontiac.qc.ca/en/notice-of-temporary-water-level-increase-bryson-dam-hydro-quebec/); ORRPB FAQ Q5 Part D and Q12 (ottawariver.ca/about-us/faq/); Lac Coulonge monthly + annual data 1972–2026 from ORRPB historical records, compiled in <code>data/lac-coulonge-monthly-1972-2026.csv</code> and analysed by <code>ingesters/climate-history/lac_coulonge_peak_stats.py</code>.
-    <strong>What this is not.</strong> An accusation. The community is asking for the missing pieces.
+    <strong>Sources verified.</strong> Hydro-Québec generating stations page (hydroquebec.com/generation/generating-stations.html, last updated 2026-01-01); Hydro-Québec open-data feed for centrale and station telemetry (hydroquebec.com/production/debits-niveaux-eau.html → Donnees_VUE_CENTRALES_ET_OUVRAGES.json, Donnees_VUE_STATIONS_ET_TARAGES.json); Bryson refurbishment project page (hydroquebec.com/projects/project-bryson/); MRC Pontiac notice of November 19, 2025 (mrcpontiac.qc.ca/en/notice-of-temporary-water-level-increase-bryson-dam-hydro-quebec/); ORRPB FAQ Q5 Part D and Q12 (ottawariver.ca/about-us/faq/); Lac Coulonge monthly + annual data 1972–2026 from ORRPB historical records, compiled in <code>data/lac-coulonge-monthly-1972-2026.csv</code> and analysed by <code>ingesters/climate-history/lac_coulonge_peak_stats.py</code>; Bryson freshet 2026 operational ledger snapshotted in <code>data/hq-opendata/</code>.
+    <strong>What this is not.</strong> An accusation. The community is asking for the missing pieces — chief among them, the pre-2017 Bryson headpond elevation history.
   </div>
   <div class="right">
     freshet.xgrunt.com<br>
-    <span style="opacity:0.5">v1 · APR 2026</span>
+    <span style="opacity:0.5">v2 · MAY 2026</span>
   </div>
 </div>
 

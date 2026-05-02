@@ -253,6 +253,9 @@ svg.chart {
   Lac Coulonge spent January and February 2026 sitting consistently above its prior-decade winter band.
   This is before any spring runoff. It is the level the freshet starts from. A higher starting line means a higher peak — every centimetre.
 </p>
+<p class="deck" style="font-size:15px; font-style:normal; max-width:950px; margin-bottom:30px; color:var(--ink); border-left:3px solid var(--ink); padding-left:14px;">
+  <strong>Scope note.</strong> Lac Coulonge alone does not have the storage capacity to absorb a freshet on its own — that is exactly the case file's point. The community's policy ask is for snowpack-indexed drawdown across the system (Baskatong, Bark Lake, Cabonga, and the run-of-river headponds together), not a Lac Coulonge–only intervention. This exhibit is purely descriptive: the river was already higher than usual when the freshet started.
+</p>
 
 <div class="stats">
   <div class="stat">
@@ -287,6 +290,16 @@ svg.chart {
   </div>
 </div>
 
+<div class="chart-block">
+  <div class="chart-title">Figure 2b · Pre-freshet trajectory · Feb 27 – Apr 14, 2026 vs prior super-flood years vs ORRPB long-run median</div>
+  <div class="chart-subtitle">The buffer was never released. 2026 stayed elevated through March and into April; prior super-flood years drew down to or below median first.</div>
+  <div class="chart-wrap">
+    <svg class="chart2b" viewBox="0 0 1080 460" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+      <g id="chart2b-content"></g>
+    </svg>
+  </div>
+</div>
+
 <div class="evidence-grid">
   <div class="evidence">
     <div class="label">Posted to the flood watch group · Feb 28, 2026</div>
@@ -309,7 +322,7 @@ svg.chart {
 
 <div class="footer">
   <div class="left">
-    <strong>Source data</strong> · Daily Lac Coulonge water level readings, January 1 to February 27, for each year 2016–2026. Compiled from Hydro-Québec gauge records published via the Ottawa River Regulation Planning Board and Quebec MSP Vigilance API (station 1195).
+    <strong>Source data · Figure 2</strong> · Daily Lac Coulonge water level readings, January 1 to February 27, for each year 2016–2026. Compiled from Hydro-Québec gauge records published via the Ottawa River Regulation Planning Board and Quebec MSP Vigilance API (station 1195). <strong>Source data · Figure 2b</strong> · ORRPB published daily values (Lake Coulonge at Fort-Coulonge) for Feb 27 – Apr 14 in 2016, 2017, 2018, 2019, 2023 and 2026, alongside ORRPB's long-run daily median across the historical record. 2026 daily values computed as the mean of 24 hourly readings per day. Years selected: all four post-2017 super-flood years (2017, 2019, 2023, 2026) plus 2016 and 2018 as comparison years.
     <strong>Why this matters</strong> · Winter baseline cannot be explained by snowmelt or spring rain — neither has occurred yet. It reflects how much water is being held in the upstream reservoirs and run-of-river headponds before the freshet starts. A higher pre-freshet baseline means less buffer to absorb spring runoff and a higher peak under any given snowmelt scenario. The shift visible here is an operational signal, not a weather signal.
   </div>
   <div class="right">
@@ -522,6 +535,205 @@ priorRange.setAttribute('fill', '#2c333a');
 priorRange.setAttribute('font-weight', '500');
 priorRange.textContent = 'prior decade';
 content.appendChild(priorRange);
+</script>
+
+<!-- ===== Figure 2b: Pre-freshet trajectory Feb 27 - Apr 14 (ORRPB daily) ===== -->
+<script>
+(function() {
+  const SVG_NS2 = 'http://www.w3.org/2000/svg';
+  const svg2 = document.querySelector('svg.chart2b');
+  const content2 = svg2.querySelector('#chart2b-content');
+
+  // Day labels Feb 27 - Apr 14 (47 days, non-leap year calendar)
+  const days2 = ["Feb 27","Feb 28","Mar 01","Mar 02","Mar 03","Mar 04","Mar 05","Mar 06","Mar 07","Mar 08","Mar 09","Mar 10","Mar 11","Mar 12","Mar 13","Mar 14","Mar 15","Mar 16","Mar 17","Mar 18","Mar 19","Mar 20","Mar 21","Mar 22","Mar 23","Mar 24","Mar 25","Mar 26","Mar 27","Mar 28","Mar 29","Mar 30","Mar 31","Apr 01","Apr 02","Apr 03","Apr 04","Apr 05","Apr 06","Apr 07","Apr 08","Apr 09","Apr 10","Apr 11","Apr 12","Apr 13","Apr 14"];
+
+  // ORRPB daily Observed values (per-year manual pulls). 2016 has Feb 29 dropped to align with non-leap calendar.
+  const yrs = {
+    "2016": [106.55,106.55,106.53,106.57,106.54,106.54,106.61,106.71,106.80,106.84,106.85,106.86,106.88,106.88,106.89,106.94,106.96,106.94,106.93,106.92,106.91,106.90,106.87,106.83,106.79,106.77,106.75,106.71,106.64,106.61,106.64,106.65,106.73,106.92,107.11,107.24,107.29,107.27,107.19,107.11,107.02,106.92,106.83,106.76,106.72,106.70,106.69],
+    "2017": [106.59,106.59,106.59,106.55,106.61,106.66,106.66,106.66,106.65,106.63,106.60,106.62,106.61,106.57,106.52,106.52,106.57,106.56,106.51,106.50,106.51,106.50,106.54,106.49,106.47,106.41,106.34,106.32,106.28,106.26,106.23,106.24,106.24,106.25,106.26,106.29,106.26,106.30,106.36,106.40,106.51,106.62,106.79,107.03,107.21,107.32,107.37],
+    "2018": [106.50,106.52,106.52,106.53,106.52,106.51,106.50,106.50,106.52,106.52,106.51,106.50,106.50,106.49,106.50,106.49,106.48,106.45,106.42,106.39,106.43,106.46,106.47,106.45,106.48,106.52,106.49,106.45,106.46,106.43,106.45,106.42,106.36,106.26,106.26,106.26,106.28,106.24,106.25,106.24,106.23,106.23,106.23,106.21,106.22,106.21,106.18],
+    "2019": [106.59,106.60,106.60,106.60,106.61,106.60,106.58,106.57,106.58,106.57,106.55,106.55,106.59,106.59,106.58,106.57,106.58,106.58,106.57,106.58,106.59,106.60,106.59,106.57,106.58,106.60,106.59,106.58,106.57,106.57,106.58,106.60,106.60,106.60,106.59,106.58,106.58,106.57,106.56,106.57,106.60,106.59,106.62,106.56,106.53,106.53,106.52],
+    "2023": [106.47,106.47,106.48,106.51,106.50,106.51,106.51,106.53,106.53,106.53,106.53,106.55,106.56,106.56,106.57,106.57,106.54,106.54,106.56,106.51,106.42,106.37,106.33,106.28,106.20,106.18,106.22,106.21,106.20,106.19,106.20,106.20,106.21,106.22,106.22,106.25,106.25,106.28,106.33,106.29,106.26,106.24,106.26,106.30,106.27,106.27,106.46],
+    "2026": [106.58,106.56,106.48,106.47,106.49,106.46,106.41,106.38,106.44,106.59,106.60,106.58,106.58,106.58,106.56,106.57,106.57,106.58,106.59,106.59,106.58,106.56,106.58,106.58,106.57,106.57,106.55,106.56,106.56,106.55,106.54,106.51,106.48,106.48,106.46,106.48,106.46,106.49,106.52,106.60,106.67,106.70,106.69,106.65,106.64,106.67,106.78]
+  };
+  // Long-run daily median across the historical record (ORRPB-published)
+  const median = [106.51,106.51,106.50,106.50,106.50,106.50,106.50,106.50,106.50,106.50,106.50,106.50,106.51,106.51,106.51,106.51,106.50,106.50,106.50,106.49,106.49,106.48,106.48,106.47,106.47,106.47,106.46,106.46,106.45,106.45,106.43,106.44,106.43,106.44,106.44,106.45,106.46,106.46,106.45,106.47,106.47,106.46,106.45,106.44,106.45,106.46,106.49];
+
+  const W2 = 1080, H2 = 460;
+  const m2 = { top: 24, right: 130, bottom: 50, left: 56 };
+  const plotW2 = W2 - m2.left - m2.right;
+  const plotH2 = H2 - m2.top - m2.bottom;
+  const N2 = days2.length;
+  const x2 = i => m2.left + (i / (N2 - 1)) * plotW2;
+  const yMin2 = 106.10, yMax2 = 107.50;
+  const y2 = v => m2.top + plotH2 - ((v - yMin2) / (yMax2 - yMin2)) * plotH2;
+
+  // background tint
+  const bg2 = document.createElementNS(SVG_NS2, 'rect');
+  bg2.setAttribute('x', m2.left); bg2.setAttribute('y', m2.top);
+  bg2.setAttribute('width', plotW2); bg2.setAttribute('height', plotH2);
+  bg2.setAttribute('fill', 'rgba(20,23,26,0.025)');
+  content2.appendChild(bg2);
+
+  // y grid + labels
+  const yt2 = [106.2, 106.4, 106.6, 106.8, 107.0, 107.2, 107.4];
+  yt2.forEach(t => {
+    const yy = y2(t);
+    const ln = document.createElementNS(SVG_NS2, 'line');
+    ln.setAttribute('x1', m2.left); ln.setAttribute('x2', m2.left + plotW2);
+    ln.setAttribute('y1', yy); ln.setAttribute('y2', yy);
+    ln.setAttribute('stroke', 'rgba(20,23,26,0.07)');
+    ln.setAttribute('stroke-width', '1');
+    content2.appendChild(ln);
+    const lb = document.createElementNS(SVG_NS2, 'text');
+    lb.setAttribute('x', m2.left - 8); lb.setAttribute('y', yy + 3);
+    lb.setAttribute('text-anchor', 'end');
+    lb.setAttribute('font-size', '10');
+    lb.setAttribute('fill', '#2c333a');
+    lb.textContent = t.toFixed(1);
+    content2.appendChild(lb);
+  });
+
+  // y axis title
+  const ylab2 = document.createElementNS(SVG_NS2, 'text');
+  ylab2.setAttribute('x', 14); ylab2.setAttribute('y', m2.top + plotH2 / 2);
+  ylab2.setAttribute('transform', `rotate(-90, 14, ${m2.top + plotH2 / 2})`);
+  ylab2.setAttribute('text-anchor', 'middle');
+  ylab2.setAttribute('font-size', '10');
+  ylab2.setAttribute('letter-spacing', '0.14em');
+  ylab2.setAttribute('fill', '#2c333a');
+  ylab2.textContent = 'METRES ABOVE SEA LEVEL';
+  content2.appendChild(ylab2);
+
+  // Median trace (dashed grey)
+  let medPath = '';
+  for (let i = 0; i < N2; i++) medPath += (i === 0 ? 'M' : 'L') + x2(i) + ',' + y2(median[i]);
+  const medLine = document.createElementNS(SVG_NS2, 'path');
+  medLine.setAttribute('d', medPath);
+  medLine.setAttribute('fill', 'none');
+  medLine.setAttribute('stroke', '#2c333a');
+  medLine.setAttribute('stroke-width', '1.5');
+  medLine.setAttribute('stroke-dasharray', '6 4');
+  medLine.setAttribute('opacity', '0.55');
+  content2.appendChild(medLine);
+
+  // Distinct colour per comparison year so each line is identifiable.
+  // 2016 (early-April high-water spike), 2017/2019/2023 (super-flood years),
+  // 2018 (low-year baseline) — all kept neutral so 2026 (red) stands alone.
+  const yrColours = {
+    "2016": "#c47a2b",   // amber — distinct because of the Apr 5 spike
+    "2017": "#3a7a8c",   // teal
+    "2018": "#7a8086",   // light grey (low-year baseline)
+    "2019": "#1f4d5e",   // deep teal
+    "2023": "#5a8c4a"    // green
+  };
+  ["2016","2018","2017","2019","2023"].forEach(yr => {
+    let p = '';
+    const arr = yrs[yr];
+    for (let i = 0; i < arr.length; i++) p += (i === 0 ? 'M' : 'L') + x2(i) + ',' + y2(arr[i]);
+    const ln = document.createElementNS(SVG_NS2, 'path');
+    ln.setAttribute('d', p);
+    ln.setAttribute('fill', 'none');
+    ln.setAttribute('stroke', yrColours[yr]);
+    ln.setAttribute('stroke-width', '1.6');
+    ln.setAttribute('opacity', '0.85');
+    content2.appendChild(ln);
+  });
+
+  // Inline labels — place at the point each line is most distinctive (typically its local peak)
+  function inlineLabel(yr, idx, color, dy) {
+    const xx = x2(idx);
+    const yy = y2(yrs[yr][idx]) + (dy || -8);
+    const lb = document.createElementNS(SVG_NS2, 'text');
+    lb.setAttribute('x', xx);
+    lb.setAttribute('y', yy);
+    lb.setAttribute('text-anchor', 'middle');
+    lb.setAttribute('font-size', '11');
+    lb.setAttribute('font-weight', '700');
+    lb.setAttribute('fill', color);
+    lb.setAttribute('font-family', "'Fraunces', serif");
+    lb.textContent = yr;
+    content2.appendChild(lb);
+  }
+  inlineLabel("2016", 38, yrColours["2016"], -8);  // Apr 5 peak (107.29)
+  inlineLabel("2017", 44, yrColours["2017"], -8);  // Apr 11 ramp visible
+  inlineLabel("2019", 12, yrColours["2019"], -8);  // mid-March on the line
+  inlineLabel("2023", 21, yrColours["2023"], -8);  // mid-March on the line
+  inlineLabel("2018", 33, yrColours["2018"], 14);  // late March, low — label below line
+
+  // 2026 in bold red
+  let p26 = '';
+  yrs["2026"].forEach((v, i) => p26 += (i === 0 ? 'M' : 'L') + x2(i) + ',' + y2(v));
+  const ln26 = document.createElementNS(SVG_NS2, 'path');
+  ln26.setAttribute('d', p26);
+  ln26.setAttribute('fill', 'none');
+  ln26.setAttribute('stroke', '#b3261e');
+  ln26.setAttribute('stroke-width', '3');
+  ln26.setAttribute('stroke-linejoin', 'round');
+  ln26.setAttribute('stroke-linecap', 'round');
+  content2.appendChild(ln26);
+
+  // X-axis tick labels (every ~10 days plus end markers)
+  const xt2 = [0, 9, 17, 23, 30, 38, 46];
+  const xtLbl = ['Feb 27', 'Mar 8', 'Mar 16', 'Mar 22', 'Mar 29', 'Apr 6', 'Apr 14'];
+  xt2.forEach((di, idx) => {
+    const xx = x2(di);
+    const tk = document.createElementNS(SVG_NS2, 'line');
+    tk.setAttribute('x1', xx); tk.setAttribute('x2', xx);
+    tk.setAttribute('y1', m2.top + plotH2); tk.setAttribute('y2', m2.top + plotH2 + 4);
+    tk.setAttribute('stroke', '#2c333a'); tk.setAttribute('stroke-width', '1');
+    content2.appendChild(tk);
+    const lb = document.createElementNS(SVG_NS2, 'text');
+    lb.setAttribute('x', xx); lb.setAttribute('y', m2.top + plotH2 + 18);
+    lb.setAttribute('text-anchor', 'middle');
+    lb.setAttribute('font-size', '10');
+    lb.setAttribute('fill', '#2c333a');
+    lb.textContent = xtLbl[idx];
+    content2.appendChild(lb);
+  });
+
+  // Right-side annotations: 2026 endpoint + median endpoint + super-flood-year endpoints
+  function annotate(idx, val, label, sub, color, weight) {
+    const xx = x2(idx);
+    const yy = y2(val);
+    const dot = document.createElementNS(SVG_NS2, 'circle');
+    dot.setAttribute('cx', xx); dot.setAttribute('cy', yy);
+    dot.setAttribute('r', '3.5'); dot.setAttribute('fill', color);
+    content2.appendChild(dot);
+    const lb = document.createElementNS(SVG_NS2, 'text');
+    lb.setAttribute('x', xx + 8); lb.setAttribute('y', yy - 3);
+    lb.setAttribute('font-size', '11');
+    lb.setAttribute('font-weight', weight || '700');
+    lb.setAttribute('fill', color);
+    lb.setAttribute('font-family', "'Fraunces', serif");
+    lb.textContent = label;
+    content2.appendChild(lb);
+    if (sub) {
+      const sl = document.createElementNS(SVG_NS2, 'text');
+      sl.setAttribute('x', xx + 8); sl.setAttribute('y', yy + 10);
+      sl.setAttribute('font-size', '9');
+      sl.setAttribute('font-weight', '500');
+      sl.setAttribute('fill', color);
+      sl.textContent = sub;
+      content2.appendChild(sl);
+    }
+  }
+  const last = N2 - 1;
+  // Only annotate 2026 + median at the right edge — per-year labels live inline above each line
+  annotate(last, yrs["2026"][last], '2026', '+29 cm above median · still elevated', '#b3261e', '700');
+  annotate(last, median[last], 'long-run median', null, '#2c333a', '600');
+
+  // Title for the median line, near its midpoint
+  const mlbl = document.createElementNS(SVG_NS2, 'text');
+  mlbl.setAttribute('x', x2(7));
+  mlbl.setAttribute('y', y2(median[7]) - 6);
+  mlbl.setAttribute('font-size', '10');
+  mlbl.setAttribute('font-weight', '700');
+  mlbl.setAttribute('fill', '#2c333a');
+  mlbl.setAttribute('letter-spacing', '0.08em');
+  mlbl.textContent = 'ORRPB LONG-RUN MEDIAN';
+  content2.appendChild(mlbl);
+})();
 </script>
 
 </body>

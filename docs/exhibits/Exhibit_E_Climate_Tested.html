@@ -605,21 +605,36 @@ svg.fig {
   meanLn.setAttribute('opacity', '0.6');
   svg.appendChild(meanLn);
 
+  // Mean-line label: centered horizontally over the 2021 column where the bar
+  // is at -80 (well below the +58 line), so nothing collides. White-tint
+  // background rect for legibility against the dashed line.
+  const meanLblText = '10-yr mean residual: +58 cm';
+  const meanLblX = margin.left + (4.5 / residuals.length) * plotW; // ~ centered on 2021 (idx 4)
+  const meanLblY = meanY - 4;
+  // background rect (paper colour with slight opacity)
+  const meanLblBg = document.createElementNS(SVG_NS, 'rect');
+  meanLblBg.setAttribute('x', meanLblX - 90);
+  meanLblBg.setAttribute('y', meanLblY - 11);
+  meanLblBg.setAttribute('width', 180);
+  meanLblBg.setAttribute('height', 14);
+  meanLblBg.setAttribute('fill', '#fbf6eb');
+  meanLblBg.setAttribute('opacity', '0.92');
+  svg.appendChild(meanLblBg);
   const meanLbl = document.createElementNS(SVG_NS, 'text');
-  meanLbl.setAttribute('x', margin.left + plotW - 4);
-  meanLbl.setAttribute('y', meanY - 4);
-  meanLbl.setAttribute('text-anchor', 'end');
+  meanLbl.setAttribute('x', meanLblX);
+  meanLbl.setAttribute('y', meanLblY);
+  meanLbl.setAttribute('text-anchor', 'middle');
   meanLbl.setAttribute('font-size', '10');
   meanLbl.setAttribute('font-weight', '700');
   meanLbl.setAttribute('fill', '#b3261e');
   meanLbl.setAttribute('font-family', "'IBM Plex Mono', monospace");
-  meanLbl.textContent = '10-yr mean residual: +58 cm';
+  meanLbl.textContent = meanLblText;
   svg.appendChild(meanLbl);
 
-  // Legend
+  // Legend — placed BELOW the chart (in the bottom margin) to avoid colliding
+  // with the +157 (2019) bar's value label at the top of the plot area.
+  const legY = margin.top + plotH + 42;
   const legX = margin.left + 20;
-  const legY = margin.top + 14;
-  // Red box
   const lr = document.createElementNS(SVG_NS, 'rect');
   lr.setAttribute('x', legX); lr.setAttribute('y', legY - 8);
   lr.setAttribute('width', 14); lr.setAttribute('height', 10);
@@ -632,7 +647,6 @@ svg.fig {
   lrt.setAttribute('fill', '#14171a');
   lrt.textContent = 'Super-flood year';
   svg.appendChild(lrt);
-  // Blue box
   const lb = document.createElementNS(SVG_NS, 'rect');
   lb.setAttribute('x', legX + 160); lb.setAttribute('y', legY - 8);
   lb.setAttribute('width', 14); lb.setAttribute('height', 10);
