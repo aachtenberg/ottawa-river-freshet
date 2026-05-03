@@ -540,6 +540,27 @@ The shift maximizes at 2017 — the year Bryson refurbishment planning began —
 
 **Test B · Climate forcing.** Across 9 ECCC watershed stations, Apr+May precipitation shifts pre/post 2017 range **−4% (Parent) to +36% (Rouyn)**; March peak snow shifts range **−15% (Témiscamingue) to +20% (Ottawa CDA)** — with snow trending *down* at the upper basin. **No coherent climate step** that mathematically requires a +19% step in basin flow. Source: `ingesters/climate-history/stepchange_analysis.py`.
 
+### Pointe-Calumet step-change — corroborating evidence at the system terminus (added May 2026)
+
+The Britannia step-change result above shows the inflow-distribution shift concentrating at 2017. A complementary test at the *opposite* end of the chain — the gauge nearest Carillon's discharge — shows the same step but with a different geographic signature.
+
+Pointe-Calumet (WSC station 02OA105, Lake of Two Mountains, immediately downstream of Carillon, level record 1986–2024) is the closest public gauge to Carillon's tailwater. April–June daily-level summary by decade, from the WSC HYDAT bulk record (loaded May 2026 into a `wsc_daily` hypertable, 178k rows across 9 Ottawa-basin stations):
+
+| decade | years | AMJ mean (m) | AMJ peak avg (m) | AMJ peak max (m) |
+|---|---|---|---|---|
+| 1986–95 | 9 | 22.334 | 23.321 | 23.930 |
+| 1996–05 | 10 | 22.435 | 23.427 | 24.186 |
+| 2006–15 | 10 | 22.454 | 23.177 | 23.958 |
+| **2016–24** | 9 | **22.727** | **23.812** | **24.774** |
+
+The 2016–24 decade is **40 cm higher in AMJ mean and ~50 cm higher in AMJ peak average** than any prior decade in the gauge's record.
+
+The corroborating piece comes from the more distant Pointe-Claire gauge (WSC 02OA039, Lac Saint-Louis, downstream via the St-Lawrence, level record 1915–2025). The 110-year view shows modern peaks are *not* historically extreme there — the 1915–1944 era had higher AMJ peak max (22.85 m) than the modern era (22.56 m). St-Lawrence regulation downstream of Carillon (Beauharnois) buffers the lake.
+
+**Spatial pattern**: the regime change is sharply visible at the gauge nearest Carillon and dissipates downstream. This is the spatial pattern expected if the cause is operational/local rather than basin-wide climate signal alone — the same conclusion the Britannia step-change test points to from the upstream end of the chain.
+
+**The monthly attenuation check.** Across six decades of ORRPB monthly Carillon discharge / Britannia daily-mean flow records, the May Carillon-to-Britannia ratio is remarkably stable (1.45–1.60), with no detectable step-change in monthly-mean operational throughput. The directive question ("is HQ drawing down to 39.62 m before peak?") is a sub-monthly timing question that monthly means hide. Resolving it would require daily Carillon outflow (operator data, not in HYDAT after 1994) plus daily headpond level (operator-only). The third piece — daily Britannia flow plus tributary daily flows for a basin-balance check — is now in `wsc_daily` and available going forward.
+
 ### Why this matters for the case file
 
 The strongest version of the operations indictment — *Bryson amplifies the lake peak* — does not survive these tests. But three independent findings now stack the same direction:
@@ -555,6 +576,20 @@ The strongest version of the operations indictment — *Bryson amplifies the lak
 The ORRPB currently uses 30-year median guidelines for fall reservoir drawdown — a fixed rule applied regardless of conditions. This produces clearly wrong outcomes in heavy snow years (excess water in storage during freshet) and unnecessarily aggressive drawdown in light snow years (e.g. 2024 had summer-like April levels).
 
 The flood watch community's policy proposal: **a snowpack-indexed drawdown rule**. Heavy snow year = drawdown lower. Light snow year = less aggressive drawdown. Snowpack data is available months in advance. The 2024 vs 2026 contrast makes the case — same approach, very different conditions, only one year had appropriate buffer.
+
+### The Carillon directive enforcement gap (added May 2026)
+
+The Bryson case is not the only example of a Hydro-Québec operating directive that exists on paper but is not executed. The same pattern is documented at the system terminus, Carillon dam, and shows the same regulatory void.
+
+Hydro-Québec's published Carillon water management plan, section 15.3.5.1, states:
+
+> "In the spring, lowering the water level toward level 39.62 m at the Carillon dam helps maintain the river's natural conditions upstream. The downstream section of the river upstream of the Grenville rapid returns to its natural state."
+
+The published operating range is **39.62 m to 41.15 m**. In practice, HQ's de-facto freshet floor is approximately **40.50 m** — leaving roughly 88 cm of head impounded above the directive low every spring. The Ottawa River Flood Awareness group (ORFA) has been documenting this discrepancy since 2017.
+
+In 2025, ORFA formally requested that the Ontario Minister of Natural Resources intervene. The response (letter 354-2025-356, dated May 30 2025, signed by Minister Mike Harris) confirmed weekly meetings with Hydro-Québec but no enforcement commitment, asserting only that "Hydro Quebec reports that water levels are currently within the operating range and there are presently no concerns about flooding." The response is technically true against the 41.15 m ceiling but evades the 39.62 m drawdown directive — the actual concern. MNR explicitly defers to HQ as "the dam owner" and does not independently verify.
+
+This is the same structural pattern this document already names at Bryson — **framework exists, enforcement does not** — visible at the opposite end of the same regulated chain. The Carillon water management plan is binding language in HQ's own published document; the verification is operator-only; the regulatory backstop has, by its own admission, no enforcement mechanism beyond consultation.
 
 ### The mandate clarity problem
 
@@ -681,6 +716,46 @@ The Bryson Generating Station was rehabilitated 2017–2023 (planning ~2017, Uni
 4. **Lac Coulonge yearly peak data 1972–2026** compiled from ORRPB historical records (Exhibit A).
 
 5. **Live Hydro-Québec open-data feed** (May 2026 onward, ingested hourly to TimescaleDB): Bryson amont (1-2964), Bryson aval (1-2965), Bryson centrale release (3-46). Through the 2026 freshet peak, the headpond was held in a 47 cm operating band (104.20–104.67 m) with 86% spill share — the operating-regime change the case file infers from gauge data is now directly observable. See Exhibit D Live Observation panel.
+
+### Live Bryson telemetry — daily breakdown and property-impact translation (added May 2026)
+
+The Hydro-Québec open-data feed has been ingested hourly since 2026-05-02 into the freshet stack's `dam_releases` and `dam_levels` hypertables. The first window of accumulated data (2026-04-22 → 2026-05-03, "free backfill" from HQ's rolling 10-day buffer captured on first ingest) shows the Bryson operating posture day-by-day:
+
+| day | total m³/s | turbined | spilled | % turbined | amont (m) | head (m) |
+|---|---|---|---|---|---|---|
+| 04-22 | 1,423 | 124 | 1,299 | **8.7%** | 104.538 | 14.78 |
+| 04-23 | 1,407 | 137 | 1,270 | 9.7% | 104.537 | 14.82 |
+| 04-24 | 1,355 | 224 | 1,130 | 16.5% | 104.446 | 14.75 |
+| 04-25 | 1,336 | 224 | 1,111 | 16.8% | 104.467 | 14.82 |
+| 04-26 | 1,330 | 225 | 1,106 | 16.9% | 104.490 | 14.87 |
+| 04-27 | 1,341 | 188 | 1,154 | 14.0% | 104.488 | 14.85 |
+| 04-28 | 1,360 | 119 | 1,241 | 8.8% | 104.444 | 14.78 |
+| 04-29 | 1,357 | 162 | 1,195 | 12.0% | 104.429 | 14.76 |
+| 04-30 | 1,346 | 236 | 1,110 | 17.5% | 104.433 | 14.78 |
+| 05-01 | 1,352 | 237 | 1,116 | 17.5% | 104.451 | 14.79 |
+| 05-02 | 1,356 | 233 | 1,123 | 17.2% | 104.473 | 14.80 |
+| 05-03 | 1,353 | 231 | 1,122 | 17.1% | 104.471 | 14.83 |
+
+Three observations sharpen the regime-change argument from gauge-data inference into direct telemetry observation.
+
+**Observation 1 — the amont level is a control setpoint, not a consequence.** The headpond held in an 11 cm band (104.429 m → 104.538 m) across 12 consecutive days during a major freshet event. That is not what unmanaged water does. Inflow averaged ~1,350 m³/s across the window — to hold the level flat, total release was matched to inflow within minutes-to-hours. The matching Lac Coulonge level at Fort-Coulonge (Vigilance Station 1195) spent the same window in the 108.5–108.7 m band, covering the 108.48 m "water in backyard" threshold and the 108.52 m "crawl space" threshold every single day. Bryson's amont and Lac Coulonge are the same body of water at different vertical datums.
+
+**Observation 2 — turbining is irrelevant to the upstream flooding question.** Bryson's turbines passed 119–237 m³/s — between 9% and 17% of total throughput. The other 83–91% — between **1,106 and 1,299 m³/s** — went over the spillway. Spillway flow is non-revenue water; it would have flowed downstream under any operating posture. The lever for upstream level control is *total* release (turbines + spillway), not turbines specifically. Whether HQ runs Bryson's turbines or doesn't has no bearing on whether the cottage floods. **The relevant choice is gate position, and gate position is a setpoint, not a constraint.**
+
+**Observation 3 — a 30–60 cm reduction in held level translates 1:1 to Lac Coulonge and would have dried the property in 2026.** Applied to the 2026 thresholds:
+
+| held level reduction | Lac Coulonge peak would be | Property impact |
+|---|---|---|
+| 0 cm (actual) | 108.633 m | crawl space flooded |
+| –15 cm | ~108.48 m | water at backyard threshold |
+| –30 cm | ~108.33 m | water approaching but not yet in backyard |
+| –60 cm | ~108.03 m | dry, well below all thresholds |
+
+A 30 cm pre-freshet drawdown would put the property in the "approaching" category instead of the "crawl space flooded" category. A 60 cm drawdown takes the property fully out of flood territory in 2026.
+
+**Plausible technical reasons for the held elevation** (for intellectual honesty — these complicate but do not refute the observation): chain coordination with downstream stations, spillway throughput design limits at the current head, and recreational/navigation interest on Lac Coulonge as a managed lake. None of these convert "operating-range compliance" into "flood-mitigation drawdown," and none rebut the direct telemetric observation that the level is being actively held during a flood.
+
+This evidence covers 12 days of one freshet. With the live ingester running, by next freshet there will be a year of accumulated telemetry showing the entire pre-peak / peak / decline cycle of multiple events and the upstream chain (Britannia at 02KF005 plus tributary inflows in `wsc_daily`) for basin-balance verification. The dashboard at `freshet.xgrunt.com` (Operations tab, featured cards) renders the held-band readout on every page load — the case-file evidence is publicly visible in real time without anyone having to ask for an analysis.
 
 ### The hydraulic continuity point (Exhibit D, expanded)
 
