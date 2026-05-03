@@ -300,7 +300,7 @@ svg.fig {
 </h1>
 
 <p class="deck">
-  We tested the climate alternative four ways. <strong>(1)</strong> 44 years of pre-2017 cold-season precipitation against post-2017 — peaks came in 58 cm higher than the precipitation model would predict, and the super-flood years came in between 90 and 157 cm above prediction. <strong>(2)</strong> Across nine watershed climate stations, April+May precipitation shifts vary from −4% to +36% with no coherent step. <strong>(3)</strong> March snow on ground trends down at the upper basin (Témiscamingue −15%, Val-d'Or −14%) — the wrong direction to drive bigger Ottawa floods. <strong>(4)</strong> The basin-flow step is sharply concentrated at 2017, while no climate variable shows a comparable step. Climate change is real. It is not what stepped the river up.
+  Tested four ways. <strong>(1)</strong> 44 years of pre-2017 cold-season precipitation vs post: peaks came in 58 cm above the precipitation model, super-flood years 90–157 cm above. <strong>(2)</strong> Across nine watershed stations, April+May precipitation shifts span −4% to +36% — no coherent step. <strong>(3)</strong> Upper-basin March snow trends <em>down</em> (Témiscamingue −15%, Val-d'Or −14%) — wrong direction. <strong>(4)</strong> Basin-flow step concentrates at 2017; no climate variable matches. Climate is real. It is not what stepped the river up.
 </p>
 
 <!-- HEADLINE STATS BAND -->
@@ -338,7 +338,7 @@ svg.fig {
     </svg>
   </div>
   <div class="figure-takeaway">
-    <strong>The pattern.</strong> Average residual across the regime era: <strong>+58 cm</strong>. The four super-flood years (2017, 2019, 2023, 2026) carry residuals between <strong>+90 and +157 cm</strong> — far beyond what their precipitation could deliver. Even adjusting for 2019 being a wet year, 1.57 m of that flood is unaccounted for by precipitation. The Ottawa station explains only <strong>~4 % of Lac Coulonge peak variance</strong> (r² = 0.04), so this is a conservative test; cleaner upstream precipitation data (Témiscamingue, Maniwaki, Val-d'Or — now in the repo) would tighten the model but not change the conclusion.
+    <strong>The pattern.</strong> Average regime-era residual: <strong>+58 cm</strong>. The four super-flood years (2017, 2019, 2023, 2026) carry residuals of <strong>+90 to +157 cm</strong> — far beyond what their precipitation could deliver. Even adjusting for 2019's wet conditions, 1.57 m of that flood is unaccounted for. Ottawa CDA explains only ~4% of Lac Coulonge variance (r² = 0.04), so this is a conservative test; cleaner upstream data (Témiscamingue, Maniwaki, Val-d'Or — now in the repo) would tighten the model but not change the conclusion.
   </div>
 </div>
 
@@ -346,7 +346,7 @@ svg.fig {
 <div class="station-table">
   <div class="station-table-title">Figure 9 · Watershed climate stations — pre vs post 2017 (April+May precipitation, March peak snow on ground)</div>
   <div class="station-table-subtitle">
-    The Ottawa CDA station used in Figures 7–8 is in the southern basin and explains only ~4% of Lac Coulonge variance. The case file's stronger test is the upstream contributing watersheds. Across nine ECCC stations spanning the Lièvre, Gatineau, upper Ottawa, and headwater areas, <strong>the climate signal is mixed and station-dependent — with the upper-basin snow trending the wrong way</strong>. No coherent step-change in 2017.
+    Ottawa CDA (Figures 7–8) is in the southern basin and explains only ~4% of Lac Coulonge variance. The stronger test is the upstream contributing watersheds. Across nine ECCC stations spanning the Lièvre, Gatineau, upper Ottawa, and headwater areas, <strong>the climate signal is mixed and station-dependent — and upper-basin snow is trending the wrong way</strong>. No coherent step at 2017.
   </div>
   <table>
     <thead>
@@ -363,7 +363,7 @@ svg.fig {
     </tbody>
   </table>
   <div class="station-table-caption">
-    <strong>What this means.</strong> The <em>downstream</em> stations (Ottawa CDA, Rouyn) show modest precipitation increases. The <em>upstream</em> snow stations that actually drive the Ottawa freshet (Témiscamingue, Val-d'Or) show snow trending <strong>down</strong>. Mont-Laurier and Val-d'Or have no full Apr+May precip series in the post-2017 archive. <strong>There is no climate forcing pattern across this watershed that mathematically requires a +19% step in basin flow at 2017</strong> — the magnitude observed in the Britannia gauge and discussed in Exhibit D Figure 7. Source: ECCC daily climate bulk CSVs, watershed station set defined in <code>ingesters/eccc-ingest/</code>.
+    <strong>What this means.</strong> Downstream stations (Ottawa CDA, Rouyn) show modest precipitation increases. Upstream snow stations that actually drive the Ottawa freshet (Témiscamingue, Val-d'Or) trend <strong>down</strong>. <strong>No climate pattern across this watershed mathematically requires a +19% basin-flow step at 2017</strong> (the Britannia magnitude — Exhibit D Fig 7). Source: ECCC bulk CSVs; station set in <code>ingesters/eccc-ingest/</code>.
   </div>
 </div>
 
@@ -371,7 +371,7 @@ svg.fig {
 <div class="station-table">
   <div class="station-table-title">Figure 10 · The basin-flow step is at exactly 2017 — sharper than any climate variable</div>
   <div class="station-table-subtitle">
-    Britannia (Ottawa River, downstream of every dam) median annual peak across candidate breakpoint years. The shift maximizes at 2017 and decays in both directions, indicating a true step rather than a trend.
+    Britannia (downstream of every dam) median annual peak across candidate breakpoints. Shift peaks at 2017 and decays both ways — true step, not a trend.
   </div>
   <table>
     <thead>
@@ -387,23 +387,23 @@ svg.fig {
     </tbody>
   </table>
   <div class="station-table-caption">
-    <strong>Decade super-flood counts</strong> (Britannia ≥ 4,500 m³/s): 1970s = 1, 1980s = 0, 1990s = 0, 2000s = 0, 2010s = 2, 2020s (5 yrs in) = 1. <strong>Three full decades with zero super-floods</strong>, then an outbreak. Step changes are not what climate-change typically delivers — climate delivers trends. Source: <code>data/wsc-hydrometric/britannia-ottawa-river/daily.csv</code>; analysis in <code>ingesters/climate-history/stepchange_analysis.py</code>.
+    <strong>Decade super-flood counts</strong> (Britannia ≥ 4,500 m³/s): 1970s = 1, 1980s = 0, 1990s = 0, 2000s = 0, 2010s = 2, 2020s (5 yrs in) = 1. <strong>Three full decades with zero super-floods, then an outbreak.</strong> Step changes are not what climate-change typically delivers — climate delivers trends. Source: <code>data/wsc-hydrometric/britannia-ottawa-river/daily.csv</code>; analysis <code>ingesters/climate-history/stepchange_analysis.py</code>.
   </div>
 </div>
 
 <!-- THE CONCLUSION -->
 <div class="question-callout">
   <div class="label">What this test rules out — and what it does not</div>
-  <div class="question">Climate change in the Ottawa basin is real, but it does not, by itself, explain the post-2017 regime change at Lac Coulonge. And even if it did contribute, the operator's response remains the controllable variable.</div>
-  <p>The +3.7% rise in cold-season precipitation at Ottawa CDA is not statistically significant; the upstream watershed signal is mixed (Figure 9), with snow at the upper basin trending down. The basin-flow step is sharply concentrated at 2017 (Figure 10), with no matching climate step. The unexplained component is consistent with the operating-regime change at Bryson Dam now directly observable in the live data (Exhibit D, Figures 7–8).</p>
-  <p><strong>And the second-order point matters more than the first.</strong> Even granting whatever climate contribution does exist, a dam built to manage river flow has an obligation to adapt its operating posture as inflow patterns change. Holding the headpond at the top of its operating band during a 10-day stretch of peak inflow — as 2026 demonstrates — is the opposite of an adaptive response. <em>That</em> is the policy question, and it stands independent of the climate-attribution debate.</p>
+  <div class="question">Climate change in the Ottawa basin is real, but does not by itself explain the post-2017 regime change at Lac Coulonge. And even if it contributed, the operator's response remains the controllable variable.</div>
+  <p>The +3.7% rise at Ottawa CDA is not statistically significant; the upstream signal is mixed (Fig 9), with upper-basin snow trending down. The basin-flow step concentrates at 2017 (Fig 10), with no matching climate step. The unexplained component is consistent with the operating-regime change at Bryson now directly observable in the live data (Exhibit D Figs 7–8).</p>
+  <p><strong>The second-order point matters more.</strong> Even granting whatever climate contribution exists, a dam built to manage river flow has to adapt its operating posture as inflow patterns change. Holding the headpond at the top of its operating band through 10 days of peak inflow — as 2026 demonstrates — is the opposite of adaptation. That is the policy question, and it stands independent of the climate-attribution debate.</p>
 </div>
 
 <!-- FOOTER -->
 <div class="footer">
   <div class="left">
-    <strong>Sources verified.</strong> Cold-season precipitation from ECCC daily climate, Ottawa CDA station 4333 (climate.weather.gc.ca), 1972-2026; watershed-station precipitation and snow shifts from ECCC daily climate for Barrage Témiscamingue, Maniwaki Airport, Mont-Laurier, Parent, Val-d'Or, Rouyn (climate.weather.gc.ca), processed by <code>ingesters/climate-history/stepchange_analysis.py</code>; Britannia annual peak from <code>data/wsc-hydrometric/britannia-ottawa-river/daily.csv</code>; Lac Coulonge annual peaks from ORRPB historical records, compiled in <code>data/lac-coulonge-monthly-1972-2026.csv</code>; regression and residual analysis described in <code>docs/analysis/Freshet_2026_Complete_Summary.md</code> § "Testing the climate alternative."
-    <strong>What this is not.</strong> A claim that climate is irrelevant. The argument is narrower: (1) the climate forcing did not step-change in 2017, and (2) even where climate has contributed to bigger inflows, the operator's response is the variable a dam was built to control.
+    <strong>Sources</strong> · ECCC daily climate (climate.weather.gc.ca) — Ottawa CDA 4333 + watershed stations Barrage Témiscamingue, Maniwaki, Mont-Laurier, Parent, Val-d'Or, Rouyn — processed by <code>ingesters/climate-history/stepchange_analysis.py</code>. Britannia annual peak: <code>data/wsc-hydrometric/britannia-ottawa-river/daily.csv</code>. Lac Coulonge: <code>data/lac-coulonge-monthly-1972-2026.csv</code>. Regression detail in <code>docs/analysis/Freshet_2026_Complete_Summary.md</code>.
+    <strong>What this is not</strong> · A claim that climate is irrelevant. (1) Climate forcing did not step-change in 2017, and (2) even where climate has contributed to bigger inflows, the operator's response is the variable a dam was built to control.
   </div>
   <div class="right">
     freshet.xgrunt.com<br>
