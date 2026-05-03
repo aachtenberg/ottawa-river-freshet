@@ -453,7 +453,9 @@ data:
     #map-dams-btn::before { content: '⚡'; font-size: 11px; opacity: 0.9; }
     #map-reservoirs-btn::before { content: '≈'; font-size: 13px; opacity: 0.9; line-height: 1; margin-right: 2px; }
     #map-releases-btn::before  { content: '↳'; font-size: 12px; opacity: 0.9; margin-right: 2px; }
+    #map-cascade-btn::before   { content: '⤳'; font-size: 12px; opacity: 0.9; margin-right: 2px; }
     #map-about-btn::before { content: '?'; font-size: 12px; opacity: 0.85; font-weight: 600; }
+    .cascade-line-arrow { background: transparent; }
     .map-about { position: absolute; top: 46px; left: 10px; z-index: 500; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 12px 14px; font-size: 11px; max-width: 320px; box-shadow: 0 4px 14px rgba(0,0,0,0.3); display: none; line-height: 1.55; }
     .map-about.open { display: block; }
     .map-about p { margin-bottom: 6px; }
@@ -551,7 +553,8 @@ data:
         <button class="map-legend-btn" id="map-dams-btn" onclick="toggleDams()" style="left:90px" title="Show/hide hydroelectric stations, major dams, and reservoirs"><span id="map-dams-btn-text">Dams</span></button>
         <button class="map-legend-btn" id="map-reservoirs-btn" onclick="toggleReservoirsLayer()" style="left:170px" title="Show/hide reservoir percent-full cards"><span id="map-reservoirs-btn-text">Reservoirs</span></button>
         <button class="map-legend-btn" id="map-releases-btn" onclick="toggleReleasesLayer()" style="left:265px" title="Show/hide live Hydro-Québec dam release cards (turbined + spilled)"><span id="map-releases-btn-text">Releases</span></button>
-        <button class="map-legend-btn" id="map-about-btn" onclick="toggleAbout()" style="left:355px" title="How to read the dots, pulses, and labels"><span id="map-about-btn-text">How to read</span></button>
+        <button class="map-legend-btn" id="map-cascade-btn" onclick="toggleCascadeLayer()" style="left:360px" title="Show/hide cascade flow lines connecting dams in hydrologic order. Red highlights the 130-km no-controls reach above Bryson."><span id="map-cascade-btn-text">Cascade</span></button>
+        <button class="map-legend-btn" id="map-about-btn" onclick="toggleAbout()" style="left:455px" title="How to read the dots, pulses, and labels"><span id="map-about-btn-text">How to read</span></button>
         <div class="map-legend" id="map-legend"></div>
         <div class="map-about" id="map-about"></div>
       </div>
@@ -3007,6 +3010,10 @@ data:
         en: '<strong>Releases layer</strong> shows live discharge from each Hydro-Québec generating station: total m³/s, with a card outline that turns orange/red when the spill share exceeds 50% / 75% (operator is bypassing turbines to evacuate water). Tooltips on dam markers also show the live release.',
         fr: 'La <strong>couche Débits</strong> affiche le débit sortant de chaque centrale Hydro-Québec : total m³/s, avec un contour qui devient orange/rouge si la part déversée dépasse 50% / 75% (l\'opérateur contourne les turbines pour évacuer l\'eau). Les info-bulles sur les barrages indiquent aussi le débit actuel.'
       },
+      about_cascade: {
+        en: '<strong>Cascade layer</strong> draws lines connecting dams in hydrologic order (Ottawa main stem, Gatineau, Lièvre). Arrowheads show flow direction. The dashed red segment is the 130-km Bryson↔Des-Joachims reach with no intermediate flow controls (Exhibit D Figure 5).',
+        fr: 'La <strong>couche Cascade</strong> trace des lignes reliant les barrages dans l\'ordre hydrologique (Outaouais, Gatineau, Lièvre). Les flèches indiquent le sens d\'écoulement. Le segment rouge pointillé est le tronçon de 130 km Bryson↔Des-Joachims sans contrôle de débit intermédiaire (Exhibit D Figure 5).'
+      },
       about_src: {
         en: 'Sources: Quebec Vigilance API, MVCA / Kisters KiWIS (Buckhams Bay), Hydro-Québec open-data feed, ORRPB "Know Your Levels" PDF (2025-05-06), ECCC HYDAT.',
         fr: 'Sources : API Vigilance Québec, MVCA / Kisters KiWIS (Baie Buckhams), données ouvertes Hydro-Québec, document ORRPB « Know Your Levels » (2025-05-06), ECCC HYDAT.'
@@ -3305,6 +3312,7 @@ data:
         <p>${t('about_pctl')}</p>
         <p>${t('about_orrpb')}</p>
         <p>${t('about_releases')}</p>
+        <p>${t('about_cascade')}</p>
         <p class="src">${t('about_src')}</p>
       `;
     }
@@ -3593,6 +3601,113 @@ data:
       if (!releasesLayerGroup) releasesLayerGroup = await buildReleasesLayer();
       if (!releasesLayerGroup) return;
       releasesLayerGroup.addTo(mapInstance);
+      btn?.classList.add('active');
+    }
+
+    // ---- Cascade layer ----
+    // Polylines connecting dams in hydrologic order (upstream → downstream),
+    // to make the cascade structure visible at a glance. The 130-km Bryson↔
+    // Des-Joachims reach (Exhibit D Figure 5) is highlighted in accent red as
+    // the case-file's "no flow controls" stretch. Coords are pulled from
+    // orw-dams.json (hydro + major_dams + reservoirs) by name.
+    const CASCADE_CHAINS = {
+      ottawa_main: {
+        label: 'Ottawa main stem',
+        color: 'rgba(40, 70, 110, 0.55)',
+        weight: 2.5,
+        nodes: [
+          // Upper-Ottawa cluster (feeds Lake Timiskaming)
+          'Rapide-2', 'Rapide-7', 'Rapides-des-Quinze', 'Rapides-des-Îles', 'Première-Chute',
+          // Down through Lake Timiskaming and the OPG/HQ chain to Carillon
+          'Lower Notch', 'Otto Holden', 'Des-Joachims', 'Bryson', 'Chenaux', 'Carillon',
+        ],
+      },
+      gatineau: {
+        label: 'Gatineau',
+        color: 'rgba(70, 110, 60, 0.55)',
+        weight: 2.5,
+        nodes: ['Cabonga', 'Mercier', 'Baskatong', 'Paugan', 'Chelsea', 'Rapides-Farmer'],
+      },
+      lievre: {
+        label: 'Lièvre',
+        color: 'rgba(140, 80, 40, 0.55)',
+        weight: 2.5,
+        nodes: ['Mitchinamecus', 'Kiamika', 'Poisson Blanc'],
+      },
+    };
+    // The case-file reach: Bryson upstream to Des Joachims, no intermediate
+    // flow controls. Drawn last in accent red so it sits on top.
+    const CASE_FILE_REACH = ['Des-Joachims', 'Bryson'];
+
+    let cascadeLayerGroup = null;
+
+    function lookupCoord(name, data) {
+      // Search hydro, major_dams, reservoirs in priority order. Some Lièvre /
+      // Gatineau headwaters live only in reservoirs (Cabonga, Baskatong, etc.).
+      for (const bucket of ['hydro', 'major_dams', 'reservoirs']) {
+        const hit = (data[bucket] || []).find(d => d.name === name);
+        if (hit && hit.lat != null && hit.lon != null) return [hit.lat, hit.lon];
+      }
+      return null;
+    }
+
+    async function buildCascadeLayer() {
+      if (typeof L === 'undefined') return null;
+      const data = await ensureDamsData();
+      if (!data) return null;
+      const group = L.layerGroup();
+
+      for (const [_, chain] of Object.entries(CASCADE_CHAINS)) {
+        const coords = chain.nodes.map(n => lookupCoord(n, data)).filter(Boolean);
+        if (coords.length < 2) continue;
+        L.polyline(coords, {
+          color: chain.color, weight: chain.weight, opacity: 1,
+          smoothFactor: 1, interactive: false,
+        }).addTo(group);
+        // Tiny arrowhead at each segment midpoint, oriented along the segment.
+        for (let i = 0; i < coords.length - 1; i++) {
+          const [a, b] = [coords[i], coords[i + 1]];
+          const mid = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+          const angle = Math.atan2(b[0] - a[0], b[1] - a[1]) * 180 / Math.PI;
+          // Leaflet rotates HTML via CSS transform (no native primitive).
+          const html = `<div class="cascade-line-arrow" style="transform: rotate(${-angle}deg); width:14px; height:14px; display:flex; align-items:center; justify-content:center; color:${chain.color.replace('0.55','0.95')}; font-size:14px; line-height:1;">▶</div>`;
+          const icon = L.divIcon({ className: 'river-marker-icon', html, iconSize: [14, 14], iconAnchor: [7, 7] });
+          L.marker(mid, { icon, interactive: false, keyboard: false, zIndexOffset: -100 }).addTo(group);
+        }
+      }
+
+      // Case-file reach overlay — Bryson upstream to Des Joachims, in accent red.
+      const reachCoords = CASE_FILE_REACH.map(n => lookupCoord(n, data)).filter(Boolean);
+      if (reachCoords.length === 2) {
+        L.polyline(reachCoords, {
+          color: 'rgba(179, 38, 30, 0.85)', weight: 4, opacity: 0.9,
+          dashArray: '8 4', interactive: false,
+        }).addTo(group);
+        // Label at the midpoint
+        const mid = [(reachCoords[0][0] + reachCoords[1][0]) / 2,
+                     (reachCoords[0][1] + reachCoords[1][1]) / 2];
+        const label = L.divIcon({
+          className: 'river-marker-icon',
+          html: `<div style="background:rgba(179,38,30,0.9); color:white; font-size:9px; font-weight:700; padding:2px 6px; border-radius:3px; white-space:nowrap; letter-spacing:0.05em; text-transform:uppercase;">130 km · no flow controls</div>`,
+          iconSize: null, iconAnchor: [70, 8],
+        });
+        L.marker(mid, { icon: label, interactive: false, zIndexOffset: 200 }).addTo(group);
+      }
+
+      return group;
+    }
+
+    async function toggleCascadeLayer() {
+      if (!mapInstance) return;
+      const btn = document.getElementById('map-cascade-btn');
+      if (cascadeLayerGroup && mapInstance.hasLayer(cascadeLayerGroup)) {
+        mapInstance.removeLayer(cascadeLayerGroup);
+        btn?.classList.remove('active');
+        return;
+      }
+      if (!cascadeLayerGroup) cascadeLayerGroup = await buildCascadeLayer();
+      if (!cascadeLayerGroup) return;
+      cascadeLayerGroup.addTo(mapInstance);
       btn?.classList.add('active');
     }
 
