@@ -65,8 +65,10 @@ Chelsea, Rapides-Farmers on the Gatineau; Carillon downstream).
 If you want to refresh the snapshots from the live database:
 
 ```bash
-# (Internal) PostgREST endpoint, no auth required from the cluster network.
-PG=http://192.168.0.150:30300
+# Set PG to your PostgREST endpoint. The maintainer runs PostgREST
+# in-cluster on a NodePort; deployments will vary. See
+# `deploy/{kubernetes,docker-compose}/` for examples.
+PG=<your-postgrest-host>
 
 # Bryson hourly release (10-day rolling window):
 curl -s "$PG/dam_releases?site_id=eq.3-46&order=time.asc"
