@@ -77,7 +77,7 @@ services:
         done
     environment:
       POSTGREST_URL: http://postgrest:3000
-      STATION_IDS: ${STATION_IDS:-1195,1004,951,545,1279,984,548,550,981,1264}
+      STATION_IDS: ${STATION_IDS:-1195,1004,951,545,1279,984,548,550,981,1264,442,994,982,983,522,196,211,300}
       MVCA_STATIONS: ${MVCA_STATIONS:-}
       MVCA_LOOKBACK_HOURS: ${MVCA_LOOKBACK_HOURS:-24}
     volumes:
@@ -97,6 +97,64 @@ services:
         done
     volumes:
       - ../../ingesters/reservoir-ingest:/app:ro
+
+  cron-hq:
+    <<: *cron-base
+    command:
+      - sh
+      - -c
+      - |
+        set -e
+        echo "Hydro-Québec open-data ingester starting; will run every hour"
+        while true; do
+          python /app/ingest.py || echo "hq-ingest failed: $$?"
+          sleep 3600
+        done
+    environment:
+      POSTGREST_URL: http://postgrest:3000
+      HQ_LAT_MIN: ${HQ_LAT_MIN:-45.0}
+      HQ_LAT_MAX: ${HQ_LAT_MAX:-48.0}
+      HQ_LON_MIN: ${HQ_LON_MIN:--80.0}
+      HQ_LON_MAX: ${HQ_LON_MAX:--74.0}
+    volumes:
+      - ../../ingesters/hq-ingest:/app:ro
+
+  cron-wsc:
+    <<: *cron-base
+    command:
+      - sh
+      - -c
+      - |
+        set -e
+        echo "WSC realtime ingester starting; will run every hour"
+        while true; do
+          python /app/ingest.py || echo "wsc-ingest failed: $$?"
+          sleep 3600
+        done
+    environment:
+      POSTGREST_URL: http://postgrest:3000
+      WSC_STATIONS: ${WSC_STATIONS:-}
+      WSC_LOOKBACK_HOURS: ${WSC_LOOKBACK_HOURS:-24}
+    volumes:
+      - ../../ingesters/wsc-ingest:/app:ro
+
+  cron-eccc:
+    <<: *cron-base
+    command:
+      - sh
+      - -c
+      - |
+        set -e
+        echo "ECCC daily-climate ingester starting; will run every 6h"
+        while true; do
+          python /app/ingest.py || echo "eccc-ingest failed: $$?"
+          sleep 21600
+        done
+    environment:
+      POSTGREST_URL: http://postgrest:3000
+      ECCC_YEARS_BACK: ${ECCC_YEARS_BACK:-1}
+    volumes:
+      - ../../ingesters/eccc-ingest:/app:ro
 
   cron-alerter:
     image: python:3.12-alpine

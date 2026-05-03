@@ -1,8 +1,10 @@
 # Docker Compose deploy
 
 Single-host deployment of the freshet stack. Brings up TimescaleDB, PostgREST,
-nginx serving the dashboard, plus three cron-style sidecars (river ingester,
-reservoir scraper, alerter).
+nginx serving the dashboard, plus six cron-style sidecars: river ingester
+(Vigilance + KiWIS + open-meteo), reservoir scraper, Hydro-Québec open-data
+ingester, WSC realtime ingester, ECCC daily-climate ingester, and the
+threshold-crossing alerter.
 
 ## Prerequisites
 
@@ -18,15 +20,28 @@ docker compose up -d
 ```
 
 The dashboard becomes available at `http://localhost:8080` once the
-TimescaleDB schema initializes (a few seconds on first start). The
-`cron-river` sidecar runs the ingester immediately on startup and then once
-per hour; `cron-reservoir` runs once per day; `cron-alerter` once per hour.
+TimescaleDB schema initializes (a few seconds on first start). Sidecar
+schedules:
+
+| Sidecar | Cadence | Source |
+|---|---|---|
+| `cron-river` | hourly | Vigilance + KiWIS + open-meteo |
+| `cron-reservoir` | daily | ORRPB conditions page (HTML scrape) |
+| `cron-hq` | hourly | Hydro-Québec open-data JSON feeds |
+| `cron-wsc` | hourly | WSC realtime CSV inline endpoint |
+| `cron-eccc` | every 6h | ECCC daily-climate bulk CSV |
+| `cron-alerter` | hourly | Vigilance + ntfy POST on threshold crossing |
+
+Each runs the script immediately on startup, then on its cadence.
 
 ## Triggering an immediate ingest
 
 ```bash
-docker compose exec cron-river python /app/ingest.py
+docker compose exec cron-river     python /app/ingest.py
 docker compose exec cron-reservoir python /app/scrape.py
+docker compose exec cron-hq        python /app/ingest.py
+docker compose exec cron-wsc       python /app/ingest.py
+docker compose exec cron-eccc      python /app/ingest.py
 ```
 
 ## Inspecting the database
