@@ -20,7 +20,7 @@ a frozen, primary-source artifact suitable for citation.
 
 ## Files in this directory
 
-### `bryson-daily-2026-04-22_to_2026-05-02.csv`
+### `bryson-daily-2026-04-22_to_2026-05-03.csv`
 
 Bryson Generating Station (HQ site_id `3-46`) daily-mean release telemetry
 for the freshet 2026 capture window. One row per day. Columns:
@@ -33,9 +33,12 @@ for the freshet 2026 capture window. One row per day. Columns:
 - `spill_share_pct` — `spilled / total × 100` for the day
 
 This is the source for the "Bryson is operating at 82–91% spill" claim in
-Exhibit D.
+Exhibit D. Note the unusual stability post-Apr 30: total release fixed at
+~1,355 m³/s and turbined throughput fixed at ~232 m³/s for 4+ consecutive
+days, even as Lac Coulonge crested (Apr 20 peak 108.633 m) and began to
+recede. The operator is holding a fixed posture, not reactively adjusting.
 
-### `bryson-headpond-2026-04-22_to_2026-05-02.csv`
+### `bryson-headpond-2026-04-22_to_2026-05-03.csv`
 
 Bryson amont (upstream / headpond, station_id `1-2964`) and aval (downstream
 / tailwater, `1-2965`) hourly water-level pair, with the head differential
