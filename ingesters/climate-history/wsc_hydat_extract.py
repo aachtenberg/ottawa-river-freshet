@@ -14,6 +14,8 @@ Stations of interest:
 - 02KG005  COULONGE AU PONT TERRY-FOX         (at Pontefract golf course; 2004-2008)
 - 02LH001  GATINEAU A MANIWAKI                (cross-check; 1925-1998)
 - 02KF009  OTTAWA RIVER AT CHATS FALLS        (mid-Ottawa downstream; 1915-1994)
+- 02OA105  DEUX MONTAGNES À POINTE-CALUMET    (Carillon tailwater proxy; level 1986-2024)
+- 02OA039  SAINT-LOUIS (LAC) À POINTE-CLAIRE  (downstream proxy via St-Lawrence; level 1915-2025)
 
 HYDAT stores daily data in wide form (one row per station-year-month, 31
 day columns). This script un-pivots to long form, one row per day.
@@ -46,6 +48,8 @@ STATIONS = [
     ("02KG005", "coulonge-pontefract-golf",        "Coulonge River at Terry Fox bridge (Pontefract) — short window 2004-2008"),
     ("02LH001", "gatineau-maniwaki",               "Gatineau River at Maniwaki — level 1925-1998"),
     ("02KF009", "chats-falls-ottawa-river",        "Ottawa River at Chats Falls — discontinued 1994"),
+    ("02OA105", "pointe-calumet-deux-montagnes",   "Lake of Two Mountains at Pointe-Calumet — Carillon tailwater proxy, level 1986-"),
+    ("02OA039", "pointe-claire-lac-st-louis",      "Lac Saint-Louis at Pointe-Claire — downstream proxy, level 1915-"),
 ]
 
 DAYS_IN_MONTH = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
