@@ -17,16 +17,21 @@ PostgREST API + a handful of Python cron jobs.
 │   • Hero card for your property gauge                       │
 │   • Watershed snapshot bar chart                            │
 │   • Per-station charts with 1 h → 30 d windows              │
-│   • Reservoirs tab (ORRPB-derived % full)                   │
-│   • Slide-out map drawer with broadcast-style callouts      │
+│   • Reservoirs tab (ORRPB-derived % full + HQ outflow)      │
+│   • Tributaries tab (Gatineau + Lièvre cascades)            │
+│   • Operations tab (live Hydro-Québec release telemetry)    │
+│   • Slide-out map: Dams / Reservoirs / Releases / Cascade   │
 │   • EN / FR + light / dark + mobile-responsive              │
 └─────────────────────────────────────────────────────────────┘
             ▲                   ▲                ▲
    public APIs                in-cluster       hourly + daily
    (Vigilance,                 PostgREST       cron jobs:
-    open-meteo,                 + TimescaleDB   • Vigilance/KiWIS ingest
-    ECCC HYDAT,                                 • ORRPB reservoir scrape
-    ORRPB)                                      • Threshold alerter (ntfy)
+    Hydro-Québec open-data,    + TimescaleDB   • Vigilance/KiWIS ingest
+    WSC, ECCC, open-meteo,                     • ORRPB reservoir scrape
+    ORRPB)                                     • HQ open-data ingest
+                                               • WSC realtime ingest
+                                               • ECCC daily-climate ingest
+                                               • Threshold alerter (ntfy)
 ```
 
 ## Quick start (Docker Compose)

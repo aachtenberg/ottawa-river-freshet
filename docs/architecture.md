@@ -72,7 +72,8 @@ ntfy → freshet-mansfield topic → property owner's phone
 
 
 k3s/data  river-history-ingest (CronJob, hourly :12)
-   │ poll Vigilance for 10 stations + KiWIS for Buckhams Bay
+   │ poll Vigilance for 18 stations (main stem + Gatineau + Lièvre cascade)
+   │ poll KiWIS for Buckhams Bay
    │ poll open-meteo for 6 basin weather stations
    ▼ (upsert)
 TimescaleDB hypertables: river_readings, weather_observations, river_stations
@@ -82,6 +83,27 @@ k3s/data  reservoir-ingest (CronJob, daily 21:30 UTC)
    │ scrape ottawariver.ca/conditions
    ▼ (upsert)
 TimescaleDB hypertable: reservoir_readings
+
+
+k3s/data  hq-ingest (CronJob, hourly :27)
+   │ pull Hydro-Québec open-data feeds (centrale releases + station levels)
+   │ filter to Ottawa basin (lat 45-48, lon -80 to -74)
+   ▼ (upsert)
+TimescaleDB hypertables: dam_releases, dam_inflows, dam_levels, dam_sites
+
+
+k3s/data  wsc-ingest (CronJob, hourly :37)
+   │ pull WSC realtime CSV (level + discharge)
+   │ for active basin gauges (Britannia, Mattawa, Mississippi, Rideau, ...)
+   ▼ (upsert)
+TimescaleDB hypertable: wsc_readings
+
+
+k3s/data  eccc-ingest (CronJob, every 6h :47)
+   │ pull ECCC daily climate bulk CSV
+   │ for 9 watershed climate stations (Maniwaki, Témiscamingue, Val-d'Or, ...)
+   ▼ (upsert)
+TimescaleDB hypertable: eccc_climate_daily
 ```
 
 ## Components
@@ -120,7 +142,7 @@ via configMapGenerator so editing the script auto-rolls the next CronJob.
 
 Hourly Python CronJob. Three responsibilities in one script:
 
-1. Poll Vigilance for 10 mainstem stations → write `river_readings`.
+1. Poll Vigilance for 18 stations (main stem + Gatineau cascade 442/994/982/983 + Lièvre cascade 522/196/211/300) → write `river_readings`.
 2. Poll MVCA KiWIS for configured stations (currently just Buckhams Bay) →
    write `river_readings` with synthetic IDs ≥99000.
 3. Poll open-meteo for 6 basin weather stations → write `weather_observations`.
@@ -141,19 +163,61 @@ Scrapes the 8-day rolling reservoir-conditions table from
 `reservoir_readings`. Same configMapGenerator + init-container schema-bootstrap
 pattern as the river ingester.
 
+### Hydro-Québec ingester (k3s/data · `hq-ingest`)
+
+Hourly Python CronJob (`:27`). Pulls two HQ open-data JSON feeds linked from
+`hydroquebec.com/production/debits-niveaux-eau.html`:
+
+1. **Centrale release telemetry** (~3 MB) — hourly turbined / spilled / total
+   m³/s + daily filtered local inflow per generating station. Writes to
+   `dam_releases` (wide: total/turbined/spilled per `(site_id, time)`) and
+   `dam_inflows` (daily incremental).
+2. **Station levels** (~15 MB; misnamed "TARAGES") — hourly water-level
+   readings at the gauging-station network. Writes to `dam_levels`.
+
+Filters both to the Ottawa basin window (lat 45–48, lon -80 to -74) so the
+ingester targets ~21 centrales + ~77 level stations rather than the entire
+Quebec hydro fleet. Each pull contains ~10 days of hourly data.
+
+The HQ CDN refuses Python's default Alpine TLS handshake; the ingester sets
+`ctx.set_ciphers('DEFAULT:@SECLEVEL=1')` to work around. Site metadata is
+upserted (`merge-duplicates`); time-series data is `ignore-duplicates`.
+
+### WSC realtime ingester (k3s/data · `wsc-ingest`)
+
+Hourly Python CronJob (`:37`). Pulls the WSC realtime CSV inline endpoint for
+configured station codes (`02KF005` Britannia, `02JE013` Mattawa, etc.) — both
+**level** (parameter 46) and **discharge** (parameter 47), 5-minute cadence,
+24-hour lookback. Writes to `wsc_readings` keyed by `(station_code, time)`.
+
+Why complementary to Vigilance: Vigilance often publishes only level. WSC
+publishes both for the same gauges, plus stations Vigilance doesn't carry.
+
+### ECCC daily climate ingester (k3s/data · `eccc-ingest`)
+
+Six-hourly Python CronJob (`47 */6 * * *`). Pulls daily climate bulk CSV from
+`climate.weather.gc.ca/climate_data/bulk_data_e.html` for 9 watershed stations
+(Ottawa CDA, Maniwaki, Barrage Témiscamingue, Mont-Laurier, Parent, Val-d'Or,
+Rouyn, North Bay, Pembroke). Writes to `eccc_climate_daily`. Used for the
+climate-residual analysis in Exhibit E and the step-change watershed test.
+
 ### TimescaleDB + PostgREST (k3s/data)
 
-TimescaleDB is the **only durable state** in the stack. Three hypertables for
-freshet:
+TimescaleDB is the **only durable state** in the stack. Hypertables:
 
 | Table | Key | Source | Cadence |
 |---|---|---|---|
 | `river_readings` | `(station_id, time)` | Vigilance + MVCA KiWIS | hourly |
 | `weather_observations` | `(station, time)` | open-meteo | hourly |
 | `reservoir_readings` | `(reservoir_id, time)` | ORRPB scrape | daily |
+| `dam_releases` | `(site_id, time)` | HQ open-data centrales | hourly |
+| `dam_inflows` | `(site_id, time)` | HQ open-data centrales | daily |
+| `dam_levels` | `(station_id, time)` | HQ open-data stations | hourly |
+| `wsc_readings` | `(station_code, time)` | WSC realtime CSV | 5-min |
+| `eccc_climate_daily` | `(station_id, time)` | ECCC bulk CSV | daily |
 
-`river_stations` is a flat metadata table (one row per station ID, including
-`provider` to distinguish Vigilance vs MVCA).
+`river_stations` (provider-tagged) and `dam_sites` (centrales + stations
+metadata) are regular tables for upsert-on-change semantics.
 
 PostgREST sits in front of the DB and exposes a JSON API. The dashboard's nginx
 proxies `/history/*` to PostgREST with **GET/HEAD/OPTIONS only** ([nginx.conf:24-30](../k3s/base/apps/files/freshet-dashboard/nginx.conf#L24-L30))

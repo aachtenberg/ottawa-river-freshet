@@ -32,6 +32,9 @@ The dashboard's "shape" comes from a handful of constants near the top of the
 | `ORRPB_HISTORIC_PEAKS` | Per-station ORRPB reference peaks + datum offset |
 | `RESERVOIR_LOCATIONS` | Reservoir lat/lon for the map's reservoir card layer |
 | `RESERVOIR_ORDER` | Hydrological upstream→downstream order for the Reservoirs tab |
+| `TRIBUTARY_STATIONS` | Stations on the Tributaries tab (Gatineau, Lièvre, etc.) |
+| `HQ_OPERATIONS` | HQ centrale cards on the Operations tab (main stem, Gatineau, lower St-Lawrence) |
+| `CASCADE_CHAINS` | Hydrologic-order chains for the Cascade map layer (with case-file reach overlay) |
 | `HOME_PIN` | Property location pin (placeholder by default) |
 
 ## Theming

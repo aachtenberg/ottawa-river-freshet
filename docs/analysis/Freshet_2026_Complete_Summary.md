@@ -501,6 +501,48 @@ This model was applied to predict 2017–2026 peaks using only the precipitation
 
 **Caveats and honest limits of this analysis.** The Ottawa station is in the southern basin and explains only ~4% of Lac Coulonge peak variance (r² = 0.038) — the very low r² is itself informative: Ottawa-station precipitation has almost no predictive value for Lac Coulonge because the southern basin is the wrong watershed. Lac Coulonge is fed primarily by the upper Ottawa (Témiscamingue) and the Coulonge tributary. Cleaner upstream precipitation data (Témiscamingue, Maniwaki, Val-d'Or — now in the repo at `data/eccc-climate/`) would produce a more powerful test. The regression also assumes a linear precipitation-to-peak relationship, which is a simplification. **Despite these limitations, the analysis demonstrates that climate alone — at least as measured by Ottawa precipitation — does not explain the regime change. A +58 cm residual remains, and that residual is consistent with operational changes at Bryson Dam.**
 
+### Per-event amplification test — Lac Coulonge ~ Britannia regression (added May 2026)
+
+A second, independent test segments the Lac Coulonge peak vs Britannia annual-peak flow relationship pre- and post-2017. Britannia is the Ottawa basin's downstream-of-everything gauge (active 1960-present, full discharge record). If Bryson operations had been amplifying *each* freshet's peak post-refurbishment, the slope or intercept of `Lac Coulonge peak ~ Britannia peak` should have shifted.
+
+```
+Pre-2017 (n=45):  Peak (m) = 105.4165 + 0.000619 × Britannia peak (m³/s)   r² = 0.818
+Post-2017 (n=8):  Peak (m) = 105.3681 + 0.000631 × Britannia peak (m³/s)   r² = 0.951
+```
+
+**Slope shift +0.012 m per 1000 m³/s. Intercept shift -4.8 cm. Mean post-2017 residual from the pre-2017 line: +0.1 cm.** At common inflow levels, the difference between the two lines is 0–2 cm — well inside noise.
+
+**Implication.** The lake responds to inflow exactly as it always has. The +59 cm shift in average annual peak is *composition-driven* — more years now produce big freshets — not amplification of how the lake responds to a given freshet. Source: `ingesters/climate-history/lc_brit_regression.py`.
+
+### Step-change location and climate-forcing test (added May 2026)
+
+If the basin-flow shift is climate-driven, it should appear as a *trend* in climate forcing — not as a step concentrated at a specific year. Two tests:
+
+**Test A · Step location.** Britannia annual-peak medians across candidate breakpoint years 2000–2020:
+
+| Breakpoint | Pre median (m³/s) | Post median (m³/s) | Shift |
+|---|---|---|---|
+| 2010 | 3,075 | 3,510 | +14.1% |
+| 2015 | 3,075 | 3,600 | +17.1% |
+| **2017** | **3,080** | **3,675** | **+19.3%** ← sharpest |
+| 2018 | 3,100 | 3,450 | +11.3% |
+| 2019 | 3,120 | 3,315 | +6.2% |
+| 2020 | 3,165 | 3,180 | +0.5% |
+
+The shift maximizes at 2017 — the year Bryson refurbishment planning began — and decays both directions. Decade super-flood counts (Britannia ≥ 4,500 m³/s): **1970s=1, 1980s=0, 1990s=0, 2000s=0, 2010s=2, 2020s (5y in)=1**. Three full decades with zero super-floods, then an outbreak.
+
+**Test B · Climate forcing.** Across 9 ECCC watershed stations, Apr+May precipitation shifts pre/post 2017 range **−4% (Parent) to +36% (Rouyn)**; March peak snow shifts range **−15% (Témiscamingue) to +20% (Ottawa CDA)** — with snow trending *down* at the upper basin. **No coherent climate step** that mathematically requires a +19% step in basin flow. Source: `ingesters/climate-history/stepchange_analysis.py`.
+
+### Why this matters for the case file
+
+The strongest version of the operations indictment — *Bryson amplifies the lake peak* — does not survive these tests. But three independent findings now stack the same direction:
+
+1. **The +59 cm peak shift is real, but driven by changes in the inflow distribution** (more years with big freshets), not per-event amplification.
+2. **The basin-flow step concentrates sharply at 2017**, with no matching climate step.
+3. **The live Bryson telemetry** (HQ open-data feed, May 2026) shows the headpond held at the top of its operating band (104.20–104.67 m) through 10 days of peak inflow, with 86% spill share — the operating-regime change is now directly observable.
+
+**The strengthened argument:** even granting whatever climate signal does exist, a dam built to manage river flow has an obligation to adapt its operating posture as inflow patterns change. Continuing the same posture — or, per the live data, moving to one that holds the headpond *higher* under bigger inflows — is the policy failure the community is asking about. The argument no longer requires winning the climate-attribution debate; it asks a governance question that stands independently. See Exhibit D Figure 7 + Live Observation panel and Exhibit E Figures 9–10.
+
 ### Snowpack-indexed drawdown — the missing rule
 
 The ORRPB currently uses 30-year median guidelines for fall reservoir drawdown — a fixed rule applied regardless of conditions. This produces clearly wrong outcomes in heavy snow years (excess water in storage during freshet) and unnecessarily aggressive drawdown in light snow years (e.g. 2024 had summer-like April levels).
@@ -631,6 +673,8 @@ The Bryson Generating Station was rehabilitated 2017–2023 (planning ~2017, Uni
 
 4. **Lac Coulonge yearly peak data 1972–2026** compiled from ORRPB historical records (Exhibit A).
 
+5. **Live Hydro-Québec open-data feed** (May 2026 onward, ingested hourly to TimescaleDB): Bryson amont (1-2964), Bryson aval (1-2965), Bryson centrale release (3-46). Through the 2026 freshet peak, the headpond was held in a 47 cm operating band (104.20–104.67 m) with 86% spill share — the operating-regime change the case file infers from gauge data is now directly observable. See Exhibit D Live Observation panel.
+
 ### The hydraulic continuity point (Exhibit D, expanded)
 
 The Ottawa River between Rapides-des-Joachims and Bryson Dam is **one continuous reach with no intermediate flow controls**. André's storage capacity calculation summed it as four contiguous sections totalling 227 km². When the headpond at Bryson is held higher to increase generating efficiency, water backs up across the entire 130 km reach.
@@ -647,16 +691,19 @@ The trade-off is therefore not "Bryson revenue vs nothing." It is **"Bryson reve
 
 Hydro-Québec acknowledges that refurbishment changes water head values. ORRPB acknowledges that higher headponds are more efficient for hydropower. The November 2025 MRC Pontiac notice confirmed a 30–50 cm rise was **tested** — its title is "notice of temporary water-level increase, Bryson Dam — Hydro-Québec." The regression analysis shows post-2017 peaks are running 58 cm higher than pre-2017 precipitation patterns predict; the year-round Lac Coulonge level data shows that gap is concentrated in the freshet peak (annual mean unchanged, off-season unchanged, only the spring peak shifted). The pattern points to operational behavior change during peak inflow rather than a permanent headpond raise. But neither agency has publicly disclosed how Bryson's freshet-period operating decisions changed during or after the refurbishment, or what flood-buffer analysis informed those changes.
 
-**The community's policy ask is therefore not "change Bryson operations."** It is "investigate which factors actually explain the regime change, with public disclosure of the analysis." Both climate and operations are likely contributors. Both deserve attention. Only one is currently being scrutinized.
+**The community's policy ask is therefore not "change Bryson operations" — it is "review the operating regime against the new freshet conditions, and disclose the trade-offs."** Even granting whatever climate signal does exist, a dam built to manage river flow has an obligation to adapt as inflow patterns change. Continuing the same posture (or, per live data, moving to a higher-headpond posture) under bigger inflows is the policy choice the community is asking to be reviewed.
 
 ### Files for the case file
 
-- `Exhibit_A_Regime_Change.png` / `.html` — Exhibit A (regime change chart)
-- `Exhibit_B_Winter_Baseline.png` / `.html` — Exhibit B (winter baseline elevation)
-- `Exhibit_C_Storage_Capacity.png` / `.html` — Exhibit C (storage capacity contradiction)
-- `Exhibit_D_Bryson_Timeline.png` / `.html` — Exhibit D (Bryson refurbishment timeline + hydraulic continuity)
+- `Exhibit_A_Regime_Change.{html,png}` — 18× super-flood frequency, 2017 step
+- `Exhibit_B_Winter_Baseline.{html,png}` — 2026 entered freshet from elevated baseline
+- `Exhibit_C_Storage_Capacity.{html,png}` — ORRPB's "too small" claim is internally inconsistent
+- `Exhibit_D_Bryson_Timeline.{html,png}` — refurbishment timeline + hydraulic continuity + **Figure 7** (regression + step-change refuting climate) + **Figure 8** (live cascade) + **Live Observation panel**
+- `Exhibit_E_Climate_Tested.{html,png}` — climate alternative tested four ways and rejected; **Figures 9–10** (watershed station table + Britannia step-change)
+- `data/hq-opendata/` — primary-source CSV snapshots cited by Exhibit D
+- `ingesters/climate-history/{lc_brit_regression,stepchange_analysis}.py` — reproducible analysis scripts
 
-Each is editorially designed for Facebook sharing with matched typography (Fraunces serif + IBM Plex Sans/Mono) and color palette. They can be posted individually as a four-day series, or sent as a media-ready package.
+Each exhibit is editorially designed for Facebook sharing (matched typography: Fraunces serif + IBM Plex Sans/Mono; consistent palette). They can be posted individually as a five-day series, or sent as a media-ready package.
 
 ---
 
@@ -664,28 +711,44 @@ Each is editorially designed for Facebook sharing with matched typography (Fraun
 
 ### Files generated during this analysis
 
-- `Freshet_2026_Complete_Summary.md` — this document
-- `Ottawa_River_Freshet_2026_Mansfield.png` — Facebook-shareable dashboard image (April 15)
-- `Know_Your_Level_2026.xlsx` — multi-station reference spreadsheet
-- `Freshet_Dashboard_Live.html` — auto-refreshing dashboard (Vigilance API)
-- `Freshet_Dashboard.html` — static snapshot dashboard
-- `freshet-dashboard.yaml` — Kubernetes manifest for k3s deployment
+- `docs/analysis/Freshet_2026_Complete_Summary.md` — this document
+- `docs/exhibits/Exhibit_{A,B,C,D,E}_*.{html,png}` — five-exhibit case file (rendered via `render_pngs.js`)
+- `data/lac-coulonge-monthly-1972-2026.csv` — canonical Lac Coulonge monthly + annual peaks
+- `data/orrpb-historic-peaks-1972-2025.csv` — ORRPB published peaks (multi-station)
+- `data/wsc-hydrometric/` — WSC HYDAT extracts for Ottawa basin stations (active + discontinued)
+- `data/eccc-climate/` — ECCC daily climate per-watershed-station (1972–2026)
+- `data/hq-opendata/` — point-in-time Bryson + cascade snapshots cited by Exhibit D
+- `ingesters/{river-history,reservoir-ingest,hq-ingest,wsc-ingest,eccc-ingest}/` — live cron pipelines
+- `ingesters/climate-history/` — historical-data extracts + analysis scripts (regression, step-change)
+- `dashboard/index.html` — live dashboard source
 
 ### Live infrastructure
 
 - **Live dashboard**: https://freshet.xgrunt.com
-- **Source endpoints**:
-  - Lac Coulonge: https://vigilance.geo.msp.gouv.qc.ca/stations/1195
-  - Coulonge River: https://vigilance.geo.msp.gouv.qc.ca/stations/1004
-  - Quai des Artistes (Lady Aberdeen): https://vigilance.geo.msp.gouv.qc.ca/stations/983
+  - Overview tab — main-stem corridor, watershed snapshot, freeze tracker
+  - Stations tab — 10 Vigilance + 1 MVCA mini-charts
+  - Reservoirs tab — basin-wide percent-full with optional outflow line for HQ-controlled dams
+  - Tributaries tab — Gatineau + Lièvre cascade
+  - **Operations tab** — live HQ release telemetry (turbined/spilled/total) for every basin centrale, with sparklines + window picker
+  - Map drawer — Dams / Reservoirs / **Releases** / **Cascade** layers, with the 130-km Bryson↔Des-Joachims reach highlighted in accent red
+- **Live data tables** (PostgREST `/history/...`):
+  - `river_readings`, `weather_observations`, `reservoir_readings` (existing)
+  - `dam_releases`, `dam_inflows`, `dam_levels`, `dam_sites` (HQ open-data)
+  - `wsc_readings` (WSC realtime, both level + discharge)
+  - `eccc_climate_daily` (ECCC observations)
+- **Public alerter**: ntfy topic `freshet-mansfield`
 
 ### Primary data sources
 
 - **ORRPB** (ottawariver.ca) — official forecasts, historical peaks, current conditions
-- **ORRPB "Flow Management in the Ottawa River Basin" presentation** (April 2026) — the official self-presentation of the board's structure, mandate, and limits, used as authoritative source for the regulatory critique
-- **Quebec MSP Vigilance** (vigilance.geo.msp.gouv.qc.ca) — real-time gauge data
-- **Environment and Climate Change Canada** (weather.gc.ca) — weather forecasts
-- **Open-Meteo** — programmatic weather data for freeze tracker
+- **ORRPB "Flow Management in the Ottawa River Basin" presentation** (April 2026) — official self-presentation; authoritative for the regulatory critique
+- **Quebec MSP Vigilance** (vigilance.geo.msp.gouv.qc.ca) — real-time gauge level data, 18 stations now persisted (main stem + Gatineau + Lièvre)
+- **Hydro-Québec open-data** (hydroquebec.com/production/debits-niveaux-eau.html) — hourly turbine + spillway + headpond + tailwater telemetry for all basin centrales (~10-day rolling window)
+- **WSC realtime hydrometric** (wateroffice.ec.gc.ca) — 5-minute level + discharge for active basin gauges
+- **WSC HYDAT** — quarterly SQLite archive, deep historical record
+- **ECCC daily climate** (climate.weather.gc.ca) — official Canadian weather observation network, 9 watershed stations
+- **Open-Meteo** — modelled / reanalysis weather for freeze tracker
+- **MVCA / Kisters KiWIS** (waterdata.quinteconservation.ca) — Buckhams Bay and other MVCA gauges
 - **Northern Reservoirs Flood Watch Group** (Facebook) — community reference and discussion
 - **"Know Your Level" reference document** — Dan Poole, flood watch community
 
@@ -805,11 +868,11 @@ Several operational behaviors initially identified through data observation were
 
 ### Thread 9: Climate test — quantitative regression analysis
 
-The climate alternative explanation was tested rigorously using 44 years (1972–2016, freshet years with adequate Ottawa CDA observation coverage) of cold-season precipitation and Lac Coulonge yearly peaks. Pre-2017 vs post-2017 cold-season precipitation differed by only +3.7% (394 → 409 mm, t = 0.46, not significant). A linear regression model trained on pre-2017 data predicted post-2017 peaks; actual peaks averaged **58 cm higher** than the model predicted. The four super-flood years showed residuals of **+90 cm (2017), +157 cm (2019), +113 cm (2023), and +127 cm (2026)**. Year-round Lac Coulonge level data shows the +59 cm shift in annual peaks is concentrated in the freshet (April monthly mean +19.5 cm, annual peak +59 cm) and is not accompanied by a sustained year-round headpond raise (annual mean +2.6 cm, annual minimum +1.0 cm, off-season months unchanged or slightly lower). The November 2025 MRC Pontiac notice confirmed a 30–50 cm rise was **tested**, not that it is in permanent effect. The Ottawa station explains only ~4% of Lac Coulonge peak variance (r² = 0.038) — that low r² is itself the finding: Ottawa-station precipitation has nearly no predictive value for Lac Coulonge peaks because it samples the wrong watershed. Cleaner upstream precipitation data (Témiscamingue, Maniwaki, Val-d'Or — now in `data/eccc-climate/`) would tighten the model. **Conclusion:** Climate change in the southern Ottawa basin is real and measurable, but does not by itself explain the regime change at Lac Coulonge. The unexplained +58 cm residual, combined with the year-round-level pattern, is consistent with operational behavior change during the freshet at Bryson Dam — later drawdown, slower refill, or holding water during peak inflow — rather than a permanent headpond raise.
+The climate alternative was tested four ways. **(1) Cold-season precipitation regression**: pre-2017 (n=44) vs post-2017 (n=10) Ottawa CDA precipitation differed by only +3.7% (not significant). A linear model trained on pre-2017 data predicted post-2017 peaks; actual peaks averaged **+58 cm above prediction**, with super-flood years at +90, +157, +113, and +127 cm. **(2) Per-event amplification regression** (Lac Coulonge peak ~ Britannia annual peak): pre-2017 and post-2017 fits are essentially identical (slope shift +0.012 m per 1000 m³/s, intercept shift -4.8 cm, mean post-2017 residual from pre-line +0.1 cm). The lake responds to inflow as it always has — the +59 cm in mean peak is composition-driven, not amplification. **(3) Watershed-station forcing**: across nine ECCC stations, Apr+May precipitation shifts span -4% to +36% with no coherent step; March snow trends *down* at the upper basin (Témiscamingue -15%, Val-d'Or -14%). **(4) Step location**: median Britannia annual-peak shift maximizes at exactly 2017 (+19.3%) and decays both directions, with three full prior decades (1980s-2000s) at zero super-floods each. **Conclusion:** climate change in the basin is real but does not by itself explain the post-2017 regime change at Lac Coulonge. **And even if it did contribute, the operator's response remains the controllable variable** — a dam built to manage river flow has an obligation to adapt as inflow patterns change.
 
-### Thread 10: The case file — four-exhibit analytical argument
+### Thread 10: The case file — five-exhibit analytical argument
 
-The policy analysis was distilled into a four-exhibit case file designed for community sharing and media use. **Exhibit A** establishes the outcomes problem (regime change, 18× super-flood frequency increase). **Exhibit B** establishes the inputs shift (2026 winter baseline 14 cm above prior decade). **Exhibit C** establishes a specific operational lever exists (André's 302 million m³ storage capacity calculation refutes ORRPB FAQ Q5 Part D's "no benefit" justification). **Exhibit D** establishes a specific operational change happened with documented timing (Bryson refurbishment 2017–2023, verified primary sources from Hydro-Québec and MRC Pontiac, 130 km hydraulic continuity affecting 10 communities across two provinces). Each exhibit can stand alone; together they form a complete argument that the regime change is real, has identifiable mechanisms, and has unanswered policy questions. The framing throughout is "asking questions backed by verified facts," not "accusing operators of malfeasance" — defensible against scrutiny because every claim is sourced.
+The policy analysis is distilled into a five-exhibit case file designed for community sharing and media use. **Exhibit A** establishes the outcomes problem (18× super-flood frequency increase, sharp 2017 step). **Exhibit B** establishes the inputs shift (2026 winter baseline 14 cm above prior decade). **Exhibit C** establishes a specific operational lever exists (302 million m³ storage capacity at Lac Coulonge, refuting ORRPB FAQ Q5 Part D's "no benefit" position). **Exhibit D** establishes the operational change with documented timing (Bryson refurbishment 2017–2023), proves climate alone cannot explain the step (Figure 7 regression + step-change test), shows Bryson is the spillway-dominant outlier in its own cascade (Figure 8), and reveals the live operating signature via Hydro-Québec's open-data feed (Live Observation panel). **Exhibit E** tests the climate alternative four ways across the watershed and rejects it; it also makes the second-order argument that even if climate contributed, adaptation is the operator's obligation. Each exhibit can stand alone; together they form a complete, governance-focused argument that does not require winning the climate-attribution debate. The framing is "asking questions backed by verified facts" — every claim is sourced; the policy ask is operating-regime review, not accusation.
 
 ---
 

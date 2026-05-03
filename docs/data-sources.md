@@ -17,10 +17,38 @@ licensing, and notes on stability.
 - **License**: Public data published by Quebec's Ministry of Public Safety.
 - **Stability**: Undocumented but stable for years. Schema evolves rarely.
 
-Used for: live river levels for Quebec gauges + a few mirrored Ontario gauges
-(Mattawa, Témiscaming, Britannia).
+Used for: live river levels for 18 main-stem + Gatineau + Lièvre stations
+(STATION_IDS env var on the river-history ingester).
 
-## 2. ECCC Real-Time Hydrometric
+## 2. Hydro-Québec open-data
+
+- **Base URL**: `https://www.hydroquebec.com/data/documents-donnees/donnees-ouvertes/json/`
+- **Endpoints**:
+  - `Donnees_VUE_CENTRALES_ET_OUVRAGES.json` — generating-station release telemetry (~3 MB)
+  - `Donnees_VUE_STATIONS_ET_TARAGES.json` — water-level + meteo station readings (~15 MB)
+- **Auth**: none
+- **Discovery**: linked from `hydroquebec.com/production/debits-niveaux-eau.html` via the page's `crues.min.js` widget
+- **Format**: per-site JSON with hourly + daily series under `Composition.Donnees`
+- **Cadence**: HQ refreshes ~twice daily; rolling ~10-day window per pull
+- **TLS quirk**: HQ's CDN refuses Python's default Alpine TLS handshake (SSLV3 alert). The ingester sets `ctx.set_ciphers('DEFAULT:@SECLEVEL=1')` to work around.
+- **License**: open-data; HQ's "use at your own risk" caveat applies
+- **Stability**: filename suggests "rating curves" (TARAGES) but content is pure level/flow telemetry — no Q-vs-H tables
+
+Used for: the Operations tab and the live Bryson Δh / spill-share evidence in Exhibit D. Centrale release goes to `dam_releases`, station levels to `dam_levels`.
+
+## 3. WSC realtime hydrometric
+
+- **Endpoint**: `https://wateroffice.ec.gc.ca/services/real_time_data/csv/inline?stations[]=<wsc_code>&parameters[]=46&parameters[]=47&start_date=...&end_date=...`
+- **Parameters**: `46` = water level (m), `47` = discharge (m³/s)
+- **Auth**: none
+- **Format**: CSV with one row per (station, timestamp, parameter) — 5-minute cadence
+- **Cadence**: 5-minute upstream; we pull hourly
+- **License**: Open Government Licence — Canada
+- **Why this alongside Vigilance**: Vigilance often publishes only level. WSC publishes both level AND discharge for the same gauges (e.g. Britannia 02KF005), plus stations Vigilance doesn't cover.
+
+Used for: discharge values not in Vigilance. Lands in `wsc_readings`.
+
+## 4. ECCC Real-Time Hydrometric
 
 - **Base URL**: `https://api.weather.gc.ca`
 - **Endpoints**:
@@ -36,7 +64,19 @@ Used for: live river levels for Quebec gauges + a few mirrored Ontario gauges
 Used for: historical annual peaks (synthetic flood-state classification for
 stations Vigilance can't classify).
 
-## 3. open-meteo
+## 5. ECCC daily climate (bulk CSV)
+
+- **Endpoint**: `https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=<id>&Year=<yyyy>&Month=1&Day=1&timeframe=2`
+- **Auth**: none (be polite — public-funded)
+- **Format**: CSV with header on row 1 (preceded by UTF-8 BOM); one row per day, ~365 rows per per-year request
+- **Cadence**: daily data lags 1–3 days; we pull every 6 hours
+- **Stations tracked**: 9 watershed stations (Ottawa CDA, Maniwaki, Barrage Témiscamingue, Mont-Laurier, Parent, Val-d'Or, Rouyn, North Bay, Pembroke)
+- **Why complementary to open-meteo**: open-meteo is modelled / reanalysis; ECCC is the official Canadian observation network. For freshet correlation work that needs to align with the historical record, ECCC is authoritative.
+- **License**: Open Government Licence — Canada
+
+Used for: climate-residual analysis (Exhibit E), step-change tests, snowpack correlation. Lands in `eccc_climate_daily`.
+
+## 6. open-meteo
 
 - **Base URL**: `https://api.open-meteo.com/v1/forecast`
 - **Auth**: none (free tier covers this stack's volume)
@@ -51,7 +91,7 @@ stations Vigilance can't classify).
 Used for: hourly temperature + 48 h precipitation forecasts at the basin
 weather points.
 
-## 4. ORRPB Conditions
+## 7. ORRPB Conditions
 
 - **URL**: `https://www.ottawariver.ca/conditions/?display=reservoir`
 - **Format**: HTML table, 8-day rolling window
@@ -67,7 +107,7 @@ isn't a contract — if it breaks, the parser at
 [`ingesters/reservoir-ingest/scrape.py`](../ingesters/reservoir-ingest/scrape.py)
 needs adjustment.
 
-## 5. Kisters KiWIS (optional)
+## 8. Kisters KiWIS (optional)
 
 - **Base URL**: instance-specific. The river-history ingester is wired to
   `https://waterdata.quinteconservation.ca/KiWIS/KiWIS` for Mississippi
@@ -81,7 +121,7 @@ needs adjustment.
 Used for: optional non-Vigilance gauges (set the `MVCA_STATIONS` env var to
 enable; default is one station as a working example).
 
-## 6. ntfy (outbound, alerter only)
+## 9. ntfy (outbound, alerter only)
 
 - **Default**: `https://ntfy.sh` (public free tier)
 - **Self-host option**: any ntfy instance reachable from your cron.
@@ -105,7 +145,10 @@ view layer is the API.
 | Source | Stability concern | Fallback |
 |---|---|---|
 | Vigilance | Undocumented JSON | Site change → fix client code |
-| ECCC | Stable OGC API | Quota / 429 not seen yet |
+| Hydro-Québec open-data | Static JSON URL, TLS quirk on Alpine | If filename changes, follow link from `debits-niveaux-eau.html` |
+| WSC realtime | Inline-CSV endpoint, not heavily documented | If broken, fall back to ECCC OGC API |
+| ECCC realtime | Stable OGC API | Quota / 429 not seen yet |
+| ECCC bulk daily | Stable, but be polite | Throttle if needed |
 | open-meteo | Free-tier limits | Bulk-call pattern stays under |
 | ORRPB | HTML scraping | Fix parser if structure changes |
 | KiWIS (MVCA) | Per-instance | Skip if endpoint moves |

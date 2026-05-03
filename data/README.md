@@ -9,6 +9,14 @@ The analysis datasets are consumed by ad-hoc analysis scripts only.
 
 ## Datasets for analysis (primary sources)
 
+### `hq-opendata/`
+
+Point-in-time snapshots of Hydro-Québec open-data telemetry cited by Exhibit D
+(Bryson freshet 2026 daily ledger, headpond/tailwater hourly pair, cascade
+peer comparison). The live data flows through the `hq-ingest` cron into
+TimescaleDB; these CSVs are the static citation artifacts. See
+[`hq-opendata/README.md`](hq-opendata/README.md).
+
 ### `eccc-climate/`
 
 Daily precipitation, temperature, and snow records from 12 ECCC stations

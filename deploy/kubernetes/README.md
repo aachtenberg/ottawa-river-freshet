@@ -22,9 +22,12 @@ scripts are inlined into the manifests, so a fresh cluster is one
 | `10-timescaledb.yaml` | TimescaleDB StatefulSet, headless Service, Secret with the DB password, ConfigMap of the bootstrap SQL |
 | `20-postgrest.yaml` | PostgREST Deployment + Service |
 | `30-dashboard.yaml` | nginx Deployment + Service + dashboard ConfigMap (the static files) + Ingress |
-| `40-river-history-cron.yaml` | Hourly Vigilance + KiWIS ingester CronJob + script ConfigMap |
+| `40-river-history-cron.yaml` | Hourly Vigilance + KiWIS + open-meteo ingester CronJob + script ConfigMap |
 | `50-reservoir-ingest-cron.yaml` | Daily ORRPB scraper CronJob + script ConfigMap |
+| `55-hq-ingest-cron.yaml` | Hourly Hydro-Québec open-data ingester (centrale + station telemetry) |
 | `60-alerter-cron.yaml` | Hourly threshold-crossing alerter CronJob + script ConfigMap |
+| `70-wsc-ingest-cron.yaml` | Hourly WSC realtime CSV ingester (level + discharge) |
+| `80-eccc-ingest-cron.yaml` | Six-hourly ECCC daily-climate bulk-CSV ingester |
 
 ## First-time apply
 
@@ -55,12 +58,18 @@ kubectl apply -f 20-postgrest.yaml
 kubectl apply -f 30-dashboard.yaml
 kubectl apply -f 40-river-history-cron.yaml
 kubectl apply -f 50-reservoir-ingest-cron.yaml
+kubectl apply -f 55-hq-ingest-cron.yaml
 kubectl apply -f 60-alerter-cron.yaml
+kubectl apply -f 70-wsc-ingest-cron.yaml
+kubectl apply -f 80-eccc-ingest-cron.yaml
 
 # 5. Trigger initial ingests so the dashboard has data immediately rather
 #    than waiting for the first scheduled run.
 kubectl create job -n freshet --from=cronjob/river-history-ingest river-init
 kubectl create job -n freshet --from=cronjob/reservoir-ingest reservoir-init
+kubectl create job -n freshet --from=cronjob/hq-ingest hq-init
+kubectl create job -n freshet --from=cronjob/wsc-ingest wsc-init
+kubectl create job -n freshet --from=cronjob/eccc-ingest eccc-init
 ```
 
 ## Updating after editing source files
