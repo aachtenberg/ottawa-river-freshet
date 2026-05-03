@@ -563,7 +563,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
       <p style="margin-bottom:6px;"><strong>Percent full</strong> is estimated using the difference between the published high and low operating limits for each reservoir. The low operating limit represents the minimum level at which a generating station or dam can maintain outflow under normal operating conditions.</p>
       <p style="margin-bottom:6px;">A simple linear approximation is applied across this operating range to estimate how full a reservoir is at a given level. This provides a reasonable point-in-time estimate of percent full based solely on water level relative to the operating limits.</p>
       <p style="margin-bottom:6px;">Reservoir level data is captured as a point-in-time measurement, while official daily values are typically finalized using 24-hour averaged data. As a result, the percent full displayed on cards reflects current conditions, but the reported daily percent-full value may lag slightly.</p>
-      <p style="margin:0;">Official calculation methods used by reservoir operators may differ and may incorporate additional operational or hydrological factors. For authoritative information, consult the respective reservoir operators. Methodology adapted from Dan Poole's community-published reservoir gauge.</p>
+      <p style="margin:0;">Official calculation methods used by reservoir operators may differ and may incorporate additional operational or hydrological factors. For authoritative information, consult the respective reservoir operators. Methodology adapted from Contributor B's community-published reservoir gauge.</p>
     </div>
     <span id="reservoir-status-line" style="display:block; margin-top:6px; font-size:11px; color:var(--text-faint);"></span>
     <span id="reservoir-calibration-warning" style="display:none; margin-top:4px; font-size:11px; color:var(--orange);">⚠ Operating limits are starting estimates from operator documentation — not yet calibrated. Percent-full numbers may drift ± a few points until limits are finalized.</span>
@@ -1126,7 +1126,7 @@ function renderRegional(rows) {
 // 100 m below MASL. Stations not listed here aren't in the ORRPB PDF.
 const ORRPB_HISTORIC_PEAKS = {
   // Temiscaming village gauge — ECCC 02JE025 uses an assumed datum referenced
-  // to lake-floor; offset to MASL ≈ 173.65 (calibrated against Dan Poole's
+  // to lake-floor; offset to MASL ≈ 173.65 (calibrated against Contributor B's
   // 2026-04-29 reading of 178.65 m vs. the gauge's 5.00 raw value). No ORRPB
   // peak data published for this gauge.
   951:  { datumOffset: 173.65, peaks: {} },

@@ -4,6 +4,11 @@
 **Tracking period: April 14–28, 2026**
 **Compiled: April 28, 2026**
 
+> **Attribution note.** Specific community contributors are referenced
+> below by placeholder labels (`Contributor A`, `Contributor B`) rather
+> than by name. Real names are withheld pending consent — see
+> [`CONTRIBUTORS.md`](../../CONTRIBUTORS.md) for the policy.
+
 ---
 
 ## Executive Summary
@@ -22,7 +27,7 @@ This document compiles a two-week real-time flood tracking effort for a riverfro
 
 **Community infrastructure deployed**: A live monitoring dashboard pulling from the Quebec Vigilance API was developed and deployed to a k3s cluster at `freshet.xgrunt.com`, providing real-time gauge readings with property-specific threshold translation, multi-station regional context, and an upstream freeze tracker.
 
-**Regime change empirically documented**: Flood watch member André Boisvert compiled Lac Coulonge yearly peaks 1972–2026 and demonstrated an **18-fold increase in super-flood frequency** between 1972–2016 (1 event in 45 years) and 2017–2026 (4 events in 10 years). The step-function shape of the change is too abrupt to be a gradual climate signal, pointing to an operational regime change around 2016–2017. The ORRPB's own April 2026 self-presentation does not engage with this empirical pattern, instead framing flood frequency as cyclical natural variation.
+**Regime change empirically documented**: Flood watch member Contributor A compiled Lac Coulonge yearly peaks 1972–2026 and demonstrated an **18-fold increase in super-flood frequency** between 1972–2016 (1 event in 45 years) and 2017–2026 (4 events in 10 years). The step-function shape of the change is too abrupt to be a gradual climate signal, pointing to an operational regime change around 2016–2017. The ORRPB's own April 2026 self-presentation does not engage with this empirical pattern, instead framing flood frequency as cyclical natural variation.
 
 ### Why this event was manageable
 
@@ -172,7 +177,7 @@ The ORRPB can reduce downstream peaks by approximately 40 cm through reservoir m
 
 ### Operational mechanisms validated by community insider knowledge
 
-Several operational behaviors that initially appeared as inferences from data were validated by Dan Poole (who has worked on watershed dams) on April 30. These move from hypothesis to confirmed mechanism:
+Several operational behaviors that initially appeared as inferences from data were validated by Contributor B (who has worked on watershed dams) on April 30. These move from hypothesis to confirmed mechanism:
 
 **Reservoirs ramp outflow as they near capacity (universal rule).** Dan confirmed: "Bark Lake is nearly full so they normally increase outflow to the Madawaska before it gets to max level. All reservoirs increase outflow as they get full to prevent an emergency release." This makes percent-full a true leading indicator — when a reservoir crosses approximately 90%, downstream outflow ramps follow within days regardless of inflow conditions, because the alternative is uncontrolled spillage.
 
@@ -294,7 +299,7 @@ A community member reported **122 mm of snow water equivalent still in the Rapid
 
 ### The Témiscamingue lake imbalance signal
 
-A critical observation from the flood watch community (Dan Poole, April 28): **Lake Témiscamingue showed north-south level imbalance**, with the north (inflow) end higher than the south (outflow) end. This indicates inflow is currently outpacing outflow capacity — water piles up at the inlet before propagating south to the dam.
+A critical observation from the flood watch community (Contributor B, April 28): **Lake Témiscamingue showed north-south level imbalance**, with the north (inflow) end higher than the south (outflow) end. This indicates inflow is currently outpacing outflow capacity — water piles up at the inlet before propagating south to the dam.
 
 Implication: the 2,550 m³/s outflow may not be sufficient to drain the lake at the rate water is arriving. ORRPB will likely need to ramp Temiskaming releases further, with that additional water arriving at Lac Coulonge May 5–8.
 
@@ -397,7 +402,7 @@ This validates the visual analysis of the smooth Des Joachims discharge ramp. It
 
 The same document also reveals what the official position systematically avoids:
 
-**No engagement with the regime change.** Slide 17 ("Is flooding the new norm?") states "Flooding is NOT expected to happen every second year. Flooding is driven by weather, and weather can be cyclical. Flood events can be clustered." This is the official position that André's 18-fold super-flood frequency increase directly contradicts. The ORRPB does not present the year-by-year peak data that would force them to engage with the regime change. Their official answer is "trust the long-run probabilities" — exactly what the data refuses to support.
+**No engagement with the regime change.** Slide 17 ("Is flooding the new norm?") states "Flooding is NOT expected to happen every second year. Flooding is driven by weather, and weather can be cyclical. Flood events can be clustered." This is the official position that Contributor A's 18-fold super-flood frequency increase directly contradicts. The ORRPB does not present the year-by-year peak data that would force them to engage with the regime change. Their official answer is "trust the long-run probabilities" — exactly what the data refuses to support.
 
 **No discussion of operational rule changes as a policy option.** Slide 19 ("Can reservoirs be increased?") answers the question of whether to BUILD new reservoirs (concluding no, costs outweigh benefits per 1980s studies). It does not answer the question the community is actually asking — whether to OPERATE existing reservoirs differently (deeper drawdown, snowpack-indexed rules, tighter Bryson headpond management). This may be deliberate misdirection or genuine misframing of the community position.
 
@@ -405,7 +410,7 @@ The same document also reveals what the official position systematically avoids:
 
 **The climate change slide is analytically empty** (Slide 18). It lists four contradictory factors — more rain (worse), faster melt (worse), variable snow (varies), more evapotranspiration (better) — and concludes with a "Lots of uncertainty" sticky note. This is the prose forecast pattern in policy form: maximum hedging, minimum analytical commitment.
 
-**No reservoir percent-full or storage analytics published.** Slide 12 shows a single year's reservoir storage curve against the median, but does not provide the multi-decade data series that would document whether operating ranges have shifted. Dan Poole's percent-full analytics demonstrate that this calculation is achievable from public ORRPB data — but ORRPB does not publish it themselves.
+**No reservoir percent-full or storage analytics published.** Slide 12 shows a single year's reservoir storage curve against the median, but does not provide the multi-decade data series that would document whether operating ranges have shifted. Contributor B's percent-full analytics demonstrate that this calculation is achievable from public ORRPB data — but ORRPB does not publish it themselves.
 
 ### Why the ORRPB's own document strengthens the community policy argument
 
@@ -438,9 +443,9 @@ Fall/winter baseline levels at Lac Coulonge have been creeping higher in the 201
 
 **Every major flood since 2017 would have stayed below the 108.48 m backyard threshold with a 60 cm deeper pre-freshet drawdown.**
 
-### The 2017 regime change — André Boisvert's empirical analysis
+### The 2017 regime change — Contributor A's empirical analysis
 
-A flood watch group member with operational experience working on dams in the watershed (André Boisvert) compiled all Lac Coulonge yearly peak levels from 1972 to 2026 and produced a striking empirical comparison:
+A flood watch group member with operational experience working on dams in the watershed (Contributor A) compiled all Lac Coulonge yearly peak levels from 1972 to 2026 and produced a striking empirical comparison:
 
 | Period | Span | Years below 107.5 m | Official floods (>107.5) | Minor floods (>108.0) | **Super-floods (>108.5)** |
 |---|---|---|---|---|---|
@@ -449,7 +454,7 @@ A flood watch group member with operational experience working on dams in the wa
 
 The super-flood frequency went from 1 event in 45 years (a once-in-a-generation occurrence) to 4 events in 10 years. That's roughly an **18-fold increase in super-flood rate**. Statistically, this is a 6+ sigma event under any reasonable null hypothesis — effectively impossible by chance alone.
 
-**The shape of the change matters.** Climate change produces gradual shifts, not step functions. A 1-in-45-year baseline transitioning to a 4-in-10-year rate over a single decade is too abrupt to be a climate signal alone. André's framing: **"This is not a gradual trend upwards due to climate change. As ChatGPT indicates, it's a major shift in management regime."**
+**The shape of the change matters.** Climate change produces gradual shifts, not step functions. A 1-in-45-year baseline transitioning to a 4-in-10-year rate over a single decade is too abrupt to be a climate signal alone. Contributor A's framing: **"This is not a gradual trend upwards due to climate change. As ChatGPT indicates, it's a major shift in management regime."**
 
 The implication is significant. Whatever changed around 2016–2017 — operating rules, drawdown targets, generation contracts, headpond management at run-of-river facilities — produced a regime change in flood frequency that has now persisted for a decade. The community's policy arguments (snowpack-indexed drawdown, mandate review, real-time data access) are responses to a regime change that is now empirically documented, not hypothetical.
 
@@ -629,7 +634,7 @@ The headline statistical finding: super-flood frequency at Lac Coulonge increase
 
 **"Before the snow even melted, the river was already too high."**
 
-The 2026 winter baseline at Lac Coulonge ran approximately 14 cm above the 2016–2025 average through January–February — before any spring runoff began. The water level the freshet started from was higher than at any comparable point in the prior decade. André Boisvert's February 28, 2026 prediction ("Lac Coulonge level is at its highest level in 10 years for this time of year. If our elected officials don't act now, I'm afraid we could possibly face the worst flooding ever for this section of the Ottawa River") was directionally validated when the freshet peaked at 108.633 m on April 20 — fourth-highest in the modern era.
+The 2026 winter baseline at Lac Coulonge ran approximately 14 cm above the 2016–2025 average through January–February — before any spring runoff began. The water level the freshet started from was higher than at any comparable point in the prior decade. Contributor A's February 28, 2026 prediction ("Lac Coulonge level is at its highest level in 10 years for this time of year. If our elected officials don't act now, I'm afraid we could possibly face the worst flooding ever for this section of the Ottawa River") was directionally validated when the freshet peaked at 108.633 m on April 20 — fourth-highest in the modern era.
 
 ### Exhibit C — A specific operational lever exists
 
@@ -637,7 +642,7 @@ The 2026 winter baseline at Lac Coulonge ran approximately 14 cm above the 2016�
 
 ORRPB FAQ Q5 Part D states: "Lowering levels in February then provides no benefit and does not reduce the flooding. Additionally, the storage volume available on the main stem of the river is far too small compared to the volume of water flowing through the river during high flow periods, to reduce flooding on the river system."
 
-André Boisvert's Google Earth measurement of the Lac Coulonge reach (Rapides-des-Joachims to Bryson Dam) demonstrates:
+Contributor A's Google Earth measurement of the Lac Coulonge reach (Rapides-des-Joachims to Bryson Dam) demonstrates:
 
 - **Surface area (4 sections summed):** 73.89 + 89.34 + 12.44 + 51.52 = 227.19 km²
 - **Available drawdown range:** 1.33 m (yearly average 106.40 m minus historical lower limit 105.07 m)
@@ -679,7 +684,7 @@ The Bryson Generating Station was rehabilitated 2017–2023 (planning ~2017, Uni
 
 ### The hydraulic continuity point (Exhibit D, expanded)
 
-The Ottawa River between Rapides-des-Joachims and Bryson Dam is **one continuous reach with no intermediate flow controls**. André's storage capacity calculation summed it as four contiguous sections totalling 227 km². When the headpond at Bryson is held higher to increase generating efficiency, water backs up across the entire 130 km reach.
+The Ottawa River between Rapides-des-Joachims and Bryson Dam is **one continuous reach with no intermediate flow controls**. Contributor A's storage capacity calculation summed it as four contiguous sections totalling 227 km². When the headpond at Bryson is held higher to increase generating efficiency, water backs up across the entire 130 km reach.
 
 Affected upstream communities (10 communities, 2 provinces):
 - **Quebec side:** Rapides-des-Joachims, Chapeau, Sheenboro, Waltham, Fort-Coulonge / Mansfield, Bryson, Allumette Island
@@ -752,7 +757,7 @@ Each exhibit is editorially designed for Facebook sharing (matched typography: F
 - **Open-Meteo** — modelled / reanalysis weather for freeze tracker
 - **MVCA / Kisters KiWIS** (waterdata.quinteconservation.ca) — Buckhams Bay and other MVCA gauges
 - **Northern Reservoirs Flood Watch Group** (Facebook) — community reference and discussion
-- **"Know Your Level" reference document** — Dan Poole, flood watch community
+- **"Know Your Level" reference document** — Contributor B, flood watch community
 
 ### Upstream weather stations tracked
 
@@ -852,7 +857,7 @@ The ORRPB's prose forecasts ("remains uncertain... remains possible... could lea
 
 ORRPB language has shifted from "minimizing" flood risk to "reducing" flood risk over the past decade — legally distinct commitments. The board is also a coordination function without enforcement authority. Real power sits with the operators (OPG, Hydro-Québec), whose mandates are power generation. The structure produces the opacity outcomes by design. Mandate review and authority clarification is a precondition for any of the other reforms.
 
-### Thread 5: Empirical evidence of regime change (André Boisvert's analysis)
+### Thread 5: Empirical evidence of regime change (Contributor A's analysis)
 
 A flood watch member with operational experience working on watershed dams compiled Lac Coulonge yearly peaks 1972-2026 and demonstrated an 18-fold increase in super-flood (>108.5 m) frequency between the 1972-2016 era (1 event in 45 years) and 2017-2026 (4 events in 10 years). The step-function shape of the change rules out gradual climate drivers as the sole cause and points to operational regime change around 2016-2017 as the proximate explanation. This empirical pattern shifts the community's policy arguments from "we suspect something has changed" to "something has demonstrably changed and an operational explanation is required."
 
@@ -862,11 +867,11 @@ The "💰 guys" appear in threads to explain why operational changes are impossi
 
 ### Thread 7: ORRPB's official self-presentation as evidence
 
-The ORRPB's April 2026 "Flow Management in the Ottawa River Basin" document (40-slide presentation) provides authoritative source material that strengthens rather than weakens the community's structural critique. The board explicitly admits it is "not a control board" and "cannot direct how operators manage their reservoirs or facilities" (Slide 11). It quantifies its 2019 reservoir effect at 120 cm of reduction at Lac Coulonge (Slide 15) — establishing both that the reservoirs do real work AND that the operational ceiling under current rules is roughly that magnitude. The "minimize impacts of floods" mandate language remains official (Slide 8). The document does not engage with the regime change documented by André Boisvert, frames the "more reservoirs?" question (which nobody is asking) instead of the "different operations?" question (which the community is asking), and does not publish the multi-decade reservoir storage data that would document operational shifts. The ORRPB's own document points the policy conversation past the ORRPB itself toward the actual decision-makers: Hydro-Québec, OPG, and the provincial/federal principals (MELCCFP, MNR, ECCC).
+The ORRPB's April 2026 "Flow Management in the Ottawa River Basin" document (40-slide presentation) provides authoritative source material that strengthens rather than weakens the community's structural critique. The board explicitly admits it is "not a control board" and "cannot direct how operators manage their reservoirs or facilities" (Slide 11). It quantifies its 2019 reservoir effect at 120 cm of reduction at Lac Coulonge (Slide 15) — establishing both that the reservoirs do real work AND that the operational ceiling under current rules is roughly that magnitude. The "minimize impacts of floods" mandate language remains official (Slide 8). The document does not engage with the regime change documented by Contributor A, frames the "more reservoirs?" question (which nobody is asking) instead of the "different operations?" question (which the community is asking), and does not publish the multi-decade reservoir storage data that would document operational shifts. The ORRPB's own document points the policy conversation past the ORRPB itself toward the actual decision-makers: Hydro-Québec, OPG, and the provincial/federal principals (MELCCFP, MNR, ECCC).
 
-### Thread 8: Operational mechanism validation by community insider (Dan Poole)
+### Thread 8: Operational mechanism validation by community insider (Contributor B)
 
-Several operational behaviors initially identified through data observation were validated by Dan Poole on April 30. These transitioned from inference to confirmed mechanism: (1) reservoirs universally ramp outflow as they near capacity to prevent emergency release, making percent-full a true leading indicator; (2) Des Joachims explicitly pauses Stage 1 refill and operates as pure run-of-river when Mattawa reaches flood territory, eliminating its normal buffer role and shortening effective Mattawa-to-Coulonge travel time; (3) Hydro-Québec releases proactively ahead of forecasted inflow (Baskatong doubled outflow with 3.5 m of headroom remaining, anticipating rain-driven inflow rather than responding to capacity constraint). None of these operational rules is published in ORRPB forecasts or press releases. The information exists internally and is verifiable post-hoc by community members with operational knowledge, but is not made available to property owners making preparation decisions in real time. This is the data accessibility gap stated as concrete mechanisms: not abstract opacity, but specific operational rules that would change a homeowner's preparation strategy if known.
+Several operational behaviors initially identified through data observation were validated by Contributor B on April 30. These transitioned from inference to confirmed mechanism: (1) reservoirs universally ramp outflow as they near capacity to prevent emergency release, making percent-full a true leading indicator; (2) Des Joachims explicitly pauses Stage 1 refill and operates as pure run-of-river when Mattawa reaches flood territory, eliminating its normal buffer role and shortening effective Mattawa-to-Coulonge travel time; (3) Hydro-Québec releases proactively ahead of forecasted inflow (Baskatong doubled outflow with 3.5 m of headroom remaining, anticipating rain-driven inflow rather than responding to capacity constraint). None of these operational rules is published in ORRPB forecasts or press releases. The information exists internally and is verifiable post-hoc by community members with operational knowledge, but is not made available to property owners making preparation decisions in real time. This is the data accessibility gap stated as concrete mechanisms: not abstract opacity, but specific operational rules that would change a homeowner's preparation strategy if known.
 
 ### Thread 9: Climate test — quantitative regression analysis
 

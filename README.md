@@ -116,7 +116,7 @@ that this dashboard doesn't model.
 
 ## Acknowledgements
 
-- **Dan Poole** for the reservoir percent-full methodology and operating-limit
+- **Contributor B** for the reservoir percent-full methodology and operating-limit
   calibration.
 - **Ottawa River Regulation Planning Board** and the operating agencies (HQ,
   OPG, MELCCFP, Evolugen, PSPC) for the public data feeds.
