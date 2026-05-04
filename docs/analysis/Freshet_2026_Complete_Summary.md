@@ -124,6 +124,13 @@ These thresholds tie ORRPB Lac Coulonge gauge readings to actual property impact
 - Temiskaming outflow ramped to 2,500–2,550 m³/s sustained — well above 2019's peak of 1,647
 - Northern pulse routing through system to Carillon (7,300 m³/s) without stacking at Coulonge
 
+### Phase 6: Slow recession and reservoir refill posture (May 1–4, added May 4)
+- May 1–3: Lac Coulonge declining at only ~2.4 cm/day (108.633 m peak Apr 20 → 108.41 m May 3 = 22 cm over 13 days). Markedly slower than 2019 or 2023 declines from comparable peaks.
+- May 2: Témiscamingue outflow peaks at **2,742 m³/s** — third-highest in the modern comparison record, behind only 2019 (3,173) and 1960 (3,637), and well above 2023 (2,388), 2017 (1,881).
+- Across the broader basin, reservoir retention dominates the recovery posture. Live telemetry (loaded May 2026 to `reservoir_readings`, scraped daily from ORRPB; see Second-Peak Risk Analysis below for the cross-station verification): Baskatong +2.24 m, Dozois +2.09 m, Mitchinamecus +1.23 m, eight other reservoirs rising 0.10–0.94 m over Apr 23 → May 3. Only Des Joachims (run-of-river, not a storage reservoir) is flat. Roughly 1.34 billion m³ stored at Baskatong alone in 11 days.
+- Bryson amont rose +4 cm over Apr 29 → May 2 while total throughput stayed pinned at ~1,353 m³/s — leading edge of the Témiscamingue release pulse arriving downstream, with Bryson unable to pass it through faster.
+- ORRPB's May 2 bulletin maintains the second-peak warning for "Mattawa to Lake Coulonge."
+
 ---
 
 ## The Sunday/Monday Freeze: Critical Mechanism
@@ -322,6 +329,48 @@ The worst-case scenario depends on **rapid melt + significant rainfall** in the 
 5. **Gatineau River trajectory** — does not directly affect Lac Coulonge (upstream of the confluence) but constrains operator options at Carillon. A Gatineau second peak forming on overnight rain (as observed April 30 at 875 m³/s rising) forces Carillon outflow to absorb both the regulated Ottawa River and the rising Gatineau, which can drive backwater pressure upstream and prevents downstream relief
 6. **Des Joachims operational state** — when Mattawa is in major flood, Des Joachims runs as pure pass-through (Stage 1 paused). This shortens the effective Mattawa-to-Coulonge travel time because the normal storage buffer is gone
 
+### May 3–4 update — basin-wide retention vs Témiscamingue ceiling (added May 4)
+
+Two community analyses converged on May 3, with our live telemetry providing the cross-station verification.
+
+**Contributor A — slow-decline inference.** From the May 3 community post: *"Levels are decreasing slowly. In my humble opinion, the second peak may be behind us. If they anticipated more level, they would have kept levels to where they were last week (peak #1), to maximize throughput and keep storage capacity in the reservoirs. The fact that levels are dropping slowly tells me they are now starting to hold back water in the reservoirs for summer operations."*
+
+This inference reads operator decisions from gauge behavior — the same framework that anchors Exhibit C (storage capacity) and Exhibit D (live Bryson telemetry). Specifically: a slow post-peak Lac Coulonge decline implies upstream reservoir retention rather than pass-through, because aggressive drawdown is the rational response to anticipated additional inflow.
+
+**Contributor B — Témiscamingue history chart.** A multi-year overlay of Témiscamingue discharge (2017, 2019, 2022, 2023, 2024, 2025, 2026) places the May 2 peak at 2,742 m³/s as the third-highest in the comparison record. Two structural observations from the chart:
+
+1. **2026 ≠ 2017.** The pre-regime-change baseline year peaked at ~1,880 m³/s on April 14 — 18 days earlier and 31% lower than 2026. The 2017 line then descended cleanly. The post-2017 Témiscamingue pattern (2019, 2023, 2025, 2026) shows consistently later peaks, higher peaks, and longer plateaus. This is Exhibit A's regime-change argument expressed at the upper-Outaouais main stem rather than at Lac Coulonge — independent corroboration at a different point in the system.
+2. **2026 ≈ 2019.** The 2019 and 2026 rising limbs trace nearly the same path through April. They diverge in the final week (2019 kept climbing into mid-May; 2026 plateaued at a lower ceiling). But 2019's *descending* side held near-peak for ~3 weeks before falling cleanly, suggesting the operative analog for the next several weeks of recovery.
+
+**Cross-station verification with the live telemetry.** Both contributors' inferences hold up under direct measurement.
+
+| reservoir | Apr 23 | May 3 | Δ (m) | interpretation |
+|---|---|---|---|---|
+| Baskatong | 218.13 | 220.37 | **+2.24** | Aggressive absorption; ~1.34 GCM stored in 11 days |
+| Dozois | 342.19 | 344.28 | +2.09 | Headwater retention |
+| Mitchinamecus | 378.35 | 379.58 | +1.23 | Headwater retention |
+| Lady Evelyn | 287.98 | 288.92 | +0.94 | Filling |
+| Poisson Blanc | 200.47 | 201.38 | +0.91 | Filling |
+| Timiskaming (Haileybury) | 178.65 | 179.47 | +0.82 | Approaching ceiling |
+| Quinze | 261.97 | 262.72 | +0.75 | Filling |
+| Rapide-7 | 308.13 | 308.83 | +0.70 | Filling |
+| Timiskaming (Témiscaming) | 178.31 | 178.92 | +0.61 | Approaching ceiling |
+| Kipawa | 268.66 | 269.23 | +0.57 | Filling |
+| Kiamika | 267.87 | 268.30 | +0.43 | Filling |
+| Cabonga | 359.69 | 360.03 | +0.34 | Filling |
+| Bark Lake | 313.24 | 313.34 | +0.10 | Slow filling |
+| Des Joachims | 150.51 | 150.50 | −0.01 | Run-of-river, no storage role |
+
+**Synthesis: the contributors' analyses are complementary, not contradictory.** Contributor A is right that the *headwater* reservoirs (Baskatong, Dozois, Cabonga, Mitchinamecus) still have room and are actively absorbing. Contributor B's Témiscamingue data shows that the bottleneck reservoir on the upper Ottawa main stem has run out of buffer — Dan's "six inches below low-level flooding" caveat matches the +0.82 m rise we observe at the Haileybury gauge. The basin is staging the inflow: headwaters absorbing the slow-melting peak, Témiscamingue passing the fast-melting peak through.
+
+**Refinement of the second-peak scenario assessment.** The Témiscamingue 2026-vs-2019 analog suggests the *timing* of relief is later than the optimistic read implies, even if no historical analog supports a higher second peak following a May 2-style first peak. Contributor A's "second peak behind us" claim survives on magnitude; Contributor B's "not finished until inflows clearly collapse" caveat survives on duration. The probability table from April 28 stands but with the duration distribution shifted right — managed-plateau likely runs another 2–3 weeks rather than 1 week.
+
+**Watch for confirmation or refutation in the live data.**
+- Bryson amont above 104.55 m: second peak materialising (current setpoint band 104.43–104.54 m). If confirmed, the held-headpond Δ to Lac Coulonge propagates 1:1 (see Exhibit D Live Observation panel).
+- Témiscamingue outflow falling below 2,000 m³/s sustained: Contributor A's recession-confirmed scenario.
+- Témiscamingue outflow holding 2,500+ m³/s: Contributor B's not-finished scenario, with arrival at Bryson on a 1–2 day lag.
+
+**Storage scale, for case-file context.** Baskatong absorbing 1.34 GCM in 11 days — equivalent to ~1,410 m³/s of net retained inflow over the window — is roughly **4–5× the total live storage** of either side of the Exhibit C comparison (Lac Coulonge reach 0.30 GCM, Des Joachims 0.23 GCM). This is not the "the reach storage is too small to matter" scale the operators have publicly invoked; it is the scale at which a single northern reservoir is currently doing flood mitigation. The exhibit's Lac-Coulonge-vs-Des-Joachims comparison demonstrates the principle (at a downstream run-of-river headpond); the Baskatong observation shows what the principle looks like in practice when applied (at a properly-sized headwater reservoir). One reservoir doing the work makes the case-file argument stronger, not weaker — because it shows the rest of the basin's storage operating in the way Lac Coulonge could, but is not.
 
 ---
 
