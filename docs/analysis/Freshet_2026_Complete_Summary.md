@@ -131,6 +131,40 @@ These thresholds tie ORRPB Lac Coulonge gauge readings to actual property impact
 - Bryson amont rose +4 cm over Apr 29 → May 2 while total throughput stayed pinned at ~1,353 m³/s — leading edge of the Témiscamingue release pulse arriving downstream, with Bryson unable to pass it through faster.
 - ORRPB's May 2 bulletin maintains the second-peak warning for "Mattawa to Lake Coulonge."
 
+### Phase 7: Operator-acknowledged refill preservation (May 5, added May 5)
+
+A morning watershed update from Contributor B introduces three findings that meaningfully refine the recession picture:
+
+**Reservoir percent-full snapshot, May 5 8:30 AM** (computed by Contributor B using published operating-range linear interpolation; volume figures shown):
+
+| reservoir | % full | volume (M m³) | Δ%/day |
+|---|---|---|---|
+| Poisson Blanc | **95.08%** | 625 | +0.51 |
+| Bark Lake | **93.64%** | 374 | +0.11 |
+| Lady Evelyn | 89.04% | 308 | +0.98 |
+| Timiskaming | 84.48% | 1,217 | +0.25 |
+| Dozois | 82.80% | 1,863 | +1.75 |
+| Baskatong | 82.56% | 3,049 | +0.52 |
+| Cabonga | 81.99% | 1,565 | +0.21 |
+| Kipawa | 78.70% | 673 | +1.30 |
+| Kiamika | 77.95% | 379 | +0.09 |
+| Quinze | 76.71% | 1,308 | +0.82 |
+| Rapide-7 | 75.12% | 371 | +0.47 |
+| Mitchinamecus | 70.86% | 554 | +0.46 |
+| Des Joachims | 36.00% | 229 | **−0.67** (only decrease) |
+
+12 reservoirs rising; 1 falling (Des Joachims, run-of-river — expected).
+
+**Finding 1 — refill rate is decelerating, not accelerating.** Earlier Phase 6 numbers showed Baskatong absorbing roughly 1.34 GCM over 11 days, equivalent to ~1,410 m³/s of net retained inflow. The May 5 rate of +0.515 %/day at Baskatong corresponds to roughly 19 Mm³/day — about **220 m³/s of net retention**. That is approximately an **85% reduction in the retention rate** versus the Phase 6 average. Contributor B attributes this to operator action: *"Reservoirs across the watershed are currently refilling at a slightly slower pace... This is due to increased outflows to the Ottawa River, implemented to help control and slow the refill rate."*
+
+**Finding 2 — operators have publicly acknowledged refill-preservation as an intentional posture.** Contributor B reports: *"Operators will intentionally avoid allowing the reservoir to reach full capacity, as storage must be preserved to accommodate any unexpected rainfall events."* This is the operator-acknowledged version of what the case file argues from gauge data — that operating decisions have non-trivial flexibility under high-flow conditions and that those decisions reflect a particular set of priorities. The "preserve storage for unexpected rainfall" framing is the *flood-positive* version of the same operator discretion that produces the held-headpond posture at Bryson. That the operators are *able* to slow refill from ~1,400 m³/s of net retention to ~220 m³/s within days demonstrates the magnitude of available operational flexibility.
+
+**Finding 3 — Témiscamingue rapid-refill heuristic.** Contributor B's flood-indicator rule: *"A key indicator of a potential flood is a rapid refill rate — specifically, when the Temiscaming Reservoir refills in less than 30 days. This pattern has occurred again this year. Notably, within the first 16 days of this refill period, water levels at Pembroke reached Major flood territory."* This is a community-derived empirical rule that complements Contributor A's regression-based step-change analysis with an operational early-warning signal. The 2026 event matched the rapid-refill pattern, and Pembroke did reach Major flood within 16 days — confirming the heuristic for this year.
+
+**Two reservoirs at the operating ceiling.** Bark Lake at 93.6% and Poisson Blanc at 95.1% are essentially full. Lady Evelyn at 89% has minimal remaining buffer. Timiskaming at 84% with 0.63 m to the south-end full supply level (per Contributor B) and "within six inches of low-level flooding" at the north end retains the same constrained posture documented earlier. The system is doing the work, but the buffer is real.
+
+**Methodology note from Contributor B (reproduced for case file context):** *"Detailed public storage data is currently not available from official sites."* Percent-full is calculated by the community using linear interpolation between published high/low operating limits because operators do not publish percent-full directly. This is the data-accessibility problem this document already names — but at the storage-volume layer rather than the level-reading layer.
+
 ---
 
 ## The Sunday/Monday Freeze: Critical Mechanism
