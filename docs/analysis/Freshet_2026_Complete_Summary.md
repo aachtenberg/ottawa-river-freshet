@@ -978,6 +978,19 @@ Compare to Des Joachims, which ORRPB enthusiastically uses for flood mitigation 
 
 For the entire 1916–1960 era, Britannia winter levels averaged 35 cm below the modern level. Whatever the specific mechanisms — different infrastructure, different operating philosophies, less power demand, fewer downstream stakeholders, more aggressive winter drawdown — **the system has *been operated* with substantially lower winter levels for 45 years of its history.** The community ask "consider returning to historical drawdown practice" is not asking for an unprecedented operating regime; it is asking for a regime that was the system's actual practice for the first half of its modern operational life. The 35 cm of winter buffer that the historical era used is roughly the same magnitude as the 2026 +14 cm elevation at Lac Coulonge that Exhibit B documents — and roughly twice the 18 cm Carillon WMP-ceiling exceedance documented in Exhibit F.1. The available drawdown range is not a theoretical claim; it is documentably what the system did for decades.
 
+**Reservoir-scale drawdown precedent — Efford (1975) figures cited in Haxton & Chubbuck (2002).** The 35 cm Britannia winter shift is the headpond-level signature; the reservoir-scale operational drawdowns reported by Efford (1975) and cited in the joint Ontario MNR / OPG technical report by Haxton & Chubbuck (2002, [`docs/reports/2002_Haxton_Chubbuck_extract.md`](../reports/2002_Haxton_Chubbuck_extract.md)) are even larger:
+
+| Reservoir | Average annual drawdown | Maximum drawdown |
+|---|---|---|
+| Lac Dollard des Ormeaux (Carillon headpond) | — | **1.5 m** |
+| Lac du Rocher Fendu (Chenaux headpond) | **1.6 m** | **1.9 m** |
+| Holden Lake (Des Joachims headpond) | **2.3 m** | **3.0 m** |
+| Lac la Cave (Otto Holden headpond) | **3.3 m** | **4.1 m** |
+
+These are *primary-source published* drawdown figures from a 2002 government-and-operator joint technical report citing 1975 data. The Lac la Cave 4.1 m maximum drawdown alone is **two orders of magnitude larger** than the case file's documented 11–47 cm operating bands during the 2026 freshet at Bryson, Carillon, and the upstream cascade stations. The system has been operated with multi-metre annual drawdowns at scale; modest decimeter-scale drawdowns of the kind the freshet directive at Carillon would require are well within the system's documented operational envelope. The "we cannot draw down further" framing is not supportable against this primary-source historical record.
+
+A separate finding from the same 2002 report worth noting for the Carillon directive section above: Table 2 of Haxton & Chubbuck (2002) lists operating ranges for each generating station. For Des Joachims it lists 149.05–152.40 m. For **Carillon** and **Bryson** the absolute-min and absolute-max columns are explicitly marked **n/a** — meaning the joint OPG-and-MNR report did not publish operating ranges for those two facilities as of 2002. The 2004 IWMP table for Carillon (separately documented at [`docs/reports/2004_Carillon_IWMP_operating_envelope.md`](../reports/2004_Carillon_IWMP_operating_envelope.md)) does publish the spring-flood envelope of 39.62–40.08 m. So between 2002 and 2004 the Carillon envelope moved from "not stated" in the joint Ontario MNR/OPG report to "stated in the IWMP." Bryson's operating range remains undisclosed in this 2002 record — consistent with the case file's existing observation that no equivalent published spring-flood envelope for Bryson has been located. Whether this is a documentation gap or a deliberate non-disclosure is itself an open question worth FOI follow-up.
+
 ### Exhibit D — A specific operational change happened with documented timing
 
 **"The dam was refurbished. The river runs higher. The Board hasn't said why."**
