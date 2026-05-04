@@ -926,6 +926,20 @@ The 2026 winter baseline at Lac Coulonge ran approximately 14 cm above the 2016�
 
 **Operator-side mechanism (added May 2026).** Phase 7 of the timeline above documents Contributor B's May 5 watershed update, in which operators publicly framed reservoir refill posture as: *"Operators will intentionally avoid allowing the reservoir to reach full capacity, as storage must be preserved to accommodate any unexpected rainfall events."* This is the *flood-positive* version of the same operator discretion that Exhibit B describes the *flood-negative consequence* of. Holding storage in winter — for any framed reason — produces elevated pre-freshet baselines. Exhibit B documents the consequence at the gauge level; Phase 7 documents the operating rationale at the operator level.
 
+**Empirical scope check (added May 2026).** The +14 cm 2026 elevation at Lac Coulonge sits within a longer-term pattern, not a 2017 step-change in winter behaviour. Mean January–February level by 20-year era at Britannia (the closest long-record proxy to Lac Coulonge / Bryson, 1916–2024):
+
+| Era | Mean Jan–Feb (m) | Δ vs 1916–1960 |
+|---|---|---|
+| 1916–1960 | 58.091 | baseline |
+| 1961–1980 | 58.207 | +12 cm |
+| 1981–2000 | 58.354 | +26 cm |
+| 2001–2016 | 58.450 | +36 cm |
+| 2017–2025 | 58.444 | +35 cm |
+
+Britannia winter levels have risen 35 cm gradually over the past 60 years; the 2017–2025 era is *stable* at the elevated plateau the system reached around 2001–2016, not a step-change above it. **The 2017 step-change is in *peak* behaviour (Exhibit A), not in *winter* behaviour.** Those are different operating decisions and the data treats them differently. Exhibit B's specific 2026 +14 cm Lac Coulonge claim is consistent with Bryson-specific drawdown change in the post-refurbishment era (Exhibit D timeline) rather than a chain-wide 2017 winter rule shift — at the upstream Britannia and Carillon-headpond Pointe-Calumet stations, no comparable post-2017 winter elevation is observable in the data.
+
+**Note on the "computer model took over the operations" hypothesis.** A community hypothesis sometimes offered for the post-2017 change is that operations were transferred from human dispatchers to an automated optimization model around that time. *No primary-source evidence has been located to substantiate or refute this hypothesis.* The case file does not advance it as a finding. The empirical question — what specifically about Bryson's freshet operating practice changed — remains unanswered by HQ, and is the subject of the Exhibit D unanswered question and Exhibit F's documented disclosure failure.
+
 ### Exhibit C — A specific operational lever exists
 
 **"The reservoir they say has no flood benefit holds more water than the one they use."**
@@ -949,6 +963,18 @@ Compare to Des Joachims, which ORRPB enthusiastically uses for flood mitigation 
 **Method validation:** Applying the same surface-area-times-depth calculation to Des Joachims yields 204.4 million m³ — within 11% of the published 229 million m³, demonstrating the method produces conservative estimates. The Lac Coulonge figure is therefore a low-end estimate of available storage.
 
 **Scale validation (added May 2026).** Phase 6 documents Baskatong absorbing approximately 1.34 GCM in 11 days during the 2026 freshet — equivalent to ~1,410 m³/s of net retained inflow over the window. That single northern reservoir absorbed **4–5× the storage capacity** of either side of the Lac Coulonge / Des Joachims comparison above. The principle Exhibit C demonstrates (that named storage capacity is operationally usable for flood-period retention) is now visibly demonstrated in this freshet at a properly-sized headwater reservoir. The 302 GCM at Lac Coulonge and 229 GCM at Des Joachims are not theoretical numbers — they are 1/4–1/5 the scale of what is actively being stored in real time, in this freshet, by a comparable system component.
+
+**Historical precedent for lower drawdown (added May 2026).** A common response to the "draw down to absolute minimum" framing is that the proposed operating regime is unprecedented or operationally infeasible. The long Britannia record (1916–2024) refutes this directly. The Ottawa River system at Britannia ran with substantially lower winter levels for the first half of its modern operational life:
+
+| Era | Mean Jan–Feb level (m) | Position vs 2017–2025 |
+|---|---|---|
+| **1916–1960** (45 yrs) | **58.091** | **−35 cm below current** |
+| 1961–1980 (20 yrs) | 58.207 | −24 cm |
+| 1981–2000 (16 yrs) | 58.354 | −9 cm |
+| 2001–2016 (15 yrs) | 58.450 | +1 cm |
+| 2017–2025 (8 yrs) | 58.444 | baseline |
+
+For the entire 1916–1960 era, Britannia winter levels averaged 35 cm below the modern level. Whatever the specific mechanisms — different infrastructure, different operating philosophies, less power demand, fewer downstream stakeholders, more aggressive winter drawdown — **the system has *been operated* with substantially lower winter levels for 45 years of its history.** The community ask "consider returning to historical drawdown practice" is not asking for an unprecedented operating regime; it is asking for a regime that was the system's actual practice for the first half of its modern operational life. The 35 cm of winter buffer that the historical era used is roughly the same magnitude as the 2026 +14 cm elevation at Lac Coulonge that Exhibit B documents — and roughly twice the 18 cm Carillon WMP-ceiling exceedance documented in Exhibit F.1. The available drawdown range is not a theoretical claim; it is documentably what the system did for decades.
 
 ### Exhibit D — A specific operational change happened with documented timing
 
