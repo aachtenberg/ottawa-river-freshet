@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Exhibit F — The Corrective Mechanisms Have Not Corrected</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,700;9..144,900&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink: #14171a;
+  --ink-soft: #2c333a;
+  --paper: #f4ede0;
+  --paper-bright: #fbf6eb;
+  --rule: #14171a;
+  --rule-soft: rgba(20, 23, 26, 0.18);
+  --accent: #b3261e;
+  --accent-soft: rgba(179, 38, 30, 0.08);
+  --accent-strong: #8a1c14;
+  --neutral: #2c333a;
+  --neutral-blue: #4a6b7c;
+  --green-soft: rgba(26, 122, 79, 0.10);
+  --green-ink: #1a7a4f;
+}
+
+html, body {
+  background: #2a2520;
+  font-family: 'IBM Plex Sans', sans-serif;
+  color: var(--ink);
+}
+
+.page {
+  width: 1200px;
+  min-height: 1500px;
+  background: var(--paper);
+  position: relative;
+  padding: 64px 72px 72px;
+  margin: 0 auto;
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(0,0,0,0.04) 1px, transparent 0);
+  background-size: 14px 14px;
+}
+
+.kicker {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 14px;
+  margin-bottom: 28px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.kicker .file { font-weight: 500; }
+.kicker .meta { font-weight: 400; opacity: 0.7; }
+
+.headline {
+  font-family: 'Fraunces', serif;
+  font-weight: 900;
+  font-size: 60px;
+  line-height: 0.96;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  margin-bottom: 18px;
+}
+.headline .accent {
+  color: var(--accent);
+  font-style: italic;
+}
+
+.deck {
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: 21px;
+  line-height: 1.4;
+  color: var(--ink-soft);
+  max-width: 950px;
+  margin-bottom: 36px;
+  letter-spacing: -0.005em;
+}
+
+/* Headline stats band */
+.stats-band {
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: 28px 0;
+  margin-bottom: 36px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 36px;
+}
+.stat .label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 8px;
+}
+.stat .figure {
+  font-family: 'Fraunces', serif;
+  font-weight: 900;
+  font-size: 56px;
+  line-height: 1;
+  letter-spacing: -0.025em;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+.stat .detail {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+.stat .detail strong { color: var(--ink); font-weight: 600; }
+
+/* Section blocks (F.1 / F.2 / F.3) */
+.layer-section {
+  margin-bottom: 32px;
+  padding: 24px 28px;
+  background: var(--paper-bright);
+  border: 1px solid var(--rule);
+  position: relative;
+}
+.layer-tag {
+  position: absolute;
+  top: -12px;
+  left: 24px;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  font-weight: 600;
+  padding: 4px 10px;
+  text-transform: uppercase;
+}
+.layer-title {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+.layer-subtitle {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--ink-soft);
+  margin-bottom: 16px;
+  max-width: 920px;
+}
+.layer-body {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  max-width: 980px;
+}
+.layer-body strong { color: var(--ink); font-weight: 600; }
+.layer-body em { font-style: italic; }
+.layer-body p { margin-bottom: 10px; }
+.layer-body p:last-child { margin-bottom: 0; }
+
+/* Tables */
+.layer-section table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 14px 0;
+  font-size: 12px;
+}
+.layer-section thead th {
+  text-align: left;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  font-weight: 600;
+  padding: 8px 10px;
+  border-bottom: 1.5px solid var(--rule);
+  white-space: nowrap;
+}
+.layer-section tbody td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--rule-soft);
+  vertical-align: top;
+}
+.layer-section tbody tr:last-child td {
+  border-bottom: none;
+}
+.cell-num { font-family: 'IBM Plex Mono', monospace; font-feature-settings: 'tnum'; }
+.cell-violation { background: var(--accent-soft); font-weight: 600; color: var(--accent-strong); }
+.cell-ok { color: var(--green-ink); }
+.cell-partial { color: #b88600; font-weight: 600; }
+
+/* Status pills */
+.status-pill {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 3px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.status-pill.fail { background: var(--accent); color: var(--paper); }
+.status-pill.partial { background: #f5c842; color: var(--ink); }
+.status-pill.unknown { background: rgba(20,23,26,0.15); color: var(--ink-soft); }
+.status-pill.pass { background: var(--green-ink); color: var(--paper); }
+
+.layer-takeaway {
+  margin-top: 14px;
+  padding: 14px 18px;
+  background: var(--accent-soft);
+  border-left: 3px solid var(--accent);
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink);
+}
+.layer-takeaway strong { color: var(--accent-strong); font-weight: 700; }
+
+/* Quote block */
+.quote {
+  margin: 14px 0;
+  padding: 12px 18px;
+  border-left: 3px solid var(--rule);
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink);
+  background: rgba(255,255,255,0.4);
+}
+.quote .attribution {
+  display: block;
+  margin-top: 8px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-style: normal;
+  font-size: 11px;
+  color: var(--ink-soft);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* Conclusion callout */
+.conclusion-callout {
+  margin: 32px 0 28px;
+  padding: 28px 32px;
+  background: var(--ink);
+  color: var(--paper);
+  position: relative;
+}
+.conclusion-callout .label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  opacity: 0.7;
+  margin-bottom: 10px;
+}
+.conclusion-callout .question {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 23px;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--paper-bright);
+  margin-bottom: 14px;
+}
+.conclusion-callout p {
+  font-size: 13px;
+  line-height: 1.6;
+  color: rgba(244, 237, 224, 0.86);
+  margin-bottom: 10px;
+}
+.conclusion-callout p:last-child { margin-bottom: 0; }
+.conclusion-callout strong { color: var(--paper-bright); font-weight: 600; }
+
+/* Footer */
+.footer {
+  border-top: 1px solid var(--rule);
+  padding-top: 16px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: 20px;
+  letter-spacing: 0.02em;
+}
+.footer strong { color: var(--ink); font-weight: 600; display: block; margin-top: 8px; margin-bottom: 4px; letter-spacing: 0.12em; text-transform: uppercase; font-size: 9px; }
+.footer .left strong:first-child { margin-top: 0; }
+.footer .right { text-align: right; align-self: end; opacity: 0.7; }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+<div class="kicker">
+  <span class="file">EXHIBIT F · CORRECTIVE MECHANISMS · NONE HAVE CORRECTED</span>
+  <span class="meta">Northern Reservoirs Flood Watch · Compiled May 2026</span>
+</div>
+
+<h1 class="headline">
+  Three layers exist to fix this.<br>
+  <span class="accent">None of them</span> have.
+</h1>
+
+<p class="deck">
+  Exhibits A–E established that the regime change is real, that operators had the lever, and that climate doesn't account for it. The next question is structural: what has the system that <em>exists for the purpose of correcting this</em> done about it? Three independent corrective layers — operator self-imposed limits, independent expert review, riparian engagement — each documented in primary sources. Each tested. Each, six years on, with no correction to show.
+</p>
+
+<!-- HEADLINE STATS BAND -->
+<div class="stats-band">
+  <div class="stat">
+    <div class="label">Carillon amont above WMP ceiling</div>
+    <div class="figure">+41 cm</div>
+    <div class="detail">Operating maximum 40.08 m during spring flood. Observed 40.49 m daily mean.<br><strong>13 of 13 days</strong> in observed window, with Hull dock trigger unambiguously met (1.36–1.86 m above the 42.61 m servitude).</div>
+  </div>
+  <div class="stat">
+    <div class="label">McNeil ORRPB recs not implemented</div>
+    <div class="figure">7 of 9</div>
+    <div class="detail">Verified May 2026 against current public sources.<br><strong>1 partial</strong> (data feeds only). <strong>1 indeterminate</strong>. <strong>0 fully implemented.</strong> Six years since the report.</div>
+  </div>
+  <div class="stat">
+    <div class="label">Riparian-MNRF engagement</div>
+    <div class="figure">5 yrs</div>
+    <div class="detail">First formal LRIA-enforcement question raised March 2021. Re-raised April 2023.<br><strong>April 2023:</strong> "Hydro Quebec has ignored all requests and correspondence." May 2026: same posture.</div>
+  </div>
+</div>
+
+<!-- F.1 — OPERATOR'S OWN PUBLISHED ENVELOPE -->
+<div class="layer-section">
+  <div class="layer-tag">F.1 · Operator's Own Limits</div>
+  <h3 class="layer-title">HQ's published spring-flood envelope is exceeded — and the trigger condition is unambiguous</h3>
+  <div class="layer-subtitle">The 2004 Impounded Water Management Plan Summary specifies a 40.08 m operating maximum at Carillon when Hull dock exceeds 42.61 m. May 2026 telemetry: Hull is 1.36–1.86 m above servitude every day; Carillon is 41–46 cm above ceiling every day.</div>
+
+  <div class="layer-body">
+    <p>The operator's own published Impounded Water Management Plan Summary (<em>Carillon Project, October 2004, page 6, Table 2.1</em>) defines the spring-flood operating envelope:</p>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>Period / condition</th><th>Operating min (m)</th><th>Operating max (m)</th><th>Range (m)</th><th>Reference</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Spring flood</strong> (Hull dock &gt; 42.61 m)</td><td class="cell-num">39.62</td><td class="cell-num cell-violation">40.08</td><td class="cell-num">0.46</td><td>"As per agreement"</td></tr>
+      <tr><td>Outside boating season</td><td class="cell-num">40.54</td><td class="cell-num">41.15</td><td class="cell-num">0.61</td><td>2004 IWMP §2.1</td></tr>
+      <tr><td>Boating season</td><td class="cell-num">40.84</td><td class="cell-num">41.15</td><td class="cell-num">0.31</td><td>2004 IWMP §2.1</td></tr>
+      <tr><td>Critical bounds (avoid at all times)</td><td class="cell-num">39.62</td><td class="cell-num">41.50</td><td>—</td><td>2004 IWMP §2.1</td></tr>
+    </tbody>
+  </table>
+
+  <div class="layer-body">
+    <p>The 13-day daily-average comparison against live HQ open-data telemetry (Hull dock = station 1-3675; Carillon amont = station 1-2968):</p>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>Day (UTC)</th><th>Hull dock (m)</th><th>Above 42.61?</th><th>Carillon amont (m)</th><th>vs 40.08 ceiling</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="cell-num">2026-04-22</td><td class="cell-num">44.466</td><td class="cell-violation"><strong>+1.86 m</strong></td><td class="cell-num">40.538</td><td class="cell-violation"><strong>+0.46 m</strong></td></tr>
+      <tr><td class="cell-num">2026-04-25</td><td class="cell-num">44.227</td><td class="cell-violation"><strong>+1.62 m</strong></td><td class="cell-num">40.467</td><td class="cell-violation"><strong>+0.39 m</strong></td></tr>
+      <tr><td class="cell-num">2026-04-28</td><td class="cell-num">44.074</td><td class="cell-violation"><strong>+1.46 m</strong></td><td class="cell-num">40.444</td><td class="cell-violation"><strong>+0.36 m</strong></td></tr>
+      <tr><td class="cell-num">2026-05-01</td><td class="cell-num">44.095</td><td class="cell-violation"><strong>+1.49 m</strong></td><td class="cell-num">40.451</td><td class="cell-violation"><strong>+0.37 m</strong></td></tr>
+      <tr><td class="cell-num">2026-05-04</td><td class="cell-num">43.973</td><td class="cell-violation"><strong>+1.36 m</strong></td><td class="cell-num">40.471</td><td class="cell-violation"><strong>+0.39 m</strong></td></tr>
+      <tr><td><strong>13-day range</strong></td><td class="cell-num"><strong>43.97 – 44.47</strong></td><td class="cell-violation"><strong>every day</strong></td><td class="cell-num"><strong>40.43 – 40.54</strong></td><td class="cell-violation"><strong>+0.36 to +0.46 m</strong></td></tr>
+    </tbody>
+  </table>
+
+  <div class="layer-takeaway">
+    <strong>Hull dock has been above the 42.61 m servitude threshold every day in the observed window — by 1.36 to 1.86 m, not borderline.</strong> The 40.08 m spring-flood ceiling at Carillon was unambiguously in effect, and Carillon amont sat 36 to 46 cm above it the entire time. The case file's previous framing of the directive as a <em>floor</em> understated the constraint; the published envelope is a 46 cm <em>band</em> with both a binding floor (39.62 m) and a binding ceiling (40.08 m), and the current operations sit outside the ceiling.
+  </div>
+
+  <div class="layer-body" style="margin-top:14px; font-size:12px;">
+    <p><em>Verification gaps named for intellectual honesty:</em> the 2004 IWMP table is a summary, not necessarily the binding instrument (Item 1j 2010 LRIA Approval would be); "operating maximum" vs "critical maximum" distinction; "spring flood" trigger may be operator-declared rather than automatic from Hull alone; vertical-datum reconciliation between IWMP reference and station-feed reference is presumed but not verified; 13-day sample is small. None of these gaps dissolve the question — they sharpen it.</p>
+  </div>
+</div>
+
+<!-- F.2 — INDEPENDENT REVIEWS -->
+<div class="layer-section">
+  <div class="layer-tag">F.2 · Independent Expert Review</div>
+  <h3 class="layer-title">Two government-commissioned reviews recommended structural reform. Neither has produced it.</h3>
+  <div class="layer-subtitle">Ontario MNRF commissioned the McNeil Report (Nov 2019). Canada tabled the ECCC Ottawa River Watershed Study (June 2019). Both identified governance fragmentation as the root cause. Six years on, the substantive recommendations remain unimplemented.</div>
+
+  <div class="layer-body">
+    <p>Implementation status of the nine McNeil recommendations directly relevant to the Ottawa River Regulation Planning Board (Recs #55–66), verified May 2026 against current ORRPB / OPG / MNRF / Ontario Public Appointments Secretariat / Environmental Registry sources:</p>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th style="width:50px;">Rec #</th><th>Substance</th><th style="width:160px;">Status (May 2026)</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="cell-num">55</td><td>IJC, ORRPB, OPG make detailed flood-ops information readily available on websites</td><td><span class="status-pill partial">Partial</span></td></tr>
+      <tr><td class="cell-num">56</td><td>IJC meet with stakeholder groups to explain operations</td><td><span class="status-pill fail">Not done</span></td></tr>
+      <tr><td class="cell-num">58</td><td>Review the 1983 ORRPB Agreement (almost 40 years old)</td><td><span class="status-pill fail">Not done</span></td></tr>
+      <tr><td class="cell-num">59</td><td>Remove "Regulation" from the Board's title (Board "cannot manage large floods")</td><td><span class="status-pill fail">Not done</span></td></tr>
+      <tr><td class="cell-num">60</td><td>Communications officer assigned from non-OPG government department</td><td><span class="status-pill fail">Not done</span></td></tr>
+      <tr><td class="cell-num">61</td><td>Marketing-experienced communicator producing plain-language materials</td><td><span class="status-pill fail">Not done</span></td></tr>
+      <tr><td class="cell-num">62</td><td>OPG/ORRPB install staff gauges read by engaged residents</td><td><span class="status-pill fail">Not done</span></td></tr>
+      <tr><td class="cell-num">63</td><td>Two municipal officials (one ON, one QC) sit on the ORRPB</td><td><span class="status-pill fail">Not done</span></td></tr>
+      <tr><td class="cell-num">65</td><td>OPG identify options on refill-date flexibility, support WMP amendments</td><td><span class="status-pill unknown">Indeterminate</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="layer-body">
+    <p>The federal-level companion review — ECCC's <em>Examination of Governance, Existing Data, Potential Indicators and Values in the Ottawa River Watershed</em>, tabled June 2019 — proposed a multi-jurisdictional Ottawa River Watershed Council with Indigenous co-governance. <strong>Status:</strong> the federal government tabled the report without endorsing the Council. None has been established. Ottawa Riverkeeper publicly characterised the response as <em>"a missed opportunity for federal leadership."</em></p>
+  </div>
+
+  <div class="quote">
+    "[The supporting agencies should] consider removing 'Regulation' from the title, as it implies that the Board can actually manage large floods when, in fact, they cannot because of the limited storage capacity of the generating station reservoirs, which were designed for electric power generation and not flood control."
+    <span class="attribution">— McNeil Report (2019), Recommendation #59. The Province's own appointed Special Advisor on Flooding.</span>
+  </div>
+
+  <div class="layer-takeaway">
+    <strong>Pattern: every recommendation requiring formal change to the 1983 Agreement is stalled. Light-touch communications recommendations the ORRPB could have implemented unilaterally are also not taken up.</strong> A coalition of 30+ municipalities (Ottawa River Flood Alliance, ottawariverflood.ca) is now publicly demanding the same federal review of the 1983 Agreement that McNeil's Recommendation #58 called for in 2019. The case-file argument is no longer community-advocacy alone — it aligns with the explicit demand of an organised municipal coalition.
+  </div>
+</div>
+
+<!-- F.3 — RIPARIAN ENGAGEMENT -->
+<div class="layer-section">
+  <div class="layer-tag">F.3 · Riparian Engagement</div>
+  <h3 class="layer-title">A riparian asked MNRF to enforce the LRIA-approved Carillon plan. The same questions remain unanswered five years later.</h3>
+  <div class="layer-subtitle">Documented correspondence chain (March 2021 → April 2023 → May 2025) between an Ontario riparian property owner upstream of Carillon and Ontario MNRF, plus federal MNR. Same legal-interpretation question raised, never refuted, never enforced.</div>
+
+  <table>
+    <thead>
+      <tr><th style="width:130px;">Date</th><th>Engagement</th><th style="width:120px;">Outcome</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="cell-num">Mar 2021</td>
+        <td>Riparian raises LRIA enforcement question with MNRF Districts Manager. Cites LRIA-approved Carillon Impounded Management Plan, Section 15 of 2004 security evaluation, easements RR19542B / RR24631B, ORRPB June 2018 minutes para 12.6 (HQ modified turbine flow calculation by 8%, did not correct prior data).</td>
+        <td><span class="status-pill fail">Deferred to HQ</span></td>
+      </tr>
+      <tr>
+        <td class="cell-num">Mar 2021</td>
+        <td>MNRF position: <em>"Our guidelines identify that Water Management Plans will not be prepared for waterpower facilities located on river or canal systems where waters are managed under international or inter-provincial jurisdictional control."</em> Non-applicability framed as a <strong>guideline</strong>, not statute.</td>
+        <td><span class="status-pill fail">Guideline cited, not statute</span></td>
+      </tr>
+      <tr>
+        <td class="cell-num">Mar 2021</td>
+        <td>Riparian challenges: LRIA s. 23(3) excludes only rivers under bodies with <strong>jurisdiction over water level</strong>. ORRPB has no such jurisdiction (it's a coordination board, not a control board). On this reading, LRIA <em>does</em> apply and MNRF's guideline exceeds the statute.</td>
+        <td><span class="status-pill fail">Not refuted</span></td>
+      </tr>
+      <tr>
+        <td class="cell-num">Apr 2023</td>
+        <td>Two-year follow-up. Riparian re-raises the same questions; reports HQ has "ignored all requests and correspondence for explanation on their lack of following their own Impounded Management Plan."</td>
+        <td><span class="status-pill fail">No enforcement action</span></td>
+      </tr>
+      <tr>
+        <td class="cell-num">May 2025</td>
+        <td>Ontario MNR ministerial response to ORFA (Mike Harris, ref 354-2025-356): <em>"Hydro Quebec reports that water levels are currently within the operating range and there are presently no concerns about flooding."</em> Defers to HQ as "the dam owner."</td>
+        <td><span class="status-pill fail">Same posture</span></td>
+      </tr>
+      <tr>
+        <td class="cell-num">May 2026</td>
+        <td>Live telemetry shows Carillon amont 41–46 cm above the published spring-flood ceiling, with the trigger condition unambiguously met — see F.1.</td>
+        <td><span class="status-pill fail">Same posture, observed</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="quote">
+    "As far as I know an internal 'guideline' which derives from wilful oversight doesn't supersede the regulation and the public security."
+    <span class="attribution">— Riparian property owner, April 19, 2023, two-year follow-up to Ontario MNRF.</span>
+  </div>
+
+  <div class="layer-takeaway">
+    <strong>Five years of documented engagement at the riparian level has produced no enforcement action.</strong> MNRF's interpretation that LRIA does not apply to Carillon rests on a <em>ministry guideline</em>, not statute. The riparian's reading of LRIA s. 23(3) — that the inter-provincial exclusion applies only where the coordinating body has jurisdiction over water level, which the ORRPB does not — has not been refuted in the surviving correspondence. The Carillon Impounded Management Plan does exist and is LRIA-approved (Item 1j 2010). Its Table 2 contains the same 39.62 m drawdown directive that HQ's published §15.3.5.1 names. None of this has produced enforcement.
+  </div>
+</div>
+
+<!-- THE CONCLUSION -->
+<div class="conclusion-callout">
+  <div class="label">What this exhibit means for the case file</div>
+  <div class="question">The system that should have prevented or corrected the post-2017 regime change has documentably failed to do so — at three independent layers, over a period long enough that the failure is structural rather than transient.</div>
+  <p>Exhibits A–E established that the regime change happened, that operators had the lever and exercised an identifiable change, and that climate alone does not account for it. Exhibit F is the <strong>closing</strong> exhibit: at every layer of the regulatory and governance system that exists <em>for the purpose</em> of preventing or correcting this kind of operating outcome, the corrective mechanism has not corrected.</p>
+  <p>The community's policy ask is therefore no longer "draw down Carillon to 39.62 m" or "change Bryson operations." It is: <strong>engage the corrective layers that exist — the LRIA, the McNeil and ECCC recommendations, the Ottawa River Flood Alliance's federal-review demand — until at least one produces a public review with disclosure of the operational trade-offs.</strong> Each verification gap named in F.1, F.2, F.3 corresponds to a specific action that, if pursued (FOI for Item 1j; formal complaint to MNRF citing the s. 23(3) reading; engagement with the municipal coalition's federal-review demand), would close the inferential gaps and convert the case file from "compelling and falsifiable" to "regulatorily determinable."</p>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="left">
+    <strong>Sources</strong>
+    F.1 — <em>Impounded Water Management Plan Summary, Carillon Project</em>, October 2004, page 6 Table 2.1; HQ open-data feed (stations 1-3675 Quai-de-Hull, 1-2968 Carillon amont) ingested hourly to TimescaleDB. Full data and verification table at <code>docs/reports/2004_Carillon_IWMP_operating_envelope.md</code>.
+    F.2 — <em>Ontario Special Advisor on Flooding Report</em> (Douglas McNeil, P.Eng., Ontario MNRF, November 2019), full PDF at <code>docs/reports/mnrf-english-ontario-special-advisor-on-flooding-report-2019-11-25.pdf</code>; ECCC <em>Examination of Governance, Existing Data, Potential Indicators and Values in the Ottawa River Watershed</em> (federal, June 2019); status verification against ORRPB site (ottawariver.ca), Ontario Public Appointments Secretariat, Environmental Registry of Ontario, Ottawa Riverkeeper, and Ottawa River Flood Alliance (ottawariverflood.ca).
+    F.3 — Documented MNRF correspondence chain 2021–2023 (private case-file archive, paraphrased in summary doc); Ontario MNR ministerial letter ref 354-2025-356, May 30 2025.
+    <strong>What this is not</strong>
+    A claim that any specific official acted in bad faith. The pattern is structural: each layer cited a higher or parallel authority. The argument is that the system as a whole has not produced correction, not that any single actor failed individually.
+  </div>
+  <div class="right">
+    freshet.xgrunt.com<br>
+    <span style="opacity:0.5">v1 · MAY 2026</span>
+  </div>
+</div>
+
+</div>
+
+</body>
+</html>

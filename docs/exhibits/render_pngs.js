@@ -11,6 +11,7 @@ const exhibits = [
   'Exhibit_C_Storage_Capacity.html',
   'Exhibit_D_Bryson_Timeline.html',
   'Exhibit_E_Climate_Tested.html',
+  'Exhibit_F_Corrective_Failure.html',
 ];
 
 (async () => {

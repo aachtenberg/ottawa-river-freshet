@@ -1120,6 +1120,7 @@ What HQ counsel, ORRPB, MNRF, ECCC, and the IJC would each have to do to refute 
 - `Exhibit_C_Storage_Capacity.{html,png}` — ORRPB's "too small" claim is internally inconsistent
 - `Exhibit_D_Bryson_Timeline.{html,png}` — refurbishment timeline + hydraulic continuity + **Figure 7** (regression + step-change refuting climate) + **Figure 8** (live cascade) + **Live Observation panel**
 - `Exhibit_E_Climate_Tested.{html,png}` — climate alternative tested four ways and rejected; **Figures 9–10** (watershed station table + Britannia step-change)
+- `Exhibit_F_Corrective_Failure.{html,png}` — three-layer corrective-mechanism failure: F.1 operator's own published spring-flood envelope exceeded (Carillon WMP + Hull dock verification); F.2 McNeil + ECCC reform recommendations not implemented (sourced status table); F.3 documented riparian-MNRF engagement chain has not produced enforcement
 - `data/hq-opendata/` — primary-source CSV snapshots cited by Exhibit D
 - `ingesters/climate-history/{lc_brit_regression,stepchange_analysis}.py` — reproducible analysis scripts
 
@@ -1132,7 +1133,7 @@ Each exhibit is editorially designed for Facebook sharing (matched typography: F
 ### Files generated during this analysis
 
 - `docs/analysis/Freshet_2026_Complete_Summary.md` — this document
-- `docs/exhibits/Exhibit_{A,B,C,D,E}_*.{html,png}` — five-exhibit case file (rendered via `render_pngs.js`)
+- `docs/exhibits/Exhibit_{A,B,C,D,E,F}_*.{html,png}` — six-exhibit case file (rendered via `render_pngs.js`)
 - `data/lac-coulonge-monthly-1972-2026.csv` — canonical Lac Coulonge monthly + annual peaks
 - `data/orrpb-historic-peaks-1972-2025.csv` — ORRPB published peaks (multi-station)
 - `data/wsc-hydrometric/` — WSC HYDAT extracts for Ottawa basin stations (active + discontinued)
