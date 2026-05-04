@@ -674,6 +674,38 @@ In 2025, ORFA formally requested that the Ontario Minister of Natural Resources 
 
 This is the same structural pattern this document already names at Bryson — **framework exists, enforcement does not** — visible at the opposite end of the same regulated chain. The Carillon water management plan is binding language in HQ's own published document; the verification is operator-only; the regulatory backstop has, by its own admission, no enforcement mechanism beyond consultation.
 
+### Documented riparian-to-MNRF correspondence chain (2021–2023, added May 2026)
+
+The §15.3.5.1 directive enforcement gap above can be supplemented with primary-source documentary evidence at the *individual riparian property owner* level. An Ontario riparian property owner upstream of Carillon (the same author whose May 2025 ministerial-letter exchange is cited above) maintained a documented correspondence chain with Ontario MNRF in 2021 and 2023 attempting to invoke the Lakes and Rivers Improvement Act (LRIA) to compel HQ to follow the freshet drawdown directive. The correspondence is held in the case-file working files; the substantive findings are summarised here.
+
+**MNRF's official position on the record (March 2021, MNRF official acting in capacity):**
+
+> "Our guidelines identify that Water Management Plans will not be prepared for waterpower facilities located on river or canal systems where waters are managed under international or inter-provincial jurisdictional control. As noted there is no Water Management Plan for the Ottawa River given the existence of the ORRPB and its Regulating Committee... [W]e continue to advise you to continue your discussions with the operator, Hydro Quebec."
+
+This is Ontario MNRF's official position: that LRIA-derived Water Management Plan enforcement does not apply to Carillon because of inter-provincial coordination through ORRPB, and that the riparian's recourse is direct discussion with the operator. Note the language: "**Our guidelines identify**." The non-applicability is a *guideline* of the ministry, not a statutory exclusion.
+
+**The riparian's legal-interpretation challenge (March 2021):**
+
+LRIA section 23(3) reads:
+
+> "(3) This section does not apply to any lake or river over which the International Joint Commission established under the Boundary Waters Treaty of 1909 or any public authority exercising jurisdiction under the Parliament of Canada or The Lake of the Woods Control Board established under The Lake of the Woods Control Board Act, 1922, chapter 21, **has jurisdiction with respect to the level of the water.**"
+
+The riparian's reading: the exclusion clause excludes only rivers under a body that *has jurisdiction with respect to the level of the water*. The ORRPB has no such jurisdiction — it is a coordination board, not a control board (the same finding McNeil's Recommendation #59 makes from a different angle). On this reading, LRIA does NOT exclude the Ottawa River, and MNRF's guideline interpretation exceeds the statute. **This challenge was not refuted in the surviving correspondence.**
+
+**The Carillon Impounded Management Plan does exist and is LRIA-approved.** The riparian attached the LRIA-approved 2010 Carillon Impounded Management Plan to the correspondence. Page 5, Table 2 of that plan establishes that "the only way that Grenville becomes the natural control point [returning the upstream river to natural conditions] is if the level at the dam is at 39.62 m" — the same drawdown directive cited from §15.3.5.1 above, but in the binding LRIA-approved operational document specifically for Carillon. Public framing of "no WMP for the Ottawa River" obscures the per-facility WMP that does exist, was LRIA-approved, and contains the directive that is not being followed.
+
+**The four-year stall is documented, not inferred.** A two-year follow-up in April 2023 reports that "Hydro Quebec has ignored all requests and correspondence for explanation on their lack of following their own Impounded Management Plan." Three years on (May 2026), the public-summary record above shows the same pattern still in effect at the ministerial level (the Mike Harris May 30, 2025 letter, ref 354-2025-356).
+
+**Source documents referenced in the correspondence — useful targets if the case file is escalated:**
+
+- *Item 1j Carillon 2010 LRIA Approval* — the LRIA-approved Carillon Impounded Management Plan with Table 2 directive
+- *Carillon évaluation de sécurité 2004*, Section 15 page 314 — engineering basis for the 39.62–40.08 m drawdown threshold
+- *Maximum Discharge Curve Carillon* — quantitative flow-vs-headpond relationship demonstrating that "Carillon doesn't restrict flow" is factually incorrect
+- Ontario expropriation easements *RR19542B & RR24631B* — Hull dock 42.61 m and Petrie Island 41.60 m thresholds in the easements granted to the dam operator
+- *ORRPB June 21, 2018 meeting minutes paragraph 12.6* — confirms HQ modified its turbine flow calculation by 8% without correcting previous data
+
+The correspondence material represents the *legal-and-procedural* layer of the case-file evidence; the live-telemetry observations at Bryson and the regression-based regime-change findings in earlier sections represent the *physical-and-empirical* layer. Both point at the same question — who is actually responsible for ensuring the LRIA-approved Carillon Water Management Plan is followed during the freshet — and the documented answer, across both layers and at every level of government engaged, is that no body with both authority and accountability has accepted that responsibility.
+
 ### The mandate clarity problem
 
 The ORRPB's mandate language has shifted from "minimizing" flood risk to "reducing" flood risk over the past decade. Legally distinct commitments. The ORRPB is also a **coordination board, not a regulator with enforcement authority** — it can recommend reservoir operations but cannot compel OPG or Hydro-Québec to change practices. Real authority sits with the operators, whose mandates are power generation.
