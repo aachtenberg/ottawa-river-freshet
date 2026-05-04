@@ -906,9 +906,9 @@ The ECCC study is structured as findings and options rather than numbered recomm
 
 ---
 
-## The Case File: Four-Exhibit Analytical Argument
+## The Case File: Six-Exhibit Analytical Argument
 
-In April 2026, the policy analysis was distilled into a four-piece "case file" of editorial-style infographics, designed for community sharing and media use. Each exhibit makes one claim, backed by verified primary sources. Together they form a complete argument that the regime change is real, has identifiable mechanisms, and has unanswered policy questions.
+In April 2026, the policy analysis was distilled into a four-piece "case file" of editorial-style infographics. Two further exhibits — Exhibit E (climate alternative tested four ways) and Exhibit F (corrective mechanisms have not corrected) — were added in May 2026 as additional evidence accumulated. Each exhibit makes one claim, backed by verified primary sources. Together they form an argument structured in three movements: that the regime change is real (A and B), that operators had the lever and exercised a specific identifiable change (C and D), that climate alone does not explain the change (E), and that every layer of the corrective system that should have prevented or corrected this has demonstrably not done so (F).
 
 ### Exhibit A — Outcomes have changed
 
@@ -923,6 +923,8 @@ The headline statistical finding: super-flood frequency at Lac Coulonge increase
 **"Before the snow even melted, the river was already too high."**
 
 The 2026 winter baseline at Lac Coulonge ran approximately 14 cm above the 2016–2025 average through January–February — before any spring runoff began. The water level the freshet started from was higher than at any comparable point in the prior decade. Contributor A's February 28, 2026 prediction ("Lac Coulonge level is at its highest level in 10 years for this time of year. If our elected officials don't act now, I'm afraid we could possibly face the worst flooding ever for this section of the Ottawa River") was directionally validated when the freshet peaked at 108.633 m on April 20 — fourth-highest in the modern era.
+
+**Operator-side mechanism (added May 2026).** Phase 7 of the timeline above documents Contributor B's May 5 watershed update, in which operators publicly framed reservoir refill posture as: *"Operators will intentionally avoid allowing the reservoir to reach full capacity, as storage must be preserved to accommodate any unexpected rainfall events."* This is the *flood-positive* version of the same operator discretion that Exhibit B describes the *flood-negative consequence* of. Holding storage in winter — for any framed reason — produces elevated pre-freshet baselines. Exhibit B documents the consequence at the gauge level; Phase 7 documents the operating rationale at the operator level.
 
 ### Exhibit C — A specific operational lever exists
 
@@ -945,6 +947,8 @@ Compare to Des Joachims, which ORRPB enthusiastically uses for flood mitigation 
 **The Lac Coulonge reach has 1.32× the storage capacity of Des Joachims.** The "far too small" justification cannot apply to one without applying to both.
 
 **Method validation:** Applying the same surface-area-times-depth calculation to Des Joachims yields 204.4 million m³ — within 11% of the published 229 million m³, demonstrating the method produces conservative estimates. The Lac Coulonge figure is therefore a low-end estimate of available storage.
+
+**Scale validation (added May 2026).** Phase 6 documents Baskatong absorbing approximately 1.34 GCM in 11 days during the 2026 freshet — equivalent to ~1,410 m³/s of net retained inflow over the window. That single northern reservoir absorbed **4–5× the storage capacity** of either side of the Lac Coulonge / Des Joachims comparison above. The principle Exhibit C demonstrates (that named storage capacity is operationally usable for flood-period retention) is now visibly demonstrated in this freshet at a properly-sized headwater reservoir. The 302 GCM at Lac Coulonge and 229 GCM at Des Joachims are not theoretical numbers — they are 1/4–1/5 the scale of what is actively being stored in real time, in this freshet, by a comparable system component.
 
 ### Exhibit D — A specific operational change happened with documented timing
 
@@ -1010,6 +1014,25 @@ A 30 cm pre-freshet drawdown would put the property in the "approaching" categor
 
 This evidence covers 12 days of one freshet. With the live ingester running, by next freshet there will be a year of accumulated telemetry showing the entire pre-peak / peak / decline cycle of multiple events and the upstream chain (Britannia at 02KF005 plus tributary inflows in `wsc_daily`) for basin-balance verification. The dashboard at `freshet.xgrunt.com` (Operations tab, featured cards) renders the held-band readout on every page load — the case-file evidence is publicly visible in real time without anyone having to ask for an analysis.
 
+### The chain-wide pattern (Exhibit D, expanded — added May 2026)
+
+The Bryson held-headpond posture documented above is consistent with — and most cleanly explained by — a *basin-wide* operating-philosophy shift across the regulated Outaouais cascade, not a single-facility consequence of the 2017–2023 refurbishment alone. The Carillon evidence makes this explicit.
+
+Carillon was *not* part of the Bryson 2017–2023 refurbishment. The Carillon Generating Station is a separate facility ~200 km downstream, run-of-river within its own operating envelope, owned and operated by Hydro-Québec independently of the Bryson rehab program. Yet the 2026 telemetry at Carillon shows the same operational signature documented at Bryson: a tightly held headpond during major-flood freshet conditions.
+
+| facility | observed band (12-13 d) | comparison reference |
+|---|---|---|
+| Bryson amont (1-2964) | 104.43–104.54 m (11 cm range) | No published spring-flood operating envelope located |
+| Carillon amont (1-2968) | 40.43–40.54 m (11 cm range) | 2004 IWMP spring-flood operating maximum: 40.08 m. Carillon held 41–46 cm above. |
+
+The same posture, the same operating-band tightness, at two facilities 200 km apart, in the same freshet, with one of them documented to be operating outside its own published spring-flood envelope (see Carillon directive enforcement gap above).
+
+**This means the "what changed in 2017" question is broader than Bryson hardware.** The unanswered question previously framed at the Bryson level should now be framed at the chain level:
+
+> *What changed about the freshet operating regime across the entire Outaouais cascade after 2017? Was the impact on upstream riparian communities — across both provinces, across multiple facilities, across the binding spring-flood envelopes that exist in operator-published documents — evaluated before the change was made?*
+
+The case file's policy ask remains the same — review the operating regime against the new freshet conditions, disclose the trade-offs, audit compliance with published envelopes — but the scope of the ask is now chain-wide, not single-facility. Continuing the same posture under bigger inflows, *while operating outside published spring-flood envelopes where they exist*, is the policy choice the community is asking to be reviewed.
+
 ### The hydraulic continuity point (Exhibit D, expanded)
 
 The Ottawa River between Rapides-des-Joachims and Bryson Dam is **one continuous reach with no intermediate flow controls**. Contributor A's storage capacity calculation summed it as four contiguous sections totalling 227 km². When the headpond at Bryson is held higher to increase generating efficiency, water backs up across the entire 130 km reach.
@@ -1027,6 +1050,68 @@ The trade-off is therefore not "Bryson revenue vs nothing." It is **"Bryson reve
 Hydro-Québec acknowledges that refurbishment changes water head values. ORRPB acknowledges that higher headponds are more efficient for hydropower. The November 2025 MRC Pontiac notice confirmed a 30–50 cm rise was **tested** — its title is "notice of temporary water-level increase, Bryson Dam — Hydro-Québec." The regression analysis shows post-2017 peaks are running 58 cm higher than pre-2017 precipitation patterns predict; the year-round Lac Coulonge level data shows that gap is concentrated in the freshet peak (annual mean unchanged, off-season unchanged, only the spring peak shifted). The pattern points to operational behavior change during peak inflow rather than a permanent headpond raise. But neither agency has publicly disclosed how Bryson's freshet-period operating decisions changed during or after the refurbishment, or what flood-buffer analysis informed those changes.
 
 **The community's policy ask is therefore not "change Bryson operations" — it is "review the operating regime against the new freshet conditions, and disclose the trade-offs."** Even granting whatever climate signal does exist, a dam built to manage river flow has an obligation to adapt as inflow patterns change. Continuing the same posture (or, per live data, moving to a higher-headpond posture) under bigger inflows is the policy choice the community is asking to be reviewed.
+
+### Exhibit E — Climate alone does not explain the change
+
+**"The climate signal is real but doesn't reach the magnitude of the regime shift."**
+
+The fully-detailed climate-alternative analysis is in the *Policy and Regulatory Analysis → Testing the climate alternative* section above, including the regression results, per-event amplification test, and step-change location analysis. Summarised here as the case-file exhibit:
+
+- **Regression test:** Post-2017 Lac Coulonge peaks run 58 cm higher than pre-2017 precipitation patterns predict. Climate forcing partially explains the regime change but leaves a substantial residual.
+- **Step-change location test:** Britannia annual-peak medians shift sharply at 2017 (+19.3% across the breakpoint), with the shift maximising at 2017 and decaying both directions. Three full decades (1980s, 1990s, 2000s) had zero super-floods at Britannia, then an outbreak.
+- **Climate-forcing test:** Across 9 ECCC watershed stations, April–May precipitation shifts pre/post 2017 range −4% to +36%; March peak snow shifts range −15% to +20%, with snow trending *down* at the upper basin. **No coherent climate step that mathematically requires a +19% step in basin flow.** Source: `ingesters/climate-history/stepchange_analysis.py`.
+- **Within-year shift test:** The post-2017 Lac Coulonge regime change is concentrated in the freshet peak — annual mean is unchanged, off-season is unchanged, only the spring peak is shifted. This is consistent with operational behavior change *during peak inflow* rather than a basin-wide hydrological shift that would also move other parts of the year.
+
+**Strengthened argument:** the operations indictment does not require winning the climate-attribution debate. Even granting whatever climate signal exists (and the regression test confirms some climate contribution), the residual is a step-change at 2017 that climate testing cannot reproduce. Combined with Exhibit D (a specific operational change happened with documented timing) and Exhibit F (corrective mechanisms have not corrected), the operations-driven hypothesis is the most parsimonious explanation supported by the evidence.
+
+Detailed methodology and figures: `Exhibit_E_Climate_Tested.{html,png}` — Figures 9–10 (watershed station table + Britannia step-change). Source code in `ingesters/climate-history/stepchange_analysis.py`.
+
+### Exhibit F — The corrective mechanisms have not corrected
+
+**"At every layer of the system that should prevent or correct this, the corrective mechanism has not."**
+
+Exhibits A–E establish that the regime change is real, that operators had the lever and exercised an identifiable change, and that climate alone does not account for it. Exhibit F asks: given those findings, what does the regulatory and governance system that exists *for the purpose* of preventing or correcting this kind of operating outcome have to say about it? The answer is documented across three independent layers, each with primary-source evidence assembled in May 2026.
+
+#### F.1 — The operator's own published spring-flood envelope is exceeded
+
+The *Impounded Water Management Plan Summary, Carillon Project, October 2004*, page 6 Table 2.1 (full extract at [`docs/reports/2004_Carillon_IWMP_operating_envelope.md`](../reports/2004_Carillon_IWMP_operating_envelope.md)) defines a spring-flood operating maximum of **40.08 m** at the Carillon headpond when the Hull dock exceeds the **42.61 m** servitude level.
+
+Verification against live HQ telemetry, May 2026:
+
+- **Hull dock (HQ station 1-3675):** continuously between 43.97 and 44.47 m for the full 13-day observed window. Margin above servitude threshold: 1.36 to 1.86 m. The trigger is unambiguous, not borderline.
+- **Carillon amont (HQ station 1-2968):** continuously between 40.43 and 40.54 m for the same window. Position relative to operating maximum: **+41 to +46 cm above the binding spring-flood ceiling**, every day, for 13 consecutive days, during a Major-flood freshet.
+
+**Verification gaps named for intellectual honesty:** the 2004 IWMP table is a summary; the binding instrument is most likely Item 1j 2010 LRIA Approval (referenced in MNRF correspondence, not yet reviewed in the case-file working files); "operating maximum" vs "critical maximum" is a meaningful distinction; "spring flood" trigger may be operator-declared rather than automatic from Hull dock alone; vertical-datum reconciliation between IWMP reference and station-feed reference is presumed but not verified; 13-day sample is small.
+
+What the verification gaps do *not* do is dissolve the question. They sharpen it: HQ has not publicly addressed why the published envelope was exceeded by 41–46 cm during the 2026 freshet, and the case file's contribution is to surface that question in a form that requires a specific response.
+
+#### F.2 — Independent government-commissioned reviews have not produced reform
+
+Two independent post-2019-flood reviews — the *Ontario Special Advisor on Flooding Report* by Douglas McNeil, P.Eng., MNRF-commissioned, November 2019 ([`docs/reports/mnrf-english-ontario-special-advisor-on-flooding-report-2019-11-25.pdf`](../reports/mnrf-english-ontario-special-advisor-on-flooding-report-2019-11-25.pdf)), and the *Examination of Governance, Existing Data, Potential Indicators and Values in the Ottawa River Watershed* tabled by ECCC June 2019 — both delivered specific structural-reform recommendations. As of May 2026, the implementation status of those recommendations has been verified against current public sources. The result is documented in the McNeil cross-reference section above; in summary form:
+
+- **Of 9 McNeil ORRPB-relevant recommendations** (Recs #55–66, those most directly bearing on the case-file argument): **7 confirmed not implemented** (#56, #58, #59, #60, #61, #62, #63), **1 partially implemented** (#55: data feeds and forecasts published, but no detailed operating-decision transparency McNeil envisioned), **1 indeterminate** (#65: no public WMP amendments found, but internal MNRF/OPG actions may not surface in a web search).
+- **Of the federal ECCC recommendations:** the dominant proposal — a multi-jurisdictional Ottawa River Watershed Council with Indigenous co-governance — has not been implemented. The federal government tabled the report without endorsing the Council. Ottawa Riverkeeper publicly characterised the response as "a missed opportunity for federal leadership."
+
+**The pattern across both reviews is identical.** Each independent expert review identified governance fragmentation as the underlying problem. Each proposed structural reforms requiring multi-jurisdictional agreement. Neither set of reforms has been implemented six years on. Each substantive recommendation requiring formal change to the 1983 ORRPB Agreement (McNeil #58, #59, #63) is stalled. The lighter-touch communications recommendations (McNeil #60, #61) that ORRPB could have implemented unilaterally have also not been taken up.
+
+**External pressure has now formalised at the municipal-government level.** The Ottawa River Flood Alliance ([ottawariverflood.ca](https://www.ottawariverflood.ca/)) — a coalition of 30+ municipalities — is publicly demanding the same federal review of the 1983 Agreement that McNeil's Recommendation #58 called for in 2019. The case file's policy argument is no longer a community-advocacy position alone; it aligns with the explicit demand of an organised municipal coalition.
+
+#### F.3 — Documented riparian-to-MNRF engagement has not produced enforcement
+
+A documented 2021–2023 correspondence chain between an Ontario riparian property owner upstream of Carillon (the same author whose May 2025 ministerial-letter exchange is documented above) and Ontario MNRF establishes the riparian-level outcome. Full content in the Documented riparian-to-MNRF correspondence chain section above; in summary form:
+
+- MNRF's official position on the record is that LRIA-derived Water Management Plan enforcement does not apply to Carillon because of inter-provincial coordination through ORRPB. The non-applicability is explicitly framed as an MNRF *guideline*, not statutory exclusion.
+- The riparian's challenge — that LRIA s. 23(3) excludes only rivers under bodies with *jurisdiction over the level of water*, which the ORRPB does not have — was not refuted in the surviving correspondence.
+- The Carillon Impounded Management Plan does exist and *is* LRIA-approved (Item 1j 2010). Its Table 2 contains the same 39.62 m drawdown directive cited in the directive-enforcement-gap section above.
+- The two-year follow-up (April 2023) reports HQ has "ignored all requests and correspondence." Three years later (May 2026), the same pattern is documented at the ministerial level (the May 30, 2025 Mike Harris letter, ref 354-2025-356).
+
+#### Why this is the closing exhibit
+
+Exhibits A–E together establish *what happened, what mechanism caused it, and what the alternative explanations cannot do.* Exhibit F establishes *what the system that should prevent or correct this has done about it* — and the answer is documented across three independent layers: operator self-imposed limits exceeded, independent reviews recommending reform that has not happened, riparian engagement that has not produced enforcement.
+
+The argument the case file makes is therefore not that the operating regime should be different on community-advocacy grounds. It is that **the system designed to ensure operating regimes adapt to changing conditions has documentably failed to do so**, at three distinct layers, over a period long enough that the failure is structural rather than transient. The corrective ask is therefore not just "change Bryson operations" or "draw down Carillon to 39.62 m"; it is "engage the corrective layers that exist — the LRIA, the McNeil and ECCC recommendations, the federal-review demand from the municipal coalition — until at least one produces a public review."
+
+What HQ counsel, ORRPB, MNRF, ECCC, and the IJC would each have to do to refute Exhibit F's specific claims is named in their respective sub-sections above. None of them has done so as of the case file's compilation date.
 
 ### Files for the case file
 
