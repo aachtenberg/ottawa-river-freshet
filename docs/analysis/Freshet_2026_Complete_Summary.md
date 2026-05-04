@@ -1071,6 +1071,29 @@ Affected upstream communities (10 communities, 2 provinces):
 
 The trade-off is therefore not "Bryson revenue vs nothing." It is **"Bryson revenue vs flood buffer for ten communities across two provinces."** This is the kind of decision that should require public consultation, environmental review, and explicit cost-benefit analysis. None has been disclosed.
 
+### The refurb-period causal chain (Exhibit D, expanded — added May 2026)
+
+The strongest version of Exhibit D's argument is structured by elimination. The case file's other exhibits exclude alternative explanations one by one; what remains is the operational mechanism Exhibit D names. The argument is not "we have proof of malfeasance"; it is "we have ruled out the alternatives, and the remaining explanation is consistent with primary-source evidence already on the record."
+
+**The eliminations:**
+
+1. *Climate alone* — ruled out by Exhibit E. Four independent climate tests (regression, watershed-station precipitation, headwater snowpack trend, Britannia step-change location) collectively show no climate forcing that mathematically requires a 2017 step-change in basin flow.
+2. *New infrastructure built that wasn't there before* — no new principal reservoirs or main-stem dams have been added to the Ottawa system in the post-2017 era. The system's physical capacity is unchanged.
+3. *Independent hydrological shift in the river* — the post-2017 regime change is *spatially concentrated near regulated structures* (Pointe-Calumet step-change near Carillon, no equivalent step at the more distant Pointe-Claire; Britannia annual-peak step-change concentrated at exactly 2017). A purely hydrological shift would distribute more uniformly across gauges.
+4. *Pre-existing operating regime under elevated inflow* — Exhibit C's historical-precedent finding (Britannia 1916–1960 ran 35 cm below the modern level for 45 years) shows the system *can* operate with substantially lower headponds; the elevated post-2017 posture is not the system's intrinsic operating characteristic, it is one specific operating choice.
+
+**What remains is the refurb-period operational mechanism**, supported by primary sources already cited in this exhibit:
+
+- The Bryson refurbishment 2017–2023 (planning ~2017, Unit 1 winter 2020–2021, Unit 2 + building 2022, Unit 3 2023) was an inflection point at which operating envelopes typically get re-licensed.
+- HQ's own published acknowledgment (Generation page, January 2026): *"Refurbishment work may therefore change the water head value."*
+- The MRC Pontiac November 2025 notice confirms a 30–50 cm test rise was *implemented*, not theoretical — establishing that decimeter-scale operating decisions are made at Bryson post-refurb without preceding public consultation about upstream impact.
+
+**The cm-level sensitivity is structural, not analytical.** Bryson's amont is Lac Coulonge — the same body of water at different vertical datums. Any cm-level shift in Bryson's operating range translates 1:1 to Lac Coulonge level during freshet. The Mansfield property's 2019-calibrated thresholds are spaced at 15–30 cm intervals (108.30, 108.48, 108.52, 108.75, 109.01). A 30 cm shift in the headpond operating range translates directly into the difference between "approaching" and "crawl space flooded" at the property. **The harm mechanism does not require dramatic operational changes — modest decimeter-scale licensing shifts during refurb are sufficient to move the property across multiple thresholds.**
+
+**The refurb is not the *cause* of climate-era inflows; it is the *period during which the operating response to those inflows was re-licensed*.** Whatever climate contribution exists, the freshet operating posture (held headponds, 83% spill share, narrow operating bands) is the controllable variable. The post-refurb operating posture sets the upstream-flood buffer; pre-refurb practice maintained more buffer. The refurb-period decisions about where to set the new operating envelope — made by HQ engineers, approved by MNRF, supported by ORRPB coordination — collectively determine how much of the climate signal becomes a property-impact signal.
+
+This is the case file's central causal claim. It is the explanation that survives after the alternatives have been eliminated, and it rests entirely on primary-source evidence already on the record. The unanswered piece is *what specific operating-regime decisions were made during the refurb licensing*, by whom, and what trade-off analysis informed them — which is the question the next subsection names directly.
+
 ### The unanswered question
 
 **What changed about the freshet operating regime at Bryson Dam after 2017? Was the impact on Lac Coulonge flood buffer evaluated before the change was made?**
