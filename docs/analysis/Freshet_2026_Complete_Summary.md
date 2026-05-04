@@ -656,9 +656,11 @@ The strongest version of the operations indictment — *Bryson amplifies the lak
 
 ### Snowpack-indexed drawdown — the missing rule
 
-The ORRPB currently uses 30-year median guidelines for fall reservoir drawdown — a fixed rule applied regardless of conditions. This produces clearly wrong outcomes in heavy snow years (excess water in storage during freshet) and unnecessarily aggressive drawdown in light snow years (e.g. 2024 had summer-like April levels).
+A common community framing is that operators (ORRPB-coordinated) follow a *fixed 30-year median rule* for fall reservoir drawdown — applied regardless of that year's snowpack or hydrological conditions. **The case file has not located primary-source confirmation of this specific "30-year median" framing.** ORRPB's published FAQ does reference a 30-year period (1991–2020) but only for the historical flow-range graphs that contextualise current conditions, not for setting annual drawdown targets. Whether the current rule is specifically a 30-year median, a different fixed metric, or some operator-internal formulation has not been publicly disclosed by the ORRPB or its supporting agencies.
 
-The flood watch community's policy proposal: **a snowpack-indexed drawdown rule**. Heavy snow year = drawdown lower. Light snow year = less aggressive drawdown. Snowpack data is available months in advance. The 2024 vs 2026 contrast makes the case — same approach, very different conditions, only one year had appropriate buffer.
+What *is* observable in the data is the *behaviour* the community is responding to: operating decisions appear not to adapt to year-by-year snowpack signals. The 2024 vs 2026 contrast — similar fall-drawdown approach, very different snowpack conditions, opposite freshet outcomes (2024 summer-like April, 2026 fourth-highest peak in modern era at Lac Coulonge) — is the empirical signature of a non-adaptive rule, whatever its specific internal definition.
+
+The flood watch community's policy proposal: **a snowpack-indexed drawdown rule**. Heavy snow year = drawdown lower. Light snow year = less aggressive drawdown. Snowpack data is available months in advance. This is the same recommendation McNeil's Recommendation #65 names ("provide greater flexibility on how refill is determined, taking into consideration the range of potential impacts") and that the ECCC governance review's Watershed Council was meant to provide a structural mechanism for. Whatever the *current* rule is, the proposal is to replace it with one that adapts to conditions. **The argument does not depend on the specific "30-year median" formulation — it depends on the documented behaviour of fixed-rule application across the 2024 vs 2026 contrast.**
 
 ### The Carillon directive enforcement gap (added May 2026)
 
@@ -789,7 +791,7 @@ A persistent thread in community discussion frames operational changes as constr
 
 **The conflation matters.** When operators or their defenders cite "contractual obligations" as a defense of freshet operational behavior, they are either confused or being deliberately vague. The contracts apply year-round to firm power obligations. They do not constrain how the river is managed during three weeks of overflow because the contracts get fulfilled either way. The actual revenue trade-off lives in fall drawdown decisions, which is the conversation the community is trying to have.
 
-The freshet vs fall distinction also reframes what "no way to warn anyone" means. Operators have multi-month snowpack data before the freshet starts. The fall drawdown decision sets the April 1 baseline. That decision is made on a fixed 30-year median rule rather than adapted to that year's snowpack. That isn't an unforeseeable weather emergency — it is a planned operational choice with predictable consequences.
+The freshet vs fall distinction also reframes what "no way to warn anyone" means. Operators have multi-month snowpack data before the freshet starts. The fall drawdown decision sets the April 1 baseline. That decision appears to be made on a fixed-rule basis (whether specifically a 30-year median, as community accounts hold, or some other operator-internal formulation that has not been publicly disclosed) rather than adapted to that year's snowpack. That isn't an unforeseeable weather emergency — it is a planned operational choice with predictable consequences.
 
 ### Summary of the regulatory critique
 
@@ -1239,7 +1241,7 @@ Each exhibit is editorially designed for Facebook sharing (matched typography: F
 
 - The ORRPB cannot compel changes from OPG or Hydro-Québec — it coordinates, it does not regulate
 - Mandate language matters ("minimize" vs "reduce" risk are legally distinct)
-- Fixed 30-year median drawdown rules are no longer fit for purpose given five major freshets in nine years
+- Whatever the specific drawdown rule is (community accounts cite "fixed 30-year median," but no primary-source confirmation exists), the *behaviour* it produces — non-adaptive across very different snowpack years (2024 vs 2026) — is no longer fit for purpose given five major freshets in nine years
 - Snowpack-indexed drawdown would be a meaningful structural improvement
 - The forecast communication style (CYA hedging) is institutionally rational but not decision-useful for homeowners
 
@@ -1281,9 +1283,9 @@ Reference data from personal 2019 flood notes at Mansfield property:
 
 Four threads from the Northern Reservoirs Flood Watch Group surfaced policy arguments worth preserving:
 
-### Thread 1: Snowpack-indexed drawdown vs fixed 30-year median rules
+### Thread 1: Snowpack-indexed drawdown vs current fixed-rule approach
 
-The ORRPB currently follows fixed 30-year median guidelines for reservoir drawdown. This treats every year the same regardless of snowpack conditions. The community's counter-proposal: snowpack data is available months in advance and should drive the drawdown target. Heavy snow year = lower drawdown. Light snow year = less aggressive. The 2024 vs 2026 contrast (similar approach, opposite outcomes) demonstrates the rule's failure mode.
+A common community framing is that ORRPB-coordinated operators follow a "fixed 30-year median" rule for reservoir drawdown — treating every year the same regardless of snowpack conditions. **The case file has not located primary-source confirmation of the specific 30-year-median framing.** ORRPB's published FAQ uses a 30-year period (1991–2020) only for historical flow-range graphs, not for setting drawdown targets. What is *empirically* observable is the non-adaptive behaviour: similar drawdown approach across very different snowpack years (2024 vs 2026), opposite freshet outcomes. The community's counter-proposal: snowpack data is available months in advance and should drive the drawdown target. Heavy snow year = lower drawdown. Light snow year = less aggressive. The argument does not depend on the specific "30-year median" formulation — it depends on the documented behaviour of fixed-rule application across the 2024 vs 2026 contrast, and on McNeil's Recommendation #65 ("provide greater flexibility on how refill is determined") which addresses the same gap from the policy-review side.
 
 ### Thread 2: Real-time data accessibility
 
