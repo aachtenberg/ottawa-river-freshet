@@ -56,8 +56,44 @@ If the Hull dock has exceeded the servitude level of 42.61 m at any point during
 
 4. **Verifying Hull dock > 42.61 m for 2026** is the next step. The case file's existing data sources should make this checkable: Vigilance has Hull-area stations, and the case-file dashboard tracks the Gatineau Rapides-Farmers gauge. Worth confirming the trigger condition formally.
 
-## Verification next steps
+## Verification: Hull dock trigger condition (added May 2026)
 
-- Confirm Hull dock level history for spring 2026 against the 42.61 m servitude threshold. If Hull has exceeded 42.61 m at any point between April 14 and present (May 4), the spring-flood ceiling at Carillon (40.08 m) was triggered.
-- Locate "Item 1j Carillon 2010 LRIA Approval" (referenced in Morin/MNRF correspondence) to verify whether the 2004 envelope was carried forward unchanged into the 2010 LRIA-approved version.
+The 40.08 m Carillon spring-flood ceiling is conditional on the Hull dock level exceeding the 42.61 m servitude threshold. **This trigger condition has been verified against the live HQ open-data telemetry and is unambiguous.**
+
+The Hull dock is HQ station **1-3675 "Quai-de-Hull"** (Outaouais region, 45.43°N, -75.71°W). Daily-average levels for the 12-day window where we have telemetry:
+
+| Day (UTC) | Hull dock min (m) | Hull dock max (m) | Daily avg (m) | Above 42.61 m servitude? | Margin (m) |
+|---|---|---|---|---|---|
+| 2026-04-22 | 44.460 | 44.470 | 44.466 | **yes** | +1.86 |
+| 2026-04-23 | 44.370 | 44.460 | 44.419 | **yes** | +1.81 |
+| 2026-04-24 | 44.250 | 44.370 | 44.313 | **yes** | +1.70 |
+| 2026-04-25 | 44.200 | 44.250 | 44.227 | **yes** | +1.62 |
+| 2026-04-26 | 44.120 | 44.190 | 44.156 | **yes** | +1.55 |
+| 2026-04-27 | 44.080 | 44.120 | 44.096 | **yes** | +1.49 |
+| 2026-04-28 | 44.060 | 44.090 | 44.074 | **yes** | +1.46 |
+| 2026-04-29 | 44.050 | 44.070 | 44.060 | **yes** | +1.45 |
+| 2026-04-30 | 44.070 | 44.110 | 44.100 | **yes** | +1.49 |
+| 2026-05-01 | 44.090 | 44.100 | 44.095 | **yes** | +1.49 |
+| 2026-05-02 | 44.080 | 44.090 | 44.086 | **yes** | +1.48 |
+| 2026-05-03 | 44.000 | 44.080 | 44.045 | **yes** | +1.44 |
+| 2026-05-04 | 43.960 | 44.000 | 43.973 | **yes** | +1.36 |
+
+Hull dock has been 1.36 to 1.86 m above the 42.61 m servitude threshold for the **entire** observed window. The trigger is not borderline — Hull dock was a full **metre and a half** above the threshold for most of the period. The 40.08 m spring-flood ceiling at Carillon was unambiguously in effect.
+
+## What the data shows together
+
+| Observation | Source | Result |
+|---|---|---|
+| Hull dock level (servitude trigger) | HQ station 1-3675, daily avg | 43.97–44.47 m (continuously above 42.61 m for all 13 days) |
+| Trigger status | per WMP table | Spring-flood envelope is in force |
+| Spring-flood ceiling at Carillon | per WMP table | **40.08 m** |
+| Carillon amont observed | HQ station 1-2968, daily avg | **40.43–40.54 m** (continuously above 40.08 m for all 13 days) |
+| Operating-band exceedance | calculated | **+0.41 m to +0.46 m above the binding ceiling, every day** |
+
+**This is not "directive not followed" in the loose sense the case file previously argued. This is "operating outside the binding spring-flood envelope of HQ's own published Impounded Water Management Plan, by 41 to 46 cm, every day for thirteen days, with the trigger condition unambiguously in effect."**
+
+## Other open verification next steps
+
+- Locate "Item 1j Carillon 2010 LRIA Approval" (referenced in Morin/MNRF correspondence) to verify whether the 2004 envelope was carried forward unchanged into the 2010 LRIA-approved version. If yes, the 40.08 m ceiling is a binding LRIA obligation.
 - Establish what "as per agreement" references in the table — likely the 1983 Ottawa River Regulation Agreement or a parallel Carillon-specific agreement with Ontario riparians. The source-document margin note "what Agreement?" flagged this question and it remains open.
+- Extend the Hull dock verification backward in time. The current telemetry only covers 12 days; once a multi-year dam_levels record accumulates (the live ingester has been running since 2026-05-02 with no retention policy), the same exceedance test can be applied across multiple freshets to establish whether the 2026 pattern is the standard pattern or an outlier.
