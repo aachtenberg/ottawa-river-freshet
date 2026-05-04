@@ -668,7 +668,18 @@ Hydro-Québec's published Carillon water management plan, section 15.3.5.1, stat
 
 > "In the spring, lowering the water level toward level 39.62 m at the Carillon dam helps maintain the river's natural conditions upstream. The downstream section of the river upstream of the Grenville rapid returns to its natural state."
 
-The published operating range is **39.62 m to 41.15 m**. In practice, HQ's de-facto freshet floor is approximately **40.50 m** — leaving roughly 88 cm of head impounded above the directive low every spring. The Ottawa River Flood Awareness group (ORFA) has been documenting this discrepancy since 2017.
+The published operating envelope is **seasonal**, not a single band. From the *Impounded Water Management Plan Summary, Carillon Project, October 2004* (page 6, Table 2.1; full extract at [`docs/reports/2004_Carillon_IWMP_operating_envelope.md`](../reports/2004_Carillon_IWMP_operating_envelope.md)):
+
+| Period | Operating min (m) | Operating max (m) | Range (m) |
+|---|---|---|---|
+| **Spring flood** (Hull dock > 42.61 m servitude level) | **39.62** | **40.08** | **0.46** |
+| Outside boating season (fall/winter) | 40.54 | 41.15 | 0.61 |
+| Boating season (summer) | 40.84 | 41.15 | 0.31 |
+| Critical bounds (avoid at all times) | 39.62 | 41.50 | — |
+
+The **spring-flood envelope is the case-file-relevant one** — and it is much tighter than a casual reading of the WMP would suggest. When Hull dock exceeds the easement servitude level of 42.61 m (the same threshold cited in Ontario expropriation easement RR19542B), the Carillon headpond must be operated between 39.62 m and 40.08 m — a 46 cm band, not the 1.53 m general-operating range.
+
+In the 2026 freshet, the live telemetry shows Carillon amont holding at approximately **40.49 m** for the full 12 days observed (band 40.43–40.54 m). That is **approximately 41 cm above the spring-flood operating maximum of 40.08 m**, not just above the operating minimum. The Ottawa River Flood Awareness group (ORFA) has been documenting this discrepancy since 2017; what the published WMP shows is that the discrepancy is larger than the case file previously stated, because the directive has been understated as a *floor only* when in fact the spring-flood envelope has both a binding ceiling (40.08 m) and a binding floor (39.62 m), and the current operations sit outside the ceiling.
 
 In 2025, ORFA formally requested that the Ontario Minister of Natural Resources intervene. The response (letter 354-2025-356, dated May 30 2025, signed by Minister Mike Harris) confirmed weekly meetings with Hydro-Québec but no enforcement commitment, asserting only that "Hydro Quebec reports that water levels are currently within the operating range and there are presently no concerns about flooding." The response is technically true against the 41.15 m ceiling but evades the 39.62 m drawdown directive — the actual concern. MNR explicitly defers to HQ as "the dam owner" and does not independently verify.
 
