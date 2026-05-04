@@ -702,6 +702,85 @@ The institutional structure produces opacity by design, not conspiracy:
 
 ---
 
+## The McNeil Report (2019) — Independent Government Validation
+
+In November 2019, Douglas McNeil, P.Eng., delivered *An Independent Review of the 2019 Flood Events in Ontario* to Ontario's Minister of Natural Resources and Forestry. He had been appointed Special Advisor on Flooding in July 2019 with a mandate to review the province's flood management framework. The full report (66 recommendations, 184 pages) is in this repository at [`docs/reports/mnrf-english-ontario-special-advisor-on-flooding-report-2019-11-25.pdf`](../reports/mnrf-english-ontario-special-advisor-on-flooding-report-2019-11-25.pdf).
+
+The report is the only commissioned, independent, primary-source government review of Ottawa River flood management since the regime change began. It contains 12 recommendations specifically directed at the Ottawa River Regulation Planning Board (Recommendations #55–66), and several findings in the body of the report that directly validate arguments the case file makes from outside the policy apparatus.
+
+### Findings that align with the case-file argument
+
+**The 60% uncontrolled-basin admission (Section 4.1.1, page 34):**
+
+> "There is little significant storage available in the lower portion of the Ottawa River; in fact, over 60% of the basin is essentially uncontrolled due to lack of storage capability."
+
+This is the official Ontario government statement of the unregulated-tributary problem the case file already names — and the 60% figure is a primary-source admission that the buffer the regulated portion of the basin can provide is inherently limited.
+
+**The legal framework that prioritises power generation (Section 4.1.1, pages 34–35):**
+
+> "[OPG] stations operate under the authority of Water Power Leases with the Province of Ontario and with An Act Respecting the Water Powers of the River Ottawa (1943). During normal flow conditions, OPG has the legal ability to raise the water level to the limit prescribed in the license for the respective facility for the purposes of power generation. Under high flow conditions, OPG operates its dams and stations to minimize the impacts of flooding and to at least do no more harm than would occur under natural conditions."
+
+The legal framework is explicit: **power generation by license, flood mitigation by operating practice**. The mandate clarity problem the case file names is documented in the binding legal instruments themselves.
+
+**The "run-of-river" framing is rejected by the report (Section 4.1.1, page 35):**
+
+> "Reference is often made in this section to OPG's facilities being operated as 'run-of-river' facilities (i.e. facilities that have no storage capacity whatsoever and generate electricity by whatever flow is running in the river and through the generating station) during periods of flooding. Understanding what this term means conceptually is critical to understanding why water management approaches were used during periods of high flow and flood flow experienced in the spring of 2017 and 2019. **OPG's facilities are not normally operated as run-of-river, nor are they classified as run-of-river facilities.** It must be highlighted that, outside of high flow or flood conditions, all of OPG generating stations operate on a daily peaking cycle as peaking or cycling facilities... [G]enerating stations, including Otto Holden, completely shut flows off at night to store water for power production the next day. **For transparency and full disclosure, the above facts must be emphasised as they can affect public perception of flow and level management regimes on the river and OPG's ability to control flooding.**"
+
+This is a primary-source finding by the Special Advisor that operators retain significant control over levels and storage outside of the most extreme flow events. The case file's Live Operational Evidence at Bryson — held headpond, 83% spill share, near-zero level variation across 12 days during freshet — falls squarely in the "outside of extreme flooding" territory McNeil names. The 2026 freshet at Lac Coulonge was Major Flood (État 6/6) but well below the 2019 record; whether it qualifies as "extreme" by McNeil's framing is itself the open question.
+
+### Recommendation #59 — the regulator-by-name-only finding
+
+Of the 12 ORRPB-specific recommendations, the most direct alignment with the case-file argument is Recommendation #59 (page 13):
+
+> "That the supporting agencies of the Ottawa River Regulation Planning Board (Canada, Ontario, Quebec and the dam operators) consider removing 'Regulation' from the title, as it implies that the Board can actually manage large floods when, in fact, they cannot because of the limited storage capacity of the generating station reservoirs, which were designed for electric power generation and not flood control."
+
+McNeil — Ontario's appointed Special Advisor — is on the record stating that:
+1. The ORRPB cannot manage large floods.
+2. The generating station reservoirs were designed for electric power generation, not flood control.
+3. The current name misleads the public about what the Board can actually do.
+
+This is the case file's mandate-clarity argument and "the gauges were built for power generation, not flood preparedness" framing, made by the official independent review. The case file's policy critique is not a fringe community position — it is essentially aligned with what the Province's own appointed expert recommended six years ago.
+
+### Recommendation #60 — public perception of dam-owner motives
+
+> "[T]he officers should be from another government department as opposed to Ontario Power Generation or another non-government dam owner, since the public believes the dam owners only care about generating electricity."
+
+McNeil's own framing acknowledges the public perception that the case file documents from gauge data: dam owners are perceived as operating for generation, not flood mitigation. The case file's contribution is providing the *empirical* evidence (the held-headpond observation, the regression analysis) that underpins what McNeil's report describes as a perception.
+
+### Other ORRPB recommendations directly relevant to the case file
+
+| # | Substance | Case-file connection |
+|---|---|---|
+| 55 | IJC, ORRPB, OPG make detailed flood operations information readily available on websites | Validates the "data accessibility problem" critique (Policy section) |
+| 56 | IJC meet with stakeholder groups to "explain in considerable detail how their structures are operated" | Validates the operational opacity argument |
+| 58 | Review the original 40-year-old ORRPB agreement | Validates the mandate clarity problem |
+| 60 | Communications officer assigned from another government department, not OPG | Acknowledges the public-perception problem |
+| 61 | Communications person work with ORRPB on "more easily understood materials" | Validates the forecast communication problem |
+| 62 | ORRPB work with OPG on staff gauges read by engaged residents | The case file is exactly that — community-built monitoring |
+| 63 | Two municipal officials (one ON, one QC) sit on ORRPB | Addresses the dual-jurisdiction problem the case file repeatedly names |
+| 65 | OPG identify options on refill date flexibility under Water Management Plans | Directly validates the freshet drawdown / contractual obligations argument |
+
+### Where the case file extends McNeil's framing
+
+McNeil's nuanced position on operator control is that operators have significant level/flow control under normal flow, but **lose** that control under extreme flood conditions. The case file does not contradict this — it sharpens it.
+
+The case file's empirical observations (Live Bryson telemetry, the held-headpond pattern, the spatial distribution of regime change concentrated near regulated structures) sit at the **boundary** between McNeil's two regimes — they describe operator behavior during high flow that is **not yet at the extreme-flood ceiling**. McNeil acknowledges that storage capacity cannot prevent the worst extreme floods. The case file argues that *at flow levels well below those extremes, operator decisions still meaningfully affect outcomes upstream*, and that the post-2017 regime change is a step-function in operator behavior in this in-between territory rather than a step-function in extreme-flood frequency.
+
+McNeil's report stops at flow patterns and recommends governance changes. The case file picks up where McNeil leaves off and asks: *given the McNeil framework — power generation by license, flood mitigation by practice, public deserving of transparency — what specifically about Bryson's freshet operating practice changed after 2017, and what flood-buffer analysis informed those changes?* That question is the unanswered one Exhibit D names.
+
+### Implementation status (as of 2026)
+
+Six years after the report:
+- Recommendations #55, #56, #61: Public-facing materials remain limited. ORRPB published a 2026 self-presentation that does not engage with the empirical regime-change evidence (see "Cross-reference: ORRPB's own self-presentation" subsection above).
+- Recommendation #59: "Regulation" remains in the Board's name.
+- Recommendation #62: No staff-gauge / resident-reading program has materialised. The Vigilance API remains the closest equivalent — and is provincial (Quebec), not federal/board.
+- Recommendation #63: No municipal representatives have been added to the ORRPB; this would require amending the founding agreement.
+- Recommendation #65: No public Water Management Plan amendments to refill-date flexibility have been disclosed.
+
+The implementation gap is itself part of the case-file argument: the recommendations were made on the basis of independent expert review of the 2019 floods, and the underlying problems they were intended to address have continued through 2023, 2025, and 2026 events.
+
+---
+
 ## The Case File: Four-Exhibit Analytical Argument
 
 In April 2026, the policy analysis was distilled into a four-piece "case file" of editorial-style infographics, designed for community sharing and media use. Each exhibit makes one claim, backed by verified primary sources. Together they form a complete argument that the regime change is real, has identifiable mechanisms, and has unanswered policy questions.
