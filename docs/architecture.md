@@ -224,6 +224,71 @@ proxies `/history/*` to PostgREST with **GET/HEAD/OPTIONS only** ([nginx.conf:24
 so browsers can read but not mutate. This is also the path remote agents use
 for cluster-state visibility (the route is exposed via Cloudflare; no auth).
 
+### Scheduled remote agents (routines)
+
+The stack also includes **scheduled remote Claude Code agents** that produce
+markdown artifacts on a schedule — currently a daily basin-state brief and a
+deployment-anniversary health check. Their prompts live in
+[`freshet-public/routines/`](../routines/) as version-controlled `.md` files
+(see [`routines/README.md`](../routines/README.md) for the full convention).
+The agents themselves run in Anthropic's cloud (CCR sandbox) but treat this
+cluster as their canonical data source via the same `/history/` proxy the
+dashboard uses.
+
+```mermaid
+flowchart LR
+    subgraph repo["Git repo (homelab-infra)"]
+        direction TB
+        prompts["freshet-public/routines/<br/><b>*.md</b> (prompt-as-code)"]
+        artifacts["freshet-public/data/<br/>daily-briefs/<b>YYYY-MM-DD.md</b>"]
+    end
+
+    subgraph claudeai["claude.ai routines (Anthropic cloud)"]
+        direction TB
+        sched["scheduled trigger<br/>(cron / run_once)"]
+        agent["CCR agent<br/>runs prompt verbatim"]
+        sched --> agent
+    end
+
+    subgraph cluster["this cluster"]
+        direction TB
+        proxy["nginx /history/<br/>(PostgREST GET-only)"]
+        db[(TimescaleDB)]
+        ingesters["hq · wsc · river-history<br/>· reservoir · eccc ingesters"]
+        ingesters --> db
+        proxy --> db
+    end
+
+    prompts -- "Claude Code: RemoteTrigger update" --> sched
+    agent -- "1. read (curl)" --> proxy
+    agent -- "2. write + git push" --> artifacts
+    artifacts -. "next run reads<br/>yesterday's brief for delta" .-> agent
+```
+
+Two design choices worth calling out:
+
+- **Proxy-first, upstream-fallback.** Routines fetch from the cluster
+  PostgREST proxy as the canonical source, not from `hydroquebec.com` /
+  `vigilance` / etc. The cluster ingesters already handle the upstream TLS
+  quirks (notably HQ's `SECLEVEL=1` requirement) and rate limits, and serve
+  clean JSON that the agent can consume without TLS handshake or User-Agent
+  contortions. Direct upstream fetches are fallback-only, used when the
+  proxy itself returns a non-2xx.
+- **Verify before declaring an outage.** Routine prompts include a guardrail
+  forbidding "API down" / "503" / "unreachable" language unless preceded by
+  an independent `curl` probe whose observed HTTP code is included alongside
+  the claim. This was added after a 2026-05-05 brief falsely reported a
+  three-day HQ outage while the API and the cluster ingester were both
+  healthy throughout — the agent had simply mishandled an early fetch error
+  and didn't verify before generalising it.
+
+The routine writes its artifact via `git push origin main`, then attempts a
+`git subtree push` to the public mirror. The subtree push frequently fails
+on GitHub auth in the CCR environment; a manual
+[`scripts/sync-freshet-public.sh`](../../scripts/sync-freshet-public.sh)
+picks up the slack. This is documented behaviour, not a bug — the routine
+exits 0 if the homelab-infra commit landed.
+
 ## Data flow
 
 ### Read path: dashboard load

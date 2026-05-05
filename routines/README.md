@@ -26,6 +26,63 @@ Treating the prompt as code in this repo gives us:
 - **One source of truth** — when the live routine drifts from the file, the
   file wins. We re-push from file to API, not the other way around.
 
+## How a routine flows, end to end
+
+```mermaid
+flowchart LR
+    subgraph dev["Developer workflow"]
+        direction TB
+        file["routines/*.md<br/><i>prompt-as-code</i>"]
+        commit["git commit + push<br/>→ homelab-infra"]
+        push["Claude Code:<br/>RemoteTrigger update<br/><i>(file → API)</i>"]
+        file --> commit --> push
+    end
+
+    subgraph cloud["claude.ai (Anthropic cloud)"]
+        direction TB
+        live["live routine<br/>(cron or run_once_at)"]
+        agent["CCR sandbox agent<br/>runs the prompt verbatim"]
+        live -- "schedule fires" --> agent
+    end
+
+    subgraph homelab["Homelab k3s cluster"]
+        direction TB
+        proxy["freshet.xgrunt.com/history/<br/>PostgREST proxy<br/><i>GET-only, no auth</i>"]
+        db[("TimescaleDB<br/>(dam_*, river_*, wsc_*, ...)")]
+        ingest["Hourly ingesters<br/>hq · wsc · vigilance · mvca"]
+        ingest -- "hourly upserts" --> db
+        proxy --> db
+    end
+
+    subgraph artifacts["Output artifacts"]
+        direction TB
+        brief["data/daily-briefs/<br/>YYYY-MM-DD.md"]
+        homelabrepo["homelab-infra/main"]
+        public["ottawa-river-freshet/main<br/><i>(public mirror)</i>"]
+        brief -- "git push" --> homelabrepo
+        homelabrepo -- "git subtree push<br/>(or manual sync)" --> public
+    end
+
+    push --> live
+    agent -- "1. read (curl)" --> proxy
+    agent -- "2. write" --> brief
+
+    classDef src fill:#e8f0ff,stroke:#5b8def
+    classDef cloud fill:#fff4e6,stroke:#e89b3c
+    classDef cluster fill:#e8f7e8,stroke:#4a9a4a
+    classDef out fill:#f7e8f7,stroke:#a64ca6
+    class file,commit,push src
+    class live,agent cloud
+    class proxy,db,ingest cluster
+    class brief,homelabrepo,public out
+```
+
+The arrows on the left are the **edit lifecycle** (file authored locally,
+pushed to claude.ai). The arrows on the right are the **run lifecycle** (each
+scheduled fire reads from the cluster proxy, writes a markdown artifact, and
+publishes back to the repo). Output artifacts feed back into the same git
+repo whose `routines/` directory holds the prompt — closing the loop.
+
 ## Layout
 
 Each routine is one self-contained markdown file:
