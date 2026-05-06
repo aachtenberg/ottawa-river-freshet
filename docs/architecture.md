@@ -261,7 +261,8 @@ flowchart LR
 
     prompts -- "Claude Code: RemoteTrigger update" --> sched
     agent -- "1. read (curl)" --> proxy
-    agent -- "2. write + git push" --> artifacts
+    agent -- "2. write + git push<br/>to homelab-infra/main" --> artifacts
+    artifacts -- "GitHub Actions<br/>(.github/workflows/mirror-freshet-public.yml)" --> mirror[("ottawa-river-freshet/main<br/>(public mirror)")]
     artifacts -. "next run reads<br/>yesterday's brief for delta" .-> agent
 ```
 
@@ -282,12 +283,20 @@ Two design choices worth calling out:
   healthy throughout — the agent had simply mishandled an early fetch error
   and didn't verify before generalising it.
 
-The routine writes its artifact via `git push origin main`, then attempts a
-`git subtree push` to the public mirror. The subtree push frequently fails
-on GitHub auth in the CCR environment; a manual
-[`scripts/sync-freshet-public.sh`](../../scripts/sync-freshet-public.sh)
-picks up the slack. This is documented behaviour, not a bug — the routine
-exits 0 if the homelab-infra commit landed.
+The routine writes its artifact via `git push origin main` and stops there.
+Mirroring to the public repo is handled by a GitHub Actions workflow
+([`.github/workflows/mirror-freshet-public.yml`](../../.github/workflows/mirror-freshet-public.yml))
+that fires on any push to `main` touching `freshet-public/**` and runs
+`git subtree push` in GitHub's auth context using a fine-grained PAT
+(repo secret `MIRROR_PAT`, scoped `Contents: write` on
+`ottawa-river-freshet`). This was previously attempted from inside the
+routine and reliably failed — the CCR sandbox has no GitHub credentials
+for the secondary remote. Moving the push to CI gives it stable auth and
+keeps the routine focused on the brief itself.
+
+A `scripts/sync-freshet-public.sh` helper still exists for one-off
+manual syncs (e.g. when the workflow is disabled or the PAT is rotating)
+but is no longer the canonical path.
 
 ## Data flow
 

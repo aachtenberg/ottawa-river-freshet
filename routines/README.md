@@ -58,9 +58,11 @@ flowchart LR
         direction TB
         brief["data/daily-briefs/<br/>YYYY-MM-DD.md"]
         homelabrepo["homelab-infra/main"]
+        gha["GitHub Actions:<br/>mirror-freshet-public"]
         public["ottawa-river-freshet/main<br/><i>(public mirror)</i>"]
         brief -- "git push" --> homelabrepo
-        homelabrepo -- "git subtree push<br/>(or manual sync)" --> public
+        homelabrepo -- "push event<br/>(freshet-public/**)" --> gha
+        gha -- "git subtree push<br/>(PAT auth)" --> public
     end
 
     push --> live
@@ -79,9 +81,12 @@ flowchart LR
 
 The arrows on the left are the **edit lifecycle** (file authored locally,
 pushed to claude.ai). The arrows on the right are the **run lifecycle** (each
-scheduled fire reads from the cluster proxy, writes a markdown artifact, and
-publishes back to the repo). Output artifacts feed back into the same git
-repo whose `routines/` directory holds the prompt — closing the loop.
+scheduled fire reads from the cluster proxy, writes a markdown artifact,
+publishes back to the repo, and a GitHub Actions workflow auto-mirrors the
+public-facing subdirectory to `ottawa-river-freshet`). Output artifacts feed
+back into the same git repo whose `routines/` directory holds the prompt —
+closing the loop. Routines themselves never touch the public mirror; they
+only push to `homelab-infra` and let CI handle the rest.
 
 ## Layout
 
