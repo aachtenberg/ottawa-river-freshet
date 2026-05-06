@@ -6,6 +6,7 @@ const puppeteer = require('puppeteer');
 const path = require('path');
 
 const exhibits = [
+  'Exhibit_0_Plain_Language.html',
   'Exhibit_A_Regime_Change.html',
   'Exhibit_B_Winter_Baseline.html',
   'Exhibit_C_Storage_Capacity.html',

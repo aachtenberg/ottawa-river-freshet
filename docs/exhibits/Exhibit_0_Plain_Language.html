@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Exhibit 0 — Read This First (Plain-Language Story)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,700;9..144,900&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink: #14171a;
+  --ink-soft: #2c333a;
+  --paper: #f4ede0;
+  --paper-bright: #fbf6eb;
+  --rule: #14171a;
+  --rule-soft: rgba(20, 23, 26, 0.18);
+  --accent: #b3261e;
+  --accent-soft: rgba(179, 38, 30, 0.08);
+  --accent-strong: #8a1c14;
+  --neutral: #2c333a;
+  --neutral-blue: #4a6b7c;
+  --neutral-blue-soft: rgba(74, 107, 124, 0.10);
+}
+
+html, body {
+  background: #2a2520;
+  font-family: 'IBM Plex Sans', sans-serif;
+  color: var(--ink);
+}
+
+.page {
+  width: 1200px;
+  min-height: 1500px;
+  background: var(--paper);
+  position: relative;
+  padding: 64px 72px 72px;
+  margin: 0 auto;
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(0,0,0,0.04) 1px, transparent 0);
+  background-size: 14px 14px;
+}
+
+.kicker {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 14px;
+  margin-bottom: 28px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.kicker .file { font-weight: 500; }
+.kicker .meta { font-weight: 400; opacity: 0.7; }
+
+.headline {
+  font-family: 'Fraunces', serif;
+  font-weight: 900;
+  font-size: 64px;
+  line-height: 0.96;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  margin-bottom: 18px;
+}
+.headline .accent {
+  color: var(--accent);
+  font-style: italic;
+}
+
+.deck {
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: 22px;
+  line-height: 1.4;
+  color: var(--ink-soft);
+  max-width: 950px;
+  margin-bottom: 36px;
+  letter-spacing: -0.005em;
+}
+
+.section-rule {
+  border-top: 1px solid var(--rule);
+  margin: 0 0 22px 0;
+}
+
+.section-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--accent-strong);
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.section-heading {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+
+.body-text {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  margin-bottom: 14px;
+  max-width: 900px;
+}
+.body-text strong { color: var(--ink); font-weight: 600; }
+.body-text em { color: var(--ink); font-style: italic; }
+
+.section-block {
+  margin-bottom: 32px;
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-bottom: 32px;
+}
+
+.driver-card {
+  padding: 24px 26px;
+  background: var(--paper-bright);
+  border: 1px solid var(--rule);
+  border-top: 4px solid var(--rule);
+}
+.driver-card.climate { border-top-color: var(--neutral-blue); }
+.driver-card.operations { border-top-color: var(--accent); }
+
+.driver-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.driver-card.climate .driver-label { color: var(--neutral-blue); }
+.driver-card.operations .driver-label { color: var(--accent-strong); }
+
+.driver-headline {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+
+.driver-body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.driver-body p { margin-bottom: 10px; }
+.driver-body strong { color: var(--ink); font-weight: 600; }
+
+.driver-stat {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dotted var(--rule-soft);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.driver-stat .number {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-transform: none;
+  display: block;
+  margin-bottom: 4px;
+}
+.driver-card.climate .driver-stat .number { color: var(--neutral-blue); }
+.driver-card.operations .driver-stat .number { color: var(--accent); }
+
+.analogy-block {
+  padding: 28px 30px;
+  background: var(--paper-bright);
+  border-left: 4px solid var(--accent);
+  margin-bottom: 32px;
+}
+.analogy-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-weight: 700;
+  color: var(--accent-strong);
+  margin-bottom: 10px;
+}
+.analogy-text {
+  font-family: 'Fraunces', serif;
+  font-size: 19px;
+  line-height: 1.45;
+  color: var(--ink);
+  font-weight: 400;
+}
+.analogy-text strong { font-weight: 700; }
+
+.numbered-list {
+  list-style: none;
+  counter-reset: step;
+  margin-bottom: 18px;
+}
+.numbered-list li {
+  counter-increment: step;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  padding: 10px 0 10px 38px;
+  border-bottom: 1px dotted var(--rule-soft);
+  position: relative;
+}
+.numbered-list li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 26px;
+  height: 26px;
+  background: var(--accent);
+  color: var(--paper-bright);
+  border-radius: 50%;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.numbered-list li strong { color: var(--ink); font-weight: 600; }
+
+.callout-question {
+  margin-bottom: 26px;
+  padding: 22px 26px;
+  background: var(--neutral-blue-soft);
+  border-left: 3px solid var(--neutral-blue);
+}
+.callout-question .label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-weight: 700;
+  color: var(--neutral-blue);
+  margin-bottom: 8px;
+}
+.callout-question .question {
+  font-family: 'Fraunces', serif;
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.callout-question .answer {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.callout-question .answer strong { color: var(--ink); font-weight: 600; }
+
+.bottom-line {
+  margin: 32px 0 28px 0;
+  padding: 30px 32px;
+  background: var(--ink);
+  color: var(--paper-bright);
+}
+.bottom-line .label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-weight: 700;
+  color: var(--paper);
+  opacity: 0.7;
+  margin-bottom: 12px;
+}
+.bottom-line .text {
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  line-height: 1.4;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+.bottom-line .text strong { font-weight: 700; }
+
+.read-next {
+  margin-bottom: 28px;
+  padding: 22px 26px;
+  background: var(--paper-bright);
+  border: 1px solid var(--rule);
+}
+.read-next-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-weight: 700;
+  color: var(--ink-soft);
+  margin-bottom: 12px;
+}
+.read-next-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 24px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+.read-next-list .row {
+  display: flex;
+  gap: 10px;
+}
+.read-next-list .badge {
+  flex: 0 0 28px;
+  height: 22px;
+  background: var(--ink);
+  color: var(--paper-bright);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0.04em;
+}
+.read-next-list strong { color: var(--ink); font-weight: 600; }
+
+.footer {
+  border-top: 1px solid var(--rule);
+  padding-top: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 11px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.footer .left { max-width: 720px; }
+.footer .right {
+  text-align: right;
+  font-family: 'IBM Plex Mono', monospace;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 10px;
+  white-space: nowrap;
+}
+.footer strong { color: var(--ink); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+<div class="kicker">
+  <span class="file">EXHIBIT 0 · READ THIS FIRST · PLAIN-LANGUAGE STORY</span>
+  <span class="meta">Northern Reservoirs Flood Watch · Compiled May 2026</span>
+</div>
+
+<h1 class="headline">
+  Two things happened at once.<br>
+  Only <span class="accent">one</span> of them is anyone's fault.
+</h1>
+
+<p class="deck">
+  This is the plain-English version of what the case file argues, why it argues it, and what to do about it. No statistics, no reservoir codes, no acronyms beyond the obvious. Read this first; the lettered exhibits show the work.
+</p>
+
+<div class="section-block">
+  <hr class="section-rule">
+  <div class="section-label">The question being asked</div>
+  <h2 class="section-heading">Why does Lac Coulonge keep flooding?</h2>
+  <p class="body-text">
+    The Ottawa River had one major flood at Lac Coulonge between 1972 and 2016 — a stretch of 45 years with a single bad year. Since 2017, it has had four: 2017, 2019, 2023, and 2026. <strong>Four bad floods in ten years where there used to be one in forty-five.</strong> That's not a number that wobbles; it's a number that broke. Something changed.
+  </p>
+  <p class="body-text">
+    The official line — what the dam operators, Hydro-Québec, and the planning board tell you when you ask — is that this is climate change, and it's no one's fault. The community has been pushing back for years saying it's actually about how the dams are being run. Until recently, both sides were arguing past each other. <strong>The case file's contribution is to show that both are partly right, but in different ways and for different reasons.</strong>
+  </p>
+</div>
+
+<div class="section-block">
+  <hr class="section-rule">
+  <div class="section-label">The two things that happened</div>
+  <h2 class="section-heading">It turns out to be a layered problem.</h2>
+</div>
+
+<div class="two-col">
+
+  <div class="driver-card climate">
+    <div class="driver-label">Driver 1 · Climate &amp; Land</div>
+    <div class="driver-headline">The river is genuinely bigger than it used to be.</div>
+    <div class="driver-body">
+      <p>If you add up every drop of water that flows past Ottawa in a year, the totals have been creeping up since the 2010s. Pre-2017, the average was about 39 cubic kilometres per year. Since 2017, it's about 46. <strong>That's roughly 17% more water moving through the system, every year.</strong></p>
+      <p>About half of that increase shows up at the rain gauges around the watershed. The other half doesn't — it might be land-use changes (less forest, more pavement, less ground absorbing water), or rain falling at upstream gauges we don't have data for, or something else. But it's real and it's basin-wide.</p>
+      <p><strong>This part is mostly out of the operators' control.</strong> A bigger river is what it is. They can't make less rain fall.</p>
+    </div>
+    <div class="driver-stat">
+      <span class="number">+17%</span>
+      More water flowing past Ottawa annually since 2017
+    </div>
+  </div>
+
+  <div class="driver-card operations">
+    <div class="driver-label">Driver 2 · Operations</div>
+    <div class="driver-headline">The dams are making the spring peaks worse than they have to be.</div>
+    <div class="driver-body">
+      <p>Take that bigger river and feed it through the dams the way they were being run before 2017, and you'd expect higher floods. But you wouldn't expect the spring <em>peaks</em> at Lac Coulonge to suddenly jump 59 centimetres on average and then stay there for a decade.</p>
+      <p>That sharp jump happens at exactly one date — 2017 — and exactly one place: the regulated stretch around Bryson Dam. By the time the same water reaches downstream gauges past Carillon, the jump is gone. Climate doesn't behave that way. Climate would show up everywhere, gradually. <strong>This pattern shows up in one place, on one date — which is exactly when Bryson started a six-year refurbishment that changed how the dam was operated.</strong></p>
+      <p><strong>This part is on the operators.</strong> Same dam, different choice about how to use it.</p>
+    </div>
+    <div class="driver-stat">
+      <span class="number">+59cm</span>
+      Higher Lac Coulonge spring peaks since 2017
+    </div>
+  </div>
+
+</div>
+
+<div class="analogy-block">
+  <div class="analogy-label">If you want a picture in your head</div>
+  <p class="analogy-text">
+    Think of a bathtub with a faucet, a drain, and a bathmat at the lip. <strong>Climate</strong> is filling the tub a bit faster than it used to. <strong>Operations</strong> is the question of how full you let the tub get before the spring rush starts, how fast you're willing to drain it, and whether you let the bathmat get pushed up against the lip when the level rises. The water on the floor — that's our crawl space — is partly because the faucet is running harder, and partly because no one is draining the tub the way they used to.
+  </p>
+</div>
+
+<div class="section-block">
+  <hr class="section-rule">
+  <div class="section-label">How we know</div>
+  <h2 class="section-heading">Five tests, one consistent picture.</h2>
+  <ol class="numbered-list">
+    <li><strong>Count the floods.</strong> Lac Coulonge had 1 super-flood in 45 years pre-2017 and 4 in 10 years since. That's an 18-fold increase in rate. Whatever happened, it happened around 2016–2017. (Exhibit A)</li>
+    <li><strong>Look upstream of the freshet.</strong> Reservoir levels going into spring have been higher than they used to be. The "starting baseline" before the snow melts is up. (Exhibit B)</li>
+    <li><strong>Compare storage to inflow.</strong> The headpond at Bryson is being held near the top of its operating range during the freshet. There's plenty of room to lower it; the operators are choosing not to. (Exhibits C and D)</li>
+    <li><strong>Test the climate alternative four ways.</strong> Cold-season precipitation is roughly flat. Headwater snow is trending down, not up. The flow step is sharply at 2017, not a gradual ramp. Climate forcing cannot reproduce the sharp shape of the peak step. (Exhibit E)</li>
+    <li><strong>Test the "river is bigger" claim head-on.</strong> Yes, total annual flow is up about 17%. But it's a smooth ramp through the 2010s, not a sharp 2017 step — different shape, different cause. The peak step is something else. (Exhibit E, Test C addendum)</li>
+  </ol>
+</div>
+
+<div class="callout-question">
+  <div class="label">The fair question</div>
+  <div class="question">"If the river is bigger, isn't the flooding inevitable?"</div>
+  <div class="answer">
+    No — and the planning board's own number proves it. They say their reservoir management reduced the 2019 Lac Coulonge peak by <strong>120 cm</strong>. That means the operators have a working lever roughly four times bigger than the +17% volume increase would imply. <strong>The river being bigger doesn't mean the spring peaks have to be higher.</strong> It means the operators have to use that lever differently — adapt the drawdown timing and depth — as the river changes. That adaptation hasn't happened. The operating playbook from before 2017 is still being run against ~17% more water.
+  </div>
+</div>
+
+<div class="section-block">
+  <hr class="section-rule">
+  <div class="section-label">What we're asking for</div>
+  <h2 class="section-heading">Three concrete changes.</h2>
+  <p class="body-text">
+    None of these are technically hard. None of them require new dams. None of them depend on winning the climate-attribution argument. They're all things the operators already have the authority to do, today.
+  </p>
+  <ol class="numbered-list">
+    <li><strong>Move the spring drawdown target earlier — to mid-March instead of April 1.</strong> If the freshet is starting earlier and the river is bigger, the buffer needs to be bigger and ready sooner. Lower the reservoirs more aggressively during the low-flow winter window when operators have full control. (This is Dan Poole / ORFA's specific ask.)</li>
+    <li><strong>Index the drawdown depth to the snowpack.</strong> Heavy snow year? Drawdown deeper. Light snow year? Less aggressive. The snowpack data is available months in advance. The current playbook doesn't use it.</li>
+    <li><strong>Enforce the rules that already exist.</strong> Hydro-Québec's own published Carillon water management plan says the headpond should be drawn down to 39.62 m during spring flood conditions. The 2026 telemetry shows it sat <strong>40 to 50 cm above</strong> that ceiling for the entire freshet. The framework exists; no one is enforcing it.</li>
+  </ol>
+</div>
+
+<div class="bottom-line">
+  <div class="label">Bottom line</div>
+  <div class="text">
+    The river is bigger now, and that's mostly climate. <strong>But the dams are amplifying the spring peaks on top of that, and that part is a choice.</strong> The fix doesn't require eliminating climate change. It requires the operators to adapt their playbook to the river they actually have, instead of the river they had in 1985.
+  </div>
+</div>
+
+<div class="read-next">
+  <div class="read-next-label">If you want the receipts, read these next</div>
+  <div class="read-next-list">
+    <div class="row"><div class="badge">A</div><div><strong>Regime Change</strong> — the 18-fold jump in super-floods.</div></div>
+    <div class="row"><div class="badge">B</div><div><strong>Winter Baseline</strong> — pre-freshet levels are up.</div></div>
+    <div class="row"><div class="badge">C</div><div><strong>Storage Capacity</strong> — there's room; it's not being used.</div></div>
+    <div class="row"><div class="badge">D</div><div><strong>Bryson Timeline</strong> — what changed at the dam, and when.</div></div>
+    <div class="row"><div class="badge">E</div><div><strong>Climate Tested</strong> — five ways climate can't be the sole explanation.</div></div>
+    <div class="row"><div class="badge">F</div><div><strong>Corrective Failure</strong> — three layers of regulation; none corrected.</div></div>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="left">
+    <strong>About this exhibit.</strong> Compiled May 2026 by a Lac Coulonge property owner, drawing on community contributions from a multi-year flood watch group. Every number above is sourced and reproducible from the public repository at <code>github.com/aachtenberg/ottawa-river-freshet</code>. The full case file is in <code>docs/analysis/Freshet_2026_Complete_Summary.md</code>; analytical scripts are in <code>ingesters/climate-history/</code>; live telemetry is at <code>freshet.xgrunt.com</code>. <strong>This is not a polished government report. It is a homeowner's investigation made open so others can verify it, build on it, or refute it.</strong>
+  </div>
+  <div class="right">
+    NORTHERN RESERVOIRS<br>
+    FLOOD WATCH · 2026<br>
+    EXHIBIT 0 · v1
+  </div>
+</div>
+
+</div>
+</body>
+</html>
