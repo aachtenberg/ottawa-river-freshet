@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Exhibit G — The Selected Window</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,700;9..144,900&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink: #14171a;
+  --ink-soft: #2c333a;
+  --paper: #f4ede0;
+  --paper-bright: #fbf6eb;
+  --rule: #14171a;
+  --rule-soft: rgba(20, 23, 26, 0.18);
+  --accent: #b3261e;
+  --accent-soft: rgba(179, 38, 30, 0.08);
+  --accent-strong: #8a1c14;
+  --neutral: #2c333a;
+  --neutral-blue: #4a6b7c;
+  --neutral-blue-soft: rgba(74, 107, 124, 0.12);
+  --green: #2c7c4e;
+  --green-soft: rgba(44, 124, 78, 0.10);
+}
+
+html, body {
+  background: #2a2520;
+  font-family: 'IBM Plex Sans', sans-serif;
+  color: var(--ink);
+}
+
+.page {
+  width: 1200px;
+  min-height: 1500px;
+  background: var(--paper);
+  position: relative;
+  padding: 64px 72px 72px;
+  margin: 0 auto;
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(0,0,0,0.04) 1px, transparent 0);
+  background-size: 14px 14px;
+}
+
+.kicker {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 14px;
+  margin-bottom: 28px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.kicker .file { font-weight: 500; }
+.kicker .meta { font-weight: 400; opacity: 0.7; }
+
+.headline {
+  font-family: 'Fraunces', serif;
+  font-weight: 900;
+  font-size: 60px;
+  line-height: 0.96;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  margin-bottom: 18px;
+}
+.headline .accent {
+  color: var(--accent);
+  font-style: italic;
+}
+
+.deck {
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: 21px;
+  line-height: 1.4;
+  color: var(--ink-soft);
+  max-width: 950px;
+  margin-bottom: 36px;
+  letter-spacing: -0.005em;
+}
+
+.quote-block {
+  margin: 0 0 32px 0;
+  padding: 24px 28px;
+  background: var(--neutral-blue-soft);
+  border-left: 4px solid var(--neutral-blue);
+}
+.quote-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-weight: 700;
+  color: var(--neutral-blue);
+  margin-bottom: 10px;
+}
+.quote-text {
+  font-family: 'Fraunces', serif;
+  font-size: 19px;
+  line-height: 1.45;
+  color: var(--ink);
+  font-style: italic;
+  margin-bottom: 8px;
+}
+.quote-attr {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+/* Window comparison table — the centerpiece */
+.windows-table {
+  margin-bottom: 32px;
+  padding: 24px 26px;
+  background: var(--paper-bright);
+  border: 1px solid var(--rule);
+}
+.windows-title {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--ink);
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+}
+.windows-subtitle {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin-bottom: 18px;
+  line-height: 1.5;
+}
+
+.windows-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+}
+.windows-table th {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-soft);
+  font-weight: 600;
+  text-align: right;
+  padding: 8px 10px;
+  border-bottom: 1.5px solid var(--rule);
+}
+.windows-table th:first-child { text-align: left; }
+
+.windows-table td {
+  padding: 10px;
+  text-align: right;
+  border-bottom: 1px solid var(--rule-soft);
+  color: var(--ink-soft);
+  font-family: 'IBM Plex Mono', monospace;
+}
+.windows-table td:first-child {
+  text-align: left;
+  color: var(--ink);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+}
+.windows-table td .desc {
+  display: block;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--ink-soft);
+  margin-top: 2px;
+}
+.windows-table tr.orrpb-row {
+  background: var(--accent-soft);
+}
+.windows-table tr.orrpb-row td {
+  font-weight: 700;
+  color: var(--ink);
+}
+.windows-table tr.orrpb-row td .desc { color: var(--ink-soft); font-weight: 400; }
+
+.rank-cell {
+  font-family: 'Fraunces', serif !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em;
+}
+.rank-good { color: var(--green) !important; }
+.rank-mid { color: var(--ink-soft) !important; }
+.rank-bad { color: var(--accent) !important; }
+
+/* Bar chart for the visual punch */
+.bars-block {
+  margin-bottom: 32px;
+}
+.bars-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  margin-bottom: 6px;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+.bars-subtitle {
+  font-family: 'Fraunces', serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  margin-bottom: 18px;
+}
+
+.bars-row {
+  display: grid;
+  grid-template-columns: 200px 1fr 60px;
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 8px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+}
+.bars-row .label {
+  text-align: right;
+  color: var(--ink);
+  font-weight: 500;
+  font-size: 12px;
+}
+.bars-row .bar-track {
+  position: relative;
+  height: 24px;
+  background: rgba(20,23,26,0.05);
+  border-radius: 1px;
+}
+.bars-row .bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: var(--neutral-blue);
+}
+.bars-row.h .bar {
+  background: var(--ink);
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--neutral-blue),
+    var(--neutral-blue) 6px,
+    rgba(74,107,124,0.7) 6px,
+    rgba(74,107,124,0.7) 12px
+  );
+}
+.bars-row.lit .bar {
+  background: var(--accent);
+}
+.bars-row .value {
+  text-align: left;
+  color: var(--ink-soft);
+  font-size: 11px;
+}
+.bars-row .median-marker {
+  position: absolute;
+  top: -6px;
+  bottom: -6px;
+  width: 2px;
+  background: var(--ink);
+}
+.bars-row .median-label {
+  position: absolute;
+  top: -16px;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.bars-legend {
+  display: flex;
+  gap: 24px;
+  margin-top: 12px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  color: var(--ink-soft);
+  align-items: center;
+}
+.bars-legend .swatch {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+.callout-bottom {
+  margin: 0 0 28px 0;
+  padding: 26px 30px;
+  background: var(--accent-soft);
+  border-left: 4px solid var(--accent);
+}
+.callout-bottom .label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-weight: 700;
+  color: var(--accent-strong);
+  margin-bottom: 10px;
+}
+.callout-bottom .heading {
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--ink);
+  margin-bottom: 10px;
+  letter-spacing: -0.01em;
+}
+.callout-bottom .body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.callout-bottom .body strong { color: var(--ink); font-weight: 600; }
+
+.bottom-line {
+  margin: 28px 0;
+  padding: 28px 32px;
+  background: var(--ink);
+  color: var(--paper-bright);
+}
+.bottom-line .label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-weight: 700;
+  color: var(--paper);
+  opacity: 0.7;
+  margin-bottom: 10px;
+}
+.bottom-line .text {
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  line-height: 1.4;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+.bottom-line .text strong { font-weight: 700; }
+
+.footer {
+  border-top: 1px solid var(--rule);
+  padding-top: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 11px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.footer .left { max-width: 720px; }
+.footer .right {
+  text-align: right;
+  font-family: 'IBM Plex Mono', monospace;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 10px;
+  white-space: nowrap;
+}
+.footer strong { color: var(--ink); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+<div class="kicker">
+  <span class="file">EXHIBIT G · THE SELECTED WINDOW · ORRPB FRAMING TEST</span>
+  <span class="meta">Northern Reservoirs Flood Watch · Compiled May 7 2026</span>
+</div>
+
+<h1 class="headline">
+  The 50-year record is real.<br>
+  It's also the <span class="accent">only</span> window where it is.
+</h1>
+
+<p class="deck">
+  On May 6 the Ottawa River Regulation Planning Board told CBC News that 2026 set a 54-year basin precipitation record between March 1 and April 15. The claim is true at that exact window — and false in every standard climatological window that frames it. The 2025–26 fall-winter was the second-driest on record. The full pre-freshet season ranked dead middle. 2026 wasn't a wet year; it was a normal year on a compressed schedule. The framing chose the only window in which the record exists.
+</p>
+
+<div class="quote-block">
+  <div class="quote-label">The claim under test</div>
+  <div class="quote-text">"This spring, the board said a preliminary assessment of precipitation received between March 1 and April 15 shows the total amount was the highest recorded in the last 50 years."</div>
+  <div class="quote-attr">— Ottawa River Regulation Planning Board, statement to CBC News, published 2026-05-06</div>
+</div>
+
+<div class="windows-table">
+  <div class="windows-title">2026 basin-mean precipitation rank by window</div>
+  <div class="windows-subtitle">Across 8 ECCC stations (Barrage Témiscamingue, Maniwaki Airport, North Bay, Ottawa CDA, Parent, Pembroke, Rouyn, Val-d'Or). Per-station inclusion: ≥85% window-day coverage. Basin-mean inclusion: ≥4 stations reporting. Source: <code>ingesters/climate-history/seasonal_window_analysis.py</code>.</div>
+  <table>
+    <thead>
+      <tr>
+        <th>Window</th>
+        <th>2026 (mm)</th>
+        <th>Rank</th>
+        <th>Top historical (mm)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="orrpb-row">
+        <td>Mar 1 — Apr 15<span class="desc">ORRPB's selected window</span></td>
+        <td>183</td>
+        <td class="rank-cell rank-bad">1 / 55</td>
+        <td>1980: 161 · 1985: 150 · 2016: 147</td>
+      </tr>
+      <tr>
+        <td>Oct 1 — Feb 28<span class="desc">fall + winter, before ORRPB's window</span></td>
+        <td>258</td>
+        <td class="rank-cell rank-good">53 / 54</td>
+        <td>2006: 453 · 2002: 437 · 1997: 424</td>
+      </tr>
+      <tr>
+        <td>Oct 1 — Apr 15<span class="desc">full pre-freshet season</span></td>
+        <td>441</td>
+        <td class="rank-cell rank-mid">27 / 54</td>
+        <td>1991: 561 · 2002: 553 · 2006: 547</td>
+      </tr>
+      <tr>
+        <td>Nov 1 — Apr 15<span class="desc">standard cold-season climatology</span></td>
+        <td>371</td>
+        <td class="rank-cell rank-mid">18 / 54</td>
+        <td>2006: 488 · 2016: 461 · 1985: 443</td>
+      </tr>
+      <tr>
+        <td>Dec 1 — Apr 15<span class="desc">winter + spring</span></td>
+        <td>304</td>
+        <td class="rank-cell rank-mid">16 / 54</td>
+        <td>2016: 392 · 2008: 367 · 1997: 360</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="bars-block">
+  <div class="bars-title">Figure 1 · The cherry-pick at every station</div>
+  <div class="bars-subtitle">2026's Mar 1 – Apr 15 share of total Oct 1 – Apr 15 precipitation, by station — vs the historical median.</div>
+
+  <div class="bars-row h">
+    <div class="label">Historical norm (median)</div>
+    <div class="bar-track">
+      <div class="bar" style="width: 22.5%;"></div>
+    </div>
+    <div class="value">~22%</div>
+  </div>
+
+  <div class="bars-row lit">
+    <div class="label">Barrage Témiscamingue</div>
+    <div class="bar-track">
+      <div class="bar" style="width: 42.3%;"></div>
+      <div class="median-marker" style="left: 22.1%;"></div>
+    </div>
+    <div class="value">42.3%</div>
+  </div>
+
+  <div class="bars-row lit">
+    <div class="label">Maniwaki Airport</div>
+    <div class="bar-track">
+      <div class="bar" style="width: 42.9%;"></div>
+      <div class="median-marker" style="left: 21.9%;"></div>
+    </div>
+    <div class="value">42.9%</div>
+  </div>
+
+  <div class="bars-row lit">
+    <div class="label">North Bay</div>
+    <div class="bar-track">
+      <div class="bar" style="width: 44.4%;"></div>
+      <div class="median-marker" style="left: 23.2%;"></div>
+    </div>
+    <div class="value">44.4%</div>
+  </div>
+
+  <div class="bars-row lit">
+    <div class="label">Ottawa CDA</div>
+    <div class="bar-track">
+      <div class="bar" style="width: 39.2%;"></div>
+      <div class="median-marker" style="left: 22.6%;"></div>
+    </div>
+    <div class="value">39.2%</div>
+  </div>
+
+  <div class="bars-row lit">
+    <div class="label">Parent</div>
+    <div class="bar-track">
+      <div class="bar" style="width: 41.8%;"></div>
+      <div class="median-marker" style="left: 21.5%;"></div>
+    </div>
+    <div class="value">41.8%</div>
+  </div>
+
+  <div class="bars-row lit">
+    <div class="label">Pembroke</div>
+    <div class="bar-track">
+      <div class="bar" style="width: 42.2%;"></div>
+      <div class="median-marker" style="left: 25.7%;"></div>
+    </div>
+    <div class="value">42.2%</div>
+  </div>
+
+  <div class="bars-row lit">
+    <div class="label">Rouyn</div>
+    <div class="bar-track">
+      <div class="bar" style="width: 35.5%;"></div>
+      <div class="median-marker" style="left: 20.7%;"></div>
+    </div>
+    <div class="value">35.5%</div>
+  </div>
+
+  <div class="bars-row lit">
+    <div class="label">Val-d'Or</div>
+    <div class="bar-track">
+      <div class="bar" style="width: 44.1%;"></div>
+      <div class="median-marker" style="left: 20.3%;"></div>
+    </div>
+    <div class="value">44.1%</div>
+  </div>
+
+  <div class="bars-legend">
+    <div><span class="swatch" style="background: var(--accent);"></span>2026 share of Oct 1 – Apr 15 season (red bar)</div>
+    <div><span class="swatch" style="background: var(--ink);"></span>Historical median for that station (vertical mark)</div>
+  </div>
+</div>
+
+<div class="callout-bottom">
+  <div class="label">What this means</div>
+  <div class="heading">2026 wasn't a wet year. It was a normal year on a compressed schedule.</div>
+  <div class="body">
+    Every single station shows the same pattern: 2026's spring window held roughly <strong>double</strong> the share of seasonal total compared to historical norms — above the historical median by 14.8 to 23.9 percentage points basin-wide. The <strong>fall-winter season was the second-driest on record</strong> in 54 years; the spring delivered the seasonal precipitation deficit on a compressed schedule. Total pre-freshet water input (Oct 1 – Apr 15) was within the normal range — rank 27 of 54. <strong>If 2026 were a genuinely 1-in-50 wet year, the major-flood outcome would be partly explained by exceptional climate forcing. It isn't.</strong> The basin received normal seasonal water volume, and Lac Coulonge still hit Major Flood status. That outcome is diagnostic of the operational response, not of the precipitation.
+  </div>
+</div>
+
+<div class="bottom-line">
+  <div class="label">Bottom line</div>
+  <div class="text">
+    The ORRPB's claim is technically true and rhetorically misleading. By selecting the one 6-week window in which 2026 set a record and reporting it without seasonal context, the framing invites readers to treat 2026 as a 1-in-50-year wet event. <strong>The full station data tells a different story: 2026 was an unusually dry winter followed by an unusually wet spring, with a normal seasonal total.</strong> Reaching major flood with normal seasonal water volume is itself the case-file's argument made by the data: the operational playbook can't absorb a normal year on a compressed schedule.
+  </div>
+</div>
+
+<div class="footer">
+  <div class="left">
+    <strong>Sources.</strong> ECCC daily climate records via the Government of Canada climate data API, archived locally in <code>data/eccc-climate/&lt;station&gt;/raw/</code>. Per-window analysis script: <code>ingesters/climate-history/seasonal_window_analysis.py</code> (stdlib only, reproducible). ORRPB statement: published as quoted by Jodie Applewaithe, CBC News, 2026-05-06, "Are dams and reservoirs on the Ottawa River intended to prevent flooding?" Article text + community-discussion thread archived in <code>data/community-notes/2026-05-06.md</code>. Methodology details and case-file context: <code>docs/analysis/Freshet_2026_Complete_Summary.md</code> § "Test C addendum — testing the ORRPB '50-year record precipitation' claim".
+  </div>
+  <div class="right">
+    NORTHERN RESERVOIRS<br>
+    FLOOD WATCH · 2026<br>
+    EXHIBIT G · v1
+  </div>
+</div>
+
+</div>
+</body>
+</html>

@@ -13,6 +13,7 @@ const exhibits = [
   'Exhibit_D_Bryson_Timeline.html',
   'Exhibit_E_Climate_Tested.html',
   'Exhibit_F_Corrective_Failure.html',
+  'Exhibit_G_Selected_Window.html',
 ];
 
 (async () => {

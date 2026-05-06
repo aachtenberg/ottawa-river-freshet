@@ -658,6 +658,45 @@ These are the same gauges and the same data window, evaluated under two differen
 
 **The honest case-file position therefore.** Donald Haines is directionally correct on volume — the river is carrying ~17% more water. The magnitude is smaller than his "30 → 40 km³/yr" framing (which uses the anomalously dry 1960s as baseline; 1961–1964 ran 24–28 km³/yr while every other decade ran 38–45 km³/yr — the 1960s mean was 33.9, median 32.1). About half of the +17% volume rise is associated with annual-precipitation increases at watershed stations; the other half remains unexplained by station-level precipitation data and could reflect land-use change, snow-to-runoff conversion shifts, or basin-wide forcing the case file's station sample misses. **The volume rise neither validates nor refutes the operations hypothesis — it answers a different question.** The operations argument lives in how peaks are *shaped*, not in how much water is in the system, and Test A + the AMJ-peak attenuation finding (next section) remain unaffected by Test C. The case file's strongest position is now: **annual volume did rise; the precipitation evidence partly explains it; the peak-shape distortion at the regulated reach is a separate and additive finding; and operating rules have to adapt to both.**
 
+### Test C addendum — testing the ORRPB "50-year record precipitation" claim (added May 7 2026)
+
+In the May 6 CBC explainer, the Ottawa River Regulation Planning Board stated to reporter Jodie Applewaithe: *"a preliminary assessment of precipitation received between March 1 and April 15 shows the total amount was the highest recorded in the last 50 years."* This is the strongest single climate-side framing in the article and is now embedded in the public narrative. A community contributor flagged it as potentially window-cherry-picked: the 2025–26 fall-winter season was locally cold and dry with no winter thaw, raising the question of whether ORRPB selected the one window in which 2026 looks exceptional while the broader season tells a different story.
+
+**Test**: We computed basin-mean precipitation across the same 8 ECCC stations used in Test C's climate overlay, for five seasonal windows, and ranked 2026 within each station's full record. Source: `ingesters/climate-history/seasonal_window_analysis.py`. Inclusion threshold: ≥85% of window days observed per station-year, ≥4 stations per basin-mean year.
+
+**Result — 2026 basin-mean ranking by window:**
+
+| Window | 2026 (mm) | Rank | Record back to | Top historical |
+|---|---:|---:|---:|---|
+| **Mar 1 – Apr 15** (ORRPB's chosen window) | **183** | **1 / 55** | 1972 | 1980: 161, 1985: 150, 2016: 147 |
+| Oct 1 – Feb 28 (fall+winter, *before* ORRPB's window) | 258 | **53 / 54** | 1973 | 2006: 453, 2002: 437, 1997: 424 |
+| Oct 1 – Apr 15 (full pre-freshet season) | 441 | **27 / 54** | 1973 | 1991: 561, 2002: 553, 2006: 547 |
+| Nov 1 – Apr 15 (standard cold-season, matches Test B) | 371 | **18 / 54** | 1973 | 2006: 488, 2016: 461, 1985: 443 |
+| Dec 1 – Apr 15 (winter + spring) | 304 | **16 / 54** | 1973 | 2016: 392, 2008: 367, 1997: 360 |
+
+The ORRPB claim is **literally true**: 2026 basin-mean precipitation in the Mar 1 – Apr 15 window genuinely is the highest in the 54-year ECCC record, by a meaningful margin (+14% above the 1980 runner-up). But it is **the only window in which 2026 is exceptional**. In the five months before ORRPB's window (Oct 1 – Feb 28), 2026 was the **second-driest fall-winter on record** out of 54 years. Across the full pre-freshet season (Oct 1 – Apr 15), 2026 ranks 27 of 54 — dead middle. Standard climatological cold-season windows put 2026 at rank 16–18.
+
+**Per-station cherry-pick check.** What share of the total Oct 1 – Apr 15 precipitation arrived in the narrow Mar 1 – Apr 15 window?
+
+| Station | 2026 share | Historical median share | Above median by |
+|---|---:|---:|---:|
+| Barrage Témiscamingue | 42.3% | 22.1% | +20.3 pp |
+| Maniwaki Airport | 42.9% | 21.9% | +21.0 pp |
+| North Bay | 44.4% | 23.2% | +21.2 pp |
+| Ottawa CDA | 39.2% | 22.6% | +16.7 pp |
+| Parent | 41.8% | 21.5% | +20.3 pp |
+| Pembroke | 42.2% | 25.7% | +16.5 pp |
+| Rouyn | 35.5% | 20.7% | +14.8 pp |
+| Val-d'Or | 44.1% | 20.3% | +23.9 pp |
+
+Every single station: 2026's spring window held **roughly double** the share of seasonal total compared to historical norms. Above the historical median by 14.8 to 23.9 percentage points across the basin. 2026 was a normal-volume year delivered on an unusually compressed schedule — not a record-wet year.
+
+**Interpretation.** The ORRPB statement to CBC is technically accurate and rhetorically misleading. By selecting the one 6-week window in which 2026 set a record and reporting it without seasonal context, the framing invites readers to treat 2026 as a 1-in-50-year wet event. The full station data tells a different story: total seasonal water input to the basin was unremarkable; the deficit from the second-driest fall-winter on record was made up in a compressed spring window.
+
+A more honest summary would be: *"The 2025–26 fall-winter season was unusually dry; the spring delivered the seasonal precipitation deficit on a compressed schedule, with March 1 – April 15 setting a record for that specific window. Total pre-freshet precipitation was within the normal range of the last 50 years."*
+
+**Why this strengthens the case-file argument.** If 2026 were a genuinely 1-in-50 wet year, the major-flood-status outcome at Lac Coulonge would be partly explained by exceptional climate forcing. But the basin received normal seasonal water volume, distributed over a compressed schedule. **The fact that Lac Coulonge still hit major-flood status with normal seasonal water volume is itself diagnostic**: it means the operational response was unable to absorb a normal-water-volume year delivered on a compressed schedule. That is exactly the failure mode the case file argues operators should be adapting to (compressed delivery, earlier melt onset, less predictable snowpack-to-runoff timing). The ORRPB's framing systematically obscures this by treating 2026 as a wet-year anomaly when the data shows it was a delivery-schedule anomaly. The 50-year-record claim is true at the chosen window and misleading at the seasonal scale.
+
 ### Pointe-Calumet step-change — corroborating evidence at the system terminus (added May 2026)
 
 The Britannia step-change result above shows the inflow-distribution shift concentrating at 2017. A complementary test at the *opposite* end of the chain — the gauge nearest Carillon's discharge — shows the same step but with a different geographic signature.
