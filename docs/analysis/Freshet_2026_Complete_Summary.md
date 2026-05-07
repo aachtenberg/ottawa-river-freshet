@@ -724,12 +724,12 @@ Source: temperature decomposition added to `ingesters/climate-history/seasonal_w
 
 ### Test D — freshet shape change at Britannia (added May 7 2026)
 
-Dan Poole, on the May 7 FB Northern Reservoirs thread, asked the most precise question yet about the case file's freshet metrics: *why is May the strongest of the post-2017 monthly shifts at Pembroke and Lac Coulonge?* He proposed the same analysis on flows, noting that "once you get to high flows late April through first 2 weeks of May, it's close to out of control as tributaries are running high flow full force into the Ottawa River and reservoirs are releasing most of the flow to not hit maximum levels."
+Dan Poole, on the May 7 FB Northern Reservoirs thread, made the most precise observation yet about the case file's freshet metrics. Asked why May had shifted up so much more than the other months at Pembroke and Lac Coulonge, he proposed the same analysis on flows — and explained the mechanism from operator-side knowledge: *"once you get to high flows late April through first 2 weeks of May, it's close to out of control as tributaries are running high flow full force into the Ottawa River and reservoirs are releasing most of the flow to not hit maximum levels."*
 
-Two competing hypotheses emerged:
+The maintainer added an alternative-hypothesis check before assuming Dan's mechanism was the only one consistent with the data: could the May rise simply reflect snowmelt arriving later in the calendar, pushing the freshet peak from late April into May? That would be a climate-side explanation that wouldn't require any operations component. Two hypotheses worth testing:
 
-1. **Later springs** — climate-driven shift in melt timing pushes the freshet peak later, raising May relative to April.
-2. **Operations + volume** — same melt timing, but reservoirs hold water longer (insufficient pre-freshet drawdown vs the bigger basin volume documented in Test C), forcing more aggressive May releases that extend the high-flow window.
+1. **Later springs** (maintainer's alternative-hypothesis check) — climate-driven shift in melt timing pushes the freshet peak later, raising May relative to April.
+2. **Operations + volume** (Dan's mechanism) — same melt timing, but reservoirs hold water longer (insufficient pre-freshet drawdown vs the bigger basin volume documented in Test C), forcing more aggressive May releases that extend the high-flow window.
 
 **Test.** Three independent timing measurements at Britannia (the only Ottawa-system gauge with continuous flow data spanning the 2017 break, WSC 02KF005, 1972–2024) plus an upper-basin spring-warming check at four ECCC stations. Source: `ingesters/climate-history/freshet_shape_analysis.py`. Cross-check: local CSV vs cluster proxy (`freshet.xgrunt.com/history/wsc_daily`) agree to within 1 m³/s every year tested.
 
@@ -772,7 +772,7 @@ The super-flood years (2017, 2019, 2023) all show May > April by meaningful marg
 
 The peak day's median is **identical** in both eras (DOY 120, May 1). The mean shifts earlier purely because pre-2017 had occasional autumn floods (e.g. 2010 peak DOY 340) that no longer happen. Onset day is unchanged. **What has changed is the back-end recession**: the high-flow window now extends ~11 days longer than it did pre-2017.
 
-**Result 4 — Upper-basin spring warming onset (rules out "later springs"):**
+**Result 4 — Upper-basin spring warming onset (rules out the maintainer's "later springs" alternative):**
 
 | Station | Pre-2017 mean DOY first 3-day stretch above +5 °C | Post-2017 mean DOY | Δ |
 |---|---:|---:|---:|
@@ -781,7 +781,7 @@ The peak day's median is **identical** in both eras (DOY 120, May 1). The mean s
 | Barrage Témiscamingue | 107.7 | 104.7 | −3.0 d (earlier) |
 | Rouyn | 107.5 | 109.2 | +1.7 d (essentially unchanged) |
 
-Across all four upper-basin stations that actually drive the Lac Coulonge freshet, **springs are not arriving later post-2017**. Three of four show earlier warming; the fourth shows no meaningful change. The "later springs" hypothesis is empirically refuted at the source.
+Across all four upper-basin stations that actually drive the Lac Coulonge freshet, **springs are not arriving later post-2017**. Three of four show earlier warming; the fourth shows no meaningful change. The maintainer's alternative hypothesis is empirically refuted at the source — the data does not support a "delayed melt" framing of the May shift, leaving Dan's operations + volume mechanism as the explanation that fits.
 
 **Conclusion — operations + volume, not delayed melt.** The mechanism that fits all four findings:
 

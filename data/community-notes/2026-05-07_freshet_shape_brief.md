@@ -13,21 +13,29 @@ Canada and ECCC station records — see the full case file at
 On the May 6 CBC explainer thread, Dan Poole pushed on a specific
 observation: across both Pembroke and Lac Coulonge, the post-2017
 spring water-level shifts concentrate in May more than any other
-month. Why?
+month. Why? He proposed an analysis on flows (rather than just water
+levels) and offered an operations-side explanation — that by late
+April / first weeks of May, tributaries are running at peak and
+reservoirs are forced into aggressive releases to avoid overtopping,
+producing the May surge.
 
-Two competing explanations come up:
+Before assuming Dan's mechanism was the only one consistent with the
+data, this brief checks the obvious alternative explanation:
 
-1. **Later springs** — climate change is shifting the snowmelt
-   schedule, so the freshet peak that used to fall in late April now
-   falls in mid-May.
-2. **Operations + volume** — the basin is genuinely carrying more
-   water annually, and the operating rules at the dams haven't
-   adapted, so reservoirs fill faster and are forced into bigger May
-   releases.
+1. **Later springs** — could the May shift simply reflect snowmelt
+   arriving later in the calendar? If climate change has pushed the
+   freshet peak from late April into May, that alone would raise the
+   May monthly average without requiring any operations component.
+2. **Operations + volume** (Dan's mechanism) — same melt timing, but
+   the basin is genuinely carrying more water annually, and the
+   operating rules at the dams haven't adapted, so reservoirs fill
+   faster and are forced into bigger May releases.
 
 This brief tests both against the public Water Survey of Canada flow
 record at Britannia (1972–2024) and Environment Canada temperature
-data at four upper-basin stations.
+data at four upper-basin stations. The "later springs" alternative is
+worth checking specifically because it would let operators off the
+hook entirely if true.
 
 ---
 
@@ -96,8 +104,9 @@ None of them have:
 
 Across all four upper-basin stations that actually feed the Lac
 Coulonge freshet, springs are not arriving later. They're either
-earlier or unchanged. The "later springs" hypothesis is refuted at
-the source.
+earlier or unchanged. The "later springs" alternative checked here
+is refuted at the source — the data does not let operators off the
+hook by attributing the May rise to delayed melt.
 
 ---
 
