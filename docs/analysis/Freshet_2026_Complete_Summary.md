@@ -722,6 +722,79 @@ ORRPB said "precipitation" and "highest in 50 years" against a 6-week window wit
 
 Source: temperature decomposition added to `ingesters/climate-history/seasonal_window_analysis.py` § "WAS IT RAIN?" panel.
 
+### Test D — freshet shape change at Britannia (added May 7 2026)
+
+Dan Poole, on the May 7 FB Northern Reservoirs thread, asked the most precise question yet about the case file's freshet metrics: *why is May the strongest of the post-2017 monthly shifts at Pembroke and Lac Coulonge?* He proposed the same analysis on flows, noting that "once you get to high flows late April through first 2 weeks of May, it's close to out of control as tributaries are running high flow full force into the Ottawa River and reservoirs are releasing most of the flow to not hit maximum levels."
+
+Two competing hypotheses emerged:
+
+1. **Later springs** — climate-driven shift in melt timing pushes the freshet peak later, raising May relative to April.
+2. **Operations + volume** — same melt timing, but reservoirs hold water longer (insufficient pre-freshet drawdown vs the bigger basin volume documented in Test C), forcing more aggressive May releases that extend the high-flow window.
+
+**Test.** Three independent timing measurements at Britannia (the only Ottawa-system gauge with continuous flow data spanning the 2017 break, WSC 02KF005, 1972–2024) plus an upper-basin spring-warming check at four ECCC stations. Source: `ingesters/climate-history/freshet_shape_analysis.py`. Cross-check: local CSV vs cluster proxy (`freshet.xgrunt.com/history/wsc_daily`) agree to within 1 m³/s every year tested.
+
+**Result 1 — Britannia monthly mean flow shift, pre/post 2017:**
+
+| Month | Pre 1972–2016 (m³/s) | Post 2017–2024 (m³/s) | Δ | Δ % |
+|---|---:|---:|---:|---:|
+| Mar | 1,351 | 1,438 | +87 | +6.4 % |
+| Apr | 2,150 | 2,367 | +217 | +10.1 % |
+| **May** | **2,068** | **2,765** | **+697** | **+33.7 %** |
+| Jun | 1,306 | 1,537 | +231 | +17.7 % |
+
+May is the standout — about 3× the percent shift of April, 5× the shift of March. Off-season months (Sep +42 %, Oct +32 %, Nov +17 %, Aug +19 %) also show meaningful increases, consistent with the basin-wide volume signal Test C documented; but in the freshet window itself, May dominates.
+
+**Result 2 — May/April flow-magnitude ratio (the freshet shape signature):**
+
+The pre-2017 ratio of May/April monthly mean flow was **0.990** (n=45) — May and April were essentially equivalent in magnitude, with May usually beginning the recession. Post-2017 the ratio is **1.204** (n=8) — May routinely exceeds April. Year-by-year:
+
+| Year | Apr (m³/s) | May (m³/s) | May/Apr |
+|---|---:|---:|---:|
+| 2017 | 3,115 | 3,855 | 1.24 (super-flood) |
+| 2018 | 1,234 | 2,918 | 2.36 |
+| 2019 | 2,851 | 5,174 | 1.81 (super-flood) |
+| 2020 | 2,768 | 1,908 | 0.69 |
+| 2021 | 1,386 | 922 | 0.67 |
+| 2022 | 2,488 | 2,287 | 0.92 |
+| 2023 | 2,824 | 3,291 | 1.17 (super-flood) |
+| 2024 | 2,271 | 1,763 | 0.78 |
+
+The super-flood years (2017, 2019, 2023) all show May > April by meaningful margins (1.17 to 1.81). The non-super-flood years are mixed but skew toward May ≤ April, consistent with the historical pattern. **The freshet shape itself has changed in the years that matter** — May has become the peak month in super-flood years where it used to share that role with April.
+
+**Result 3 — Britannia freshet timing (DOY = day-of-year):**
+
+| Metric | Pre-2017 mean | Post-2017 mean | Δ |
+|---|---:|---:|---:|
+| Annual peak DOY | 132.7 (median 120) | 115.8 (median 120) | **−17 d mean / 0 d median** |
+| Freshet onset (first day > 3000 m³/s) | 110.0 | 108.6 | −1.4 d (essentially unchanged) |
+| Recession end (last day > 2000 m³/s, spring) | 142.9 | 148.1 | **+5.2 d (later)** |
+| **High-flow duration (onset → recession)** | **35.8 days** | **47.1 days** | **+11.3 d longer** |
+
+The peak day's median is **identical** in both eras (DOY 120, May 1). The mean shifts earlier purely because pre-2017 had occasional autumn floods (e.g. 2010 peak DOY 340) that no longer happen. Onset day is unchanged. **What has changed is the back-end recession**: the high-flow window now extends ~11 days longer than it did pre-2017.
+
+**Result 4 — Upper-basin spring warming onset (rules out "later springs"):**
+
+| Station | Pre-2017 mean DOY first 3-day stretch above +5 °C | Post-2017 mean DOY | Δ |
+|---|---:|---:|---:|
+| Val-d'Or | 127.2 | 111.2 | **−16.0 d (earlier)** |
+| Parent | 118.2 | 114.0 | −4.2 d (earlier) |
+| Barrage Témiscamingue | 107.7 | 104.7 | −3.0 d (earlier) |
+| Rouyn | 107.5 | 109.2 | +1.7 d (essentially unchanged) |
+
+Across all four upper-basin stations that actually drive the Lac Coulonge freshet, **springs are not arriving later post-2017**. Three of four show earlier warming; the fourth shows no meaningful change. The "later springs" hypothesis is empirically refuted at the source.
+
+**Conclusion — operations + volume, not delayed melt.** The mechanism that fits all four findings:
+
+- Climate / land-use delivers ~17 % more total water to the basin per year (Test C, basin-wide, confirmed at Britannia + Pointe-Calumet + Pointe-Claire).
+- The same pre-freshet drawdown rule is applied to a bigger river. Reservoirs end the drawdown at roughly the same baseline elevation as before (community observation; not publicly documented operator rule).
+- Snowmelt arrives on its historical schedule (Result 4: upper-basin warming onset unchanged or earlier).
+- The freshet onset day at Britannia is unchanged (Result 3, DOY 109 vs 110).
+- The peak day is unchanged (Result 3, median DOY 120 in both eras).
+- **But the high-flow window stretches +11 days longer at the back end** (Result 3) because reservoirs forced into more aggressive releases through May to avoid overtopping a smaller buffer relative to the bigger inflow.
+- Net effect: May's monthly mean rises +33.7 % (Result 1, dominant in the freshet window) and the May/April ratio flips from 0.99 to 1.20 (Result 2, the freshet shape signature changes).
+
+This sharpens Dan Poole's ORFA policy ask: earlier and deeper drawdown wouldn't change the onset day or the peak day (those aren't the problem), but it would shorten the back-end high-flow window by allowing reservoirs to absorb the May surge they currently cannot. The load-bearing data for the "drawdown earlier" argument is May, not March — March is +6 %, May is +34 %. The lever has to act before the May overshoot, which means before April 1 in years with significant snowpack.
+
 ### Pointe-Calumet step-change — corroborating evidence at the system terminus (added May 2026)
 
 The Britannia step-change result above shows the inflow-distribution shift concentrating at 2017. A complementary test at the *opposite* end of the chain — the gauge nearest Carillon's discharge — shows the same step but with a different geographic signature.
