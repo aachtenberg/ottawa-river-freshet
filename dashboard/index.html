@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ottawa River Freshet — Live Dashboard</title>
+<title>Ottawa River Watch — Mansfield / Fort-Coulonge</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
@@ -39,7 +39,11 @@
 }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); padding: 24px 16px; max-width: 1100px; margin: 0 auto; line-height: 1.5; }
 .header { margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
-.header h1 { font-size: 22px; font-weight: 600; margin-bottom: 4px; }
+.header h1 { font-size: 24px; font-weight: 700; letter-spacing: -0.015em; margin-bottom: 2px; line-height: 1.1; }
+.header h1 .brand-mark { color: var(--blue); font-weight: 800; margin-right: 2px; }
+.header h1 .title-sep { color: var(--text-faint); font-weight: 300; margin: 0 6px; }
+.header h1 .title-loc { color: var(--text-muted); font-weight: 500; font-size: 0.92em; letter-spacing: 0; }
+.header .tagline { font-size: 11px; color: var(--text-faint); letter-spacing: 0.16em; text-transform: uppercase; font-weight: 600; margin-bottom: 6px; font-variant-numeric: tabular-nums; }
 .header .meta { font-size: 13px; color: var(--text-muted); display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
 .header .meta .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); display: inline-block; margin-right: 4px; }
 .header .meta .dot.live { animation: pulse 2s infinite; }
@@ -204,29 +208,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 
 .skeleton { color: var(--text-faint); }
 
-/* Operations-watch cards: Carillon §15.3.5.1 directive status + Bryson posture */
-.ops-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px 12px; }
-.ops-card.compliant { border-left: 3px solid var(--green); }
-.ops-card.overshoot { border-left: 3px solid var(--red); }
-.ops-card.inactive { border-left: 3px solid var(--text-faint); }
-.ops-card.posture { border-left: 3px solid #7A5ED8; }
-.ops-card .ops-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); display: flex; justify-content: space-between; align-items: center; gap: 6px; margin-bottom: 8px; }
-.ops-card .ops-status-chip { font-size: 9px; font-weight: 600; padding: 2px 7px; border-radius: 3px; letter-spacing: 0.4px; }
-.ops-card .ops-status-chip.compliant { background: var(--green-light); color: var(--green); }
-.ops-card .ops-status-chip.overshoot { background: var(--red-light); color: var(--red); }
-.ops-card .ops-status-chip.inactive { background: var(--surface-2); color: var(--text-faint); }
-.ops-card .ops-status-chip.posture { background: rgba(122,94,216,0.13); color: #7A5ED8; }
-.ops-card .ops-headline { font-size: 22px; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; margin-bottom: 4px; }
-.ops-card .ops-headline .unit { font-size: 12px; font-weight: 400; color: var(--text-muted); margin-left: 3px; }
-.ops-card .ops-rows { display: grid; gap: 4px; font-size: 12px; line-height: 1.5; margin-top: 8px; }
-.ops-card .ops-row { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
-.ops-card .ops-row .lbl { color: var(--text-muted); }
-.ops-card .ops-row .val { font-variant-numeric: tabular-nums; font-weight: 500; }
-.ops-card .ops-row .val.over { color: var(--red); font-weight: 600; }
-.ops-card .ops-row .val.under { color: var(--green); }
-.ops-card .ops-note { font-size: 11px; color: var(--text-muted); line-height: 1.5; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); }
-.ops-card .ops-note a { color: var(--text-muted); text-decoration: underline; }
-
 /* Top-level tab navigation. */
 .tab-strip { display: flex; gap: 0; margin: 0 0 18px; border-bottom: 1px solid var(--border); }
 .tab-strip button { background: transparent; border: none; color: var(--text-muted); padding: 10px 18px; font-family: inherit; font-size: 14px; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color 0.15s, border-color 0.15s; }
@@ -261,6 +242,53 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .res-card .res-bar-fill { height: 100%; transition: width 0.4s ease; }
 .reservoir-boundary { grid-column: 1 / -1; padding: 10px 14px; margin: 6px 0 4px; background: var(--blue-light); color: var(--blue); border-radius: 6px; font-size: 12px; font-weight: 600; letter-spacing: 0.4px; text-align: center; }
 .reservoir-boundary span { display: block; font-size: 10px; font-weight: 400; letter-spacing: 0; opacity: 0.85; margin-top: 2px; }
+
+/* Operational-state pill on the Des Joachims reservoir card */
+.res-card .res-op-state { display: inline-block; margin-top: 6px; padding: 3px 9px; border-radius: 4px; font-size: 10px; font-weight: 600; letter-spacing: 0.3px; text-transform: uppercase; line-height: 1.3; }
+.res-card .res-op-state.paused  { background: var(--red-light);   color: var(--red); border: 1px solid var(--red); }
+.res-card .res-op-state.refill  { background: var(--green-light); color: var(--green); border: 1px solid var(--green); }
+.res-card .res-outflow { font-size: 11px; color: var(--text-muted); margin-top: 4px; font-variant-numeric: tabular-nums; }
+
+/* HQ generating-station release cards (Operations tab). Reuses .res-card layout
+   but the bottom bar is split between turbined (blue) and spilled (orange/red)
+   instead of a percent-full indicator. */
+.op-card .op-flow { font-size: 22px; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.op-card .op-flow .unit { font-size: 11px; font-weight: 400; color: var(--text-muted); margin-left: 3px; }
+.op-card .op-breakdown { font-size: 11px; color: var(--text-muted); margin-top: 4px; font-variant-numeric: tabular-nums; }
+.op-card .op-breakdown .turbined { color: var(--blue); }
+.op-card .op-breakdown .spilled  { color: var(--orange); }
+.op-card .op-head { font-size: 11px; color: var(--text-muted); margin-top: 4px; font-variant-numeric: tabular-nums; }
+.op-card .op-head .head-diff { color: var(--text); font-weight: 600; }
+.op-card .op-held { font-size: 10px; color: var(--text-faint); margin-top: 2px; font-variant-numeric: tabular-nums; }
+.op-card .op-held .range-val { color: var(--text-muted); font-weight: 600; }
+.op-card .op-held.flat-while-spilling { color: var(--orange); }
+.op-card .op-held.flat-while-spilling .range-val { color: var(--orange); }
+.op-card .op-directive { font-size: 10px; margin-top: 4px; padding: 3px 7px; border-radius: 3px; font-weight: 600; line-height: 1.3; letter-spacing: 0.2px; display: inline-block; }
+.op-card .op-directive.compliant { background: var(--green-light); color: var(--green); }
+.op-card .op-directive.overshoot { background: var(--red-light); color: var(--red); }
+.op-card .op-directive.inactive  { background: var(--surface-2); color: var(--text-faint); }
+.op-card .op-bar { position: absolute; bottom: 0; left: 0; right: 0; height: 4px; background: var(--border); border-radius: 0 0 10px 10px; overflow: hidden; display: flex; }
+.op-card .op-bar-turb { background: var(--blue); height: 100%; }
+.op-card .op-bar-spill { background: var(--orange); height: 100%; }
+.op-card.featured { border-left: 3px solid var(--red); background: linear-gradient(90deg, rgba(224,75,74,0.04) 0%, transparent 30%); }
+.op-card.high-spill { border-left: 3px solid var(--orange); }
+.op-card.normal     { border-left: 3px solid var(--blue); }
+.op-card.stale      { border-left: 3px solid var(--text-faint); opacity: 0.6; }
+.op-card .op-spark { margin-top: 8px; height: 28px; width: 100%; display: block; }
+.op-card .op-spark-label { display: flex; justify-content: space-between; font-size: 9px; color: var(--text-faint); margin-top: 2px; font-variant-numeric: tabular-nums; letter-spacing: 0.2px; }
+.op-card .op-spark-area-turb  { fill: rgba(76,140,224,0.55); }
+.op-card .op-spark-area-spill { fill: rgba(224,127,47,0.55); }
+.op-card .op-spark-line       { stroke: var(--text); stroke-width: 1.1; fill: none; opacity: 0.85; }
+.res-map-card .res-op-state { display: block; margin-top: 3px; padding: 1px 5px; border-radius: 3px; font-size: 8px; font-weight: 700; letter-spacing: 0.3px; text-transform: uppercase; line-height: 1.2; }
+.res-map-card .res-op-state.paused { background: var(--red-light); color: var(--red); }
+.res-map-card .res-op-state.refill { background: var(--green-light); color: var(--green); }
+
+/* Tributaries tab — grouped by river, same 2-col card grid as Stations */
+#tributaries-content { margin-top: 12px; }
+.tributary-group-header { font-size: 12px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: var(--text-muted); margin: 18px 0 8px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+.tributary-group-header:first-child { margin-top: 4px; }
+.tributaries-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 800px) { .tributaries-grid { grid-template-columns: 1fr; } }
 
 .station-card-mini { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; cursor: pointer; transition: box-shadow 0.15s, transform 0.15s; }
 .station-card-mini:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.15); transform: translateY(-1px); }
@@ -309,6 +337,25 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .bar-detail-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 1100; padding: 20px; }
 .bar-detail-modal.open { display: flex; }
 .bar-detail-content { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px 22px 16px; max-width: 520px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+.bar-detail-content.wide { max-width: 720px; }
+/* Clickable-card affordance — applied to .res-card / .op-card click targets */
+.res-card.clickable, .op-card.clickable { cursor: pointer; transition: transform 0.12s ease-out, box-shadow 0.12s ease-out; }
+.res-card.clickable:hover, .op-card.clickable:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.18); }
+/* Detail-modal section blocks */
+.detail-section { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); }
+.detail-section:first-of-type { border-top: none; padding-top: 4px; }
+.detail-section .section-label { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-faint); font-weight: 600; margin-bottom: 6px; }
+.detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 18px; font-size: 12px; }
+.detail-grid .row { display: flex; justify-content: space-between; gap: 12px; padding: 4px 0; border-bottom: 1px solid var(--border); }
+.detail-grid .row:nth-last-child(-n+2) { border-bottom: none; }
+.detail-grid .row .lbl { color: var(--text-muted); }
+.detail-grid .row .val { font-variant-numeric: tabular-nums; font-weight: 600; }
+.detail-callout { padding: 10px 12px; border-radius: 6px; font-size: 12px; line-height: 1.5; margin-top: 12px; }
+.detail-callout.info { background: var(--surface-2); color: var(--text); }
+.detail-callout.warn { background: rgba(224,127,47,0.12); color: var(--orange); border-left: 3px solid var(--orange); }
+.detail-callout.alert { background: rgba(224,75,74,0.10); color: var(--red); border-left: 3px solid var(--red); }
+.detail-spark-wrap { margin-top: 10px; height: 80px; width: 100%; }
+.detail-spark-wrap svg { width: 100%; height: 100%; display: block; }
 .bar-detail-close { position: absolute; top: 10px; right: 10px; background: transparent; border: none; color: var(--text-muted); font-size: 22px; cursor: pointer; line-height: 1; padding: 0 8px; }
 .bar-detail-close:hover { color: var(--text); }
 .bar-detail-content h3 { font-size: 17px; font-weight: 600; margin-bottom: 4px; padding-right: 24px; }
@@ -326,7 +373,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .bar-detail-row .level-diff.below { color: rgb(76,175,80); }
 .bar-detail-content .footnote { font-size: 11px; color: var(--text-faint); margin-top: 12px; line-height: 1.4; }
 
-.res-map-card { background: var(--surface); border: 1px solid var(--text-faint); border-left: 3px solid #888; border-radius: 6px; padding: 4px 8px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 10px; line-height: 1.2; min-width: 92px; box-shadow: 0 2px 8px rgba(0,0,0,0.45), 0 0 0 1px rgba(0,0,0,0.12); cursor: pointer; pointer-events: auto; transition: transform 0.15s, box-shadow 0.15s; }
+/* Reservoir cards: "water-tank" silhouette — flat top, rounded bottom — to
+   distinguish them at a glance from the rounded-rectangle station cards. */
+.res-map-card { background: var(--surface); border: 1px solid var(--text-faint); border-left: 3px solid #888; border-radius: 3px 3px 14px 14px; padding: 4px 8px 7px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 10px; line-height: 1.2; min-width: 92px; box-shadow: 0 2px 8px rgba(0,0,0,0.45), 0 0 0 1px rgba(0,0,0,0.12); cursor: pointer; pointer-events: auto; transition: transform 0.15s, box-shadow 0.15s; }
+.res-map-card .name::before { content: '≈ '; opacity: 0.6; font-weight: 700; }
 .res-map-card:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.55), 0 0 0 1px rgba(0,0,0,0.18); }
 .res-map-card .name { font-weight: 600; font-size: 9px; text-transform: uppercase; letter-spacing: 0.4px; color: var(--text-muted); }
 .res-map-card .pct { font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.1; color: var(--text); margin-top: 1px; }
@@ -341,6 +391,27 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .res-map-card.fill-high { border-left-color: rgb(224,127,47); }
 .res-map-card.fill-near { border-left-color: rgb(224,75,74); }
 .res-map-card.fill-unknown { border-left-color: var(--text-faint); }
+
+/* Release callout cards (Releases layer). Same envelope as the reservoir cards
+   but flow-oriented: total m³/s headline, spill-fraction tag underneath, and
+   a turbined/spilled bar at the bottom. Border-left colour signals spill share. */
+.rel-map-card { background: var(--surface); border: 1px solid var(--text-faint); border-left: 3px solid var(--blue); border-radius: 3px 3px 14px 14px; padding: 4px 8px 7px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 10px; line-height: 1.2; min-width: 88px; box-shadow: 0 2px 8px rgba(0,0,0,0.45), 0 0 0 1px rgba(0,0,0,0.12); cursor: pointer; pointer-events: auto; transition: transform 0.15s, box-shadow 0.15s; }
+.rel-map-card:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.55), 0 0 0 1px rgba(0,0,0,0.18); }
+.rel-map-card .name::before { content: '↳ '; opacity: 0.6; font-weight: 700; }
+.rel-map-card .name { font-weight: 600; font-size: 9px; text-transform: uppercase; letter-spacing: 0.4px; color: var(--text-muted); }
+.rel-map-card .flow { font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.1; color: var(--text); margin-top: 1px; }
+.rel-map-card .flow .unit { font-size: 9px; font-weight: 400; color: var(--text-muted); margin-left: 2px; }
+.rel-map-card .spill { font-size: 9px; color: var(--text-muted); margin-top: 1px; font-variant-numeric: tabular-nums; }
+.rel-map-card .spill.high { color: var(--orange); font-weight: 600; }
+.rel-map-card .bar { height: 3px; background: var(--border); margin-top: 3px; border-radius: 2px; overflow: hidden; display: flex; }
+.rel-map-card .bar-turb  { background: var(--blue);   height: 100%; }
+.rel-map-card .bar-spill { background: var(--orange); height: 100%; }
+.rel-map-card.spill-low  { border-left-color: var(--blue); }
+.rel-map-card.spill-mid  { border-left-color: var(--amber); }
+.rel-map-card.spill-high { border-left-color: var(--orange); }
+.rel-map-card.spill-extreme { border-left-color: var(--red); }
+.rel-map-dot { width: 8px; height: 8px; border-radius: 50%; box-shadow: 0 0 0 1px rgba(0,0,0,0.45), 0 1px 2px rgba(0,0,0,0.4); }
+.res-map-dot { width: 10px; height: 10px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 0 1px rgba(0,0,0,0.45), 0 2px 4px rgba(0,0,0,0.4); }
 
 .dam-icon { width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; line-height: 1; cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.4); }
 .dam-icon.hydro     { background: #facc66; color: #604010; border: 1px solid #b48a25; }
@@ -394,7 +465,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 #map-legend-btn::before { content: 'ℹ'; font-size: 12px; opacity: 0.8; }
 #map-dams-btn::before { content: '⚡'; font-size: 11px; opacity: 0.9; }
 #map-reservoirs-btn::before { content: '≈'; font-size: 13px; opacity: 0.9; line-height: 1; margin-right: 2px; }
+#map-releases-btn::before  { content: '↳'; font-size: 12px; opacity: 0.9; margin-right: 2px; }
+#map-cascade-btn::before   { content: '⤳'; font-size: 12px; opacity: 0.9; margin-right: 2px; }
 #map-about-btn::before { content: '?'; font-size: 12px; opacity: 0.85; font-weight: 600; }
+.cascade-line-arrow { background: transparent; }
 .map-about { position: absolute; top: 46px; left: 10px; z-index: 500; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 12px 14px; font-size: 11px; max-width: 320px; box-shadow: 0 4px 14px rgba(0,0,0,0.3); display: none; line-height: 1.55; }
 .map-about.open { display: block; }
 .map-about p { margin-bottom: 6px; }
@@ -452,7 +526,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 
 <div class="header">
   <div>
-    <h1>Ottawa River Freshet — Mansfield / Fort-Coulonge</h1>
+    <h1><span class="brand-mark">≈</span>Ottawa River Watch<span class="title-sep">·</span><span class="title-loc">Mansfield / Fort-Coulonge</span></h1>
+    <div class="tagline">Gauges · Reservoirs · Dam Operations · Property Thresholds</div>
     <div class="meta">
       <span id="status"><span class="dot live"></span><span data-i18n="loading">Loading live data…</span></span>
     </div>
@@ -464,6 +539,9 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
         <button data-lang="fr">FR</button>
       </span>
       <button class="header-icon-btn" id="theme-toggle" onclick="toggleTheme()" title="Toggle light / dark" aria-label="Toggle light / dark">🌙</button>
+      <a class="header-icon-btn" href="https://github.com/aachtenberg/ottawa-river-freshet" target="_blank" rel="noopener noreferrer" title="View source on GitHub" aria-label="View source on GitHub" style="text-decoration:none;">
+        <svg height="16" width="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+      </a>
     </div>
     <div class="header-cmds">
       <button class="map-btn" id="map-btn" onclick="toggleMap()" data-i18n="map">Map</button>
@@ -491,7 +569,9 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
     <button class="map-legend-btn" id="map-legend-btn" onclick="toggleLegend()" style="left:10px"><span id="map-legend-btn-text">Legend</span></button>
     <button class="map-legend-btn" id="map-dams-btn" onclick="toggleDams()" style="left:90px" title="Show/hide hydroelectric stations, major dams, and reservoirs"><span id="map-dams-btn-text">Dams</span></button>
     <button class="map-legend-btn" id="map-reservoirs-btn" onclick="toggleReservoirsLayer()" style="left:170px" title="Show/hide reservoir percent-full cards"><span id="map-reservoirs-btn-text">Reservoirs</span></button>
-    <button class="map-legend-btn" id="map-about-btn" onclick="toggleAbout()" style="left:265px" title="How to read the dots, pulses, and labels"><span id="map-about-btn-text">How to read</span></button>
+    <button class="map-legend-btn" id="map-releases-btn" onclick="toggleReleasesLayer()" style="left:265px" title="Show/hide live Hydro-Québec dam release cards (turbined + spilled)"><span id="map-releases-btn-text">Releases</span></button>
+    <button class="map-legend-btn" id="map-cascade-btn" onclick="toggleCascadeLayer()" style="left:360px" title="Show/hide cascade flow lines connecting dams in hydrologic order. Red highlights the 130-km no-controls reach above Bryson."><span id="map-cascade-btn-text">Cascade</span></button>
+    <button class="map-legend-btn" id="map-about-btn" onclick="toggleAbout()" style="left:455px" title="How to read the dots, pulses, and labels"><span id="map-about-btn-text">How to read</span></button>
     <div class="map-legend" id="map-legend"></div>
     <div class="map-about" id="map-about"></div>
   </div>
@@ -503,6 +583,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
   <button class="active" data-tab="overview">Overview</button>
   <button data-tab="stations">All stations</button>
   <button data-tab="reservoirs">Reservoirs</button>
+  <button data-tab="tributaries">Tributaries</button>
+  <button data-tab="operations">Operations</button>
 </nav>
 
 <div class="tab-panel active" data-tab="overview">
@@ -539,23 +621,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 <div class="section-subtitle" id="cr-info">—</div>
 <div class="chart-wrap"><div class="chart-container"><canvas id="crChart"></canvas></div></div>
 <div class="thresholds" id="cr-legend"></div>
-
-<div class="section-title" style="margin-top: 28px;" data-i18n="ops_h">Operations watch</div>
-<div class="section-subtitle" data-i18n="ops_sub">Live operator-side telemetry: Carillon spring-flood directive compliance and Bryson posture. Refreshed every 10 minutes from the cluster proxy.</div>
-<div class="cards" id="ops-cards" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));">
-  <div class="ops-card inactive" id="carillon-directive-card">
-    <div class="ops-title">Carillon §15.3.5.1 directive <span class="ops-status-chip inactive" id="carillon-status-chip">Loading…</span></div>
-    <div class="ops-headline skeleton" id="carillon-headline">Loading…</div>
-    <div class="ops-rows" id="carillon-rows"></div>
-    <div class="ops-note">IWMP spring-flood ceiling: 40.08 m at Carillon when Hull dock > 42.61 m. <a href="https://github.com/aachtenberg/ottawa-river-freshet/blob/main/docs/analysis/Freshet_2026_Complete_Summary.md#the-carillon-directive-enforcement-gap-added-may-2026" target="_blank">Why this matters</a></div>
-  </div>
-  <div class="ops-card posture" id="bryson-posture-card">
-    <div class="ops-title">Bryson operating posture <span class="ops-status-chip posture" id="bryson-status-chip">Loading…</span></div>
-    <div class="ops-headline skeleton" id="bryson-headline">Loading…</div>
-    <div class="ops-rows" id="bryson-rows"></div>
-    <div class="ops-note">Headpond operating band: 104.20–104.67 m. Spill share = % of total release passing the gates rather than the turbines.</div>
-  </div>
-</div>
 
 <div class="section-title" style="margin-top: 28px;" data-i18n="regional">Regional context — Ottawa River corridor</div>
 <div class="section-subtitle" data-i18n="regional_sub">Upstream-to-downstream gauges along the Ottawa River. Upstream stations lead Lac Coulonge by hours-to-days and flag incoming pulses.</div>
@@ -613,6 +678,52 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
   </div>
 </div>
 
+<div class="tab-panel" data-tab="tributaries">
+  <div class="section-title" style="margin-top: 4px;">Tributaries — second-peak watch</div>
+  <div class="section-subtitle">
+    Major tributary stations on the rivers that feed the Ottawa downstream of Mansfield.
+    These don't directly affect Lac Coulonge — but they constrain ORRPB's options at Carillon.
+    A rising Gatineau forces lower-river outflow up, which propagates upstream as backwater pressure.
+  </div>
+  <div class="range-picker" id="range-picker-tributaries">
+    <span class="label" data-i18n="window">Window</span>
+    <button class="range-btn" data-hours="1">1h</button>
+    <button class="range-btn" data-hours="6">6h</button>
+    <button class="range-btn" data-hours="12">12h</button>
+    <button class="range-btn" data-hours="24">24h</button>
+    <button class="range-btn active" data-hours="72">72h</button>
+    <button class="range-btn" data-hours="168">7d</button>
+    <button class="range-btn" data-hours="336">14d</button>
+    <button class="range-btn" data-hours="720">30d</button>
+  </div>
+  <div id="tributaries-content"></div>
+</div>
+
+<div class="tab-panel" data-tab="operations">
+  <div class="section-title" style="margin-top: 4px;">Dam operations — release telemetry</div>
+  <div class="section-subtitle">
+    Live discharge from each Hydro-Québec generating station in the Ottawa basin: total release, the share going through the turbines, and the share going over the spillway. A high <em>spilled %</em> means the dam is bypassing power generation to evacuate water — typically because the headpond is at its operating ceiling.
+    Source: <a href="https://www.hydroquebec.com/production/debits-niveaux-eau.html" target="_blank">Hydro-Québec open-data feed</a>, ingested hourly to TimescaleDB.
+    Bryson and Carillon also expose <strong>headpond (amont) and tailwater (aval) levels</strong>, letting us compute the live head differential — the variable at the heart of the Mansfield case file.
+  </div>
+  <div class="range-picker" id="range-picker-operations">
+    <span class="label" data-i18n="window">Window</span>
+    <button class="range-btn" data-hours="6">6h</button>
+    <button class="range-btn" data-hours="24">24h</button>
+    <button class="range-btn active" data-hours="72">72h</button>
+    <button class="range-btn" data-hours="168">7d</button>
+    <button class="range-btn" data-hours="240">10d</button>
+  </div>
+  <div class="section-title" style="margin-top: 18px; font-size: 13px;">Ottawa main stem (upstream → downstream)</div>
+  <div class="reservoirs-grid" id="op-grid-mainstem">
+    <div class="skeleton">Loading release data…</div>
+  </div>
+  <div class="section-title" style="margin-top: 18px; font-size: 13px;">Gatineau cascade (joins Ottawa at Hull)</div>
+  <div class="reservoirs-grid" id="op-grid-gatineau"></div>
+  <div class="section-title" style="margin-top: 18px; font-size: 13px;">Lower St-Lawrence (downstream of Carillon)</div>
+  <div class="reservoirs-grid" id="op-grid-stlaw"></div>
+</div>
+
 <div class="bar-detail-modal" id="bar-detail-modal" onclick="closeBarDetail(event)" aria-hidden="true">
   <div class="bar-detail-content" onclick="event.stopPropagation()" role="dialog" aria-labelledby="bar-detail-title">
     <button class="bar-detail-close" onclick="closeBarDetail()" aria-label="Close detail">×</button>
@@ -639,7 +750,7 @@ const STATIONS = {
 
 // Property thresholds. `histCount` = number of years out of HISTORICAL_RECORD_YEARS
 // where the annual daily max equalled or exceeded `level`. Sourced from
-// data/lac-coulonge-monthly-1972-2026.csv.
+// data/lac-coulonge-monthly-1972-2025.csv.
 const PROPERTY_THRESHOLDS = [
   { level: 108.30, desc: 'Water approaching property (2019: Apr 25)',     histCount: 6 },
   { level: 108.48, desc: 'Water in backyard, driveway, big tree (2019: Apr 26)', histCount: 4 },
@@ -648,7 +759,7 @@ const PROPERTY_THRESHOLDS = [
   { level: 109.01, desc: 'WATER INSIDE cottage, garage, RV (2019: Apr 28)', histCount: 1 },
   { level: 109.17, desc: '2019 record — all-time high',                   histCount: 1 }
 ];
-const HISTORICAL_RECORD_YEARS = 55; // 1972-2026
+const HISTORICAL_RECORD_YEARS = 54; // 1972-2025
 
 // All 54 annual daily-maximum levels, sorted descending. Used to rank the
 // current season's peak against history.
@@ -747,10 +858,7 @@ const PAGE_STRINGS = {
   property_t:     { en: 'Property thresholds (from 2019 observations)', fr: 'Seuils de la propriété (selon observations 2019)' },
   freeze_h:       { en: 'Basin freeze & precipitation outlook', fr: 'Aperçu du gel et précipitations dans le bassin' },
   freeze_sub:     { en: 'Overnight lows + 48 h precipitation across the basin. The freeze-night counter uses upstream stations only (snowmelt signal); downstream rows are local forecast for visitors watching the lower-corridor gauges.',
-                    fr: 'Minimums nocturnes + précipitations sur 48 h dans le bassin. Le compteur de nuits de gel n\'utilise que les stations en amont (signal de fonte); les stations en aval sont des prévisions locales pour les visiteurs surveillant les jauges du corridor inférieur.' },
-  ops_h:          { en: 'Operations watch', fr: 'Surveillance des opérations' },
-  ops_sub:        { en: 'Live operator-side telemetry: Carillon spring-flood directive compliance and Bryson posture. Refreshed every 10 minutes from the cluster proxy.',
-                    fr: 'Télémétrie côté opérateur en direct : conformité de la directive de crue printanière à Carillon et posture du Bryson. Rafraîchi toutes les 10 minutes via le proxy du cluster.' }
+                    fr: 'Minimums nocturnes + précipitations sur 48 h dans le bassin. Le compteur de nuits de gel n\'utilise que les stations en amont (signal de fonte); les stations en aval sont des prévisions locales pour les visiteurs surveillant les jauges du corridor inférieur.' }
 };
 function tPage(key) { return (PAGE_STRINGS[key] && PAGE_STRINGS[key][pageLang]) || (PAGE_STRINGS[key] && PAGE_STRINGS[key].en) || key; }
 
@@ -879,7 +987,7 @@ function ago(iso) {
   if (m < 1) return 'just now';
   if (m < 60) return `${m} min ago`;
   if (m < 1440) return `${Math.round(m/60)} h ago`;
-  return `${Math.round(m/1440)} d ago`;
+  return `${Math.floor(m/1440)} d ago`;
 }
 
 function etaToThreshold(current, target, ratePerHour) {
@@ -1521,7 +1629,7 @@ function renderProperty(lcLatest, trendPerHour) {
       else if (trendPerHour != null && Math.abs(trendPerHour) <= 0.00005) etaHtml = `<span class="eta">→ stable</span>`;
     }
     const rate = ((t.histCount / HISTORICAL_RECORD_YEARS) * 100).toFixed(t.histCount < 4 ? 1 : 0);
-    const baseRate = `<span class="base-rate" title="Annual peak ≥ this level in ${t.histCount} of ${HISTORICAL_RECORD_YEARS} years on record (1972–2026)">${t.histCount}/${HISTORICAL_RECORD_YEARS} yrs · ${rate}%</span>`;
+    const baseRate = `<span class="base-rate" title="Annual peak ≥ this level in ${t.histCount} of ${HISTORICAL_RECORD_YEARS} years on record (1972–2025)">${t.histCount}/${HISTORICAL_RECORD_YEARS} yrs · ${rate}%</span>`;
     return `<div class="thresh-row"><span class="level">${t.level.toFixed(2)} m</span><span class="desc">${t.desc} ${baseRate}</span><span class="status ${cls}">${status}${etaHtml}</span></div>`;
   }).join('');
 }
@@ -1856,6 +1964,204 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape' && document.getElementById('bar-detail-modal')?.classList.contains('open')) closeBarDetail();
 });
 
+// ---- Generic card-detail open helpers (reservoir + operations) ----
+// Both reuse the existing #bar-detail-modal infrastructure but render
+// richer content. They look up data from the cached results of the most
+// recent render of their respective tabs (reservoirSnapshotCache /
+// opByIdCache + reservoirLimitsCache).
+
+function _openCardDetail(bodyHtml, wide = true) {
+  document.getElementById('bar-detail-body').innerHTML = bodyHtml;
+  const content = document.querySelector('.bar-detail-content');
+  if (content) content.classList.toggle('wide', !!wide);
+  const modal = document.getElementById('bar-detail-modal');
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden', 'false');
+}
+
+// Tiny inline SVG sparkline used inside the detail-modal section.
+// Plots a single numeric series (e.g. headpond level over the window).
+function _detailSpark(series, valueFn, opts) {
+  const o = Object.assign({ stroke: 'var(--blue)', fill: 'rgba(76,140,224,0.15)', height: 80, width: 660 }, opts || {});
+  if (!series || series.length < 2) return '<div class="detail-spark-wrap" style="color:var(--text-faint);font-size:11px;display:flex;align-items:center;justify-content:center;">no series data</div>';
+  const vals = series.map(valueFn).filter(v => v != null && !isNaN(v));
+  if (vals.length < 2) return '<div class="detail-spark-wrap" style="color:var(--text-faint);font-size:11px;display:flex;align-items:center;justify-content:center;">no series data</div>';
+  const lo = Math.min(...vals), hi = Math.max(...vals);
+  const pad = (hi - lo) * 0.08 || 0.01;
+  const yMin = lo - pad, yMax = hi + pad;
+  const W = o.width, H = o.height;
+  const xs = series.map((_, i) => (i / (series.length - 1)) * W);
+  const ys = vals.map(v => H - ((v - yMin) / (yMax - yMin)) * (H - 6) - 3);
+  const linePts = xs.map((x, i) => `${x.toFixed(1)},${ys[i].toFixed(1)}`).join(' ');
+  const areaPts = `0,${H} ${linePts} ${W},${H}`;
+  const fmtT = t => new Date(t).toLocaleString('en-CA', { month: 'short', day: 'numeric', hour: '2-digit', hour12: false });
+  const t0 = fmtT(series[0].time), tn = fmtT(series[series.length - 1].time);
+  return `
+    <div class="detail-spark-wrap">
+      <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+        <polygon points="${areaPts}" style="fill:${o.fill}; stroke:none;"></polygon>
+        <polyline points="${linePts}" style="stroke:${o.stroke}; stroke-width:1.5; fill:none;"></polyline>
+      </svg>
+      <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text-faint);font-variant-numeric:tabular-nums;margin-top:2px;">
+        <span>${t0}  ·  min ${lo.toFixed(2)}</span>
+        <span>max ${hi.toFixed(2)}  ·  ${tn}</span>
+      </div>
+    </div>
+  `;
+}
+
+function openReservoirDetail(reservoirId) {
+  const snap = (reservoirSnapshotCache || []).find(s => s.reservoir_id === reservoirId);
+  const cfg = (reservoirLimitsCache?.reservoirs || {})[reservoirId];
+  if (!snap || !cfg) {
+    _openCardDetail(`<h3>${reservoirId}</h3><div class="detail-callout info">No cached data for this reservoir yet — try refreshing the Reservoirs tab.</div>`);
+    return;
+  }
+  const pct = pctFull(snap.level_m, cfg.low_limit, cfg.high_limit);
+  const priorPct = pctFull(snap.prior_level_m, cfg.low_limit, cfg.high_limit);
+  const change = (pct != null && priorPct != null) ? pct - priorPct : null;
+  const volume = pct != null ? Math.round(cfg.capacity_mcm * pct / 100) : null;
+  const range = (cfg.high_limit - cfg.low_limit).toFixed(2);
+  const cmFromHigh = snap.level_m != null ? ((cfg.high_limit - snap.level_m) * 100).toFixed(0) : '—';
+  const cmFromLow = snap.level_m != null ? ((snap.level_m - cfg.low_limit) * 100).toFixed(0) : '—';
+
+  // Plain-language read of the state
+  let callout = '';
+  if (pct != null) {
+    if (pct >= 95) callout = `<div class="detail-callout alert"><strong>At ceiling.</strong> Only ${cmFromHigh} cm below high operating limit. Any further inflow forces release at full rate.</div>`;
+    else if (pct >= 85) callout = `<div class="detail-callout warn"><strong>Approaching ceiling.</strong> ${cmFromHigh} cm to high operating limit. Operator buffer narrowing.</div>`;
+    else if (pct >= 65) callout = `<div class="detail-callout info"><strong>In upper operating range.</strong> ${cmFromHigh} cm below high; ${cmFromLow} cm above low. Normal active management.</div>`;
+    else callout = `<div class="detail-callout info"><strong>Drawn down / refilling.</strong> ${cmFromLow} cm above low operating limit.</div>`;
+  }
+
+  const body = `
+    <h3>${cfg.name}<span class="station-id"> · ${cfg.agency}</span></h3>
+    <div class="now-meta">${cfg.low_limit.toFixed(2)} – ${cfg.high_limit.toFixed(2)} m operating range · ${range} m total · ${cfg.capacity_mcm.toLocaleString()} M m³ at full</div>
+    <div class="now-line">${pct != null ? pct.toFixed(1) : '—'}<span class="unit">% full</span></div>
+    ${callout}
+    <div class="detail-section">
+      <div class="section-label">Current state</div>
+      <div class="detail-grid">
+        <div class="row"><span class="lbl">Level</span><span class="val">${snap.level_m != null ? snap.level_m.toFixed(2) + ' m' : '—'}</span></div>
+        <div class="row"><span class="lbl">Volume</span><span class="val">${volume != null ? volume.toLocaleString() + ' M m³' : '—'}</span></div>
+        <div class="row"><span class="lbl">Below high limit</span><span class="val">${cmFromHigh} cm</span></div>
+        <div class="row"><span class="lbl">Above low limit</span><span class="val">${cmFromLow} cm</span></div>
+        <div class="row"><span class="lbl">24 h change</span><span class="val">${change != null ? (change > 0 ? '+' : '') + change.toFixed(2) + ' pp' : '—'}</span></div>
+        <div class="row"><span class="lbl">Last reading</span><span class="val">${ago(snap.time)}</span></div>
+      </div>
+    </div>
+    <div class="detail-section">
+      <div class="section-label">How "% full" is calculated</div>
+      <div style="font-size:11px;color:var(--text-muted);line-height:1.55;">Linear interpolation between published high (${cfg.high_limit.toFixed(2)} m) and low (${cfg.low_limit.toFixed(2)} m) operating limits. Methodology by Contributor B; operator-published % full is not available from official sites.</div>
+    </div>
+  `;
+  _openCardDetail(body, true);
+}
+
+function openOpDetail(siteId) {
+  if (!opByIdCache) {
+    _openCardDetail(`<h3>${siteId}</h3><div class="detail-callout info">No cached data for this station yet — try the Operations tab refresh.</div>`);
+    return;
+  }
+  // Find meta from HQ_OPERATIONS
+  let meta = null;
+  for (const group of Object.values(HQ_OPERATIONS)) {
+    const m = group.sites.find(s => s.id === siteId);
+    if (m) { meta = m; break; }
+  }
+  if (!meta) {
+    _openCardDetail(`<h3>${siteId}</h3><div class="detail-callout info">Unknown station id.</div>`);
+    return;
+  }
+  const rel = opByIdCache['rel:' + meta.id];
+  const series = opByIdCache._series?.[meta.id] || [];
+  const total = rel?.total_cms ?? null;
+  const turb = rel?.turbined_cms ?? 0;
+  const spill = rel?.spilled_cms ?? 0;
+  const spillFrac = total ? spill / total : 0;
+  const a = meta.amont ? opByIdCache['lvl:' + meta.amont] : null;
+  const v = meta.aval ? opByIdCache['lvl:' + meta.aval] : null;
+  const amontSeries = meta.amont ? opByIdCache._lvlSeries?.[meta.amont] : null;
+
+  // Held-band stat
+  let bandStr = '—', rangeCm = null, flatWhileSpilling = false;
+  if (amontSeries && amontSeries.length >= 2) {
+    const vals = amontSeries.map(p => p.level_m).filter(x => x != null && !isNaN(x));
+    if (vals.length >= 2) {
+      const lo = Math.min(...vals), hi = Math.max(...vals);
+      rangeCm = (hi - lo) * 100;
+      bandStr = `${lo.toFixed(2)}–${hi.toFixed(2)} m · ${rangeCm.toFixed(0)} cm`;
+      flatWhileSpilling = rangeCm <= 15 && spillFrac >= 0.5;
+    }
+  }
+
+  // Case-file callout
+  let callout = '';
+  if (flatWhileSpilling) {
+    callout = `<div class="detail-callout alert"><strong>Held-headpond posture detected.</strong> Amont level is held in a ${rangeCm.toFixed(0)} cm band while ${Math.round(spillFrac*100)}% of throughput is spilled. The operator could open gates wider to draw the headpond down — see case-file Exhibit D and Exhibit F.1.</div>`;
+  } else if (spillFrac >= 0.5) {
+    callout = `<div class="detail-callout warn"><strong>High spill share (${Math.round(spillFrac*100)}%).</strong> Most throughput is bypassing turbines, indicating freshet-period operation at or near hydraulic capacity for this plant.</div>`;
+  }
+
+  // Build the historical breakdown table
+  const recent = series.slice(-10).reverse();  // most recent first
+  const tableRows = recent.map(r => {
+    const t = r.time ? new Date(r.time).toLocaleString('en-CA', { month: 'short', day: 'numeric', hour: '2-digit', hour12: false }) : '—';
+    const tot = r.total_cms != null ? Math.round(r.total_cms).toLocaleString() : '—';
+    const tb = r.turbined_cms != null ? Math.round(r.turbined_cms).toLocaleString() : '—';
+    const sp = r.spilled_cms != null ? Math.round(r.spilled_cms).toLocaleString() : '—';
+    const sf = r.total_cms ? Math.round((r.spilled_cms ?? 0) / r.total_cms * 100) : 0;
+    return `<tr><td style="padding:3px 8px;font-variant-numeric:tabular-nums;">${t}</td><td style="text-align:right;padding:3px 8px;font-variant-numeric:tabular-nums;">${tot}</td><td style="text-align:right;padding:3px 8px;font-variant-numeric:tabular-nums;color:var(--blue);">${tb}</td><td style="text-align:right;padding:3px 8px;font-variant-numeric:tabular-nums;color:var(--orange);">${sp}</td><td style="text-align:right;padding:3px 8px;font-variant-numeric:tabular-nums;">${sf}%</td></tr>`;
+  }).join('');
+
+  const historySection = recent.length ? `
+    <div class="detail-section">
+      <div class="section-label">Recent hourly readings (most recent first)</div>
+      <table style="width:100%;font-size:11px;border-collapse:collapse;">
+        <thead><tr style="font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-faint);"><th style="text-align:left;padding:3px 8px;">Time</th><th style="text-align:right;padding:3px 8px;">Total</th><th style="text-align:right;padding:3px 8px;">Turb</th><th style="text-align:right;padding:3px 8px;">Spill</th><th style="text-align:right;padding:3px 8px;">% spill</th></tr></thead>
+        <tbody>${tableRows}</tbody>
+      </table>
+    </div>
+  ` : '';
+
+  const amontSparkSection = (amontSeries && amontSeries.length >= 2) ? `
+    <div class="detail-section">
+      <div class="section-label">Amont (headpond) level — last ${opWindowHours} h</div>
+      ${_detailSpark(amontSeries, p => p.level_m, { stroke: 'var(--red)', fill: 'rgba(224,75,74,0.10)' })}
+    </div>
+  ` : '';
+
+  const body = `
+    <h3>${meta.name}<span class="station-id"> · ${siteId}</span></h3>
+    <div class="now-meta">${meta.subtitle || 'HQ generating station'} · last updated ${rel ? ago(rel.time) : '—'}</div>
+    <div class="now-line">${total != null ? Math.round(total).toLocaleString() : '—'}<span class="unit"> m³/s total</span></div>
+    ${callout}
+    <div class="detail-section">
+      <div class="section-label">Throughput</div>
+      <div class="detail-grid">
+        <div class="row"><span class="lbl">Turbined</span><span class="val" style="color:var(--blue);">${Math.round(turb).toLocaleString()} m³/s</span></div>
+        <div class="row"><span class="lbl">Spilled</span><span class="val" style="color:var(--orange);">${Math.round(spill).toLocaleString()} m³/s</span></div>
+        <div class="row"><span class="lbl">% Spilled</span><span class="val">${Math.round(spillFrac*100)}%</span></div>
+        <div class="row"><span class="lbl">% Turbined</span><span class="val">${Math.round((1-spillFrac)*100)}%</span></div>
+      </div>
+    </div>
+    ${(a || v) ? `
+    <div class="detail-section">
+      <div class="section-label">Headpond / tailwater</div>
+      <div class="detail-grid">
+        ${a ? `<div class="row"><span class="lbl">Amont (headpond)</span><span class="val">${a.level_m.toFixed(2)} m</span></div>` : ''}
+        ${v ? `<div class="row"><span class="lbl">Aval (tailwater)</span><span class="val">${v.level_m.toFixed(2)} m</span></div>` : ''}
+        ${(a && v) ? `<div class="row"><span class="lbl">Δh head differential</span><span class="val">${(a.level_m - v.level_m).toFixed(2)} m</span></div>` : ''}
+        ${rangeCm != null ? `<div class="row"><span class="lbl">Held band (${opWindowHours}h)</span><span class="val${flatWhileSpilling ? '" style="color:var(--orange);"' : '"'}>${bandStr}</span></div>` : ''}
+      </div>
+    </div>
+    ` : ''}
+    ${amontSparkSection}
+    ${historySection}
+  `;
+  _openCardDetail(body, true);
+}
+
 function updateChartTitles() {
   const waLbl = lastData?.[1279]?.metadata?.label;
   const lcLbl = lastData?.[1195]?.metadata?.label;
@@ -1930,9 +2236,12 @@ function setWindow(hours) {
   renderWindow(1279);
   renderWindow(1195);
   renderWindow(1004);
-  // Stations tab redraws too — its mini-charts share windowHours with Overview.
+  // Stations / Tributaries tabs redraw too — their mini-charts share windowHours with Overview.
   if (document.querySelector('.tab-panel[data-tab="stations"].active')) {
     renderStationsTab();
+  }
+  if (document.querySelector('.tab-panel[data-tab="tributaries"].active')) {
+    renderTributariesTab();
   }
 }
 
@@ -1944,15 +2253,37 @@ document.getElementById('range-picker-stations').addEventListener('click', (e) =
   const btn = e.target.closest('.range-btn');
   if (btn) setWindow(Number(btn.dataset.hours));
 });
+document.getElementById('range-picker-tributaries').addEventListener('click', (e) => {
+  const btn = e.target.closest('.range-btn');
+  if (btn) setWindow(Number(btn.dataset.hours));
+});
+document.getElementById('range-picker-operations').addEventListener('click', (e) => {
+  const btn = e.target.closest('.range-btn');
+  if (!btn) return;
+  setOpWindow(Number(btn.dataset.hours));
+});
+
+function setOpWindow(hours) {
+  if (!Number.isFinite(hours) || hours <= 0 || hours === opWindowHours) return;
+  opWindowHours = hours;
+  // Update only the Operations picker — other tabs use the global windowHours.
+  document.querySelectorAll('#range-picker-operations .range-btn').forEach(b => {
+    b.classList.toggle('active', Number(b.dataset.hours) === hours);
+  });
+  // Re-fetch with the new window. fetchHqOperations re-reads opWindowHours.
+  renderOperationsTab();
+}
 
 // ---- Tab navigation (hash-routed) ----
 function activateTab(name) {
-  if (!['overview', 'stations', 'reservoirs'].includes(name)) name = 'overview';
+  if (!['overview', 'stations', 'reservoirs', 'tributaries', 'operations'].includes(name)) name = 'overview';
   document.querySelectorAll('.tab-strip button').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.dataset.tab === name));
   if (location.hash !== '#' + name) history.replaceState(null, '', '#' + name);
   if (name === 'stations') renderStationsTab();
   if (name === 'reservoirs') renderReservoirsTab();
+  if (name === 'tributaries') renderTributariesTab();
+  if (name === 'operations') renderOperationsTab();
 }
 document.getElementById('tab-strip').addEventListener('click', e => {
   const btn = e.target.closest('button[data-tab]');
@@ -1999,7 +2330,7 @@ function buildStationCard(id) {
     const peakLevel = (seasonPk && seasonPk.valeur > latest.valeur) ? seasonPk.valeur : latest.valeur;
     const rank = rankPeak(peakLevel);
     const pctl = Math.round(((HISTORICAL_RECORD_YEARS - rank + 1) / HISTORICAL_RECORD_YEARS) * 100);
-    pctlChip = `<span class="pctl-chip ${pctl >= 90 ? 'high' : ''}" title="Season peak ranks ${ordinal(rank)} of ${HISTORICAL_RECORD_YEARS} on record (1972–2026)">${pctl}th %ile (1972–2026)</span>`;
+    pctlChip = `<span class="pctl-chip ${pctl >= 90 ? 'high' : ''}" title="Season peak ranks ${ordinal(rank)} of ${HISTORICAL_RECORD_YEARS} on record (1972–2025)">${pctl}th %ile (1972–2025)</span>`;
   } else if (m.label && WSC_ID_PATTERN.test(m.label) && eccPeakCache[m.label]) {
     const peaks = eccPeakCache[m.label];
     const above = peaks.filter(p => latest.valeur >= p).length;
@@ -2159,7 +2490,7 @@ function fillBarColor(pct) {
   return 'rgb(76,175,80)';
 }
 
-function buildReservoirCard(snap, cfg) {
+function buildReservoirCard(snap, cfg, release) {
   const pct = pctFull(snap.level_m, cfg.low_limit, cfg.high_limit);
   const priorPct = pctFull(snap.prior_level_m, cfg.low_limit, cfg.high_limit);
   const change = (pct != null && priorPct != null) ? pct - priorPct : null;
@@ -2181,12 +2512,33 @@ function buildReservoirCard(snap, cfg) {
     ? 'flat'
     : Math.abs(change) < 0.05 ? 'flat' : change > 0 ? 'up' : 'down';
   const reading = snap.level_m != null ? `${snap.level_m.toFixed(2)} m` : '—';
+  // Des Joachims gets an operational-state pill — see desJoachimsOpState().
+  let opStateLine = '';
+  if (snap.reservoir_id === 'des_joachims') {
+    const state = desJoachimsOpState(change);
+    if (state) opStateLine = `<div class="res-op-state ${state.cls}" title="Triggered when Des Joachims is approximately stable AND Mattawa is at near-major (etat 5) or major (6) flood. Storing water at Des Joachims would back up Mattawa further, so the reservoir is run as pure run-of-river.">${state.label}</div>`;
+  }
+  // Live outflow line — only shown when reservoir-limits.json declared an
+  // outflow_site_id AND the hq-ingest cron has populated dam_releases for it.
+  // Total m³/s + spill share, since high spill at a constrained reservoir is
+  // the operational signal worth flagging.
+  let outflowLine = '';
+  if (release && release.total_cms != null) {
+    const total = Math.round(release.total_cms).toLocaleString();
+    const spillFrac = release.spilled_cms && release.total_cms
+      ? Math.round((release.spilled_cms / release.total_cms) * 100) : 0;
+    const spillTag = spillFrac >= 50 ? `<span style="color:var(--orange);font-weight:600;"> · ${spillFrac}% spill</span>`
+                    : spillFrac > 0  ? ` · ${spillFrac}% spill` : '';
+    outflowLine = `<div class="res-outflow" title="Total release at the dam (turbined + spilled), live from Hydro-Québec open data.&#10;Last update: ${ago(release.time)}">↳ ${total} m³/s out${spillTag}</div>`;
+  }
   return `
-    <div class="res-card ${cls}" data-reservoir-id="${snap.reservoir_id}" title="${cfg.name} (${cfg.agency})&#10;Reading: ${reading}&#10;Range: ${cfg.low_limit.toFixed(2)} – ${cfg.high_limit.toFixed(2)} m">
+    <div class="res-card clickable ${cls}" data-reservoir-id="${snap.reservoir_id}" onclick="openReservoirDetail('${snap.reservoir_id}')" title="${cfg.name} (${cfg.agency}) — click for detail&#10;Reading: ${reading}&#10;Range: ${cfg.low_limit.toFixed(2)} – ${cfg.high_limit.toFixed(2)} m">
       <div class="res-name">${cfg.name}<span class="agency">${cfg.agency}</span></div>
       <div class="res-pct">${pct != null ? pct.toFixed(1) : '—'}<span class="unit">% full</span></div>
       <div class="res-volume">${volumeStr}</div>
       <div class="res-change ${changeCls}">${changeText}</div>
+      ${outflowLine}
+      ${opStateLine}
       <div class="res-bar"><div class="res-bar-fill" style="width:${barWidth}%; background:${barColor}"></div></div>
     </div>
   `;
@@ -2199,14 +2551,21 @@ async function renderReservoirsTab() {
   if (!grid) return;
   const limitsCfg = await ensureReservoirLimits();
   if (calibWarn) calibWarn.style.display = limitsCfg._calibrated ? 'none' : 'block';
-  let snapshot;
+  let snapshot, releases;
   try {
-    snapshot = await fetchReservoirSnapshot();
+    [snapshot, releases] = await Promise.all([
+      fetchReservoirSnapshot(),
+      // Best-effort — if hq-ingest hasn't run, just skip the outflow line on cards.
+      fetch('/history/latest_dam_releases', { cache: 'no-store' })
+        .then(r => r.ok ? r.json() : [])
+        .catch(() => []),
+    ]);
     reservoirSnapshotCache = snapshot;
   } catch (e) {
     grid.innerHTML = `<div class="error" style="grid-column:1/-1;color:var(--red);font-size:13px;padding:14px;">Could not load reservoir data: ${e.message}.<br>Has the daily scrape run yet? <code>kubectl -n data get cronjobs reservoir-ingest</code></div>`;
     return;
   }
+  const releaseBySite = Object.fromEntries((releases || []).map(r => [r.site_id, r]));
   if (!snapshot.length) {
     grid.innerHTML = `<div style="grid-column:1/-1;color:var(--text-muted);font-size:13px;padding:14px;">No reservoir readings in the database yet — the daily scrape runs at 21:30 UTC. Trigger a manual run with: <code>kubectl -n data create job --from=cronjob/reservoir-ingest reservoir-ingest-now</code></div>`;
     return;
@@ -2236,13 +2595,210 @@ async function renderReservoirsTab() {
       html.push('<div class="reservoir-boundary">▼ Lac Coulonge / Mansfield ▼<span>Reservoirs below this line drain into tributaries that join the Ottawa downstream of Mansfield (Madawaska / Gatineau / Lièvre).</span></div>');
       boundaryEmitted = true;
     }
-    html.push(buildReservoirCard(item.snap, item.cfg));
+    const release = item.cfg.outflow_site_id ? releaseBySite[item.cfg.outflow_site_id] : null;
+    html.push(buildReservoirCard(item.snap, item.cfg, release));
   }
   grid.innerHTML = html.join('');
   if (status && snapshot.length) {
     const newest = snapshot.reduce((acc, s) => new Date(s.time) > new Date(acc.time) ? s : acc, snapshot[0]);
     status.textContent = `${snapshot.length} reservoirs · most recent reading ${ago(newest.time)}`;
   }
+}
+
+// ---- Tributaries tab ----
+// Stations on tributaries that join the Ottawa River downstream of Mansfield.
+// They don't directly affect Lac Coulonge but constrain ORRPB's options at
+// Carillon — a rising tributary forces lower-river outflow up, which
+// propagates upstream as backwater pressure.
+const TRIBUTARY_STATIONS = [
+  { river: 'Rivière Gatineau', stations: [
+    { id: 442, name: 'Tête des rapides Ceizur',   subtitle: 'Lac-Douaire · upstream discharge gauge' },
+    { id: 994, name: 'La Pêche',                  subtitle: 'Route 366 bridge · mid-river' },
+    { id: 982, name: 'Rue Cartier (Gatineau)',    subtitle: 'Lower Gatineau · before Cartier dam' },
+    { id: 983, name: 'Quai des Artistes (Gatineau)', subtitle: 'Lower Gatineau · near Ottawa confluence' }
+  ] }
+];
+const TRIBUTARY_STATION_IDS = TRIBUTARY_STATIONS.flatMap(g => g.stations.map(s => s.id));
+let tributaryMiniCharts = {};
+
+async function renderTributariesTab() {
+  const container = document.getElementById('tributaries-content');
+  if (!container) return;
+  // Tear down existing charts up front — anything we re-render replaces them.
+  Object.values(tributaryMiniCharts).forEach(c => { try { c.destroy(); } catch (_) {} });
+  tributaryMiniCharts = {};
+  // Render structure immediately so the user sees something even before fetches resolve.
+  const paint = () => {
+    const html = TRIBUTARY_STATIONS.map(group => {
+      const cards = group.stations.map(meta => buildTributaryCard(meta)).join('');
+      return `<div class="tributary-group-header">${group.river}</div>
+              <div class="tributaries-grid">${cards}</div>`;
+    }).join('');
+    container.innerHTML = html;
+    TRIBUTARY_STATION_IDS.forEach(id => renderTributaryMiniChart(id));
+  };
+  paint();
+  // Now fetch any missing station data + history in the background. Re-paint when done.
+  let didFetch = false;
+  await Promise.all(TRIBUTARY_STATION_IDS.map(async id => {
+    if (lastData?.[id]) return;
+    if (!lastData) lastData = {};
+    try { lastData[id] = await fetchStation(id); didFetch = true; }
+    catch (e) { console.warn(`trib ${id}: ${e.message}`); }
+  }));
+  if (windowHours > 72) {
+    await Promise.all(TRIBUTARY_STATION_IDS.map(async id => {
+      const key = `${id}:${windowHours}`;
+      if (historyCache[key]) return;
+      try { historyCache[key] = await fetchStationHistory(id, windowHours); didFetch = true; }
+      catch (e) { console.warn(`trib history ${id}: ${e.message}`); }
+    }));
+  }
+  if (didFetch) {
+    Object.values(tributaryMiniCharts).forEach(c => { try { c.destroy(); } catch (_) {} });
+    tributaryMiniCharts = {};
+    paint();
+  }
+}
+
+function buildTributaryCard(meta) {
+  const id = meta.id;
+  const station = lastData?.[id];
+  if (!station?.metadata) {
+    return `<div class="station-card-mini" data-station-id="${id}"><div class="meta">${meta.name} — no data yet</div></div>`;
+  }
+  const m = station.metadata;
+  // station.readings can legitimately be null when Vigilance has metadata but
+  // no live buffer (e.g., 994 La Pêche on Rivière Gatineau).
+  const readings = station.readings || [];
+  const latest = readings.length ? readings[readings.length - 1] : null;
+  if (!latest) {
+    const labelChip = m.label ? ` <span class="station-id">${m.label}</span>` : '';
+    return `<div class="station-card-mini" data-station-id="${id}">
+      <div class="header-row"><div class="name">${meta.name}${labelChip}</div></div>
+      <div class="meta">${meta.subtitle}</div>
+      <div class="meta" style="color:var(--text-faint);font-style:italic">No live readings published.</div>
+    </div>`;
+  }
+  const dispCurrent = displayLevel(m, latest.valeur);
+  const change = dailyChangeCm(station.readings);
+  const changeArrow = change == null ? '' : (change > 0.5 ? '↑' : change < -0.5 ? '↓' : '→');
+  const changeCls = change == null ? '' : (change > 0.5 ? 'up' : change < -0.5 ? 'down' : 'flat');
+  const changeText = change == null ? '' : `<span class="change ${changeCls}">${changeArrow} ${change > 0 ? '+' : ''}${change.toFixed(1)} cm/24h</span>`;
+  const eff = getEffectiveEtat(m);
+  const ETAT_NAMES = { 6: 'Major flood', 5: 'Near major', 4: 'Moderate', 3: 'Minor', 2: 'Pre-alert', 1: 'Normal', 0: 'No threshold' };
+  const synthetic = isEffectiveEtatSynthetic(m);
+  const stateBadgeCls = eff >= 5 ? 'badge major' : eff >= 3 ? 'badge near' : 'badge peaked';
+  const stateBadge = (eff != null && eff > 0) ? `<span class="${stateBadgeCls}">${ETAT_NAMES[eff] || ''}${synthetic ? ' (est.)' : ''}</span>` : '';
+  // Discharge row when published.
+  const flow = m.dern_valeur_deb;
+  const flowLine = (flow != null) ? `<div class="meta" style="font-variant-numeric:tabular-nums"><strong>Q: ${Math.round(flow).toLocaleString()} m³/s</strong></div>` : '';
+  return `<div class="station-card-mini" data-station-id="${id}" onclick="openBarDetail(${id})">
+    <div class="header-row">
+      <div class="name">${meta.name}${m.label ? ` <span class="station-id">${m.label}</span>` : ''}</div>
+      <div class="level">${dispCurrent.toFixed(2)}<span class="unit">m</span>${changeText}</div>
+    </div>
+    <div class="meta">${meta.subtitle}</div>
+    ${flowLine}
+    <div class="chart-wrap"><canvas id="trib-chart-${id}"></canvas></div>
+    <div class="badge-row">${stateBadge}</div>
+  </div>`;
+}
+
+function renderTributaryMiniChart(id) {
+  const canvas = document.getElementById(`trib-chart-${id}`);
+  if (!canvas || !lastData?.[id]) return;
+  const station = lastData[id];
+  const m = station.metadata;
+  // Guard against null readings (some stations expose metadata but no buffer).
+  const readings = station.readings || [];
+  if (!readings.length && !historyCache[`${id}:${windowHours}`]) return;
+  const offset = ORRPB_HISTORIC_PEAKS[id]?.datumOffset || 0;
+  let vals;
+  if (windowHours <= 72) {
+    vals = readings.slice(-windowHours);
+  } else {
+    const hist = historyCache[`${id}:${windowHours}`];
+    vals = hist ? mergeHistory(hist, readings) : readings;
+  }
+  if (!vals?.length) return;
+  const isDark = isDarkMode();
+  const txt = isDark ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.55)';
+  const grid = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
+  const eff = getEffectiveEtat(m);
+  const lineColors = { 6: 'rgb(156,26,26)', 5: 'rgb(224,75,74)', 4: 'rgb(224,127,47)', 3: 'rgb(239,159,39)', 2: 'rgb(245,200,66)', 1: 'rgb(76,175,80)', 0: 'rgb(79,163,199)' };
+  const lineColor = lineColors[eff ?? 0];
+  const thresholds = ((m.seuils_niv) || []).map(s => ({
+    val: s.valeur + offset, label: THRESHOLD_COLORS[s.type]?.label || s.type, color: THRESHOLD_COLORS[s.type]?.color || '#888'
+  }));
+  if (tributaryMiniCharts[id]) tributaryMiniCharts[id].destroy();
+  tributaryMiniCharts[id] = new Chart(canvas, {
+    type: 'line',
+    data: {
+      labels: vals.map(v => timeLabel(v.date_prise_valeur)),
+      datasets: [{
+        data: vals.map(v => v.valeur + offset),
+        borderColor: lineColor,
+        backgroundColor: lineColor.replace('rgb', 'rgba').replace(')', ',0.12)'),
+        borderWidth: 1.5, pointRadius: 0, pointHoverRadius: 4, tension: 0.2, fill: true
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, animation: false,
+      interaction: { mode: 'index', intersect: false, axis: 'x' },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: isDark ? 'rgba(30,30,30,0.95)' : 'rgba(255,255,255,0.98)',
+          titleColor: isDark ? '#f0f0f0' : '#1a1a1a',
+          bodyColor: isDark ? '#f0f0f0' : '#1a1a1a',
+          borderColor: isDark ? '#444' : '#ddd', borderWidth: 1, padding: 6, displayColors: false,
+          callbacks: { label: c => `${c.parsed.y.toFixed(2)} m` }
+        }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: txt, font: { size: 9 }, maxTicksLimit: 5, maxRotation: 0 } },
+        y: { grid: { color: grid }, ticks: { color: txt, font: { size: 9 }, callback: v => v.toFixed(2) } }
+      }
+    },
+    plugins: [{
+      id: 'thresholdLines',
+      afterDraw: (chart) => {
+        const { ctx, scales: { x: xA, y: yA } } = chart;
+        thresholds.forEach(t => {
+          const y = yA.getPixelForValue(t.val);
+          if (y < yA.top || y > yA.bottom) return;
+          ctx.save(); ctx.beginPath(); ctx.setLineDash([3, 3]);
+          ctx.strokeStyle = t.color; ctx.lineWidth = 1;
+          ctx.moveTo(xA.left, y); ctx.lineTo(xA.right, y); ctx.stroke();
+          ctx.restore();
+        });
+      }
+    }]
+  });
+}
+
+// Compute Des Joachims operational state (Stage 1 paused vs active refill).
+// Returns { cls, label } or null when neither condition fires.
+//
+// Des Joachims operating range is ~3 m, so 1 pp/24h ≈ 3 cm of level change.
+// "Paused"  — level roughly stable (within ±1 pp/24h, ~±3 cm) AND Mattawa at
+//             flood stage 5+ (Vigilance or our synthesized etat). Translation:
+//             ORRPB has stopped storing water at Des Joachims because doing
+//             so would back up Mattawa further (Contributor B, 2026-04-30).
+// "Refill"  — level rising > 1.5 pp/24h (~5 cm/24h). Reservoir is buffering.
+function desJoachimsOpState(snapPctChange) {
+  if (snapPctChange == null) return null;
+  const mattawa = lastData?.[545];
+  const mattawaEtat = mattawa ? getEffectiveEtat(mattawa.metadata) : null;
+  const mattawaInFlood = mattawaEtat != null && mattawaEtat >= 5;
+  if (Math.abs(snapPctChange) <= 1.0 && mattawaInFlood) {
+    return { cls: 'paused', label: 'Stage 1 paused — pure run-of-river' };
+  }
+  if (snapPctChange > 1.5) {
+    return { cls: 'refill', label: 'Active refill — buffering' };
+  }
+  return null;
 }
 
 function renderStationMiniChart(id) {
@@ -2317,6 +2873,259 @@ function renderStationMiniChart(id) {
   });
 }
 
+// ---- Operations tab ----
+// Hydro-Québec generating-station release telemetry. Sourced from the
+// hq-ingest CronJob in the data namespace, served via PostgREST under
+// /history/. Cascade ordering matches actual flow direction so visitors
+// can read each panel upstream → downstream. Bryson and Carillon are
+// "featured" because they have headpond/tailwater pairs (case-file relevant).
+const HQ_OPERATIONS = {
+  mainstem: {
+    label: 'Ottawa main stem',
+    sites: [
+      { id: '3-33', name: 'Première-Chute',     subtitle: 'Upper Ottawa · run-of-river' },
+      { id: '3-31', name: 'Rapides-des-Quinze', subtitle: 'Upper Ottawa' },
+      { id: '3-32', name: 'Rapides-des-Îles',   subtitle: 'Lac Témiscamingue head' },
+      { id: '3-29', name: 'Rapide-2',           subtitle: 'Upper Ottawa' },
+      { id: '3-28', name: 'Rapide-7',           subtitle: 'Upper Ottawa' },
+      { id: '3-46', name: 'Bryson',             subtitle: 'Lac Coulonge / Mansfield', amont: '1-2964', aval: '1-2965', featured: true },
+      { id: '3-60', name: 'Carillon',           subtitle: 'Terminal lower Ottawa',    amont: '1-2968', aval: '1-2969', featured: true },
+    ],
+  },
+  gatineau: {
+    label: 'Gatineau',
+    sites: [
+      { id: '3-62', name: 'Cabonga',         subtitle: 'Headwater reservoir' },
+      { id: '3-63', name: 'Mercier',         subtitle: 'Upper Gatineau' },
+      { id: '3-65', name: 'Paugan',          subtitle: 'Mid Gatineau' },
+      { id: '3-66', name: 'Chelsea',         subtitle: 'Lower Gatineau' },
+      { id: '3-67', name: 'Rapides-Farmers', subtitle: 'Gatineau mouth · joins Ottawa at Hull' },
+    ],
+  },
+  stlaw: {
+    label: 'Lower St-Lawrence',
+    sites: [
+      { id: '3-3', name: 'Coteau 1, 2, 3',  subtitle: 'St-Lawrence · downstream of Carillon' },
+      { id: '3-4', name: 'Île-Juillet',     subtitle: 'St-Lawrence' },
+      { id: '3-5', name: 'Saint-Timothée',  subtitle: 'St-Lawrence' },
+      { id: '3-6', name: 'Cèdres',          subtitle: 'St-Lawrence' },
+    ],
+  },
+};
+
+// Sparkline window — driven by the Operations-tab range picker. Independent
+// of the Overview/Stations/Tributaries `windowHours` because (a) HQ's open-data
+// buffer only goes back ~10 days, so 30 d is meaningless, and (b) hourly-cadence
+// flow telemetry doesn't benefit from a 1 h window the way level data does.
+let opWindowHours = 72;
+let opByIdCache = null;  // populated by fetchHqOperations() — used by openOpDetail()
+
+// Carillon §15.3.5.1 directive thresholds (case file: docs/analysis/Freshet_2026_Complete_Summary.md
+// § "The Carillon directive enforcement gap"). The IWMP spring-flood operating
+// maximum at the Carillon headpond is 40.08 m when the Hull dock exceeds the
+// 42.61 m servitude level.
+const CARILLON_SPRING_CEILING_M = 40.08;
+const HULL_DOCK_TRIGGER_M       = 42.61;
+const HULL_DOCK_STATION         = '1-3675';
+
+async function fetchHqOperations() {
+  const allSiteIds = Object.values(HQ_OPERATIONS).flatMap(g => g.sites.map(s => s.id));
+  // Featured stations expose amont/aval level pairs — pull their level history too,
+  // so each card can show how stable the headpond's been over the window. The
+  // case-file-relevant signal is "level held flat while spilling >50%".
+  // Also include Hull dock (1-3675) for the Carillon §15.3.5.1 directive check.
+  const levelStationIds = [
+    ...Object.values(HQ_OPERATIONS).flatMap(g =>
+      g.sites.flatMap(s => [s.amont, s.aval].filter(Boolean))),
+    HULL_DOCK_STATION,
+  ];
+  const since = new Date(Date.now() - opWindowHours * 3600 * 1000).toISOString();
+  const histUrl = `/history/dam_releases?site_id=in.(${allSiteIds.join(',')})`
+    + `&time=gte.${since}&order=time.asc&select=time,site_id,total_cms,turbined_cms,spilled_cms`;
+  const lvlHistUrl = levelStationIds.length
+    ? `/history/dam_levels?station_id=in.(${levelStationIds.join(',')})`
+      + `&time=gte.${since}&order=time.asc&select=time,station_id,level_m`
+    : null;
+  const [relR, lvlR, histR, lvlHistR] = await Promise.all([
+    fetch('/history/latest_dam_releases', { cache: 'no-store' }),
+    fetch('/history/latest_dam_levels',   { cache: 'no-store' }),
+    fetch(histUrl,                         { cache: 'no-store' }),
+    lvlHistUrl ? fetch(lvlHistUrl,         { cache: 'no-store' }) : Promise.resolve(null),
+  ]);
+  if (!relR.ok) throw new Error(`latest_dam_releases HTTP ${relR.status}`);
+  if (!lvlR.ok) throw new Error(`latest_dam_levels HTTP ${lvlR.status}`);
+  const releases = await relR.json();
+  const levels   = await lvlR.json();
+  const history  = histR.ok ? await histR.json() : [];
+  const lvlHist  = (lvlHistR && lvlHistR.ok) ? await lvlHistR.json() : [];
+  const byId = {};
+  for (const r of releases) byId['rel:' + r.site_id] = r;
+  for (const l of levels)   byId['lvl:' + l.station_id] = l;
+  // Group hourly history by site_id so each card renders in O(N) of its own series.
+  const seriesBySite = {};
+  for (const h of history) (seriesBySite[h.site_id] ||= []).push(h);
+  byId._series = seriesBySite;
+  // Per-station level series for the held-band readout on featured cards.
+  const lvlSeriesByStation = {};
+  for (const l of lvlHist) (lvlSeriesByStation[l.station_id] ||= []).push(l);
+  byId._lvlSeries = lvlSeriesByStation;
+  opByIdCache = byId;
+  return byId;
+}
+
+// Hand-rolled SVG sparkline. Draws a stacked area: blue band = turbined, orange
+// band = spilled (spilled stacked on top of turbined since "total" = turb + spill).
+// A thin top line traces total_cms. No external chart lib — keeps the Operations
+// tab cheap when 16 cards render simultaneously.
+function buildOpSparkline(series) {
+  if (!series || series.length < 2) return '';
+  const W = 100, H = 28;
+  const xs = series.map((_, i) => (i / (series.length - 1)) * W);
+  const totals  = series.map(s => s.total_cms ?? 0);
+  const turbs   = series.map(s => s.turbined_cms ?? 0);
+  const ymax = Math.max(1, ...totals); // avoid divide-by-zero on flat-zero stations
+  const yToPx = v => H - (v / ymax) * (H - 2);
+  // Polygon points for the turbined band: x from left to right along its top edge,
+  // then back along the bottom (y = H).
+  const turbTop = xs.map((x, i) => `${x.toFixed(2)},${yToPx(turbs[i]).toFixed(2)}`).join(' ');
+  const turbPoly = `${turbTop} ${W},${H} 0,${H}`;
+  // Spilled band sits on top of the turbined band: bottom = turbined edge, top = total edge.
+  const totalTop = xs.map((x, i) => `${x.toFixed(2)},${yToPx(totals[i]).toFixed(2)}`).join(' ');
+  const turbTopRev = xs.map((x, i) => `${x.toFixed(2)},${yToPx(turbs[i]).toFixed(2)}`).reverse().join(' ');
+  const spillPoly = `${totalTop} ${turbTopRev}`;
+  const linePts = totalTop;
+  const firstT = new Date(series[0].time);
+  const lastT  = new Date(series[series.length - 1].time);
+  const fmt = d => d.toLocaleString('en-CA', { month: 'short', day: 'numeric', hour: '2-digit', hour12: false });
+  return `
+    <svg class="op-spark" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-label="Recent total release sparkline">
+      <polygon class="op-spark-area-turb"  points="${turbPoly}"></polygon>
+      <polygon class="op-spark-area-spill" points="${spillPoly}"></polygon>
+      <polyline class="op-spark-line" points="${linePts}"></polyline>
+    </svg>
+    <div class="op-spark-label"><span>${fmt(firstT)}</span><span>${opWindowHours}h · max ${Math.round(ymax).toLocaleString()} m³/s</span></div>
+  `;
+}
+
+function buildOpCard(meta, byId) {
+  const rel = byId['rel:' + meta.id];
+  if (!rel) {
+    return `<div class="res-card op-card stale" title="No release data yet for ${meta.name}"><div class="res-name">${meta.name}<span class="agency">HQ</span></div><div class="op-flow">—<span class="unit"> m³/s</span></div><div class="op-breakdown">awaiting first ingest…</div></div>`;
+  }
+  const total = rel.total_cms;
+  const turb  = rel.turbined_cms ?? 0;
+  const spill = rel.spilled_cms ?? 0;
+  const denom = (turb + spill) || (total ?? 0) || 1;
+  const turbPct  = Math.max(0, Math.min(100, (turb  / denom) * 100));
+  const spillPct = Math.max(0, Math.min(100, (spill / denom) * 100));
+  const spillFrac = total ? spill / total : 0;
+  let cls = 'normal';
+  if (meta.featured) cls = 'featured';
+  else if (spillFrac >= 0.5) cls = 'high-spill';
+  // Optional headpond / tailwater pair
+  let headLine = '';
+  let heldLine = '';
+  let directiveLine = '';
+  if (meta.amont || meta.aval) {
+    const a = byId['lvl:' + meta.amont];
+    const v = byId['lvl:' + meta.aval];
+    if (a && v) {
+      const diff = a.level_m - v.level_m;
+      headLine = `<div class="op-head">amont ${a.level_m.toFixed(2)} m · aval ${v.level_m.toFixed(2)} m · <span class="head-diff">Δh ${diff.toFixed(2)} m</span></div>`;
+    } else if (a) {
+      headLine = `<div class="op-head">amont ${a.level_m.toFixed(2)} m</div>`;
+    }
+    // Carillon §15.3.5.1 directive: spring-flood operating maximum 40.08 m at
+    // the Carillon headpond when the Hull dock exceeds 42.61 m servitude. Show
+    // a status pill on the Carillon featured card. Source: 2004 IWMP Carillon
+    // §15 + ORFA correspondence chain. See case file for context.
+    if (meta.id === '3-60' && a) {
+      const hull = byId['lvl:' + HULL_DOCK_STATION];
+      if (hull) {
+        const triggerActive = hull.level_m > HULL_DOCK_TRIGGER_M;
+        const overshootCm = Math.round((a.level_m - CARILLON_SPRING_CEILING_M) * 100);
+        let cls, label, title;
+        if (!triggerActive) {
+          cls = 'inactive';
+          label = `§15.3.5.1 trigger inactive (Hull ${hull.level_m.toFixed(2)} m < 42.61)`;
+          title = 'Spring-flood operating ceiling of 40.08 m only applies when the Hull dock exceeds the 42.61 m servitude level. Currently below trigger.';
+        } else if (overshootCm > 0) {
+          cls = 'overshoot';
+          label = `§15.3.5.1 overshoot +${overshootCm} cm (above 40.08 m ceiling)`;
+          title = `IWMP spring-flood operating maximum is 40.08 m at Carillon when Hull dock > 42.61 m. Hull is currently ${hull.level_m.toFixed(2)} m (trigger active); Carillon amont is ${a.level_m.toFixed(2)} m, exceeding the ceiling by ${overshootCm} cm.`;
+        } else {
+          cls = 'compliant';
+          label = `§15.3.5.1 compliant (${overshootCm} cm vs 40.08 m ceiling)`;
+          title = `IWMP spring-flood operating maximum is 40.08 m at Carillon when Hull dock > 42.61 m. Currently compliant.`;
+        }
+        directiveLine = `<div class="op-directive ${cls}" title="${title.replace(/"/g, '&quot;')}">${label}</div>`;
+      }
+    }
+    // Held-band readout: how tight is the amont level over the window? A small
+    // range while spill is >50% of throughput is the case-file signal — the
+    // operator is choosing to hold the headpond level even though they could
+    // open gates wider and draw it down.
+    const amontSeries = meta.amont ? byId._lvlSeries?.[meta.amont] : null;
+    if (amontSeries && amontSeries.length >= 2) {
+      const vals = amontSeries.map(p => p.level_m).filter(x => x != null && !isNaN(x));
+      if (vals.length >= 2) {
+        const lo = Math.min(...vals);
+        const hi = Math.max(...vals);
+        const rangeCm = (hi - lo) * 100;
+        const flatWhileSpilling = rangeCm <= 15 && spillFrac >= 0.5;
+        const flatTitle = flatWhileSpilling
+          ? 'Headpond held in a tight band while >50% of throughput is spilled — the operator is holding this elevation by choice. See case-file analysis.'
+          : `Range of amont level over the last ${opWindowHours} h.`;
+        heldLine = `<div class="op-held${flatWhileSpilling ? ' flat-while-spilling' : ''}" title="${flatTitle}">held: <span class="range-val">${lo.toFixed(2)}–${hi.toFixed(2)} m</span> · range ${rangeCm.toFixed(0)} cm · ${opWindowHours}h${flatWhileSpilling ? ' · flat while spilling' : ''}</div>`;
+      }
+    }
+  }
+  const totalStr = total != null ? Math.round(total).toLocaleString() : '—';
+  const breakdown = (turb || spill)
+    ? `<span class="turbined">${Math.round(turb).toLocaleString()} turbined</span> · <span class="spilled">${Math.round(spill).toLocaleString()} spilled</span> (${Math.round(spillFrac * 100)}% spilled)`
+    : 'no breakdown';
+  const updated = ago(rel.time);
+  const subtitle = meta.subtitle ? `<div style="font-size:10px;color:var(--text-faint);margin-top:1px;">${meta.subtitle}</div>` : '';
+  const series = byId._series?.[meta.id] || [];
+  const spark = buildOpSparkline(series);
+  return `
+    <div class="res-card op-card clickable ${cls}" onclick="openOpDetail('${meta.id}')" title="${meta.name} · ${updated} — click for detail">
+      <div class="res-name">${meta.name}<span class="agency">HQ</span></div>
+      ${subtitle}
+      <div class="op-flow">${totalStr}<span class="unit"> m³/s total</span></div>
+      <div class="op-breakdown">${breakdown}</div>
+      ${headLine}
+      ${heldLine}
+      ${directiveLine}
+      ${spark}
+      <div class="op-bar">
+        <div class="op-bar-turb"  style="width:${turbPct}%"></div>
+        <div class="op-bar-spill" style="width:${spillPct}%"></div>
+      </div>
+    </div>
+  `;
+}
+
+async function renderOperationsTab() {
+  const grids = {
+    mainstem: document.getElementById('op-grid-mainstem'),
+    gatineau: document.getElementById('op-grid-gatineau'),
+    stlaw:    document.getElementById('op-grid-stlaw'),
+  };
+  if (!grids.mainstem) return;
+  let byId;
+  try {
+    byId = await fetchHqOperations();
+  } catch (e) {
+    grids.mainstem.innerHTML = `<div class="error" style="grid-column:1/-1;color:var(--red);font-size:13px;padding:14px;">Could not load HQ release data: ${e.message}.<br>Has the hq-ingest cron run yet? <code>kubectl -n data create job --from=cronjob/hq-ingest hq-ingest-now</code></div>`;
+    return;
+  }
+  for (const [key, group] of Object.entries(HQ_OPERATIONS)) {
+    if (!grids[key]) continue;
+    grids[key].innerHTML = group.sites.map(s => buildOpCard(s, byId)).join('');
+  }
+}
+
 async function fetchData() {
   const btn = document.getElementById('refresh');
   btn.disabled = true;
@@ -2348,6 +3157,12 @@ async function fetchData() {
     renderCards(data, seasonPeaks);
     renderCorridorBar();
     if (document.querySelector('.tab-panel[data-tab="stations"].active')) renderStationsTab();
+    // Reservoirs / Tributaries tabs depend on lastData[545] (Mattawa) for the
+    // Des Joachims state pill — refresh them too so the pill appears once
+    // Mattawa data is available.
+    if (document.querySelector('.tab-panel[data-tab="reservoirs"].active')) renderReservoirsTab();
+    if (document.querySelector('.tab-panel[data-tab="tributaries"].active')) renderTributariesTab();
+    if (document.querySelector('.tab-panel[data-tab="operations"].active')) renderOperationsTab();
     renderWindow(1279);
     renderWindow(1195);
     renderWindow(1004);
@@ -2373,11 +3188,6 @@ async function fetchData() {
       renderCorridorBar(); // refresh now that regional stations are in lastData
     }).catch(err => {
       document.getElementById('regional-cards').innerHTML = `<div class="card">Regional data unavailable: ${err.message}</div>`;
-    });
-
-    // Operations watch: Carillon §15.3.5.1 directive + Bryson posture (non-blocking).
-    fetchOpsWatch().then(d => renderOpsWatch(d)).catch(err => {
-      console.warn(`ops watch: ${err.message}`);
     });
     
     const latestLC = lc.readings[lc.readings.length - 1];
@@ -2432,12 +3242,10 @@ let homeMarker = null;
 let leafletReady = null;
 let mapLang = 'en';
 
-// Property location pin. PLACEHOLDER coordinates — overwrite with your own
-// property's lat/lon. If you also have a LoRa weather station (or any GPS
-// device) feeding lat/lon into a `esp_gps` table accessible via the
-// /history/ proxy, refreshHomeCoords() will pick it up live; otherwise the
-// static value here is used.
-const HOME_PIN = { lat: 45.84, lon: -76.74, label: { en: 'Property', fr: 'Propriété' } };
+// Cottage location. Default values are the most recent fix; refreshHomeCoords()
+// queries the LoRa weather station's live GPS via the /history/esp_gps view
+// each time the map opens, so the pin moves if the device is relocated.
+const HOME_PIN = { lat: 45.87865, lon: -76.783409, label: { en: 'Cottage (Mansfield)', fr: 'Chalet (Mansfield)' } };
 
 async function refreshHomeCoords() {
   try {
@@ -2450,141 +3258,6 @@ async function refreshHomeCoords() {
       HOME_PIN.lon = row.gps_longitude;
     }
   } catch (e) { console.warn(`home coords fetch: ${e.message}`); }
-}
-
-// Operations watch: pulls Carillon directive + Bryson posture from the proxy.
-// Carillon §15.3.5.1 spring-flood operating ceiling: 40.08 m at the Carillon
-// headpond when the Hull dock exceeds 42.61 m servitude. See case file
-// (Freshet_2026_Complete_Summary.md § "Carillon directive enforcement gap").
-const HULL_DOCK_TRIGGER_M = 42.61;
-const CARILLON_SPRING_CEILING_M = 40.08;
-const BRYSON_BAND_LOW_M  = 104.20;
-const BRYSON_BAND_HIGH_M = 104.67;
-
-async function fetchOpsWatch() {
-  // Pull all four levels and the Bryson release in parallel. Each request can
-  // fail independently; missing pieces just leave that row blank.
-  const ids = ['1-2968', '1-3675', '1-2964', '1-2965'];
-  const levelsUrl = `/history/latest_dam_levels?station_id=in.(${ids.join(',')})`;
-  const releaseUrl = '/history/latest_dam_releases?site_id=eq.3-46';
-  const [levelsR, releaseR] = await Promise.all([
-    fetch(levelsUrl, { cache: 'no-store' }).catch(e => null),
-    fetch(releaseUrl, { cache: 'no-store' }).catch(e => null)
-  ]);
-  const levels = (levelsR && levelsR.ok) ? await levelsR.json() : [];
-  const release = (releaseR && releaseR.ok) ? await releaseR.json() : [];
-  const byId = {};
-  for (const r of levels) byId[r.station_id] = r;
-  return {
-    carillon: byId['1-2968'] || null,    // amont (headpond)
-    hull:     byId['1-3675'] || null,    // Quai-de-Hull dock
-    brysonAmont: byId['1-2964'] || null,
-    brysonAval:  byId['1-2965'] || null,
-    brysonRelease: release[0] || null
-  };
-}
-
-function fmtAge(iso) {
-  if (!iso) return '—';
-  const t = new Date(iso).getTime();
-  const dh = (Date.now() - t) / 3600000;
-  if (dh < 1)   return `${Math.round(dh * 60)} min ago`;
-  if (dh < 24)  return `${Math.round(dh)} h ago`;
-  return `${Math.round(dh / 24)} d ago`;
-}
-
-function renderOpsWatch(d) {
-  // ----- Carillon §15.3.5.1 directive card -----
-  const card = document.getElementById('carillon-directive-card');
-  const chip = document.getElementById('carillon-status-chip');
-  const headline = document.getElementById('carillon-headline');
-  const rows = document.getElementById('carillon-rows');
-
-  card.classList.remove('inactive', 'compliant', 'overshoot');
-  chip.classList.remove('inactive', 'compliant', 'overshoot');
-  headline.classList.remove('skeleton');
-
-  if (!d.hull || !d.carillon) {
-    card.classList.add('inactive');
-    chip.classList.add('inactive');
-    chip.textContent = 'Data unavailable';
-    headline.textContent = '—';
-    rows.innerHTML = '';
-    return;
-  }
-
-  const hullLevel = d.hull.level_m;
-  const carLevel  = d.carillon.level_m;
-  const triggerActive = hullLevel > HULL_DOCK_TRIGGER_M;
-  const overshootCm = Math.round((carLevel - CARILLON_SPRING_CEILING_M) * 100);
-
-  let statusLabel, statusKind;
-  if (!triggerActive) {
-    statusLabel = 'Trigger inactive';
-    statusKind = 'inactive';
-  } else if (overshootCm > 0) {
-    statusLabel = `Overshoot +${overshootCm} cm`;
-    statusKind = 'overshoot';
-  } else {
-    statusLabel = `Compliant ${overshootCm} cm`;
-    statusKind = 'compliant';
-  }
-  card.classList.add(statusKind);
-  chip.classList.add(statusKind);
-  chip.textContent = statusLabel;
-
-  headline.innerHTML = `${carLevel.toFixed(2)}<span class="unit"> m amont</span>`;
-
-  const hullDelta = (hullLevel - HULL_DOCK_TRIGGER_M);
-  const hullCls = hullDelta > 0 ? 'over' : 'under';
-  const carClsRaw = (triggerActive && overshootCm > 0) ? 'over' : (triggerActive ? 'under' : '');
-  const carDeltaStr = triggerActive
-    ? `${overshootCm > 0 ? '+' : ''}${overshootCm} cm vs 40.08 m ceiling`
-    : 'ceiling not in effect';
-
-  rows.innerHTML = `
-    <div class="ops-row"><span class="lbl">Hull dock (1-3675)</span><span class="val ${hullCls}">${hullLevel.toFixed(2)} m (${hullDelta >= 0 ? '+' : ''}${hullDelta.toFixed(2)} m vs 42.61 m)</span></div>
-    <div class="ops-row"><span class="lbl">Carillon amont (1-2968)</span><span class="val ${carClsRaw}">${carDeltaStr}</span></div>
-    <div class="ops-row"><span class="lbl">Reading age</span><span class="val">${fmtAge(d.carillon.time)}</span></div>
-  `;
-
-  // ----- Bryson posture card -----
-  const bCard = document.getElementById('bryson-posture-card');
-  const bChip = document.getElementById('bryson-status-chip');
-  const bHead = document.getElementById('bryson-headline');
-  const bRows = document.getElementById('bryson-rows');
-
-  bHead.classList.remove('skeleton');
-
-  if (!d.brysonRelease || !d.brysonAmont) {
-    bChip.textContent = 'Data unavailable';
-    bHead.textContent = '—';
-    bRows.innerHTML = '';
-    return;
-  }
-
-  const total = d.brysonRelease.total_cms || 0;
-  const turbined = d.brysonRelease.turbined_cms || 0;
-  const spilled  = d.brysonRelease.spilled_cms || 0;
-  const spillShare = total > 0 ? (spilled / total) * 100 : 0;
-  const headpond = d.brysonAmont.level_m;
-  const tailwater = d.brysonAval ? d.brysonAval.level_m : null;
-  const inBand = headpond >= BRYSON_BAND_LOW_M && headpond <= BRYSON_BAND_HIGH_M;
-  const headFromLow = ((headpond - BRYSON_BAND_LOW_M) * 100).toFixed(0);
-  const headFromHigh = ((BRYSON_BAND_HIGH_M - headpond) * 100).toFixed(0);
-
-  bChip.textContent = inBand
-    ? `Within band (+${headFromLow} cm above floor)`
-    : (headpond > BRYSON_BAND_HIGH_M ? 'Above band' : 'Below band');
-  bHead.innerHTML = `${total.toFixed(0)}<span class="unit"> m³/s total release</span>`;
-
-  bRows.innerHTML = `
-    <div class="ops-row"><span class="lbl">Turbined</span><span class="val">${turbined.toFixed(0)} m³/s</span></div>
-    <div class="ops-row"><span class="lbl">Spilled</span><span class="val">${spilled.toFixed(0)} m³/s (${spillShare.toFixed(0)}% of total)</span></div>
-    <div class="ops-row"><span class="lbl">Headpond (1-2964)</span><span class="val">${headpond.toFixed(2)} m (${inBand ? `${headFromLow} cm above 104.20 floor` : 'outside band'})</span></div>
-    ${tailwater ? `<div class="ops-row"><span class="lbl">Tailwater (1-2965)</span><span class="val">${tailwater.toFixed(2)} m</span></div>` : ''}
-    <div class="ops-row"><span class="lbl">Reading age</span><span class="val">${fmtAge(d.brysonRelease.time)}</span></div>
-  `;
 }
 
 // Map drawer text in EN / FR.
@@ -2618,16 +3291,24 @@ const MAP_LABELS = {
     fr: 'La <strong>couleur de la pulsation</strong> indique la tendance horaire : rouge si ≥ +1 mm/h en hausse, vert si ≤ −1 mm/h en baisse, gris sinon.'
   },
   about_pctl: {
-    en: '<strong>%ile</strong> on Lac Coulonge\'s callout = rank of this season\'s peak among 54 historical annual peaks (1972–2026). 94th %ile means it would beat all but ~3 historical years.',
-    fr: '<strong>Centile</strong> sur la fiche Lac Coulonge = rang du pic saisonnier parmi 54 pics annuels historiques (1972–2026). 94ᵉ centile signifie qu\'il dépasse tous sauf ~3 années historiques.'
+    en: '<strong>%ile</strong> on Lac Coulonge\'s callout = rank of this season\'s peak among 54 historical annual peaks (1972–2025). 94th %ile means it would beat all but ~3 historical years.',
+    fr: '<strong>Centile</strong> sur la fiche Lac Coulonge = rang du pic saisonnier parmi 54 pics annuels historiques (1972–2025). 94ᵉ centile signifie qu\'il dépasse tous sauf ~3 années historiques.'
   },
   about_orrpb: {
     en: '<strong>ORRPB ref</strong> compares the current level to the 2017 / 2019 / 2023 freshet peaks at that station — useful shorthand for "is this a 2019-level event?".',
     fr: '<strong>Réf. ORRPB</strong> compare le niveau actuel aux pics de crue 2017 / 2019 / 2023 à cette station — raccourci utile pour situer l\'événement.'
   },
+  about_releases: {
+    en: '<strong>Releases layer</strong> shows live discharge from each Hydro-Québec generating station: total m³/s, with a card outline that turns orange/red when the spill share exceeds 50% / 75% (operator is bypassing turbines to evacuate water). Tooltips on dam markers also show the live release.',
+    fr: 'La <strong>couche Débits</strong> affiche le débit sortant de chaque centrale Hydro-Québec : total m³/s, avec un contour qui devient orange/rouge si la part déversée dépasse 50% / 75% (l\'opérateur contourne les turbines pour évacuer l\'eau). Les info-bulles sur les barrages indiquent aussi le débit actuel.'
+  },
+  about_cascade: {
+    en: '<strong>Cascade layer</strong> draws lines connecting dams in hydrologic order (Ottawa main stem, Gatineau, Lièvre). Arrowheads show flow direction. The dashed red segment is the 130-km Bryson↔Des-Joachims reach with no intermediate flow controls (Exhibit D Figure 5).',
+    fr: 'La <strong>couche Cascade</strong> trace des lignes reliant les barrages dans l\'ordre hydrologique (Outaouais, Gatineau, Lièvre). Les flèches indiquent le sens d\'écoulement. Le segment rouge pointillé est le tronçon de 130 km Bryson↔Des-Joachims sans contrôle de débit intermédiaire (Exhibit D Figure 5).'
+  },
   about_src: {
-    en: 'Sources: Quebec Vigilance API, MVCA / Kisters KiWIS (Buckhams Bay), ORRPB "Know Your Levels" PDF (2025-05-06), ECCC HYDAT.',
-    fr: 'Sources : API Vigilance Québec, MVCA / Kisters KiWIS (Baie Buckhams), document ORRPB « Know Your Levels » (2025-05-06), ECCC HYDAT.'
+    en: 'Sources: Quebec Vigilance API, MVCA / Kisters KiWIS (Buckhams Bay), Hydro-Québec open-data feed, ORRPB "Know Your Levels" PDF (2025-05-06), ECCC HYDAT.',
+    fr: 'Sources : API Vigilance Québec, MVCA / Kisters KiWIS (Baie Buckhams), données ouvertes Hydro-Québec, document ORRPB « Know Your Levels » (2025-05-06), ECCC HYDAT.'
   }
 };
 // Per-station display name; English by default, French where it differs.
@@ -2791,7 +3472,7 @@ async function renderMapMarkers() {
       const rank = rankPeak(peakLevel);
       const pctl = Math.round(((HISTORICAL_RECORD_YEARS - rank + 1) / HISTORICAL_RECORD_YEARS) * 100);
       const cls = pctl >= 90 ? 'percentile high' : 'percentile';
-      percentileLine = `<div class="${cls}" title="Season peak ${peakLevel.toFixed(2)} m ranks ${ordinal(rank)} of ${HISTORICAL_RECORD_YEARS} on record (1972–2026)"><strong>${pctl}th %ile</strong> · 1972–2026</div>`;
+      percentileLine = `<div class="${cls}" title="Season peak ${peakLevel.toFixed(2)} m ranks ${ordinal(rank)} of ${HISTORICAL_RECORD_YEARS} on record (1972–2025)"><strong>${pctl}th %ile</strong> · 1972–2025</div>`;
     }
     // Card divIcon — placed at an offset latLng we recompute on zoom/pan.
     const dispCurrent = displayLevel(station.metadata, latest.valeur);
@@ -2922,6 +3603,8 @@ function renderAbout() {
     <p>${t('about_pulse')}</p>
     <p>${t('about_pctl')}</p>
     <p>${t('about_orrpb')}</p>
+    <p>${t('about_releases')}</p>
+    <p>${t('about_cascade')}</p>
     <p class="src">${t('about_src')}</p>
   `;
 }
@@ -2940,6 +3623,8 @@ function toggleAbout() {
 let damsLayerGroup = null;
 let damsData = null;
 let damsLoading = null;
+let hqReleasesCache = null;
+let hqReleasesLoading = null;
 
 async function ensureDamsData() {
   if (damsData) return damsData;
@@ -2948,8 +3633,23 @@ async function ensureDamsData() {
   return damsData;
 }
 
-function buildDamsLayer(data) {
+// Latest HQ release per centrale, indexed by site_id. Best-effort — if hq-ingest
+// hasn't run yet, returns {} and the dam tooltips just skip the live-flow line.
+async function ensureHqReleases() {
+  if (hqReleasesCache) return hqReleasesCache;
+  if (!hqReleasesLoading) {
+    hqReleasesLoading = fetch('/history/latest_dam_releases', { cache: 'no-store' })
+      .then(r => r.ok ? r.json() : [])
+      .then(arr => Object.fromEntries(arr.map(r => [r.site_id, r])))
+      .catch(() => ({}));
+  }
+  hqReleasesCache = await hqReleasesLoading;
+  return hqReleasesCache;
+}
+
+function buildDamsLayer(data, releases) {
   const group = L.layerGroup();
+  releases = releases || {};
   // Hydroelectric stations — bigger marker for ≥100 MW.
   for (const h of data.hydro || []) {
     if (h.lat == null || h.lon == null) continue;
@@ -2957,8 +3657,21 @@ function buildDamsLayer(data) {
     const cls = `dam-icon hydro${big ? ' big' : ''}`;
     const icon = L.divIcon({ className: 'river-marker-icon', html: `<div class="${cls}" title="${h.name}">⚡</div>`,
       iconSize: big ? [22, 22] : [18, 18], iconAnchor: big ? [11, 11] : [9, 9] });
+    // If this hydro entry is mapped to an HQ centrale, append a live-release
+    // line: total m³/s + spill share. Falls back silently if no data yet.
+    let releaseLine = '';
+    if (h.hq_site_id && releases[h.hq_site_id]) {
+      const r = releases[h.hq_site_id];
+      if (r.total_cms != null) {
+        const total = Math.round(r.total_cms).toLocaleString();
+        const spillFrac = r.spilled_cms && r.total_cms ? Math.round(r.spilled_cms / r.total_cms * 100) : 0;
+        const tag = spillFrac >= 50 ? `<span style="color:#e07f2f;font-weight:600;"> · ${spillFrac}% spill</span>`
+                  : spillFrac > 0  ? ` · ${spillFrac}% spill` : '';
+        releaseLine = `<br><span style="color:var(--text-faint);">↳ ${total} m³/s${tag}</span>`;
+      }
+    }
     L.marker([h.lat, h.lon], { icon, riseOnHover: true })
-      .bindTooltip(`<strong>${h.name}</strong><br>${h.mw || '?'} MW · ${h.owner || '—'}`,
+      .bindTooltip(`<strong>${h.name}</strong><br>${h.mw || '?'} MW · ${h.owner || '—'}${releaseLine}`,
         { direction: 'top', offset: [0, -10], className: 'river-tip', opacity: 0.95 })
       .addTo(group);
   }
@@ -3038,14 +3751,46 @@ async function buildReservoirsLayer() {
     const changeArrow = change == null ? '' : Math.abs(change) < 0.05 ? '→' : change > 0 ? '↑' : '↓';
     const changeCls = change == null ? '' : Math.abs(change) < 0.05 ? '' : change > 0 ? 'up' : 'down';
     const changeStr = change == null ? '' : `${changeArrow} ${change > 0 ? '+' : ''}${change.toFixed(2)} pp/24h`;
+    // Operational-state pill for Des Joachims (matches the Reservoirs tab logic).
+    let opLine = '';
+    if (snap.reservoir_id === 'des_joachims') {
+      const state = desJoachimsOpState(change);
+      if (state) {
+        const text = state.cls === 'paused' ? '⏸ Pass-through' : '↑ Refilling';
+        opLine = `<div class="res-op-state ${state.cls}" title="${state.label}">${text}</div>`;
+      }
+    }
     const html = `<div class="res-map-card ${cls}" title="${c.name} (${c.agency}) · ${snap.level_m != null ? snap.level_m.toFixed(2) + ' m' : '—'}">
       <div class="name">${c.name}</div>
       <div class="pct">${pct != null ? pct.toFixed(0) : '—'}<span class="unit">% full</span></div>
       <div class="bar"><div class="bar-fill" style="width:${barWidth}%; background:${barColor}"></div></div>
       <div class="change ${changeCls}">${changeStr}</div>
+      ${opLine}
     </div>`;
-    const icon = L.divIcon({ className: 'river-marker-icon', html, iconSize: null, iconAnchor: [50, 30] });
-    L.marker([loc.lat, loc.lon], { icon, riseOnHover: true, zIndexOffset: 300 }).addTo(group);
+
+    // Static lat/lon offset — card sits NE of the actual reservoir centroid
+    // with a dashed leader line back. Same broadcast-callout pattern as the
+    // river-station cards but simpler: no per-zoom recompute since reservoirs
+    // are spread far enough apart that overlaps aren't an issue.
+    const cardLat = loc.lat + 0.04;
+    const cardLon = loc.lon + 0.05;
+
+    // Small dot at the true reservoir centroid, fill-coloured to match.
+    const dotIcon = L.divIcon({
+      className: 'river-marker-icon',
+      html: `<div class="res-map-dot" style="background:${barColor}"></div>`,
+      iconSize: [10, 10], iconAnchor: [5, 5]
+    });
+    L.marker([loc.lat, loc.lon], { icon: dotIcon, zIndexOffset: 250 }).addTo(group);
+
+    // Dashed leader line, dot → card.
+    L.polyline([[loc.lat, loc.lon], [cardLat, cardLon]], {
+      color: '#888', weight: 1.2, opacity: 0.65, dashArray: '4,3', interactive: false
+    }).addTo(group);
+
+    // Card at the offset position.
+    const icon = L.divIcon({ className: 'river-marker-icon', html, iconSize: null, iconAnchor: [50, 60] });
+    L.marker([cardLat, cardLon], { icon, riseOnHover: true, zIndexOffset: 300 }).addTo(group);
   }
   return group;
 }
@@ -3064,6 +3809,200 @@ async function toggleReservoirsLayer() {
   btn?.classList.add('active');
 }
 
+// ---- Releases callout layer ----
+// Live HQ generating-station release cards plotted at each centrale's lat/lon.
+// Card colour signals spill fraction (blue = no spill, orange = >30%,
+// red = >75%). Uses the same dot + leader-line pattern as the reservoir layer.
+let releasesLayerGroup = null;
+
+function spillClass(spillFrac) {
+  if (spillFrac == null) return 'spill-low';
+  if (spillFrac >= 0.75) return 'spill-extreme';
+  if (spillFrac >= 0.50) return 'spill-high';
+  if (spillFrac >= 0.20) return 'spill-mid';
+  return 'spill-low';
+}
+function spillBarColor(spillFrac) {
+  if (spillFrac == null) return 'var(--blue)';
+  if (spillFrac >= 0.75) return 'rgb(224,75,74)';
+  if (spillFrac >= 0.50) return 'rgb(224,127,47)';
+  if (spillFrac >= 0.20) return 'rgb(245,200,66)';
+  return 'rgb(76,140,224)';
+}
+
+async function buildReleasesLayer() {
+  if (typeof L === 'undefined') return null;
+  const [data, releases] = await Promise.all([ensureDamsData(), ensureHqReleases()]);
+  if (!data) return null;
+  const group = L.layerGroup();
+  // Iterate orw-dams hydro entries that carry an hq_site_id — that's our
+  // pre-computed mapping of lat/lon to HQ centrale.
+  for (const h of data.hydro || []) {
+    if (!h.hq_site_id) continue;
+    const r = releases[h.hq_site_id];
+    if (!r || r.total_cms == null) continue;
+    const total = Math.round(r.total_cms);
+    const turb = r.turbined_cms || 0;
+    const spill = r.spilled_cms || 0;
+    const denom = (turb + spill) || total || 1;
+    const turbPct  = Math.max(0, Math.min(100, (turb  / denom) * 100));
+    const spillPct = Math.max(0, Math.min(100, (spill / denom) * 100));
+    const spillFrac = total ? spill / total : 0;
+    const cls = spillClass(spillFrac);
+    const dotColor = spillBarColor(spillFrac);
+    const spillTag = spillFrac > 0
+      ? `<div class="spill ${spillFrac >= 0.5 ? 'high' : ''}">${Math.round(spillFrac * 100)}% spilled</div>`
+      : `<div class="spill">all turbined</div>`;
+    const html = `<div class="rel-map-card ${cls}" title="${h.name} (HQ) · last update ${ago(r.time)}">
+      <div class="name">${h.name}</div>
+      <div class="flow">${total.toLocaleString()}<span class="unit">m³/s</span></div>
+      ${spillTag}
+      <div class="bar"><div class="bar-turb" style="width:${turbPct}%"></div><div class="bar-spill" style="width:${spillPct}%"></div></div>
+    </div>`;
+
+    // Offset card NE of dam, leader line back. Smaller offsets than reservoir
+    // cards (HQ centrales are close to one another in the upper basin).
+    const cardLat = h.lat + 0.025;
+    const cardLon = h.lon + 0.035;
+
+    const dotIcon = L.divIcon({
+      className: 'river-marker-icon',
+      html: `<div class="rel-map-dot" style="background:${dotColor}"></div>`,
+      iconSize: [10, 10], iconAnchor: [5, 5]
+    });
+    L.marker([h.lat, h.lon], { icon: dotIcon, zIndexOffset: 250 }).addTo(group);
+
+    L.polyline([[h.lat, h.lon], [cardLat, cardLon]], {
+      color: '#888', weight: 1.2, opacity: 0.65, dashArray: '4,3', interactive: false
+    }).addTo(group);
+
+    const icon = L.divIcon({ className: 'river-marker-icon', html, iconSize: null, iconAnchor: [44, 50] });
+    L.marker([cardLat, cardLon], { icon, riseOnHover: true, zIndexOffset: 300 }).addTo(group);
+  }
+  return group;
+}
+
+async function toggleReleasesLayer() {
+  if (!mapInstance) return;
+  const btn = document.getElementById('map-releases-btn');
+  if (releasesLayerGroup && mapInstance.hasLayer(releasesLayerGroup)) {
+    mapInstance.removeLayer(releasesLayerGroup);
+    btn?.classList.remove('active');
+    return;
+  }
+  if (!releasesLayerGroup) releasesLayerGroup = await buildReleasesLayer();
+  if (!releasesLayerGroup) return;
+  releasesLayerGroup.addTo(mapInstance);
+  btn?.classList.add('active');
+}
+
+// ---- Cascade layer ----
+// Polylines connecting dams in hydrologic order (upstream → downstream),
+// to make the cascade structure visible at a glance. The 130-km Bryson↔
+// Des-Joachims reach (Exhibit D Figure 5) is highlighted in accent red as
+// the case-file's "no flow controls" stretch. Coords are pulled from
+// orw-dams.json (hydro + major_dams + reservoirs) by name.
+const CASCADE_CHAINS = {
+  ottawa_main: {
+    label: 'Ottawa main stem',
+    color: 'rgba(40, 70, 110, 0.55)',
+    weight: 2.5,
+    nodes: [
+      // Upper-Ottawa cluster (feeds Lake Timiskaming)
+      'Rapide-2', 'Rapide-7', 'Rapides-des-Quinze', 'Rapides-des-Îles', 'Première-Chute',
+      // Down through Lake Timiskaming and the OPG/HQ chain to Carillon
+      'Lower Notch', 'Otto Holden', 'Des-Joachims', 'Bryson', 'Chenaux', 'Carillon',
+    ],
+  },
+  gatineau: {
+    label: 'Gatineau',
+    color: 'rgba(70, 110, 60, 0.55)',
+    weight: 2.5,
+    nodes: ['Cabonga', 'Mercier', 'Baskatong', 'Paugan', 'Chelsea', 'Rapides-Farmer'],
+  },
+  lievre: {
+    label: 'Lièvre',
+    color: 'rgba(140, 80, 40, 0.55)',
+    weight: 2.5,
+    nodes: ['Mitchinamecus', 'Kiamika', 'Poisson Blanc'],
+  },
+};
+// The case-file reach: Bryson upstream to Des Joachims, no intermediate
+// flow controls. Drawn last in accent red so it sits on top.
+const CASE_FILE_REACH = ['Des-Joachims', 'Bryson'];
+
+let cascadeLayerGroup = null;
+
+function lookupCoord(name, data) {
+  // Search hydro, major_dams, reservoirs in priority order. Some Lièvre /
+  // Gatineau headwaters live only in reservoirs (Cabonga, Baskatong, etc.).
+  for (const bucket of ['hydro', 'major_dams', 'reservoirs']) {
+    const hit = (data[bucket] || []).find(d => d.name === name);
+    if (hit && hit.lat != null && hit.lon != null) return [hit.lat, hit.lon];
+  }
+  return null;
+}
+
+async function buildCascadeLayer() {
+  if (typeof L === 'undefined') return null;
+  const data = await ensureDamsData();
+  if (!data) return null;
+  const group = L.layerGroup();
+
+  for (const [_, chain] of Object.entries(CASCADE_CHAINS)) {
+    const coords = chain.nodes.map(n => lookupCoord(n, data)).filter(Boolean);
+    if (coords.length < 2) continue;
+    L.polyline(coords, {
+      color: chain.color, weight: chain.weight, opacity: 1,
+      smoothFactor: 1, interactive: false,
+    }).addTo(group);
+    // Tiny arrowhead at each segment midpoint, oriented along the segment.
+    for (let i = 0; i < coords.length - 1; i++) {
+      const [a, b] = [coords[i], coords[i + 1]];
+      const mid = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+      const angle = Math.atan2(b[0] - a[0], b[1] - a[1]) * 180 / Math.PI;
+      // Leaflet rotates HTML via CSS transform (no native primitive).
+      const html = `<div class="cascade-line-arrow" style="transform: rotate(${-angle}deg); width:14px; height:14px; display:flex; align-items:center; justify-content:center; color:${chain.color.replace('0.55','0.95')}; font-size:14px; line-height:1;">▶</div>`;
+      const icon = L.divIcon({ className: 'river-marker-icon', html, iconSize: [14, 14], iconAnchor: [7, 7] });
+      L.marker(mid, { icon, interactive: false, keyboard: false, zIndexOffset: -100 }).addTo(group);
+    }
+  }
+
+  // Case-file reach overlay — Bryson upstream to Des Joachims, in accent red.
+  const reachCoords = CASE_FILE_REACH.map(n => lookupCoord(n, data)).filter(Boolean);
+  if (reachCoords.length === 2) {
+    L.polyline(reachCoords, {
+      color: 'rgba(179, 38, 30, 0.85)', weight: 4, opacity: 0.9,
+      dashArray: '8 4', interactive: false,
+    }).addTo(group);
+    // Label at the midpoint
+    const mid = [(reachCoords[0][0] + reachCoords[1][0]) / 2,
+                 (reachCoords[0][1] + reachCoords[1][1]) / 2];
+    const label = L.divIcon({
+      className: 'river-marker-icon',
+      html: `<div style="background:rgba(179,38,30,0.9); color:white; font-size:9px; font-weight:700; padding:2px 6px; border-radius:3px; white-space:nowrap; letter-spacing:0.05em; text-transform:uppercase;">130 km · no flow controls</div>`,
+      iconSize: null, iconAnchor: [70, 8],
+    });
+    L.marker(mid, { icon: label, interactive: false, zIndexOffset: 200 }).addTo(group);
+  }
+
+  return group;
+}
+
+async function toggleCascadeLayer() {
+  if (!mapInstance) return;
+  const btn = document.getElementById('map-cascade-btn');
+  if (cascadeLayerGroup && mapInstance.hasLayer(cascadeLayerGroup)) {
+    mapInstance.removeLayer(cascadeLayerGroup);
+    btn?.classList.remove('active');
+    return;
+  }
+  if (!cascadeLayerGroup) cascadeLayerGroup = await buildCascadeLayer();
+  if (!cascadeLayerGroup) return;
+  cascadeLayerGroup.addTo(mapInstance);
+  btn?.classList.add('active');
+}
+
 async function toggleDams() {
   if (!mapInstance) return;
   const btn = document.getElementById('map-dams-btn');
@@ -3072,12 +4011,12 @@ async function toggleDams() {
     btn?.classList.remove('active');
     return;
   }
-  const data = await ensureDamsData();
+  const [data, releases] = await Promise.all([ensureDamsData(), ensureHqReleases()]);
   if (!data) {
     console.warn('Failed to load dams data');
     return;
   }
-  if (!damsLayerGroup) damsLayerGroup = buildDamsLayer(data);
+  if (!damsLayerGroup) damsLayerGroup = buildDamsLayer(data, releases);
   damsLayerGroup.addTo(mapInstance);
   btn?.classList.add('active');
 }

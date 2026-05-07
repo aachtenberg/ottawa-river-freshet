@@ -4,10 +4,11 @@
       "name": "Carillon",
       "lat": 45.5686517,
       "lon": -74.3830074,
-      "owner": "Hydro-Qu\u00e9bec",
+      "owner": "Hydro-Québec",
       "mw": 756,
       "city": "Carillon",
-      "province": "Qu\u00e9bec"
+      "province": "Québec",
+      "hq_site_id": "3-60"
     },
     {
       "name": "Des-Joachims",
@@ -40,19 +41,20 @@
       "name": "Paugan",
       "lat": 45.809749,
       "lon": -75.9309214,
-      "owner": "Hydro-Qu\u00e9bec",
+      "owner": "Hydro-Québec",
       "mw": 216,
       "city": "Low",
-      "province": "Qu\u00e9bec"
+      "province": "Québec",
+      "hq_site_id": "3-65"
     },
     {
       "name": "Chats Fall / Chute-des-Chats",
       "lat": 45.4751942,
       "lon": -76.2381926,
-      "owner": "Ontario Power Generation/Hydro-Qu\u00e9bec",
+      "owner": "Ontario Power Generation/Hydro-Québec",
       "mw": 192,
       "city": "Fitzroy Harbour",
-      "province": "Qu\u00e9bec"
+      "province": "Québec"
     },
     {
       "name": "Stewartville",
@@ -73,13 +75,14 @@
       "province": "Ontario"
     },
     {
-      "name": "Rapides-des-\u00celes",
+      "name": "Rapides-des-Îles",
       "lat": 47.5768404,
       "lon": -79.3546289,
-      "owner": "Hydro-Qu\u00e9bec",
+      "owner": "Hydro-Québec",
       "mw": 176,
       "city": "Saint-Ugene-de- Guigues",
-      "province": "Qu\u00e9bec"
+      "province": "Québec",
+      "hq_site_id": "3-32"
     },
     {
       "name": "Mountain Chute",
@@ -94,10 +97,11 @@
       "name": "Chelsea",
       "lat": 45.512532,
       "lon": -75.7774758,
-      "owner": "Hydro-Qu\u00e9bec",
+      "owner": "Hydro-Québec",
       "mw": 152,
       "city": "Chelsea",
-      "province": "Qu\u00e9bec"
+      "province": "Québec",
+      "hq_site_id": "3-66"
     },
     {
       "name": "Chenaux",
@@ -109,31 +113,33 @@
       "province": "Ontario"
     },
     {
-      "name": "Premi\u00e8re-Chute",
+      "name": "Première-Chute",
       "lat": 47.6006594,
       "lon": -79.4524015,
-      "owner": "Hydro-Qu\u00e9bec",
+      "owner": "Hydro-Québec",
       "mw": 131,
       "city": "Notre Dame  Du Nord",
-      "province": "Qu\u00e9bec"
+      "province": "Québec",
+      "hq_site_id": "3-33"
     },
     {
-      "name": "High Falls (Li\u00e8vre)",
+      "name": "High Falls (Lièvre)",
       "lat": 45.8395736,
       "lon": -75.6456035,
       "owner": "Evolugen",
       "mw": 109,
       "city": "Bowman",
-      "province": "Qu\u00e9bec"
+      "province": "Québec"
     },
     {
       "name": "Rapides-des-Quinze",
       "lat": 47.590587,
       "lon": -79.2943857,
-      "owner": "Hydro-Qu\u00e9bec",
+      "owner": "Hydro-Québec",
       "mw": 109,
       "city": "Anglier",
-      "province": "Qu\u00e9bec"
+      "province": "Québec",
+      "hq_site_id": "3-31"
     },
     {
       "name": "Masson",
@@ -142,16 +148,17 @@
       "owner": "Evolugen",
       "mw": 105,
       "city": "Masson",
-      "province": "Qu\u00e9bec"
+      "province": "Québec"
     },
     {
       "name": "Rapides-Farmer",
       "lat": 45.498915,
       "lon": -75.7632316,
-      "owner": "Hydro-Qu\u00e9bec",
+      "owner": "Hydro-Québec",
       "mw": 104,
       "city": "Gatineau",
-      "province": "Qu\u00e9bec"
+      "province": "Québec",
+      "hq_site_id": "3-67"
     },
     {
       "name": "Arnprior",
@@ -166,37 +173,41 @@
       "name": "Bryson",
       "lat": 45.6611391,
       "lon": -76.6318174,
-      "owner": "Hydro-Qu\u00e9bec",
+      "owner": "Hydro-Québec",
       "mw": 61,
       "city": "Bryson",
-      "province": "Qu\u00e9bec"
+      "province": "Québec",
+      "hq_site_id": "3-46"
     },
     {
       "name": "Rapide-2",
       "lat": 47.9336454,
       "lon": -78.5761452,
-      "owner": "Hydro-Qu\u00e9bec",
+      "owner": "Hydro-Québec",
       "mw": 61,
       "city": "Malartic",
-      "province": "Qu\u00e9bec"
+      "province": "Québec",
+      "hq_site_id": "3-29"
     },
     {
       "name": "Rapide-7",
       "lat": 47.7684735,
       "lon": -78.3101745,
-      "owner": "Hydro-Qu\u00e9bec",
+      "owner": "Hydro-Québec",
       "mw": 61,
       "city": "Malartic",
-      "province": "Qu\u00e9bec"
+      "province": "Québec",
+      "hq_site_id": "3-28"
     },
     {
       "name": "Mercier",
       "lat": 46.7172965,
       "lon": -75.9824771,
-      "owner": "Hydro-Qu\u00e9bec",
+      "owner": "Hydro-Québec",
       "mw": 55,
       "city": "Grand-Remous",
-      "province": "Qu\u00e9bec"
+      "province": "Québec",
+      "hq_site_id": "3-63"
     },
     {
       "name": "Dufferin",
@@ -205,7 +216,7 @@
       "owner": "Evolugen",
       "mw": 40,
       "city": "Buckingham",
-      "province": "Qu\u00e9bec"
+      "province": "Québec"
     },
     {
       "name": "Chaudiere GS #5",
@@ -223,25 +234,25 @@
       "owner": "Portage Power",
       "mw": 27,
       "city": "Gatineau",
-      "province": "Qu\u00e9bec"
+      "province": "Québec"
     },
     {
       "name": "Buckingham",
       "lat": 45.589494,
       "lon": -75.4222794,
-      "owner": "Fiducie Boralex \u00c9nergie/Boralex Inc",
+      "owner": "Fiducie Boralex Énergie/Boralex Inc",
       "mw": 20,
       "city": "Buckingham",
-      "province": "Qu\u00e9bec"
+      "province": "Québec"
     },
     {
       "name": "Joey-Tanenbaum",
       "lat": 45.8781047,
       "lon": -76.6960999,
-      "owner": "Coulonge \u00c9nergie (Soci\u00e9t\u00e9 en Commandite)/Hydro-Pontiac Inc",
+      "owner": "Coulonge Énergie (Société en Commandite)/Hydro-Pontiac Inc",
       "mw": 17,
       "city": "Fort-Coulonge",
-      "province": "Qu\u00e9bec"
+      "province": "Québec"
     },
     {
       "name": "Hull #1",
@@ -250,16 +261,16 @@
       "owner": "Portage Power",
       "mw": 12,
       "city": "Gatineau",
-      "province": "Qu\u00e9bec"
+      "province": "Québec"
     },
     {
       "name": "W.R. Beatty",
       "lat": 45.9167024,
       "lon": -76.9222941,
-      "owner": "Waltham \u00c9nergie, Sec/Hydro-Pontiac Inc",
+      "owner": "Waltham Énergie, Sec/Hydro-Pontiac Inc",
       "mw": 11.7,
       "city": "Waltham",
-      "province": "Qu\u00e9bec"
+      "province": "Québec"
     },
     {
       "name": "Calabogie",
@@ -274,10 +285,11 @@
       "name": "Chute-Bell",
       "lat": 45.7740335,
       "lon": -74.6843707,
-      "owner": "Hydro-Qu\u00e9bec",
+      "owner": "Hydro-Québec",
       "mw": 10,
       "city": "Rivington",
-      "province": "Qu\u00e9bec"
+      "province": "Québec",
+      "hq_site_id": "3-58"
     },
     {
       "name": "Matabitchuan",
@@ -289,13 +301,14 @@
       "province": "Ontario"
     },
     {
-      "name": "Rapides-des-C\u00e8dres",
+      "name": "Rapides-des-Cèdres",
       "lat": 46.1008978,
       "lon": -75.6480356,
-      "owner": "\u00c9nergie La Li\u00e8vre, SEC",
+      "owner": "Énergie La Lièvre, SEC",
       "mw": 9,
       "city": "Notre Dame du Laus",
-      "province": "Qu\u00e9bec"
+      "province": "Québec",
+      "hq_site_id": "3-6"
     },
     {
       "name": "Hound Chute",
@@ -346,10 +359,10 @@
       "name": "Ayers-1",
       "lat": 45.6366631,
       "lon": -74.3605308,
-      "owner": "Ayers Limit\u00e9e",
+      "owner": "Ayers Limitée",
       "mw": 4.8,
       "city": "Lachute",
-      "province": "Qu\u00e9bec"
+      "province": "Québec"
     },
     {
       "name": "Thomas Low",
@@ -385,7 +398,7 @@
       "owner": "Algonquin Power",
       "mw": 2.7,
       "city": "Mont Laurier",
-      "province": "Qu\u00e9bec"
+      "province": "Québec"
     },
     {
       "name": "Belleterre",
@@ -394,7 +407,7 @@
       "owner": "Algonquin Power",
       "mw": 2.2,
       "city": "Laforce",
-      "province": "Qu\u00e9bec"
+      "province": "Québec"
     },
     {
       "name": "Merrickville",
@@ -436,10 +449,10 @@
       "name": "Ayers-2",
       "lat": 45.643632,
       "lon": -74.3539024,
-      "owner": "Ayers Limit\u00e9e",
+      "owner": "Ayers Limitée",
       "mw": 1,
       "city": "Lachute",
-      "province": "Qu\u00e9bec"
+      "province": "Québec"
     }
   ],
   "major_dams": [
@@ -499,11 +512,11 @@
       "province": "Quebec"
     },
     {
-      "name": "Rapides Des \u00celes",
+      "name": "Rapides Des Îles",
       "lat": 47.5693799,
       "lon": -79.3508882,
       "year": 1967,
-      "river": "Rivi\u00e8re Des Quinze",
+      "river": "Rivière Des Quinze",
       "height_m": 45,
       "purpose": "H",
       "res_volume_mil_m3": 105,
@@ -602,14 +615,14 @@
       "lat": 46.1005164,
       "lon": -75.6489007,
       "year": 1930,
-      "river": "Li\u00e8vre, Du",
+      "river": "Lièvre, Du",
       "height_m": 27,
       "purpose": "HC",
       "res_volume_mil_m3": 24,
       "province": "Quebec"
     },
     {
-      "name": "R\u00e9servoir Baskatong - Castor",
+      "name": "Réservoir Baskatong - Castor",
       "lat": 46.7527191,
       "lon": -75.9467318,
       "year": 1927,
@@ -679,7 +692,7 @@
       "lat": 45.5613629,
       "lon": -75.4222997,
       "year": 1933,
-      "river": "Li\u00e8vre, Du",
+      "river": "Lièvre, Du",
       "height_m": 20,
       "purpose": "H",
       "res_volume_mil_m3": 36,
@@ -697,7 +710,7 @@
       "province": "Quebec"
     },
     {
-      "name": "Rapides-Des-Quinze, \u00c9vacuateur Des (Principal)",
+      "name": "Rapides-Des-Quinze, Évacuateur Des (Principal)",
       "lat": 47.581153,
       "lon": -79.2821915,
       "year": 1923,
@@ -723,7 +736,7 @@
       "lat": 45.8412199,
       "lon": -75.6506084,
       "year": 1929,
-      "river": "Li\u00e8vre, Du",
+      "river": "Lièvre, Du",
       "height_m": 19,
       "purpose": "H",
       "res_volume_mil_m3": null,
@@ -925,7 +938,7 @@
       "lon": -78.12574869373825,
       "capacity_mcm": 371,
       "year": 1941,
-      "agency": "Hydro-Qu\u00e9bec"
+      "agency": "Hydro-Québec"
     },
     {
       "name": "Dozois",
@@ -934,7 +947,7 @@
       "lon": -77.10889578399345,
       "capacity_mcm": 1863,
       "year": 1949,
-      "agency": "Hydro-Qu\u00e9bec"
+      "agency": "Hydro-Québec"
     },
     {
       "name": "Quinze",
@@ -943,7 +956,7 @@
       "lon": -78.98251151795125,
       "capacity_mcm": 1308,
       "year": 1914,
-      "agency": "Minist\u00e8re de l\u2019Environnement et de la Lutte contre les changements climatiques of Quebec"
+      "agency": "Ministère de l’Environnement et de la Lutte contre les changements climatiques of Quebec"
     },
     {
       "name": "Cabonga",
@@ -952,7 +965,7 @@
       "lon": -76.58105017959572,
       "capacity_mcm": 1565,
       "year": 1928,
-      "agency": "Hydro-Qu\u00e9bec"
+      "agency": "Hydro-Québec"
     },
     {
       "name": "Kipawa",
@@ -961,7 +974,7 @@
       "lon": -79.02917812071817,
       "capacity_mcm": 673,
       "year": 1912,
-      "agency": "Minist\u00e8re de l\u2019Environnement et de la Lutte contre les changements climatiques of Quebec"
+      "agency": "Ministère de l’Environnement et de la Lutte contre les changements climatiques of Quebec"
     },
     {
       "name": "Baskatong",
@@ -970,7 +983,7 @@
       "lon": -75.85856636812873,
       "capacity_mcm": 3049,
       "year": 1926,
-      "agency": "Hydro-Qu\u00e9bec"
+      "agency": "Hydro-Québec"
     },
     {
       "name": "Mitchinamecus",
@@ -979,7 +992,7 @@
       "lon": -75.0999838808608,
       "capacity_mcm": 554,
       "year": 1942,
-      "agency": "Minist\u00e8re de l\u2019Environnement et de la Lutte contre les changements climatiques of Quebec"
+      "agency": "Ministère de l’Environnement et de la Lutte contre les changements climatiques of Quebec"
     },
     {
       "name": "Kiamika",
@@ -988,7 +1001,7 @@
       "lon": -75.074127294531,
       "capacity_mcm": 379,
       "year": 1954,
-      "agency": "Minist\u00e8re de l\u2019Environnement et de la Lutte contre les changements climatiques of Quebec"
+      "agency": "Ministère de l’Environnement et de la Lutte contre les changements climatiques of Quebec"
     },
     {
       "name": "Bark Lake",
@@ -1006,7 +1019,7 @@
       "lon": -75.73745698823224,
       "capacity_mcm": 625,
       "year": 1930,
-      "agency": "Minist\u00e8re de l\u2019Environnement et de la Lutte contre les changements climatiques of Quebec"
+      "agency": "Ministère de l’Environnement et de la Lutte contre les changements climatiques of Quebec"
     },
     {
       "name": "Timiskaming",
