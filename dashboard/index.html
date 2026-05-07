@@ -204,6 +204,29 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 
 .skeleton { color: var(--text-faint); }
 
+/* Operations-watch cards: Carillon §15.3.5.1 directive status + Bryson posture */
+.ops-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px 12px; }
+.ops-card.compliant { border-left: 3px solid var(--green); }
+.ops-card.overshoot { border-left: 3px solid var(--red); }
+.ops-card.inactive { border-left: 3px solid var(--text-faint); }
+.ops-card.posture { border-left: 3px solid #7A5ED8; }
+.ops-card .ops-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); display: flex; justify-content: space-between; align-items: center; gap: 6px; margin-bottom: 8px; }
+.ops-card .ops-status-chip { font-size: 9px; font-weight: 600; padding: 2px 7px; border-radius: 3px; letter-spacing: 0.4px; }
+.ops-card .ops-status-chip.compliant { background: var(--green-light); color: var(--green); }
+.ops-card .ops-status-chip.overshoot { background: var(--red-light); color: var(--red); }
+.ops-card .ops-status-chip.inactive { background: var(--surface-2); color: var(--text-faint); }
+.ops-card .ops-status-chip.posture { background: rgba(122,94,216,0.13); color: #7A5ED8; }
+.ops-card .ops-headline { font-size: 22px; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; margin-bottom: 4px; }
+.ops-card .ops-headline .unit { font-size: 12px; font-weight: 400; color: var(--text-muted); margin-left: 3px; }
+.ops-card .ops-rows { display: grid; gap: 4px; font-size: 12px; line-height: 1.5; margin-top: 8px; }
+.ops-card .ops-row { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+.ops-card .ops-row .lbl { color: var(--text-muted); }
+.ops-card .ops-row .val { font-variant-numeric: tabular-nums; font-weight: 500; }
+.ops-card .ops-row .val.over { color: var(--red); font-weight: 600; }
+.ops-card .ops-row .val.under { color: var(--green); }
+.ops-card .ops-note { font-size: 11px; color: var(--text-muted); line-height: 1.5; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); }
+.ops-card .ops-note a { color: var(--text-muted); text-decoration: underline; }
+
 /* Top-level tab navigation. */
 .tab-strip { display: flex; gap: 0; margin: 0 0 18px; border-bottom: 1px solid var(--border); }
 .tab-strip button { background: transparent; border: none; color: var(--text-muted); padding: 10px 18px; font-family: inherit; font-size: 14px; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color 0.15s, border-color 0.15s; }
@@ -517,6 +540,23 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 <div class="chart-wrap"><div class="chart-container"><canvas id="crChart"></canvas></div></div>
 <div class="thresholds" id="cr-legend"></div>
 
+<div class="section-title" style="margin-top: 28px;" data-i18n="ops_h">Operations watch</div>
+<div class="section-subtitle" data-i18n="ops_sub">Live operator-side telemetry: Carillon spring-flood directive compliance and Bryson posture. Refreshed every 10 minutes from the cluster proxy.</div>
+<div class="cards" id="ops-cards" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));">
+  <div class="ops-card inactive" id="carillon-directive-card">
+    <div class="ops-title">Carillon §15.3.5.1 directive <span class="ops-status-chip inactive" id="carillon-status-chip">Loading…</span></div>
+    <div class="ops-headline skeleton" id="carillon-headline">Loading…</div>
+    <div class="ops-rows" id="carillon-rows"></div>
+    <div class="ops-note">IWMP spring-flood ceiling: 40.08 m at Carillon when Hull dock > 42.61 m. <a href="https://github.com/aachtenberg/ottawa-river-freshet/blob/main/docs/analysis/Freshet_2026_Complete_Summary.md#the-carillon-directive-enforcement-gap-added-may-2026" target="_blank">Why this matters</a></div>
+  </div>
+  <div class="ops-card posture" id="bryson-posture-card">
+    <div class="ops-title">Bryson operating posture <span class="ops-status-chip posture" id="bryson-status-chip">Loading…</span></div>
+    <div class="ops-headline skeleton" id="bryson-headline">Loading…</div>
+    <div class="ops-rows" id="bryson-rows"></div>
+    <div class="ops-note">Headpond operating band: 104.20–104.67 m. Spill share = % of total release passing the gates rather than the turbines.</div>
+  </div>
+</div>
+
 <div class="section-title" style="margin-top: 28px;" data-i18n="regional">Regional context — Ottawa River corridor</div>
 <div class="section-subtitle" data-i18n="regional_sub">Upstream-to-downstream gauges along the Ottawa River. Upstream stations lead Lac Coulonge by hours-to-days and flag incoming pulses.</div>
 <div class="regional-section">
@@ -586,6 +626,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
   Property thresholds from personal 2019 flood observations.
   All timestamps shown in Eastern (America/Toronto).
   <br><strong>Unofficial dashboard</strong> — for official guidance consult <a href="https://www.ottawariver.ca/forecasts" target="_blank">ORRPB</a> and local authorities.
+  <br><strong>Case file</strong> — this dashboard is paired with a multi-year analytical case file on the post-2017 freshet regime change at Lac Coulonge: <a href="https://github.com/aachtenberg/ottawa-river-freshet/blob/main/docs/exhibits/Exhibit_0_Plain_Language.html" target="_blank">plain-language story</a> · <a href="https://github.com/aachtenberg/ottawa-river-freshet/tree/main/data/daily-briefs" target="_blank">daily briefs</a> · <a href="https://github.com/aachtenberg/ottawa-river-freshet" target="_blank">full repository</a>.
 </div>
 
 <script>
@@ -706,7 +747,10 @@ const PAGE_STRINGS = {
   property_t:     { en: 'Property thresholds (from 2019 observations)', fr: 'Seuils de la propriété (selon observations 2019)' },
   freeze_h:       { en: 'Basin freeze & precipitation outlook', fr: 'Aperçu du gel et précipitations dans le bassin' },
   freeze_sub:     { en: 'Overnight lows + 48 h precipitation across the basin. The freeze-night counter uses upstream stations only (snowmelt signal); downstream rows are local forecast for visitors watching the lower-corridor gauges.',
-                    fr: 'Minimums nocturnes + précipitations sur 48 h dans le bassin. Le compteur de nuits de gel n\'utilise que les stations en amont (signal de fonte); les stations en aval sont des prévisions locales pour les visiteurs surveillant les jauges du corridor inférieur.' }
+                    fr: 'Minimums nocturnes + précipitations sur 48 h dans le bassin. Le compteur de nuits de gel n\'utilise que les stations en amont (signal de fonte); les stations en aval sont des prévisions locales pour les visiteurs surveillant les jauges du corridor inférieur.' },
+  ops_h:          { en: 'Operations watch', fr: 'Surveillance des opérations' },
+  ops_sub:        { en: 'Live operator-side telemetry: Carillon spring-flood directive compliance and Bryson posture. Refreshed every 10 minutes from the cluster proxy.',
+                    fr: 'Télémétrie côté opérateur en direct : conformité de la directive de crue printanière à Carillon et posture du Bryson. Rafraîchi toutes les 10 minutes via le proxy du cluster.' }
 };
 function tPage(key) { return (PAGE_STRINGS[key] && PAGE_STRINGS[key][pageLang]) || (PAGE_STRINGS[key] && PAGE_STRINGS[key].en) || key; }
 
@@ -2330,6 +2374,11 @@ async function fetchData() {
     }).catch(err => {
       document.getElementById('regional-cards').innerHTML = `<div class="card">Regional data unavailable: ${err.message}</div>`;
     });
+
+    // Operations watch: Carillon §15.3.5.1 directive + Bryson posture (non-blocking).
+    fetchOpsWatch().then(d => renderOpsWatch(d)).catch(err => {
+      console.warn(`ops watch: ${err.message}`);
+    });
     
     const latestLC = lc.readings[lc.readings.length - 1];
     lastDataTimestamp = latestLC.date_prise_valeur;
@@ -2401,6 +2450,141 @@ async function refreshHomeCoords() {
       HOME_PIN.lon = row.gps_longitude;
     }
   } catch (e) { console.warn(`home coords fetch: ${e.message}`); }
+}
+
+// Operations watch: pulls Carillon directive + Bryson posture from the proxy.
+// Carillon §15.3.5.1 spring-flood operating ceiling: 40.08 m at the Carillon
+// headpond when the Hull dock exceeds 42.61 m servitude. See case file
+// (Freshet_2026_Complete_Summary.md § "Carillon directive enforcement gap").
+const HULL_DOCK_TRIGGER_M = 42.61;
+const CARILLON_SPRING_CEILING_M = 40.08;
+const BRYSON_BAND_LOW_M  = 104.20;
+const BRYSON_BAND_HIGH_M = 104.67;
+
+async function fetchOpsWatch() {
+  // Pull all four levels and the Bryson release in parallel. Each request can
+  // fail independently; missing pieces just leave that row blank.
+  const ids = ['1-2968', '1-3675', '1-2964', '1-2965'];
+  const levelsUrl = `/history/latest_dam_levels?station_id=in.(${ids.join(',')})`;
+  const releaseUrl = '/history/latest_dam_releases?site_id=eq.3-46';
+  const [levelsR, releaseR] = await Promise.all([
+    fetch(levelsUrl, { cache: 'no-store' }).catch(e => null),
+    fetch(releaseUrl, { cache: 'no-store' }).catch(e => null)
+  ]);
+  const levels = (levelsR && levelsR.ok) ? await levelsR.json() : [];
+  const release = (releaseR && releaseR.ok) ? await releaseR.json() : [];
+  const byId = {};
+  for (const r of levels) byId[r.station_id] = r;
+  return {
+    carillon: byId['1-2968'] || null,    // amont (headpond)
+    hull:     byId['1-3675'] || null,    // Quai-de-Hull dock
+    brysonAmont: byId['1-2964'] || null,
+    brysonAval:  byId['1-2965'] || null,
+    brysonRelease: release[0] || null
+  };
+}
+
+function fmtAge(iso) {
+  if (!iso) return '—';
+  const t = new Date(iso).getTime();
+  const dh = (Date.now() - t) / 3600000;
+  if (dh < 1)   return `${Math.round(dh * 60)} min ago`;
+  if (dh < 24)  return `${Math.round(dh)} h ago`;
+  return `${Math.round(dh / 24)} d ago`;
+}
+
+function renderOpsWatch(d) {
+  // ----- Carillon §15.3.5.1 directive card -----
+  const card = document.getElementById('carillon-directive-card');
+  const chip = document.getElementById('carillon-status-chip');
+  const headline = document.getElementById('carillon-headline');
+  const rows = document.getElementById('carillon-rows');
+
+  card.classList.remove('inactive', 'compliant', 'overshoot');
+  chip.classList.remove('inactive', 'compliant', 'overshoot');
+  headline.classList.remove('skeleton');
+
+  if (!d.hull || !d.carillon) {
+    card.classList.add('inactive');
+    chip.classList.add('inactive');
+    chip.textContent = 'Data unavailable';
+    headline.textContent = '—';
+    rows.innerHTML = '';
+    return;
+  }
+
+  const hullLevel = d.hull.level_m;
+  const carLevel  = d.carillon.level_m;
+  const triggerActive = hullLevel > HULL_DOCK_TRIGGER_M;
+  const overshootCm = Math.round((carLevel - CARILLON_SPRING_CEILING_M) * 100);
+
+  let statusLabel, statusKind;
+  if (!triggerActive) {
+    statusLabel = 'Trigger inactive';
+    statusKind = 'inactive';
+  } else if (overshootCm > 0) {
+    statusLabel = `Overshoot +${overshootCm} cm`;
+    statusKind = 'overshoot';
+  } else {
+    statusLabel = `Compliant ${overshootCm} cm`;
+    statusKind = 'compliant';
+  }
+  card.classList.add(statusKind);
+  chip.classList.add(statusKind);
+  chip.textContent = statusLabel;
+
+  headline.innerHTML = `${carLevel.toFixed(2)}<span class="unit"> m amont</span>`;
+
+  const hullDelta = (hullLevel - HULL_DOCK_TRIGGER_M);
+  const hullCls = hullDelta > 0 ? 'over' : 'under';
+  const carClsRaw = (triggerActive && overshootCm > 0) ? 'over' : (triggerActive ? 'under' : '');
+  const carDeltaStr = triggerActive
+    ? `${overshootCm > 0 ? '+' : ''}${overshootCm} cm vs 40.08 m ceiling`
+    : 'ceiling not in effect';
+
+  rows.innerHTML = `
+    <div class="ops-row"><span class="lbl">Hull dock (1-3675)</span><span class="val ${hullCls}">${hullLevel.toFixed(2)} m (${hullDelta >= 0 ? '+' : ''}${hullDelta.toFixed(2)} m vs 42.61 m)</span></div>
+    <div class="ops-row"><span class="lbl">Carillon amont (1-2968)</span><span class="val ${carClsRaw}">${carDeltaStr}</span></div>
+    <div class="ops-row"><span class="lbl">Reading age</span><span class="val">${fmtAge(d.carillon.time)}</span></div>
+  `;
+
+  // ----- Bryson posture card -----
+  const bCard = document.getElementById('bryson-posture-card');
+  const bChip = document.getElementById('bryson-status-chip');
+  const bHead = document.getElementById('bryson-headline');
+  const bRows = document.getElementById('bryson-rows');
+
+  bHead.classList.remove('skeleton');
+
+  if (!d.brysonRelease || !d.brysonAmont) {
+    bChip.textContent = 'Data unavailable';
+    bHead.textContent = '—';
+    bRows.innerHTML = '';
+    return;
+  }
+
+  const total = d.brysonRelease.total_cms || 0;
+  const turbined = d.brysonRelease.turbined_cms || 0;
+  const spilled  = d.brysonRelease.spilled_cms || 0;
+  const spillShare = total > 0 ? (spilled / total) * 100 : 0;
+  const headpond = d.brysonAmont.level_m;
+  const tailwater = d.brysonAval ? d.brysonAval.level_m : null;
+  const inBand = headpond >= BRYSON_BAND_LOW_M && headpond <= BRYSON_BAND_HIGH_M;
+  const headFromLow = ((headpond - BRYSON_BAND_LOW_M) * 100).toFixed(0);
+  const headFromHigh = ((BRYSON_BAND_HIGH_M - headpond) * 100).toFixed(0);
+
+  bChip.textContent = inBand
+    ? `Within band (+${headFromLow} cm above floor)`
+    : (headpond > BRYSON_BAND_HIGH_M ? 'Above band' : 'Below band');
+  bHead.innerHTML = `${total.toFixed(0)}<span class="unit"> m³/s total release</span>`;
+
+  bRows.innerHTML = `
+    <div class="ops-row"><span class="lbl">Turbined</span><span class="val">${turbined.toFixed(0)} m³/s</span></div>
+    <div class="ops-row"><span class="lbl">Spilled</span><span class="val">${spilled.toFixed(0)} m³/s (${spillShare.toFixed(0)}% of total)</span></div>
+    <div class="ops-row"><span class="lbl">Headpond (1-2964)</span><span class="val">${headpond.toFixed(2)} m (${inBand ? `${headFromLow} cm above 104.20 floor` : 'outside band'})</span></div>
+    ${tailwater ? `<div class="ops-row"><span class="lbl">Tailwater (1-2965)</span><span class="val">${tailwater.toFixed(2)} m</span></div>` : ''}
+    <div class="ops-row"><span class="lbl">Reading age</span><span class="val">${fmtAge(d.brysonRelease.time)}</span></div>
+  `;
 }
 
 // Map drawer text in EN / FR.
