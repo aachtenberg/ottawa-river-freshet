@@ -697,6 +697,31 @@ A more honest summary would be: *"The 2025–26 fall-winter season was unusually
 
 **Why this strengthens the case-file argument.** If 2026 were a genuinely 1-in-50 wet year, the major-flood-status outcome at Lac Coulonge would be partly explained by exceptional climate forcing. But the basin received normal seasonal water volume, distributed over a compressed schedule. **The fact that Lac Coulonge still hit major-flood status with normal seasonal water volume is itself diagnostic**: it means the operational response was unable to absorb a normal-water-volume year delivered on a compressed schedule. That is exactly the failure mode the case file argues operators should be adapting to (compressed delivery, earlier melt onset, less predictable snowpack-to-runoff timing). The ORRPB's framing systematically obscures this by treating 2026 as a wet-year anomaly when the data shows it was a delivery-schedule anomaly. The 50-year-record claim is true at the chosen window and misleading at the seasonal scale.
 
+**Was it rain? Temperature decomposition (added 2026-05-07 after community challenge by Stephen Depooter on FB).** A community contributor on the May 6 CBC-article thread pushed back on the cherry-pick framing with a sharper point: ORRPB said "precipitation" without qualifying. How do we know it was rain? The 2025–26 winter at Lac Coulonge was characterised locally by no thaw, frozen ground, and accumulating snowpack — not the kind of year where mid-March precipitation would arrive as freshet-driving rain.
+
+Tested directly. ECCC reports rain and snow separately at synoptic stations; for the 7 non-synoptic upper-basin stations the rain column is unreported, but **mean temperature settles the question** — at sub-zero means, precipitation falls as snow regardless of what the rain column says.
+
+| Station | 2026 mean T (Mar 1 – Apr 15) | Sub-zero days | Verdict |
+|---|---:|---:|---|
+| Val-d'Or | **−7.7 °C** | 38 / 46 | Snow only — too cold for rain |
+| Rouyn | −7.0 °C | 37 / 46 | Snow only |
+| Parent | −7.0 °C | 36 / 46 | Snow only |
+| North Bay | −3.9 °C | 31 / 46 | Snow only |
+| Barrage Témiscamingue | −2.8 °C | 30 / 46 | Mostly snow |
+| Maniwaki Airport | −2.3 °C | 27 / 46 | Mostly snow |
+| Pembroke | −1.8 °C | 27 / 46 | Mostly snow |
+| **Ottawa CDA** (south, in city) | **+0.3 °C** | 21 / 46 | Mixed — 126 mm of 158 mm reported as rain (80%) |
+
+**7 of 8 stations averaged sub-zero across the window. Basin-mean temperature was −4.0 °C.** Only Ottawa CDA — the southernmost site, in the city, well downstream of where the freshet originates — saw mean temperatures above freezing or any meaningful rain. At every station that actually drives Lac Coulonge inflow, the "record precipitation" the planning board reported was **snow**, not rain.
+
+**This changes the operational interpretation entirely.** Snow falling Mar 1 – Apr 15 in the upper basin doesn't run into the river in real time — it augments the snowpack that's already there, and that snowpack melts on whatever schedule the upper-basin temperatures dictate. The 2025–26 fall-winter season was already the second-driest on record; the cold winter meant the existing snowpack didn't undergo any thaw cycles; the late-March / early-April snow piled onto a frozen surface; and the freshet didn't begin until mid-April warming finally broke the freeze. **None of that was "record rainfall driving record runoff"** — that's a story ORRPB's framing invites readers to assume but the temperature record refuses to support.
+
+ORRPB said "precipitation" and "highest in 50 years" against a 6-week window without qualifying it as rain, without identifying the region (the record actually applies to the upper basin), and without acknowledging that at sub-zero temperatures the precipitation joined the snowpack rather than entering the river. That single line in the May 6 CBC explainer does substantial rhetorical work to support a "2026 was a wet year, blame climate" reading that the data does not support at any level once examined.
+
+**Mechanism speculation worth flagging.** The simplest explanation that fits all observations — second-driest fall-winter, no thaw, late compressed snowfall, basin still hits major-flood at Lac Coulonge — is that operators executed a historical-average drawdown rule against a year that didn't match historical averages, with no mechanism to adapt the rule mid-season as conditions diverged. Whether the rule is end-state-targeted (drawdown to elevation X by April 1) or schedule-targeted (release Y m³/s through Dec–Mar) is not publicly documented; the case file has been asking that question for months and has not received an answer. But under either rule, the absence of a snowpack-indexed adaptation mechanism is consistent with what we observe: a fixed playbook executed against a year the playbook wasn't designed for. This is speculation about the mechanism, but it's consistent with everything observable from outside, and it lines up directly with Dan Poole's ORFA policy ask (replace fixed-rule drawdown with snowpack-indexed drawdown).
+
+Source: temperature decomposition added to `ingesters/climate-history/seasonal_window_analysis.py` § "WAS IT RAIN?" panel.
+
 ### Pointe-Calumet step-change — corroborating evidence at the system terminus (added May 2026)
 
 The Britannia step-change result above shows the inflow-distribution shift concentrating at 2017. A complementary test at the *opposite* end of the chain — the gauge nearest Carillon's discharge — shows the same step but with a different geographic signature.

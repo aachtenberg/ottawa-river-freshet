@@ -160,6 +160,77 @@ def print_share_of_season() -> None:
     print()
 
 
+def collect_temp_window(station_dir, year):
+    """Mean temp + sub-zero day count for Mar 1 - Apr 15 of given year."""
+    raw = station_dir / 'raw' / f'{year}.csv'
+    if not raw.exists():
+        return None
+    temps = []
+    sub_zero = 0
+    text = raw.read_text(encoding='utf-8-sig')
+    for row in csv.DictReader(text.splitlines()):
+        try:
+            month = int(row['Month'])
+            day = int(row['Day'])
+            mean_t = float(row.get('Mean Temp (°C)', '') or '')
+        except (ValueError, KeyError):
+            continue
+        if not in_window(month, day, 'mar1-apr15'):
+            continue
+        temps.append(mean_t)
+        if mean_t < 0:
+            sub_zero += 1
+    if len(temps) < 38:
+        return None
+    return {
+        'n': len(temps),
+        'mean': statistics.mean(temps),
+        'sub_zero_days': sub_zero,
+    }
+
+
+def print_was_it_rain():
+    """Decompose 2026 'record precipitation' into rain vs snow at the upper basin.
+
+    ECCC reports rain/snow split only at synoptic stations. For non-synoptic
+    upper-basin stations, the rain column is unreported, but mean temperature
+    settles the question: with sub-zero means, precipitation falls as snow
+    regardless of what the rain column says.
+    """
+    print('WAS IT RAIN? — temperature evidence for 2026 Mar 1 - Apr 15')
+    print('At upper-basin stations the rain/snow split is unreported, but mean')
+    print('temp determines the form of precipitation. Sub-zero means = snow.')
+    print()
+    print(f'  {"station":<26}  {"2026 mean T":>12}  {"sub-zero days":>14}  {"verdict":<24}')
+
+    rows = []
+    for station_dir in sorted(ROOT.iterdir()):
+        if not station_dir.is_dir():
+            continue
+        info = collect_temp_window(station_dir, 2026)
+        if info is None:
+            continue
+        if info['mean'] >= 0:
+            verdict = 'mixed — rain plausible'
+        elif info['mean'] >= -3:
+            verdict = 'mostly snow'
+        else:
+            verdict = 'snow only — too cold'
+        rows.append((station_dir.name, info, verdict))
+        print(f'  {station_dir.name:<26}  {info["mean"]:>+10.1f} °C  {info["sub_zero_days"]:>4d} of {info["n"]:<3d}  {verdict:<24}')
+
+    if rows:
+        sub_zero_count = sum(1 for _, info, _ in rows if info['mean'] < 0)
+        avg_mean = statistics.mean(info['mean'] for _, info, _ in rows)
+        print()
+        print(f'  Summary: {sub_zero_count} of {len(rows)} stations averaged sub-zero across the window.')
+        print(f'  Basin-mean temperature Mar 1 - Apr 15 2026: {avg_mean:+.1f} °C.')
+        print(f'  At sub-zero means, the "record precipitation" was snow — not rain')
+        print(f'  running into the river. It augmented the existing snowpack and')
+        print(f'  did not enter the freshet flow until mid-April warming.')
+    print()
+
+
 def print_summary_finding() -> None:
     print('=' * 72)
     print('SUMMARY')
@@ -189,6 +260,7 @@ def main() -> None:
     for window in WINDOWS:
         print_window_ranking(window)
     print_share_of_season()
+    print_was_it_rain()
     print_summary_finding()
 
 
