@@ -14,8 +14,10 @@ seasons.
 
 ## 1. The ecological regime change at Lac Coulonge / Mansfield reach
 
-**Status:** Scoped 2026-05-07. To be pursued during the 2026 low-water
-period (post-July) when freshet operations work tapers off.
+**Status:** Scoped 2026-05-07. Tracked on the public repo as
+[ottawa-river-freshet#1](https://github.com/aachtenberg/ottawa-river-freshet/issues/1).
+To be pursued during the 2026 low-water period (post-July) when freshet
+operations work tapers off.
 
 **The question.** The case file currently treats the post-2017 regime
 change as a human-impact / regulatory story (peak heights, property
