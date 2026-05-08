@@ -75,7 +75,7 @@ Hardening options for new exhibits:
 - Render attributions as part of the chart SVG (harder to alter without obvious tampering)
 - Add a more prominent persistent watermark or QR code linking back to the canonical source
 - Publish the canonical PNG renderings with embedded metadata identifying source URL and version
-- Add a per-exhibit "Verify the original at freshet.xgrunt.com/exhibits/A" callout
+- Add a per-exhibit "Verify the original at github.com/aachtenberg/ottawa-river-freshet" callout
 
 These are mitigations, not preventions — anyone determined to alter an exhibit can. The case file's protection ultimately comes from the original being publicly readable at a stable URL, and from records like this one documenting alterations on the record.
 
