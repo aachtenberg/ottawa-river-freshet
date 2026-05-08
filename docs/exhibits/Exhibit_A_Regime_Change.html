@@ -302,7 +302,7 @@ svg.chart {
   </div>
   <div class="stat">
     <div class="label">Mean peak shift</div>
-    <div class="figure">+61<span style="font-size:24px">cm</span></div>
+    <div class="figure">+59<span style="font-size:24px">cm</span></div>
     <div class="unit">average annual peak<br>between the two eras</div>
   </div>
 </div>
@@ -354,12 +354,12 @@ svg.chart {
   <div class="left">
     <strong>Source</strong> · Lac Coulonge yearly peaks, ORRPB historical records 1972–2026 (n = 55). Super-flood threshold 108.5 m = Quebec MSP Vigilance major-flood (station 1195).
     <strong>Statistical note</strong> · Under a stationary flood rate, the odds of 4 super-floods in any 10-year window are below 1 in 20,000. Step function, not a trend.
-    <strong>Framing</strong> · The +61 cm is in the inflow distribution (more years produce big freshets now), not in lake response per inflow — see Exhibit D Fig 7.
+    <strong>Framing</strong> · The +59 cm is in the inflow distribution (more years produce big freshets now), not in lake response per inflow — see Exhibit D Fig 7.
     <strong>May 2026</strong> · Britannia basin-flow step concentrates at 2017; no matching climate step (Exhibit E Figs 9–10). Live Bryson telemetry: <code>freshet.xgrunt.com#operations</code>.
   </div>
   <div class="right">
     freshet.xgrunt.com<br>
-    <span style="opacity:0.5">v3 · MAY 2026</span>
+    <span style="opacity:0.5">v4 · MAY 2026</span>
   </div>
 </div>
 
@@ -367,18 +367,26 @@ svg.chart {
 
 <!-- Generate the chart inline -->
 <script>
+// Canonical: ORRPB historical-summaries scrape, identical to
+// data/lac-coulonge-monthly-1972-2026.csv `daily_max` column.
+// Cross-checked against the canonical CSV by
+// ingesters/climate-history/cross_check_overlay.py (CHECK 6).
+// Replaces an earlier hardcoded snapshot whose per-year values
+// diverged from the canonical CSV at 46/54 years (notably 1985-86
+// were swapped). Headline claims unchanged: 1 super-flood pre-2017,
+// 4 super-floods post-2017, 18× rate ratio.
 const peaks = {
-  1972: 107.64, 1973: 107.84, 1974: 108.27, 1975: 107.32, 1976: 107.52,
-  1977: 106.65, 1978: 107.85, 1979: 108.85, 1980: 108.16, 1981: 107.02,
-  1982: 106.85, 1983: 107.65, 1984: 107.27, 1985: 107.20, 1986: 108.40,
-  1987: 107.21, 1988: 106.66, 1989: 107.79, 1990: 107.36, 1991: 106.66,
-  1992: 106.74, 1993: 106.46, 1994: 106.65, 1995: 107.27, 1996: 107.78,
-  1997: 107.85, 1998: 106.74, 1999: 106.86, 2000: 107.55, 2001: 106.86,
-  2002: 107.20, 2003: 106.93, 2004: 107.46, 2005: 107.40, 2006: 107.68,
-  2007: 107.95, 2008: 108.32, 2009: 107.49, 2010: 106.61, 2011: 108.00,
-  2012: 107.51, 2013: 107.72, 2014: 107.55, 2015: 107.55, 2016: 106.59,
-  2017: 108.52, 2018: 107.49, 2019: 109.17, 2020: 107.40, 2021: 107.48,
-  2022: 107.84, 2023: 108.77, 2024: 106.67, 2025: 108.15, 2026: 108.63
+  1972: 107.87, 1973: 107.64, 1974: 108.27, 1975: 107.46, 1976: 107.72,
+  1977: 107.46, 1978: 107.15, 1979: 108.85, 1980: 107.52, 1981: 107.85,
+  1982: 107.00, 1983: 108.16, 1984: 106.65, 1985: 108.40, 1986: 107.02,
+  1987: 106.64, 1988: 107.05, 1989: 107.20, 1990: 107.21, 1991: 107.50,
+  1992: 107.36, 1993: 106.61, 1994: 106.60, 1995: 107.27, 1996: 107.88,
+  1997: 107.78, 1998: 107.79, 1999: 106.78, 2000: 106.66, 2001: 107.01,
+  2002: 108.32, 2003: 106.94, 2004: 107.44, 2005: 107.23, 2006: 107.63,
+  2007: 106.77, 2008: 107.49, 2009: 107.72, 2010: 106.74, 2011: 107.55,
+  2012: 107.58, 2013: 107.96, 2014: 108.01, 2015: 107.38, 2016: 107.60,
+  2017: 108.52, 2018: 107.84, 2019: 109.17, 2020: 107.44, 2021: 106.67,
+  2022: 107.61, 2023: 108.77, 2024: 107.49, 2025: 108.15, 2026: 108.63
 };
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
@@ -610,7 +618,7 @@ srcLine.setAttribute('font-size', '10');
 srcLine.setAttribute('font-weight', '500');
 srcLine.setAttribute('letter-spacing', '0.05em');
 srcLine.setAttribute('fill', '#5d6066');
-srcLine.textContent = 'Source: Contributor A · Northern Reservoirs Flood Watch · 28 Apr 2026  |  Verify the original at github.com/aachtenberg/ottawa-river-freshet · v3';
+srcLine.textContent = 'Source: Contributor A · Northern Reservoirs Flood Watch · 28 Apr 2026  |  Verify the original at github.com/aachtenberg/ottawa-river-freshet · v4';
 content.appendChild(srcLine);
 </script>
 
