@@ -14,6 +14,7 @@ const exhibits = [
   'Exhibit_E_Climate_Tested.html',
   'Exhibit_F_Corrective_Failure.html',
   'Exhibit_G_Selected_Window.html',
+  'Exhibit_H_Climate_Overlay.html',
 ];
 
 (async () => {

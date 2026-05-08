@@ -835,34 +835,21 @@ period2Lbl.setAttribute('fill', '#b3261e');
 period2Lbl.textContent = '2017 — 2026 · 10 YRS · 4 SUPER-FLOODS';
 content.appendChild(period2Lbl);
 
-// === Watermark + baked source attribution =============================
-const wmDefs = svg.querySelector('defs');
-const wmPattern = document.createElementNS(SVG_NS, 'pattern');
-wmPattern.setAttribute('id', 'exhibit-watermark');
-wmPattern.setAttribute('patternUnits', 'userSpaceOnUse');
-wmPattern.setAttribute('width', '420');
-wmPattern.setAttribute('height', '110');
-wmPattern.setAttribute('patternTransform', 'rotate(-22)');
-const wmText = document.createElementNS(SVG_NS, 'text');
-wmText.setAttribute('x', '0');
-wmText.setAttribute('y', '60');
-wmText.setAttribute('font-family', "'IBM Plex Mono', monospace");
-wmText.setAttribute('font-size', '14');
-wmText.setAttribute('font-weight', '600');
-wmText.setAttribute('letter-spacing', '0.10em');
-wmText.setAttribute('fill', 'rgba(20,23,26,0.07)');
-wmText.textContent = 'github.com/aachtenberg/ottawa-river-freshet · ';
-wmPattern.appendChild(wmText);
-wmDefs.appendChild(wmPattern);
-
-const wmRect = document.createElementNS(SVG_NS, 'rect');
-wmRect.setAttribute('x', margin.left);
-wmRect.setAttribute('y', PANEL_TOPS[0]);
-wmRect.setAttribute('width', plotW);
-wmRect.setAttribute('height', PANEL_TOPS[2] + PANEL_H - PANEL_TOPS[0]);
-wmRect.setAttribute('fill', 'url(#exhibit-watermark)');
-wmRect.setAttribute('pointer-events', 'none');
-content.appendChild(wmRect);
+// === Single-corner watermark + baked source attribution ===============
+// Lightweight provenance pointer in the upper-right of the top panel
+// (empty space above the bars). Single text element rather than a
+// repeating pattern. Survives cropping to the chart-only region.
+const wmCorner = document.createElementNS(SVG_NS, 'text');
+wmCorner.setAttribute('x', margin.left + plotW - 8);
+wmCorner.setAttribute('y', PANEL_TOPS[0] + 18);
+wmCorner.setAttribute('text-anchor', 'end');
+wmCorner.setAttribute('font-family', "'IBM Plex Mono', monospace");
+wmCorner.setAttribute('font-size', '11');
+wmCorner.setAttribute('font-weight', '500');
+wmCorner.setAttribute('letter-spacing', '0.06em');
+wmCorner.setAttribute('fill', 'rgba(20,23,26,0.20)');
+wmCorner.textContent = 'github.com/aachtenberg/ottawa-river-freshet · v1';
+content.appendChild(wmCorner);
 
 const srcLine = document.createElementNS(SVG_NS, 'text');
 srcLine.setAttribute('x', W / 2);
