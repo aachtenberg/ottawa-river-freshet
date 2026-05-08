@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Lac Coulonge Climate Overlay Infographic</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,700;9..144,900&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink: #14171a;
+  --ink-soft: #2c333a;
+  --paper: #f4ede0;
+  --paper-bright: #fbf6eb;
+  --rule: #14171a;
+  --rule-soft: rgba(20, 23, 26, 0.18);
+  --accent: #b3261e;
+  --accent-soft: rgba(179, 38, 30, 0.08);
+  --accent-strong: #8a1c14;
+  --neutral-bar: #2c333a;
+  --highlight-bar: #b3261e;
+  --snow: #2b5d8c;
+  --rain: #4a7a4a;
+}
+
+html, body {
+  background: #2a2520;
+  font-family: 'IBM Plex Sans', sans-serif;
+  color: var(--ink);
+}
+
+.page {
+  width: 1200px;
+  min-height: 1500px;
+  background: var(--paper);
+  position: relative;
+  padding: 64px 72px 72px;
+  margin: 0 auto;
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(0,0,0,0.04) 1px, transparent 0);
+  background-size: 14px 14px;
+}
+
+.kicker {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 14px;
+  margin-bottom: 28px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.kicker .file { font-weight: 500; }
+.kicker .meta { font-weight: 400; opacity: 0.7; }
+
+.headline {
+  font-family: 'Fraunces', serif;
+  font-weight: 900;
+  font-size: 68px;
+  line-height: 0.95;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  margin-bottom: 18px;
+}
+.headline .accent { color: var(--accent); font-style: italic; }
+
+.deck {
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: 22px;
+  line-height: 1.35;
+  color: var(--ink-soft);
+  max-width: 920px;
+  margin-bottom: 36px;
+  letter-spacing: -0.005em;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 36px;
+}
+.stat { padding: 18px 22px 18px 0; border-right: 1px solid var(--rule-soft); position: relative; }
+.stat:last-child { border-right: none; padding-right: 0; }
+.stat:not(:first-child) { padding-left: 22px; }
+.stat .label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--ink-soft);
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+.stat .figure {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-size: 40px;
+  line-height: 1;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+.stat.hot .figure { color: var(--accent); }
+.stat.cool .figure { color: var(--snow); }
+.stat.flat .figure { color: var(--ink-soft); }
+.stat .unit {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 400;
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin-top: 6px;
+  line-height: 1.3;
+}
+
+.chart-block { margin-bottom: 36px; }
+.chart-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  margin-bottom: 6px;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+.chart-subtitle {
+  font-family: 'Fraunces', serif;
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 16px;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.chart-wrap {
+  position: relative;
+  background: var(--paper-bright);
+  border: 1px solid var(--rule-soft);
+  padding: 22px 26px 16px;
+}
+svg.chart { width: 100%; display: block; font-family: 'IBM Plex Mono', monospace; }
+
+.evidence-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+.evidence { border-top: 2px solid var(--ink); padding-top: 16px; }
+.evidence .label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  margin-bottom: 10px;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+.evidence .quote {
+  font-family: 'Fraunces', serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--ink);
+  margin-bottom: 12px;
+  letter-spacing: -0.005em;
+}
+.evidence .source {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-soft);
+}
+.evidence.contrast { border-top-color: var(--snow); }
+.evidence.contrast .label, .evidence.contrast .source { color: var(--snow); }
+
+.footer {
+  border-top: 1px solid var(--rule);
+  padding-top: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 11px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.footer .left { max-width: 720px; }
+.footer .right {
+  text-align: right;
+  font-family: 'IBM Plex Mono', monospace;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 10px;
+  white-space: nowrap;
+}
+.footer strong { color: var(--ink); font-weight: 600; }
+
+.divider { width: 36px; height: 1px; background: var(--ink); margin: 4px 0 16px; }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+<div class="kicker">
+  <span class="file">EXHIBIT H · CLIMATE FORCING · LAC COULONGE 1972–2026</span>
+  <span class="meta">Northern Reservoirs Flood Watch · Compiled May 2026</span>
+</div>
+
+<h1 class="headline">
+  Less <span class="accent">snow</span>.<br>
+  Bigger <span class="accent">floods</span>.
+</h1>
+
+<p class="deck">
+  Lac Coulonge yearly peaks are up 59&nbsp;cm on average since 2017. Across upper-basin ECCC stations,
+  peak winter snowpack is down 12% over the same period; spring precipitation is up 16%.
+  The combined climate forcing is roughly flat. The floods are not.
+</p>
+
+<div class="stats">
+  <div class="stat hot">
+    <div class="label">Lac Coulonge peak</div>
+    <div class="figure">+59<span style="font-size:22px">cm</span></div>
+    <div class="unit">post-2017 mean<br>vs 1972–2016</div>
+  </div>
+  <div class="stat cool">
+    <div class="label">Peak snowpack</div>
+    <div class="figure">−12<span style="font-size:22px">%</span></div>
+    <div class="unit">basin-mean Feb–Mar max<br>(70.9 → 62.3 cm)</div>
+  </div>
+  <div class="stat flat">
+    <div class="label">Spring precipitation</div>
+    <div class="figure">+16<span style="font-size:22px">%</span></div>
+    <div class="unit">basin-mean Apr–May<br>(140 → 162 mm)</div>
+  </div>
+  <div class="stat flat">
+    <div class="label">Combined climate driver</div>
+    <div class="figure">~flat</div>
+    <div class="unit">snowpack down,<br>spring rain modestly up</div>
+  </div>
+</div>
+
+<div class="chart-block">
+  <div class="chart-title">Figures 1–3 · Lac Coulonge peaks vs upper-basin climate, 1972–2026</div>
+  <div class="chart-subtitle">Three panels share the same time axis. The eye does the comparison: peaks step up sharply post-2017; climate variables do not.</div>
+  <div class="chart-wrap">
+    <svg class="chart" viewBox="0 0 1080 760" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <pattern id="hatch" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)">
+          <line x1="0" y1="0" x2="0" y2="6" stroke="rgba(20,23,26,0.06)" stroke-width="3"/>
+        </pattern>
+      </defs>
+      <g id="chart-content"></g>
+    </svg>
+  </div>
+</div>
+
+<div class="evidence-grid">
+  <div class="evidence">
+    <div class="label">What the data shows</div>
+    <div class="divider"></div>
+    <div class="quote">
+      "Three of the five super-flood years on record (2017, 2023, 2026) had below-average upper-basin
+      snowpack going into the freshet. The basin is now producing super-floods at climate inputs that
+      historically did not produce them. That is a regime change in lake response, not in weather."
+    </div>
+    <div class="source">— Northern Reservoirs Flood Watch case file · Test B / Exhibit H · May 2026</div>
+  </div>
+
+  <div class="evidence contrast">
+    <div class="label">What the community asked</div>
+    <div class="divider" style="background: var(--snow);"></div>
+    <div class="quote">
+      "I remember as a kid we could climb up on our garage roof and slide off the roof on to the snow
+      bank (1970–1980's). I haven't seen snow piled up beside our garage the same in 20+ years.
+      It would be interesting to see the comparison with the flood years over the last 50 years."
+    </div>
+    <div class="source">— Northern Reservoirs Flood Watch member · FB thread · 8 May 2026</div>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="left">
+    <strong>Source data</strong> · Lac Coulonge yearly peaks compiled from ORRPB historical records 1972–2026 (n = 55).
+    Climate inputs from ECCC daily climate data at three upper-basin stations causally upstream of Lac Coulonge:
+    Val-d'Or A (high north headwaters, 1972–2025), Parent (Cabonga headwaters, 1972–2026),
+    Barrage Témiscamingue (main feeder, 1972–2026).
+    <strong>Method</strong> · Peak snowpack = max daily Snow-on-Ground (cm) in Feb–Mar.
+    Spring precipitation = sum of Total Precip (mm) in April + May. Basin metric = unweighted mean
+    across stations with ≥30 days observed for that year.
+    <strong>Note on "Total Precip" vs "Total Rain"</strong> · ECCC discontinued the separated Total Rain field
+    at these stations in the late 1990s; Total Precip is the only field continuous across the full
+    1972–present record. By April–May, precipitation at upper-basin stations is overwhelmingly rain.
+    <strong>Snowpack data gap</strong> · Snow-on-Ground reporting is sparse 1996–2001 at the upper-basin
+    stations (era of broader ECCC snow-program changes); affected years are shown as breaks in the
+    middle-panel line.
+  </div>
+  <div class="right">
+    github.com/aachtenberg/<br>ottawa-river-freshet<br>
+    <span style="opacity:0.5">v1 · MAY 2026</span>
+  </div>
+</div>
+
+</div>
+
+<script>
+const SVG_NS = 'http://www.w3.org/2000/svg';
+const svg = document.querySelector('svg.chart');
+const content = svg.querySelector('#chart-content');
+
+// === Embedded data ====================================================
+const peaks = {
+  1972: 107.87, 1973: 107.64, 1974: 108.27, 1975: 107.46, 1976: 107.72,
+  1977: 107.46, 1978: 107.15, 1979: 108.85, 1980: 107.52, 1981: 107.85,
+  1982: 107.00, 1983: 108.16, 1984: 106.65, 1985: 108.40, 1986: 107.02,
+  1987: 106.64, 1988: 107.05, 1989: 107.20, 1990: 107.21, 1991: 107.50,
+  1992: 107.36, 1993: 106.61, 1994: 106.60, 1995: 107.27, 1996: 107.88,
+  1997: 107.78, 1998: 107.79, 1999: 106.78, 2000: 106.66, 2001: 107.01,
+  2002: 108.32, 2003: 106.94, 2004: 107.44, 2005: 107.23, 2006: 107.63,
+  2007: 106.77, 2008: 107.49, 2009: 107.72, 2010: 106.74, 2011: 107.55,
+  2012: 107.58, 2013: 107.96, 2014: 108.01, 2015: 107.38, 2016: 107.60,
+  2017: 108.52, 2018: 107.84, 2019: 109.17, 2020: 107.44, 2021: 106.67,
+  2022: 107.61, 2023: 108.77, 2024: 107.49, 2025: 108.15, 2026: 108.63,
+};
+const snowpack = {
+  1972: 147.0, 1973: 68.5, 1974: 113.0, 1975: 70.0, 1976: 86.5,
+  1977: 110.0, 1978: 86.0, 1979: 87.0, 1980: 45.0, 1981: 79.5,
+  1982: 82.5, 1983: 49.0, 1984: 76.5, 1985: 79.0, 1986: 79.0,
+  1987: 69.5, 1988: 68.0, 1989: 60.0, 1990: 62.0, 1991: 51.5,
+  1992: 72.5, 1993: 51.5, 1994: 59.0, 1995: 53.5, 1996: null,
+  1997: null, 1998: 41.0, 1999: null, 2000: null, 2001: null,
+  2002: 89.0, 2003: 93.0, 2004: 64.5, 2005: 62.5, 2006: 84.7,
+  2007: 42.0, 2008: 54.0, 2009: 65.0, 2010: 56.7, 2011: 51.0,
+  2012: 74.7, 2013: 54.3, 2014: 76.0, 2015: 52.7, 2016: 68.0,
+  2017: 62.0, 2018: 53.3, 2019: 82.7, 2020: 74.0, 2021: 52.0,
+  2022: 71.7, 2023: 65.7, 2024: 40.5, 2025: 60.3, 2026: 60.5,
+};
+const precip = {
+  1972: 82.6, 1973: 144.6, 1974: 247.2, 1975: 116.4, 1976: 144.9,
+  1977: 97.2, 1978: 114.0, 1979: 180.8, 1980: 135.1, 1981: 196.9,
+  1982: 115.8, 1983: 210.5, 1984: 207.9, 1985: 132.8, 1986: 192.1,
+  1987: 128.6, 1988: 181.2, 1989: 137.6, 1990: 131.3, 1991: 159.8,
+  1992: 88.5, 1993: 139.7, 1994: 124.1, 1995: 218.4, 1996: 116.6,
+  1997: 138.5, 1998: 85.1, 1999: 99.5, 2000: 137.0, 2001: 150.6,
+  2002: 143.1, 2003: 108.7, 2004: 145.4, 2005: 115.0, 2006: 129.7,
+  2007: 126.1, 2008: 147.9, 2009: 142.4, 2010: 86.1, 2011: 136.0,
+  2012: 79.0, 2013: 179.4, 2014: 130.7, 2015: 140.7, 2016: 123.8,
+  2017: 205.0, 2018: 151.6, 2019: 242.2, 2020: 126.7, 2021: 69.5,
+  2022: 214.4, 2023: 162.1, 2024: 154.2, 2025: 141.2, 2026: 151.4,
+};
+
+// === Layout ===========================================================
+const W = 1080, H = 760;
+const margin = { top: 14, right: 24, bottom: 64, left: 56 };
+const plotW = W - margin.left - margin.right;
+const PANEL_H = 200;
+const PANEL_GAP = 24;
+const PANEL_TOPS = [
+  margin.top,
+  margin.top + PANEL_H + PANEL_GAP,
+  margin.top + 2 * (PANEL_H + PANEL_GAP),
+];
+
+const years = Object.keys(peaks).map(Number).sort((a,b)=>a-b);
+const yearMin = years[0], yearMax = years[years.length - 1];
+const x = year => margin.left + ((year - yearMin) / (yearMax - yearMin)) * plotW;
+const periodSplit = 2016.5;
+const xSplit = x(periodSplit);
+const barW = (plotW / years.length) - 3;
+
+// Helper: y-scale within a panel
+function makeY(panelTop, panelH, vMin, vMax) {
+  return v => panelTop + panelH - ((v - vMin) / (vMax - vMin)) * panelH;
+}
+
+// === Background period tints (across all three panels) ================
+const bgTotalH = PANEL_TOPS[2] + PANEL_H - PANEL_TOPS[0];
+const bg1 = document.createElementNS(SVG_NS, 'rect');
+bg1.setAttribute('x', margin.left);
+bg1.setAttribute('y', PANEL_TOPS[0]);
+bg1.setAttribute('width', xSplit - margin.left);
+bg1.setAttribute('height', bgTotalH);
+bg1.setAttribute('fill', 'rgba(20,23,26,0.025)');
+content.appendChild(bg1);
+
+const bg2 = document.createElementNS(SVG_NS, 'rect');
+bg2.setAttribute('x', xSplit);
+bg2.setAttribute('y', PANEL_TOPS[0]);
+bg2.setAttribute('width', margin.left + plotW - xSplit);
+bg2.setAttribute('height', bgTotalH);
+bg2.setAttribute('fill', 'rgba(179,38,30,0.06)');
+content.appendChild(bg2);
+
+// === Panel 1: Lac Coulonge yearly peaks ===============================
+{
+  const PT = PANEL_TOPS[0];
+  const yMin = 106.0, yMax = 109.5;
+  const y = makeY(PT, PANEL_H, yMin, yMax);
+
+  const ticks = [106.0, 107.0, 108.0, 108.5, 109.0];
+  ticks.forEach(t => {
+    const yy = y(t);
+    const isSF = Math.abs(t - 108.5) < 0.001;
+    const line = document.createElementNS(SVG_NS, 'line');
+    line.setAttribute('x1', margin.left);
+    line.setAttribute('x2', margin.left + plotW);
+    line.setAttribute('y1', yy);
+    line.setAttribute('y2', yy);
+    if (isSF) {
+      line.setAttribute('stroke', '#b3261e');
+      line.setAttribute('stroke-width', '1.2');
+      line.setAttribute('stroke-dasharray', '6 4');
+    } else {
+      line.setAttribute('stroke', 'rgba(20,23,26,0.08)');
+    }
+    content.appendChild(line);
+
+    const lbl = document.createElementNS(SVG_NS, 'text');
+    lbl.setAttribute('x', margin.left - 8);
+    lbl.setAttribute('y', yy + 3);
+    lbl.setAttribute('text-anchor', 'end');
+    lbl.setAttribute('font-size', '10');
+    lbl.setAttribute('fill', isSF ? '#b3261e' : '#2c333a');
+    lbl.setAttribute('font-weight', isSF ? '600' : '400');
+    lbl.textContent = t.toFixed(1);
+    content.appendChild(lbl);
+  });
+
+  // Bars
+  years.forEach(yr => {
+    const v = peaks[yr];
+    const isP2 = yr >= 2017;
+    const isSF = v >= 108.5;
+    const bx = x(yr) - barW / 2;
+    const by = y(v);
+    const bh = (PT + PANEL_H) - by;
+    const r = document.createElementNS(SVG_NS, 'rect');
+    r.setAttribute('x', bx);
+    r.setAttribute('y', by);
+    r.setAttribute('width', barW);
+    r.setAttribute('height', bh);
+    r.setAttribute('fill', isSF ? '#b3261e' : (isP2 ? '#7a4244' : '#2c333a'));
+    content.appendChild(r);
+  });
+
+  // Panel label
+  const ttl = document.createElementNS(SVG_NS, 'text');
+  ttl.setAttribute('x', margin.left);
+  ttl.setAttribute('y', PT - 2);
+  ttl.setAttribute('font-size', '10');
+  ttl.setAttribute('font-weight', '700');
+  ttl.setAttribute('letter-spacing', '0.14em');
+  ttl.setAttribute('fill', '#2c333a');
+  ttl.textContent = 'FIG 1 · LAC COULONGE YEARLY PEAK (m above sea level)';
+  content.appendChild(ttl);
+
+  // Super-flood threshold label
+  const sf = document.createElementNS(SVG_NS, 'text');
+  sf.setAttribute('x', x(1995));
+  sf.setAttribute('y', y(108.5) - 6);
+  sf.setAttribute('text-anchor', 'middle');
+  sf.setAttribute('font-size', '9');
+  sf.setAttribute('font-weight', '600');
+  sf.setAttribute('letter-spacing', '0.12em');
+  sf.setAttribute('fill', '#b3261e');
+  sf.textContent = 'SUPER-FLOOD THRESHOLD · 108.5 m';
+  content.appendChild(sf);
+}
+
+// === Panel 2: Peak snowpack ===========================================
+{
+  const PT = PANEL_TOPS[1];
+  const yMin = 0, yMax = 160;
+  const y = makeY(PT, PANEL_H, yMin, yMax);
+
+  const ticks = [0, 40, 80, 120, 160];
+  ticks.forEach(t => {
+    const yy = y(t);
+    const line = document.createElementNS(SVG_NS, 'line');
+    line.setAttribute('x1', margin.left);
+    line.setAttribute('x2', margin.left + plotW);
+    line.setAttribute('y1', yy);
+    line.setAttribute('y2', yy);
+    line.setAttribute('stroke', 'rgba(20,23,26,0.08)');
+    content.appendChild(line);
+
+    const lbl = document.createElementNS(SVG_NS, 'text');
+    lbl.setAttribute('x', margin.left - 8);
+    lbl.setAttribute('y', yy + 3);
+    lbl.setAttribute('text-anchor', 'end');
+    lbl.setAttribute('font-size', '10');
+    lbl.setAttribute('fill', '#2c333a');
+    lbl.textContent = t;
+    content.appendChild(lbl);
+  });
+
+  // Era-mean reference lines (snowpack)
+  const preMean = 70.9, postMean = 62.3;
+  [
+    [margin.left, xSplit, preMean],
+    [xSplit, margin.left + plotW, postMean],
+  ].forEach(([x1, x2, mv]) => {
+    const ln = document.createElementNS(SVG_NS, 'line');
+    ln.setAttribute('x1', x1);
+    ln.setAttribute('x2', x2);
+    ln.setAttribute('y1', y(mv));
+    ln.setAttribute('y2', y(mv));
+    ln.setAttribute('stroke', '#2b5d8c');
+    ln.setAttribute('stroke-width', '1.4');
+    ln.setAttribute('stroke-dasharray', '4 3');
+    ln.setAttribute('opacity', '0.55');
+    content.appendChild(ln);
+  });
+
+  // Line + dot connecting non-null values, with breaks at nulls
+  let path = '';
+  years.forEach((yr, i) => {
+    const v = snowpack[yr];
+    if (v === null || v === undefined) return;
+    const px = x(yr);
+    const py = y(v);
+    path += (path === '' || snowpack[years[i - 1]] == null) ? `M${px},${py}` : ` L${px},${py}`;
+  });
+  const p = document.createElementNS(SVG_NS, 'path');
+  p.setAttribute('d', path);
+  p.setAttribute('fill', 'none');
+  p.setAttribute('stroke', '#2b5d8c');
+  p.setAttribute('stroke-width', '1.6');
+  p.setAttribute('opacity', '0.85');
+  content.appendChild(p);
+
+  years.forEach(yr => {
+    const v = snowpack[yr];
+    if (v === null || v === undefined) return;
+    const c = document.createElementNS(SVG_NS, 'circle');
+    c.setAttribute('cx', x(yr));
+    c.setAttribute('cy', y(v));
+    c.setAttribute('r', '2.4');
+    c.setAttribute('fill', '#2b5d8c');
+    content.appendChild(c);
+  });
+
+  // Panel label
+  const ttl = document.createElementNS(SVG_NS, 'text');
+  ttl.setAttribute('x', margin.left);
+  ttl.setAttribute('y', PT - 2);
+  ttl.setAttribute('font-size', '10');
+  ttl.setAttribute('font-weight', '700');
+  ttl.setAttribute('letter-spacing', '0.14em');
+  ttl.setAttribute('fill', '#2b5d8c');
+  ttl.textContent = 'FIG 2 · UPPER-BASIN PEAK SNOWPACK (cm, Feb–Mar max, basin mean)';
+  content.appendChild(ttl);
+
+  // Era mean labels
+  const lblPre = document.createElementNS(SVG_NS, 'text');
+  lblPre.setAttribute('x', margin.left + 8);
+  lblPre.setAttribute('y', y(preMean) - 4);
+  lblPre.setAttribute('font-size', '9');
+  lblPre.setAttribute('fill', '#2b5d8c');
+  lblPre.setAttribute('opacity', '0.85');
+  lblPre.textContent = `pre-2017 mean ${preMean.toFixed(1)} cm`;
+  content.appendChild(lblPre);
+
+  const lblPost = document.createElementNS(SVG_NS, 'text');
+  lblPost.setAttribute('x', xSplit + 8);
+  lblPost.setAttribute('y', y(postMean) - 4);
+  lblPost.setAttribute('font-size', '9');
+  lblPost.setAttribute('fill', '#2b5d8c');
+  lblPost.setAttribute('opacity', '0.85');
+  lblPost.textContent = `post-2017 mean ${postMean.toFixed(1)} cm`;
+  content.appendChild(lblPost);
+}
+
+// === Panel 3: Spring precipitation =====================================
+{
+  const PT = PANEL_TOPS[2];
+  const yMin = 0, yMax = 280;
+  const y = makeY(PT, PANEL_H, yMin, yMax);
+
+  const ticks = [0, 70, 140, 210, 280];
+  ticks.forEach(t => {
+    const yy = y(t);
+    const line = document.createElementNS(SVG_NS, 'line');
+    line.setAttribute('x1', margin.left);
+    line.setAttribute('x2', margin.left + plotW);
+    line.setAttribute('y1', yy);
+    line.setAttribute('y2', yy);
+    line.setAttribute('stroke', 'rgba(20,23,26,0.08)');
+    content.appendChild(line);
+
+    const lbl = document.createElementNS(SVG_NS, 'text');
+    lbl.setAttribute('x', margin.left - 8);
+    lbl.setAttribute('y', yy + 3);
+    lbl.setAttribute('text-anchor', 'end');
+    lbl.setAttribute('font-size', '10');
+    lbl.setAttribute('fill', '#2c333a');
+    lbl.textContent = t;
+    content.appendChild(lbl);
+  });
+
+  // Era-mean reference lines (precip)
+  const preMean = 139.8, postMean = 161.8;
+  [
+    [margin.left, xSplit, preMean],
+    [xSplit, margin.left + plotW, postMean],
+  ].forEach(([x1, x2, mv]) => {
+    const ln = document.createElementNS(SVG_NS, 'line');
+    ln.setAttribute('x1', x1);
+    ln.setAttribute('x2', x2);
+    ln.setAttribute('y1', y(mv));
+    ln.setAttribute('y2', y(mv));
+    ln.setAttribute('stroke', '#4a7a4a');
+    ln.setAttribute('stroke-width', '1.4');
+    ln.setAttribute('stroke-dasharray', '4 3');
+    ln.setAttribute('opacity', '0.55');
+    content.appendChild(ln);
+  });
+
+  // Bars
+  years.forEach(yr => {
+    const v = precip[yr];
+    if (v === null || v === undefined) return;
+    const bx = x(yr) - barW / 2;
+    const by = y(v);
+    const bh = (PT + PANEL_H) - by;
+    const r = document.createElementNS(SVG_NS, 'rect');
+    r.setAttribute('x', bx);
+    r.setAttribute('y', by);
+    r.setAttribute('width', barW);
+    r.setAttribute('height', bh);
+    r.setAttribute('fill', '#4a7a4a');
+    r.setAttribute('opacity', '0.78');
+    content.appendChild(r);
+  });
+
+  // Panel label
+  const ttl = document.createElementNS(SVG_NS, 'text');
+  ttl.setAttribute('x', margin.left);
+  ttl.setAttribute('y', PT - 2);
+  ttl.setAttribute('font-size', '10');
+  ttl.setAttribute('font-weight', '700');
+  ttl.setAttribute('letter-spacing', '0.14em');
+  ttl.setAttribute('fill', '#4a7a4a');
+  ttl.textContent = 'FIG 3 · UPPER-BASIN SPRING PRECIPITATION (mm, Apr–May sum, basin mean)';
+  content.appendChild(ttl);
+
+  // Era mean labels
+  const lblPre = document.createElementNS(SVG_NS, 'text');
+  lblPre.setAttribute('x', margin.left + 8);
+  lblPre.setAttribute('y', y(preMean) - 4);
+  lblPre.setAttribute('font-size', '9');
+  lblPre.setAttribute('fill', '#4a7a4a');
+  lblPre.setAttribute('opacity', '0.95');
+  lblPre.textContent = `pre-2017 mean ${preMean.toFixed(1)} mm`;
+  content.appendChild(lblPre);
+
+  const lblPost = document.createElementNS(SVG_NS, 'text');
+  lblPost.setAttribute('x', xSplit + 8);
+  lblPost.setAttribute('y', y(postMean) - 4);
+  lblPost.setAttribute('font-size', '9');
+  lblPost.setAttribute('fill', '#4a7a4a');
+  lblPost.setAttribute('opacity', '0.95');
+  lblPost.textContent = `post-2017 mean ${postMean.toFixed(1)} mm`;
+  content.appendChild(lblPost);
+}
+
+// === Shared X-axis (ticks + period labels) ============================
+const xTicks = [1975, 1985, 1995, 2005, 2015, 2025];
+const xAxisY = PANEL_TOPS[2] + PANEL_H + 4;
+xTicks.forEach(t => {
+  const xx = x(t);
+  const tk = document.createElementNS(SVG_NS, 'line');
+  tk.setAttribute('x1', xx);
+  tk.setAttribute('x2', xx);
+  tk.setAttribute('y1', xAxisY);
+  tk.setAttribute('y2', xAxisY + 4);
+  tk.setAttribute('stroke', '#2c333a');
+  content.appendChild(tk);
+
+  const lbl = document.createElementNS(SVG_NS, 'text');
+  lbl.setAttribute('x', xx);
+  lbl.setAttribute('y', xAxisY + 18);
+  lbl.setAttribute('text-anchor', 'middle');
+  lbl.setAttribute('font-size', '10');
+  lbl.setAttribute('fill', '#2c333a');
+  lbl.textContent = t;
+  content.appendChild(lbl);
+});
+
+// Period labels under x-axis
+const period1Lbl = document.createElementNS(SVG_NS, 'text');
+period1Lbl.setAttribute('x', margin.left + (xSplit - margin.left) / 2);
+period1Lbl.setAttribute('y', xAxisY + 36);
+period1Lbl.setAttribute('text-anchor', 'middle');
+period1Lbl.setAttribute('font-size', '10');
+period1Lbl.setAttribute('font-weight', '600');
+period1Lbl.setAttribute('letter-spacing', '0.08em');
+period1Lbl.setAttribute('fill', '#2c333a');
+period1Lbl.textContent = '1972 — 2016 · 45 YRS · 1 SUPER-FLOOD';
+content.appendChild(period1Lbl);
+
+const period2Lbl = document.createElementNS(SVG_NS, 'text');
+period2Lbl.setAttribute('x', xSplit + (margin.left + plotW - xSplit) / 2);
+period2Lbl.setAttribute('y', xAxisY + 36);
+period2Lbl.setAttribute('text-anchor', 'middle');
+period2Lbl.setAttribute('font-size', '10');
+period2Lbl.setAttribute('font-weight', '700');
+period2Lbl.setAttribute('letter-spacing', '0.08em');
+period2Lbl.setAttribute('fill', '#b3261e');
+period2Lbl.textContent = '2017 — 2026 · 10 YRS · 4 SUPER-FLOODS';
+content.appendChild(period2Lbl);
+
+// === Watermark + baked source attribution =============================
+const wmDefs = svg.querySelector('defs');
+const wmPattern = document.createElementNS(SVG_NS, 'pattern');
+wmPattern.setAttribute('id', 'exhibit-watermark');
+wmPattern.setAttribute('patternUnits', 'userSpaceOnUse');
+wmPattern.setAttribute('width', '420');
+wmPattern.setAttribute('height', '110');
+wmPattern.setAttribute('patternTransform', 'rotate(-22)');
+const wmText = document.createElementNS(SVG_NS, 'text');
+wmText.setAttribute('x', '0');
+wmText.setAttribute('y', '60');
+wmText.setAttribute('font-family', "'IBM Plex Mono', monospace");
+wmText.setAttribute('font-size', '14');
+wmText.setAttribute('font-weight', '600');
+wmText.setAttribute('letter-spacing', '0.10em');
+wmText.setAttribute('fill', 'rgba(20,23,26,0.07)');
+wmText.textContent = 'github.com/aachtenberg/ottawa-river-freshet · ';
+wmPattern.appendChild(wmText);
+wmDefs.appendChild(wmPattern);
+
+const wmRect = document.createElementNS(SVG_NS, 'rect');
+wmRect.setAttribute('x', margin.left);
+wmRect.setAttribute('y', PANEL_TOPS[0]);
+wmRect.setAttribute('width', plotW);
+wmRect.setAttribute('height', PANEL_TOPS[2] + PANEL_H - PANEL_TOPS[0]);
+wmRect.setAttribute('fill', 'url(#exhibit-watermark)');
+wmRect.setAttribute('pointer-events', 'none');
+content.appendChild(wmRect);
+
+const srcLine = document.createElementNS(SVG_NS, 'text');
+srcLine.setAttribute('x', W / 2);
+srcLine.setAttribute('y', H - 10);
+srcLine.setAttribute('text-anchor', 'middle');
+srcLine.setAttribute('font-family', "'IBM Plex Mono', monospace");
+srcLine.setAttribute('font-size', '10');
+srcLine.setAttribute('font-weight', '500');
+srcLine.setAttribute('letter-spacing', '0.05em');
+srcLine.setAttribute('fill', '#5d6066');
+srcLine.textContent = 'Source: ECCC daily climate data (3 upper-basin stations) · ORRPB historical records · Verify the original at github.com/aachtenberg/ottawa-river-freshet · v1';
+content.appendChild(srcLine);
+</script>
+
+</body>
+</html>

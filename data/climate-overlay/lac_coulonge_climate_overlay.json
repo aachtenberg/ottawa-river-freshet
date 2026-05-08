@@ -1,0 +1,452 @@
+{
+  "schema_version": 1,
+  "stations": [
+    "val-dor-a",
+    "parent",
+    "barrage-temiscamingue"
+  ],
+  "snowpack_window": "Feb-Mar (peak Snow-on-Ground)",
+  "rain_window": "Apr-May (sum of Total Rain)",
+  "records": [
+    {
+      "year": 1972,
+      "lac_coulonge_peak_m": 107.87,
+      "peak_sog_cm": 147.0,
+      "spring_precip_mm": 82.6,
+      "sog_n_stations": 2,
+      "precip_n_stations": 3
+    },
+    {
+      "year": 1973,
+      "lac_coulonge_peak_m": 107.64,
+      "peak_sog_cm": 68.5,
+      "spring_precip_mm": 144.6,
+      "sog_n_stations": 2,
+      "precip_n_stations": 3
+    },
+    {
+      "year": 1974,
+      "lac_coulonge_peak_m": 108.27,
+      "peak_sog_cm": 113.0,
+      "spring_precip_mm": 247.2,
+      "sog_n_stations": 2,
+      "precip_n_stations": 3
+    },
+    {
+      "year": 1975,
+      "lac_coulonge_peak_m": 107.46,
+      "peak_sog_cm": 70.0,
+      "spring_precip_mm": 116.4,
+      "sog_n_stations": 2,
+      "precip_n_stations": 3
+    },
+    {
+      "year": 1976,
+      "lac_coulonge_peak_m": 107.72,
+      "peak_sog_cm": 86.5,
+      "spring_precip_mm": 144.9,
+      "sog_n_stations": 2,
+      "precip_n_stations": 3
+    },
+    {
+      "year": 1977,
+      "lac_coulonge_peak_m": 107.46,
+      "peak_sog_cm": 110.0,
+      "spring_precip_mm": 97.2,
+      "sog_n_stations": 2,
+      "precip_n_stations": 3
+    },
+    {
+      "year": 1978,
+      "lac_coulonge_peak_m": 107.15,
+      "peak_sog_cm": 86.0,
+      "spring_precip_mm": 114.0,
+      "sog_n_stations": 2,
+      "precip_n_stations": 3
+    },
+    {
+      "year": 1979,
+      "lac_coulonge_peak_m": 108.85,
+      "peak_sog_cm": 87.0,
+      "spring_precip_mm": 180.8,
+      "sog_n_stations": 1,
+      "precip_n_stations": 2
+    },
+    {
+      "year": 1980,
+      "lac_coulonge_peak_m": 107.52,
+      "peak_sog_cm": 45.0,
+      "spring_precip_mm": 135.1,
+      "sog_n_stations": 1,
+      "precip_n_stations": 2
+    },
+    {
+      "year": 1981,
+      "lac_coulonge_peak_m": 107.85,
+      "peak_sog_cm": 79.5,
+      "spring_precip_mm": 196.9,
+      "sog_n_stations": 2,
+      "precip_n_stations": 2
+    },
+    {
+      "year": 1982,
+      "lac_coulonge_peak_m": 107.0,
+      "peak_sog_cm": 82.5,
+      "spring_precip_mm": 115.8,
+      "sog_n_stations": 2,
+      "precip_n_stations": 2
+    },
+    {
+      "year": 1983,
+      "lac_coulonge_peak_m": 108.16,
+      "peak_sog_cm": 49.0,
+      "spring_precip_mm": 210.5,
+      "sog_n_stations": 2,
+      "precip_n_stations": 2
+    },
+    {
+      "year": 1984,
+      "lac_coulonge_peak_m": 106.65,
+      "peak_sog_cm": 76.5,
+      "spring_precip_mm": 207.9,
+      "sog_n_stations": 2,
+      "precip_n_stations": 2
+    },
+    {
+      "year": 1985,
+      "lac_coulonge_peak_m": 108.4,
+      "peak_sog_cm": 79.0,
+      "spring_precip_mm": 132.8,
+      "sog_n_stations": 2,
+      "precip_n_stations": 2
+    },
+    {
+      "year": 1986,
+      "lac_coulonge_peak_m": 107.02,
+      "peak_sog_cm": 79.0,
+      "spring_precip_mm": 192.1,
+      "sog_n_stations": 2,
+      "precip_n_stations": 2
+    },
+    {
+      "year": 1987,
+      "lac_coulonge_peak_m": 106.64,
+      "peak_sog_cm": 69.5,
+      "spring_precip_mm": 128.6,
+      "sog_n_stations": 2,
+      "precip_n_stations": 2
+    },
+    {
+      "year": 1988,
+      "lac_coulonge_peak_m": 107.05,
+      "peak_sog_cm": 68.0,
+      "spring_precip_mm": 181.2,
+      "sog_n_stations": 2,
+      "precip_n_stations": 2
+    },
+    {
+      "year": 1989,
+      "lac_coulonge_peak_m": 107.2,
+      "peak_sog_cm": 60.0,
+      "spring_precip_mm": 137.6,
+      "sog_n_stations": 2,
+      "precip_n_stations": 2
+    },
+    {
+      "year": 1990,
+      "lac_coulonge_peak_m": 107.21,
+      "peak_sog_cm": 62.0,
+      "spring_precip_mm": 131.3,
+      "sog_n_stations": 2,
+      "precip_n_stations": 2
+    },
+    {
+      "year": 1991,
+      "lac_coulonge_peak_m": 107.5,
+      "peak_sog_cm": 51.5,
+      "spring_precip_mm": 159.8,
+      "sog_n_stations": 2,
+      "precip_n_stations": 2
+    },
+    {
+      "year": 1992,
+      "lac_coulonge_peak_m": 107.36,
+      "peak_sog_cm": 72.5,
+      "spring_precip_mm": 88.5,
+      "sog_n_stations": 2,
+      "precip_n_stations": 2
+    },
+    {
+      "year": 1993,
+      "lac_coulonge_peak_m": 106.61,
+      "peak_sog_cm": 51.5,
+      "spring_precip_mm": 139.7,
+      "sog_n_stations": 2,
+      "precip_n_stations": 2
+    },
+    {
+      "year": 1994,
+      "lac_coulonge_peak_m": 106.6,
+      "peak_sog_cm": 59.0,
+      "spring_precip_mm": 124.1,
+      "sog_n_stations": 2,
+      "precip_n_stations": 2
+    },
+    {
+      "year": 1995,
+      "lac_coulonge_peak_m": 107.27,
+      "peak_sog_cm": 53.5,
+      "spring_precip_mm": 218.4,
+      "sog_n_stations": 2,
+      "precip_n_stations": 2
+    },
+    {
+      "year": 1996,
+      "lac_coulonge_peak_m": 107.88,
+      "peak_sog_cm": null,
+      "spring_precip_mm": 116.6,
+      "sog_n_stations": 0,
+      "precip_n_stations": 2
+    },
+    {
+      "year": 1997,
+      "lac_coulonge_peak_m": 107.78,
+      "peak_sog_cm": null,
+      "spring_precip_mm": 138.5,
+      "sog_n_stations": 0,
+      "precip_n_stations": 2
+    },
+    {
+      "year": 1998,
+      "lac_coulonge_peak_m": 107.79,
+      "peak_sog_cm": 41.0,
+      "spring_precip_mm": 85.1,
+      "sog_n_stations": 1,
+      "precip_n_stations": 2
+    },
+    {
+      "year": 1999,
+      "lac_coulonge_peak_m": 106.78,
+      "peak_sog_cm": null,
+      "spring_precip_mm": 99.5,
+      "sog_n_stations": 0,
+      "precip_n_stations": 2
+    },
+    {
+      "year": 2000,
+      "lac_coulonge_peak_m": 106.66,
+      "peak_sog_cm": null,
+      "spring_precip_mm": 137.0,
+      "sog_n_stations": 0,
+      "precip_n_stations": 1
+    },
+    {
+      "year": 2001,
+      "lac_coulonge_peak_m": 107.01,
+      "peak_sog_cm": null,
+      "spring_precip_mm": 150.6,
+      "sog_n_stations": 0,
+      "precip_n_stations": 2
+    },
+    {
+      "year": 2002,
+      "lac_coulonge_peak_m": 108.32,
+      "peak_sog_cm": 89.0,
+      "spring_precip_mm": 143.1,
+      "sog_n_stations": 1,
+      "precip_n_stations": 2
+    },
+    {
+      "year": 2003,
+      "lac_coulonge_peak_m": 106.94,
+      "peak_sog_cm": 93.0,
+      "spring_precip_mm": 108.7,
+      "sog_n_stations": 1,
+      "precip_n_stations": 2
+    },
+    {
+      "year": 2004,
+      "lac_coulonge_peak_m": 107.44,
+      "peak_sog_cm": 64.5,
+      "spring_precip_mm": 145.4,
+      "sog_n_stations": 2,
+      "precip_n_stations": 3
+    },
+    {
+      "year": 2005,
+      "lac_coulonge_peak_m": 107.23,
+      "peak_sog_cm": 62.5,
+      "spring_precip_mm": 115.0,
+      "sog_n_stations": 2,
+      "precip_n_stations": 3
+    },
+    {
+      "year": 2006,
+      "lac_coulonge_peak_m": 107.63,
+      "peak_sog_cm": 84.7,
+      "spring_precip_mm": 129.7,
+      "sog_n_stations": 3,
+      "precip_n_stations": 3
+    },
+    {
+      "year": 2007,
+      "lac_coulonge_peak_m": 106.77,
+      "peak_sog_cm": 42.0,
+      "spring_precip_mm": 126.1,
+      "sog_n_stations": 3,
+      "precip_n_stations": 3
+    },
+    {
+      "year": 2008,
+      "lac_coulonge_peak_m": 107.49,
+      "peak_sog_cm": 54.0,
+      "spring_precip_mm": 147.9,
+      "sog_n_stations": 2,
+      "precip_n_stations": 3
+    },
+    {
+      "year": 2009,
+      "lac_coulonge_peak_m": 107.72,
+      "peak_sog_cm": 65.0,
+      "spring_precip_mm": 142.4,
+      "sog_n_stations": 3,
+      "precip_n_stations": 3
+    },
+    {
+      "year": 2010,
+      "lac_coulonge_peak_m": 106.74,
+      "peak_sog_cm": 56.7,
+      "spring_precip_mm": 86.1,
+      "sog_n_stations": 3,
+      "precip_n_stations": 3
+    },
+    {
+      "year": 2011,
+      "lac_coulonge_peak_m": 107.55,
+      "peak_sog_cm": 51.0,
+      "spring_precip_mm": 136.0,
+      "sog_n_stations": 3,
+      "precip_n_stations": 3
+    },
+    {
+      "year": 2012,
+      "lac_coulonge_peak_m": 107.58,
+      "peak_sog_cm": 74.7,
+      "spring_precip_mm": 79.0,
+      "sog_n_stations": 3,
+      "precip_n_stations": 3
+    },
+    {
+      "year": 2013,
+      "lac_coulonge_peak_m": 107.96,
+      "peak_sog_cm": 54.3,
+      "spring_precip_mm": 179.4,
+      "sog_n_stations": 3,
+      "precip_n_stations": 3
+    },
+    {
+      "year": 2014,
+      "lac_coulonge_peak_m": 108.01,
+      "peak_sog_cm": 76.0,
+      "spring_precip_mm": 130.7,
+      "sog_n_stations": 3,
+      "precip_n_stations": 3
+    },
+    {
+      "year": 2015,
+      "lac_coulonge_peak_m": 107.38,
+      "peak_sog_cm": 52.7,
+      "spring_precip_mm": 140.7,
+      "sog_n_stations": 3,
+      "precip_n_stations": 3
+    },
+    {
+      "year": 2016,
+      "lac_coulonge_peak_m": 107.6,
+      "peak_sog_cm": 68.0,
+      "spring_precip_mm": 123.8,
+      "sog_n_stations": 3,
+      "precip_n_stations": 2
+    },
+    {
+      "year": 2017,
+      "lac_coulonge_peak_m": 108.52,
+      "peak_sog_cm": 62.0,
+      "spring_precip_mm": 205.0,
+      "sog_n_stations": 3,
+      "precip_n_stations": 2
+    },
+    {
+      "year": 2018,
+      "lac_coulonge_peak_m": 107.84,
+      "peak_sog_cm": 53.3,
+      "spring_precip_mm": 151.6,
+      "sog_n_stations": 3,
+      "precip_n_stations": 2
+    },
+    {
+      "year": 2019,
+      "lac_coulonge_peak_m": 109.17,
+      "peak_sog_cm": 82.7,
+      "spring_precip_mm": 242.2,
+      "sog_n_stations": 3,
+      "precip_n_stations": 2
+    },
+    {
+      "year": 2020,
+      "lac_coulonge_peak_m": 107.44,
+      "peak_sog_cm": 74.0,
+      "spring_precip_mm": 126.7,
+      "sog_n_stations": 3,
+      "precip_n_stations": 2
+    },
+    {
+      "year": 2021,
+      "lac_coulonge_peak_m": 106.67,
+      "peak_sog_cm": 52.0,
+      "spring_precip_mm": 69.5,
+      "sog_n_stations": 3,
+      "precip_n_stations": 2
+    },
+    {
+      "year": 2022,
+      "lac_coulonge_peak_m": 107.61,
+      "peak_sog_cm": 71.7,
+      "spring_precip_mm": 214.4,
+      "sog_n_stations": 3,
+      "precip_n_stations": 2
+    },
+    {
+      "year": 2023,
+      "lac_coulonge_peak_m": 108.77,
+      "peak_sog_cm": 65.7,
+      "spring_precip_mm": 162.1,
+      "sog_n_stations": 3,
+      "precip_n_stations": 2
+    },
+    {
+      "year": 2024,
+      "lac_coulonge_peak_m": 107.49,
+      "peak_sog_cm": 40.5,
+      "spring_precip_mm": 154.2,
+      "sog_n_stations": 2,
+      "precip_n_stations": 2
+    },
+    {
+      "year": 2025,
+      "lac_coulonge_peak_m": 108.15,
+      "peak_sog_cm": 60.3,
+      "spring_precip_mm": 141.2,
+      "sog_n_stations": 3,
+      "precip_n_stations": 2
+    },
+    {
+      "year": 2026,
+      "lac_coulonge_peak_m": 108.633,
+      "peak_sog_cm": 60.5,
+      "spring_precip_mm": 151.4,
+      "sog_n_stations": 2,
+      "precip_n_stations": 1
+    }
+  ]
+}
