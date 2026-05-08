@@ -46,13 +46,21 @@ The altered version, if presented as a case-file product, would therefore introd
 
 ## What this is not
 
-This document does **not** assess the intent of whoever produced the altered version. The most likely scenarios — in descending order of charitableness — are:
+This document does **not** assess the intent of whoever produced the altered version. The most likely scenarios — in roughly descending order of plausibility given the alteration signature — are:
 
-1. **Sympathetic-but-careless re-skin.** Someone reformatted the exhibit for FB sharing, swapped what they thought was a generic placeholder ("Contributor A" → "Planning Board Member") thinking it sounded more authoritative, and did not realize the swap materially changed the meaning.
-2. **Deliberate rhetorical strengthening.** Aware that "insider quote" plays better than "community member," consciously made the swap.
-3. **Adversarial framing.** Designed to discredit the case file by associating it with a fabricated quote that the Planning Board could legitimately challenge, in turn discrediting the actual case-file findings.
+1. **AI-mediated re-skin.** The alteration pattern is consistent with someone running the exhibit through a generative image or document model with a generic prompt like *"clean this up"* or *"make this look more professional."* Three signatures support this reading:
+   - "xgrunt.com" → "xGROWTH.com" — substitution of an unrecognized brand string with something that *sounds like* a plausible domain. A human deliberately altering would typically pick a domain that resolves; "xGROWTH.com" does not.
+   - "Contributor A" → "Planning Board Member" — substitution by topical association. The model would not recognize "Contributor A" as a load-bearing pseudonym (per `CONTRIBUTORS.md`), would treat it as a placeholder, and would substitute a more authoritative-sounding label drawn from surrounding context (the Planning Board is named twice elsewhere on the exhibit).
+   - Body copy, statistical figures, chart data, headline, and the contrasting Planning Board quote on the right panel are all preserved verbatim — consistent with a model doing a "polish" pass that touches only what looks like editable metadata, not with a human alterer pursuing a specific rhetorical goal who would more likely tweak substantive language as well.
+
+   If this is the actual provenance, the person who shared the altered version may not have noticed the substantive changes — generative substitution can produce text that *looks correct* to a casual review while having quietly changed material claims.
+2. **Sympathetic-but-careless re-skin.** Someone manually reformatted the exhibit for FB sharing, swapped what they thought was a generic placeholder ("Contributor A" → "Planning Board Member") thinking it sounded more authoritative, and did not realize the swap materially changed the meaning.
+3. **Deliberate rhetorical strengthening.** Aware that "insider quote" plays better than "community member," consciously made the swap.
+4. **Adversarial framing.** Designed to discredit the case file by associating it with a fabricated quote that the Planning Board could legitimately challenge, in turn discrediting the actual case-file findings.
 
 The case file takes no position on which scenario applies. The integrity record stands regardless of intent.
+
+If a similar alteration pattern (generic substitution of unrecognized identifiers — branding, attributions, placeholder labels — with topically plausible-sounding replacements while leaving body content intact) appears on other exhibits in future, that is itself diagnostic of AI-mediated alteration and worth flagging in any subsequent integrity records.
 
 ## Suggested public-engagement framing
 
