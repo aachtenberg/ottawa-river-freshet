@@ -218,14 +218,15 @@ svg.chart { width: 100%; display: block; font-family: 'IBM Plex Mono', monospace
 </div>
 
 <h1 class="headline">
-  Less <span class="accent">snow</span>.<br>
-  Bigger <span class="accent">floods</span>.
+  Less snow. More rain.<br>
+  <span class="accent">Much bigger</span> floods.
 </h1>
 
 <p class="deck">
-  Lac Coulonge yearly peaks are up 59&nbsp;cm on average since 2017. Across upper-basin ECCC stations,
-  peak winter snowpack is down 12% over the same period; spring precipitation is up 16%.
-  The combined climate forcing is roughly flat. The floods are not.
+  Across three upper-basin ECCC stations causally upstream of Lac Coulonge, peak winter snowpack is
+  down 12% since 2017 and spring precipitation is up 16%. The two climate signals partially offset.
+  Lac Coulonge yearly peaks, by contrast, are up 59&nbsp;cm on average. The climate moved a little.
+  The floods moved a lot.
 </p>
 
 <div class="stats">
@@ -358,6 +359,40 @@ const precip = {
   2012: 79.0, 2013: 179.4, 2014: 130.7, 2015: 140.7, 2016: 123.8,
   2017: 205.0, 2018: 151.6, 2019: 242.2, 2020: 126.7, 2021: 69.5,
   2022: 214.4, 2023: 162.1, 2024: 154.2, 2025: 141.2, 2026: 151.4,
+};
+
+// Per-station snowpack — for individual line overlays in Fig 2.
+// Coverage gaps reflect ECCC reporting gaps at each station, NOT zeros.
+const sog_val_dor_a = {
+  1972: 142.0, 1973: 58.0, 1974: 112.0, 1975: 79.0, 1976: 97.0,
+  1977: 119.0, 1978: 78.0, 1979: 87.0, 1980: 45.0, 1981: 91.0,
+  1982: 84.0, 1983: 56.0, 1984: 84.0, 1985: 89.0, 1986: 98.0,
+  1987: 63.0, 1988: 65.0, 1989: 55.0, 1990: 63.0, 1991: 52.0,
+  1992: 70.0, 1993: 56.0, 1994: 57.0, 1995: 49.0,
+  2006: 79.0, 2007: 57.0, 2008: 62.0, 2009: 66.0, 2010: 54.0,
+  2011: 35.0, 2012: 62.0, 2013: 47.0, 2014: 55.0, 2015: 35.0,
+  2016: 45.0, 2017: 38.0, 2018: 39.0, 2019: 75.0, 2020: 67.0,
+  2021: 26.0, 2022: 51.0, 2023: 52.0, 2025: 55.0,
+};
+const sog_parent = {
+  1972: 152.0, 1973: 79.0, 1974: 114.0, 1975: 61.0, 1976: 76.0,
+  1977: 101.0, 1978: 94.0,
+  2004: 64.0, 2005: 52.0, 2006: 75.0, 2007: 33.0, 2009: 61.0,
+  2010: 58.0, 2011: 46.0, 2012: 71.0, 2013: 52.0, 2014: 82.0,
+  2015: 59.0, 2016: 75.0, 2017: 94.0, 2018: 66.0, 2019: 83.0,
+  2020: 94.0, 2021: 77.0, 2022: 109.0, 2023: 86.0, 2024: 52.0,
+  2025: 70.0, 2026: 58.0,
+};
+const sog_barrage_temiscamingue = {
+  1981: 68.0, 1982: 81.0, 1983: 42.0, 1984: 69.0, 1985: 69.0,
+  1986: 60.0, 1987: 76.0, 1988: 71.0, 1989: 65.0, 1990: 61.0,
+  1991: 51.0, 1992: 75.0, 1993: 47.0, 1994: 61.0, 1995: 58.0,
+  1998: 41.0,
+  2002: 89.0, 2003: 93.0, 2004: 65.0, 2005: 73.0, 2006: 100.0,
+  2007: 36.0, 2008: 46.0, 2009: 68.0, 2010: 58.0, 2011: 72.0,
+  2012: 91.0, 2013: 64.0, 2014: 91.0, 2015: 64.0, 2016: 84.0,
+  2017: 54.0, 2018: 55.0, 2019: 90.0, 2020: 61.0, 2021: 53.0,
+  2022: 55.0, 2023: 59.0, 2024: 29.0, 2025: 56.0, 2026: 63.0,
 };
 
 // === Layout ===========================================================
@@ -523,7 +558,54 @@ content.appendChild(bg2);
     content.appendChild(ln);
   });
 
-  // Line + dot connecting non-null values, with breaks at nulls
+  // Helper: draw a station snowpack line (sparse data → connect only
+  // adjacent years; large gaps render as breaks).
+  function drawStationLine(stationData, color, dasharray, label) {
+    const stationYears = Object.keys(stationData).map(Number).sort((a, b) => a - b);
+    let path = '';
+    let prevYear = null;
+    stationYears.forEach(yr => {
+      const v = stationData[yr];
+      const px = x(yr);
+      const py = y(v);
+      // Break the path if the previous data point was more than 2 years ago
+      // (prevents drawing implausibly long line segments across gaps).
+      if (prevYear !== null && yr - prevYear <= 2) {
+        path += ` L${px},${py}`;
+      } else {
+        path += (path === '' ? '' : ' ') + `M${px},${py}`;
+      }
+      prevYear = yr;
+    });
+    const p = document.createElementNS(SVG_NS, 'path');
+    p.setAttribute('d', path);
+    p.setAttribute('fill', 'none');
+    p.setAttribute('stroke', color);
+    p.setAttribute('stroke-width', '1.0');
+    if (dasharray) p.setAttribute('stroke-dasharray', dasharray);
+    p.setAttribute('opacity', '0.55');
+    content.appendChild(p);
+
+    // Tiny per-year dots on each station, even tinier than basin-mean.
+    stationYears.forEach(yr => {
+      const v = stationData[yr];
+      const c = document.createElementNS(SVG_NS, 'circle');
+      c.setAttribute('cx', x(yr));
+      c.setAttribute('cy', y(v));
+      c.setAttribute('r', '1.4');
+      c.setAttribute('fill', color);
+      c.setAttribute('opacity', '0.55');
+      content.appendChild(c);
+    });
+  }
+
+  // Per-station lines underneath the basin mean — same blue family,
+  // lower opacity, distinguished by dash pattern.
+  drawStationLine(sog_val_dor_a,            '#5a85aa', '',         'Val-d\'Or A');
+  drawStationLine(sog_parent,               '#5a85aa', '4 3',      'Parent');
+  drawStationLine(sog_barrage_temiscamingue,'#5a85aa', '1 3',      'Barrage Témiscamingue');
+
+  // Basin-mean line + dots on top
   let path = '';
   years.forEach((yr, i) => {
     const v = snowpack[yr];
@@ -535,9 +617,9 @@ content.appendChild(bg2);
   const p = document.createElementNS(SVG_NS, 'path');
   p.setAttribute('d', path);
   p.setAttribute('fill', 'none');
-  p.setAttribute('stroke', '#2b5d8c');
-  p.setAttribute('stroke-width', '1.6');
-  p.setAttribute('opacity', '0.85');
+  p.setAttribute('stroke', '#1d4163');
+  p.setAttribute('stroke-width', '2.0');
+  p.setAttribute('opacity', '0.95');
   content.appendChild(p);
 
   years.forEach(yr => {
@@ -546,8 +628,8 @@ content.appendChild(bg2);
     const c = document.createElementNS(SVG_NS, 'circle');
     c.setAttribute('cx', x(yr));
     c.setAttribute('cy', y(v));
-    c.setAttribute('r', '2.4');
-    c.setAttribute('fill', '#2b5d8c');
+    c.setAttribute('r', '2.6');
+    c.setAttribute('fill', '#1d4163');
     content.appendChild(c);
   });
 
@@ -558,8 +640,8 @@ content.appendChild(bg2);
   ttl.setAttribute('font-size', '10');
   ttl.setAttribute('font-weight', '700');
   ttl.setAttribute('letter-spacing', '0.14em');
-  ttl.setAttribute('fill', '#2b5d8c');
-  ttl.textContent = 'FIG 2 · UPPER-BASIN PEAK SNOWPACK (cm, Feb–Mar max, basin mean)';
+  ttl.setAttribute('fill', '#1d4163');
+  ttl.textContent = 'FIG 2 · UPPER-BASIN PEAK SNOWPACK (cm, Feb–Mar max)';
   content.appendChild(ttl);
 
   // Era mean labels
@@ -567,19 +649,51 @@ content.appendChild(bg2);
   lblPre.setAttribute('x', margin.left + 8);
   lblPre.setAttribute('y', y(preMean) - 4);
   lblPre.setAttribute('font-size', '9');
-  lblPre.setAttribute('fill', '#2b5d8c');
+  lblPre.setAttribute('fill', '#1d4163');
   lblPre.setAttribute('opacity', '0.85');
-  lblPre.textContent = `pre-2017 mean ${preMean.toFixed(1)} cm`;
+  lblPre.textContent = `pre-2017 basin mean ${preMean.toFixed(1)} cm`;
   content.appendChild(lblPre);
 
   const lblPost = document.createElementNS(SVG_NS, 'text');
   lblPost.setAttribute('x', xSplit + 8);
   lblPost.setAttribute('y', y(postMean) - 4);
   lblPost.setAttribute('font-size', '9');
-  lblPost.setAttribute('fill', '#2b5d8c');
+  lblPost.setAttribute('fill', '#1d4163');
   lblPost.setAttribute('opacity', '0.85');
-  lblPost.textContent = `post-2017 mean ${postMean.toFixed(1)} cm`;
+  lblPost.textContent = `post-2017 basin mean ${postMean.toFixed(1)} cm`;
   content.appendChild(lblPost);
+
+  // Inline legend in the right side of the panel
+  const legendItems = [
+    { label: 'BASIN MEAN', color: '#1d4163', width: 2.0, dash: '' },
+    { label: "Val-d'Or A",  color: '#5a85aa', width: 1.0, dash: '' },
+    { label: 'Parent',      color: '#5a85aa', width: 1.0, dash: '4 3' },
+    { label: 'B. Témis.',   color: '#5a85aa', width: 1.0, dash: '1 3' },
+  ];
+  const legendX0 = margin.left + plotW - 220;
+  const legendY = PT + 14;
+  legendItems.forEach((it, i) => {
+    const yy = legendY + i * 11;
+    const ln = document.createElementNS(SVG_NS, 'line');
+    ln.setAttribute('x1', legendX0);
+    ln.setAttribute('x2', legendX0 + 18);
+    ln.setAttribute('y1', yy);
+    ln.setAttribute('y2', yy);
+    ln.setAttribute('stroke', it.color);
+    ln.setAttribute('stroke-width', it.width);
+    if (it.dash) ln.setAttribute('stroke-dasharray', it.dash);
+    ln.setAttribute('opacity', i === 0 ? '0.95' : '0.7');
+    content.appendChild(ln);
+    const lbl = document.createElementNS(SVG_NS, 'text');
+    lbl.setAttribute('x', legendX0 + 24);
+    lbl.setAttribute('y', yy + 3);
+    lbl.setAttribute('font-size', '9');
+    lbl.setAttribute('font-weight', i === 0 ? '700' : '400');
+    lbl.setAttribute('letter-spacing', i === 0 ? '0.10em' : '0');
+    lbl.setAttribute('fill', i === 0 ? '#1d4163' : '#5a85aa');
+    lbl.textContent = it.label;
+    content.appendChild(lbl);
+  });
 }
 
 // === Panel 3: Spring precipitation =====================================

@@ -191,14 +191,25 @@ def main():
             "precip_n_stations": len(b["precip_stations"]),
         })
 
+    # Also expose per-station snowpack so Exhibit H Fig 2 can show
+    # individual station lines underneath the basin mean.
+    per_station_records = {}
+    for slug, by_year in per_station.items():
+        per_station_records[slug] = {
+            y: by_year[y]["peak_sog_cm"]
+            for y in sorted(by_year)
+            if by_year[y]["peak_sog_cm"] is not None
+        }
+
     OUT_JSON.parent.mkdir(parents=True, exist_ok=True)
     with OUT_JSON.open("w") as f:
         json.dump({
-            "schema_version": 1,
+            "schema_version": 2,
             "stations": [s for s, _ in STATIONS],
             "snowpack_window": "Feb-Mar (peak Snow-on-Ground)",
-            "rain_window": "Apr-May (sum of Total Rain)",
+            "precip_window": "Apr-May (sum of Total Precip)",
             "records": records,
+            "per_station_snowpack": per_station_records,
         }, f, indent=2)
     print(f"Wrote {len(records)} paired records to {OUT_JSON}")
 
