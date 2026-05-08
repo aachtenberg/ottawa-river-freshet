@@ -172,6 +172,76 @@ If nothing flagged, say "None."
 Free-form. Anything you observed that seems worth flagging for the human reader. Keep brief.
 ```
 
+## Structured forecast snapshot (MANDATORY when ORRPB forecast is reachable)
+
+After parsing the ORRPB forecast page for the brief, ALSO write a structured JSON snapshot to `freshet-public/data/forecast/latest.json`. The dashboard at `freshet.xgrunt.com` reads this file directly from the public mirror to drive the post-peak status text — it is no longer hard-coded boilerplate. Stale or missing JSON degrades the dashboard's status messaging. Treat this output as part of the routine's contract.
+
+Schema (write all fields; use `null` only when truly unknown):
+
+```json
+{
+  "schema_version": 1,
+  "fetched_at_iso": "2026-05-08T11:32:00Z",
+  "source": {
+    "url": "https://www.ottawariver.ca/conditions/?display=forecast",
+    "last_update_iso": "2026-05-07T20:16:00Z",
+    "next_update_expected_iso": "2026-05-08T20:15:00Z",
+    "next_update_cadence": "daily"
+  },
+  "mode": "daily-freshet",
+  "freshet_active": true,
+  "further_increases_possible": true,
+  "further_increases_reach": "Mattawa to Lac Coulonge",
+  "further_increases_includes_lac_coulonge": true,
+  "forecast_text": "Spring runoff in the northern part of the basin is expected to rise this weekend due to forecast rain..."
+}
+```
+
+### Field semantics
+
+- `fetched_at_iso` — your routine's run timestamp, UTC ISO-8601.
+- `source.last_update_iso` — the "Last Update: …" timestamp ORRPB prints on the forecast page, converted to UTC ISO-8601. Convert from the EDT/EST Eastern timezone the page renders in.
+- `source.next_update_expected_iso` — same conversion for the "Next Update: …" line. If the page omits one (e.g. off-season), set to `null`.
+- `source.next_update_cadence` — `"daily"`, `"weekly"`, or `"unknown"`. Inferred from the gap between `last_update_iso` and `next_update_expected_iso` and from any explicit cadence text on the page (e.g. "weekly summary", "next bulletin in seven days"). If the page only shows a single dated update with no next-update commitment, default to `"unknown"`.
+- `mode` — one of:
+  - `"daily-freshet"` — daily ORRPB forecast updates with active-freshet language (snowmelt, runoff, rising/falling levels framed in m³/s, peak warnings).
+  - `"weekly-notice"` — ORRPB has shifted to weekly summaries / bulletins, typically post-freshet through fall. Cadence ≥5 days between updates and language no longer references active spring runoff.
+  - `"off-season"` — winter/dormant period; no current forecast, page may show "summary will resume" or similar.
+  - `"unreachable"` — page returned a non-2xx after the verify-before-outage guardrail completed. **In this case, DO NOT overwrite `latest.json` — preserve the last-known-good file.** Update only the brief markdown to note the outage. (To distinguish from the file simply being missing on the dashboard, the dashboard has its own staleness check based on `fetched_at_iso`.)
+- `freshet_active` — `true` when `mode` is `daily-freshet`, otherwise `false`.
+- `further_increases_possible` — `true` when ORRPB's forecast prose contains language like *"further increases … cannot be ruled out"*, *"levels expected to rise"*, *"second peak possible"*, or equivalent. Set `false` when ORRPB explicitly forecasts continued decline with no caveat. `null` if the page is silent on the question (off-season or weekly notice with no flood framing).
+- `further_increases_reach` — short geographic descriptor as ORRPB writes it, e.g. `"Mattawa to Lac Coulonge"`, `"Lake Coulonge to the Montreal Region"`, `"northern basin"`. `null` if not applicable.
+- `further_increases_includes_lac_coulonge` — `true` if the named reach explicitly includes Lac Coulonge or any point upstream of it (Pembroke, Mattawa, etc., since their water flows past Lac Coulonge). The case file's property gauge is Lac Coulonge, so this boolean is what the dashboard uses.
+- `forecast_text` — the verbatim forecast paragraph(s), single string, newlines preserved. Truncate at ~1500 characters if unusually long.
+
+### Mode-detection examples
+
+- *"Last Update: 2026-05-07 4:16 PM EDT, Next Update: 2026-05-08 4:15 PM EDT"* + active-freshet prose → `mode: "daily-freshet"`.
+- *"Last Update: 2026-08-12, Next Update: 2026-08-19"* + summer water-level summary prose → `mode: "weekly-notice"`.
+- Page renders only a generic "freshet has ended" notice or last update is >30 days ago → `mode: "off-season"`.
+- Page returns 503 / blank after the guardrail confirms it → do not write the file.
+
+### Write the file
+
+Use Python via Bash, atomic-style (write to tempfile then rename):
+
+```bash
+mkdir -p freshet-public/data/forecast
+python3 - <<'PY'
+import json, os, tempfile
+data = {
+  "schema_version": 1,
+  # ... fill from your ORRPB parse ...
+}
+fd, tmp = tempfile.mkstemp(dir="freshet-public/data/forecast", suffix=".json")
+with os.fdopen(fd, "w") as f:
+    json.dump(data, f, indent=2)
+os.replace(tmp, "freshet-public/data/forecast/latest.json")
+PY
+```
+
+Stage and commit `freshet-public/data/forecast/latest.json` alongside the brief markdown in the same commit. Mirror sync (CI) propagates both atomically.
+
 ## Operating instructions
 
 - **Read yesterday's brief first** to compute day-over-day deltas: `git log --oneline -- freshet-public/data/daily-briefs/ | head -3` then `cat` the most recent file. If no prior brief exists, deltas are blank.

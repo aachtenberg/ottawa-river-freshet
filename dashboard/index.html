@@ -841,6 +841,8 @@ const charts = {};
 let lastDataTimestamp = null;
 let lastData = null;
 let lastSeasonPeaks = {};
+let forecastData = null;     // ORRPB forecast snapshot — see loadForecast()
+let forecastLoading = null;
 
 // ---- Page-level i18n + theme (persisted) ---------------------------------
 let pageLang = (typeof localStorage !== 'undefined' && localStorage.getItem('pageLang')) || 'en';
@@ -1634,6 +1636,48 @@ function renderProperty(lcLatest, trendPerHour) {
   }).join('');
 }
 
+// ---- ORRPB forecast snapshot ---------------------------------------------
+// Fetched once per page-load from the public mirror. Drives the post-peak
+// status text in renderSummary so it reflects the actual current ORRPB
+// forecast rather than hard-coded boilerplate. Schema is documented in
+// freshet-public/routines/freshet-daily-brief.md "Structured forecast snapshot".
+const FORECAST_URL = 'https://raw.githubusercontent.com/aachtenberg/ottawa-river-freshet/main/data/forecast/latest.json';
+const FORECAST_STALE_HOURS = 36;  // older than this → fall back to generic boilerplate
+
+async function loadForecast() {
+  if (forecastData !== null) return forecastData;
+  if (forecastLoading) return forecastLoading;
+  forecastLoading = (async () => {
+    try {
+      const r = await fetch(FORECAST_URL, { cache: 'no-store' });
+      if (!r.ok) return null;
+      const j = await r.json();
+      if (!j || j.schema_version !== 1) return null;
+      return j;
+    } catch (e) {
+      return null;
+    }
+  })();
+  forecastData = await forecastLoading;
+  return forecastData;
+}
+
+function forecastIsFresh(f) {
+  if (!f || !f.fetched_at_iso) return false;
+  const ageH = (Date.now() - new Date(f.fetched_at_iso).getTime()) / 3600000;
+  return ageH <= FORECAST_STALE_HOURS;
+}
+
+function formatForecastUpdate(iso) {
+  if (!iso) return '';
+  try {
+    return new Date(iso).toLocaleString(pageLang === 'fr' ? 'fr-CA' : 'en-CA',
+      { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+  } catch (e) {
+    return '';
+  }
+}
+
 function renderSummary(lcData, seasonPeak) {
   const box = document.getElementById('summary-box');
   box.classList.remove('skeleton');
@@ -1649,6 +1693,14 @@ function renderSummary(lcData, seasonPeak) {
   const cottageMargin = (108.75 - latest.valeur) * 100;
   const rank = rankPeak(peak.valeur);
 
+  // Forecast-aware post-peak messaging. forecastData is loaded by the data
+  // pipeline before renderSummary runs (see refreshAll); when fresh, the
+  // status text and footnote relay ORRPB's actual forecast. Outside the
+  // freshet (mode === 'off-season' / 'weekly-notice') we suppress the
+  // post-peak narrative to match what ORRPB itself is publishing.
+  const fcst = forecastIsFresh(forecastData) ? forecastData : null;
+  const fcstSaysOffseason = fcst && fcst.mode === 'off-season';
+
   let statusCls, statusText;
   if (latest.valeur >= 108.75) {
     statusCls = 'danger';
@@ -1656,9 +1708,20 @@ function renderSummary(lcData, seasonPeak) {
   } else if (latest.valeur >= 108.48) {
     statusCls = 'warning';
     statusText = 'Property flooding — water in backyard / driveway';
-  } else if (isDeclined) {
+  } else if (isDeclined && !fcstSaysOffseason) {
     statusCls = 'good';
-    statusText = 'Past first peak — second peak still possible';
+    if (fcst && fcst.mode === 'daily-freshet' && fcst.further_increases_possible === true) {
+      statusText = fcst.further_increases_includes_lac_coulonge
+        ? 'Past first peak — ORRPB flags possible further rise in this reach'
+        : 'Past first peak — ORRPB flags possible upstream rise';
+    } else if (fcst && fcst.mode === 'daily-freshet' && fcst.further_increases_possible === false) {
+      statusText = 'Past first peak — ORRPB forecasts continued decline';
+    } else if (fcst && fcst.mode === 'weekly-notice') {
+      statusText = 'Past first peak — freshet winding down (ORRPB on weekly notices)';
+    } else {
+      // No fresh forecast snapshot — fall back to the generic boilerplate.
+      statusText = 'Past first peak — second peak still possible';
+    }
   } else {
     statusCls = 'good';
     statusText = 'Below property thresholds';
@@ -1688,9 +1751,25 @@ function renderSummary(lcData, seasonPeak) {
    .map(z => `<div class="summary-zone-label" style="left:${pct(z.v)}%">${z.t}</div>`).join('');
 
   const marginValue = cottageMargin > 0 ? `${cottageMargin.toFixed(0)} cm` : 'breached';
-  const note = (statusCls === 'good' && isDeclined)
-    ? `<div class="summary-note">Reservoir drawdown upstream can drive a secondary crest weeks after the first — watch <a href="https://www.ottawariver.ca/forecasts" target="_blank">ORRPB forecasts</a>. Season's true peak may still be ahead.</div>`
-    : '';
+  // Footnote — relays ORRPB's actual published forecast when fresh; falls
+  // back to the generic boilerplate if forecastData is unavailable.
+  let note = '';
+  if (statusCls === 'good' && isDeclined && !fcstSaysOffseason) {
+    if (fcst && fcst.mode === 'daily-freshet') {
+      const upd = formatForecastUpdate(fcst.source && fcst.source.last_update_iso);
+      const reach = fcst.further_increases_reach || 'the basin';
+      const verdict = fcst.further_increases_possible === true
+        ? `further rise possible from ${reach}`
+        : (fcst.further_increases_possible === false
+          ? 'continued decline forecast'
+          : 'no second-peak signal stated');
+      note = `<div class="summary-note">ORRPB${upd ? ` (${upd})` : ''}: ${verdict}. <a href="https://www.ottawariver.ca/conditions/?display=forecast" target="_blank">Full forecast →</a></div>`;
+    } else if (fcst && fcst.mode === 'weekly-notice') {
+      note = `<div class="summary-note">ORRPB has shifted to weekly notices for the post-freshet period. <a href="https://www.ottawariver.ca/conditions/?display=forecast" target="_blank">Latest notice →</a></div>`;
+    } else {
+      note = `<div class="summary-note">Reservoir drawdown upstream can drive a secondary crest weeks after the first — watch <a href="https://www.ottawariver.ca/conditions/?display=forecast" target="_blank">ORRPB forecasts</a>. Season's true peak may still be ahead.</div>`;
+    }
+  }
 
   box.innerHTML = `
     <div class="summary-headline">
@@ -3148,7 +3227,12 @@ async function fetchData() {
     lastSeasonPeaks = seasonPeaks;
     // Pull ECCC annual peaks for any station Vigilance can't classify (etat_niv=0).
     // Cached after first call, so subsequent refreshes are free.
-    await precomputeEcccPeaks(Object.values(data).map(d => d.metadata));
+    // Also kick off the ORRPB forecast snapshot fetch in parallel — it's a
+    // single ~1KB JSON file, both finish well before render.
+    await Promise.all([
+      precomputeEcccPeaks(Object.values(data).map(d => d.metadata)),
+      loadForecast(),
+    ]);
 
     // Fresh fetch — blow away cached history so the next >72h render re-pulls.
     Object.keys(historyCache).forEach(k => delete historyCache[k]);

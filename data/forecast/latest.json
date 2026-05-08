@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "fetched_at_iso": "2026-05-08T11:30:00Z",
+  "source": {
+    "url": "https://www.ottawariver.ca/conditions/?display=forecast",
+    "last_update_iso": "2026-05-07T20:16:00Z",
+    "next_update_expected_iso": "2026-05-08T20:15:00Z",
+    "next_update_cadence": "daily"
+  },
+  "mode": "daily-freshet",
+  "freshet_active": true,
+  "further_increases_possible": true,
+  "further_increases_reach": "Mattawa to Lake Coulonge",
+  "further_increases_includes_lac_coulonge": true,
+  "forecast_text": "Spring runoff in the northern part of the basin is expected to rise this weekend due to forecast rain. As a result, the decline in water levels and flows between Mattawa and Pembroke is expected to slow down and may come to a stop, depending on the amount of rain received. Elsewhere along the river from Lake Coulonge to the Montreal Region, water levels and flows should continue to decrease gradually in all locations over the coming week. Because large volumes of water continue to come from the northern part of the basin, water levels along the main stem of the river are expected to remain generally high over the next week. The northern part of the basin will remain vulnerable to heavy rainfall events in the coming weeks; therefore, further increases in water levels from Mattawa to Lake Coulonge due to high spring runoff cannot be ruled out."
+}
