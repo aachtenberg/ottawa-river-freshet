@@ -6,6 +6,7 @@
 <title>Ottawa River Watch — Mansfield / Fort-Coulonge</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 :root {
@@ -431,6 +432,35 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .map-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.45); opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 999; }
 .map-backdrop.open { opacity: 1; pointer-events: auto; }
 
+/* === Daily-brief drawer (mirrors map-drawer pattern) ==================== */
+.brief-drawer { position: fixed; top: 0; right: 0; width: min(94vw, 880px); height: 100vh; background: var(--surface); border-left: 1px solid var(--border); box-shadow: -8px 0 24px rgba(0,0,0,0.25); transform: translateX(100%); transition: transform 0.3s ease-out, width 0.25s ease-out; z-index: 1000; display: flex; flex-direction: column; }
+.brief-drawer.open { transform: translateX(0); }
+.brief-drawer.fullscreen { width: 100vw; }
+.brief-drawer-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 14px; flex-shrink: 0; }
+.brief-drawer-header strong { font-weight: 600; }
+.brief-drawer-header .sub { font-size: 11px; color: var(--text-muted); margin-left: 8px; }
+.brief-drawer-body { flex: 1; overflow-y: auto; padding: 18px 22px 28px; line-height: 1.55; font-size: 13px; color: var(--text); }
+.brief-drawer-body h1 { font-size: 20px; margin: 0 0 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+.brief-drawer-body h2 { font-size: 15px; margin: 22px 0 8px; color: var(--text); font-weight: 600; }
+.brief-drawer-body h3 { font-size: 13px; margin: 16px 0 6px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
+.brief-drawer-body p { margin: 6px 0 10px; }
+.brief-drawer-body em { color: var(--text-muted); font-style: italic; }
+.brief-drawer-body strong { color: var(--text); font-weight: 600; }
+.brief-drawer-body ul, .brief-drawer-body ol { margin: 6px 0 10px 22px; }
+.brief-drawer-body li { margin: 3px 0; }
+.brief-drawer-body code { background: var(--surface-2); padding: 1px 5px; border-radius: 3px; font-family: ui-monospace, SFMono-Regular, monospace; font-size: 12px; }
+.brief-drawer-body blockquote { margin: 8px 0; padding: 6px 12px; border-left: 3px solid var(--accent, #4a8); background: var(--surface-2); color: var(--text-muted); border-radius: 0 4px 4px 0; }
+.brief-drawer-body blockquote p { margin: 4px 0; }
+.brief-drawer-body table { width: 100%; border-collapse: collapse; margin: 8px 0 14px; font-size: 12px; }
+.brief-drawer-body th, .brief-drawer-body td { padding: 5px 8px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+.brief-drawer-body th { font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-size: 10px; letter-spacing: 0.04em; background: var(--surface-2); }
+.brief-drawer-body a { color: var(--link, #4a90e2); text-decoration: none; }
+.brief-drawer-body a:hover { text-decoration: underline; }
+.brief-drawer-body hr { border: 0; border-top: 1px solid var(--border); margin: 18px 0; }
+.brief-drawer-loading { padding: 40px 22px; color: var(--text-muted); text-align: center; }
+.brief-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.45); opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 999; }
+.brief-backdrop.open { opacity: 1; pointer-events: auto; }
+
 .river-marker-icon { background: transparent !important; border: none !important; overflow: visible !important; }
 .river-dot { --dot-color: 79,163,199; --pulse-color: 79,163,199; width: 12px; height: 12px; border-radius: 50%; background: rgb(var(--dot-color)); box-shadow: 0 0 0 0 rgba(var(--pulse-color), 0.7), 0 0 6px rgba(var(--dot-color), 0.8); animation: radar-pulse 2.4s infinite ease-out; cursor: pointer; position: relative; transition: transform 0.15s; }
 .river-dot::after { content: ''; position: absolute; inset: 3px; border-radius: 50%; background: rgba(255,255,255,0.55); pointer-events: none; }
@@ -549,6 +579,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
     </div>
     <div class="header-cmds">
       <button class="map-btn" id="map-btn" onclick="toggleMap()" data-i18n="map">Map</button>
+      <button class="map-btn" id="brief-btn" onclick="toggleBrief()" title="Today's daily brief">Brief</button>
       <button class="refresh-btn" id="refresh" onclick="fetchData()" data-i18n="refresh">Refresh</button>
     </div>
   </div>
@@ -578,6 +609,27 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
     <button class="map-legend-btn" id="map-about-btn" onclick="toggleAbout()" style="left:455px" title="How to read the dots, pulses, and labels"><span id="map-about-btn-text">How to read</span></button>
     <div class="map-legend" id="map-legend"></div>
     <div class="map-about" id="map-about"></div>
+  </div>
+</div>
+
+<!-- Daily-brief drawer — fetches and renders the latest AI-generated brief -->
+<div class="brief-backdrop" id="brief-backdrop" onclick="toggleBrief()"></div>
+<div class="brief-drawer" id="brief-drawer" aria-hidden="true">
+  <div class="brief-drawer-header">
+    <div>
+      <strong>Daily brief</strong>
+      <span class="sub" id="brief-subtitle">AI-generated summary of today's basin state</span>
+    </div>
+    <span style="display:inline-flex;gap:6px;align-items:center;">
+      <a class="header-icon-btn" id="brief-source-link" href="https://github.com/aachtenberg/ottawa-river-freshet/tree/main/data/daily-briefs" target="_blank" rel="noopener noreferrer" title="View brief history on GitHub" aria-label="View brief history on GitHub" style="text-decoration:none;">
+        <svg height="14" width="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+      </a>
+      <button class="map-fullscreen-btn" id="brief-fullscreen-btn" onclick="toggleBriefFullscreen()" title="Toggle fullscreen" aria-label="Toggle fullscreen">⛶</button>
+      <button class="map-close" id="brief-close-btn" onclick="toggleBrief()" aria-label="Close brief">×</button>
+    </span>
+  </div>
+  <div class="brief-drawer-body" id="brief-body">
+    <div class="brief-drawer-loading">Loading…</div>
   </div>
 </div>
 
@@ -4190,7 +4242,60 @@ async function toggleMap() {
 
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape' && document.getElementById('map-drawer').classList.contains('open')) toggleMap();
+  if (e.key === 'Escape' && document.getElementById('brief-drawer').classList.contains('open')) toggleBrief();
 });
+
+// === Daily-brief drawer ====================================================
+// Fetches data/daily-briefs/latest.md from the public mirror and renders
+// it as HTML inside the drawer. The latest.md file is overwritten daily by
+// the freshet-daily-brief Claude routine alongside the dated brief.
+const BRIEF_URL = 'https://raw.githubusercontent.com/aachtenberg/ottawa-river-freshet/main/data/daily-briefs/latest.md';
+let briefLoaded = false;
+
+async function loadBrief() {
+  const body = document.getElementById('brief-body');
+  body.innerHTML = '<div class="brief-drawer-loading">Loading…</div>';
+  try {
+    const r = await fetch(BRIEF_URL, { cache: 'no-store' });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const md = await r.text();
+    if (typeof marked === 'undefined') {
+      body.innerHTML = '<div class="brief-drawer-loading">Markdown library failed to load. <a href="' + BRIEF_URL + '" target="_blank">Open raw brief →</a></div>';
+      return;
+    }
+    // GFM mode for tables; line breaks treated as paragraphs (gfm default).
+    marked.setOptions({ gfm: true, breaks: false });
+    body.innerHTML = marked.parse(md);
+    // Update subtitle with the brief's "Generated automatically at HH:MM UTC" line.
+    const m = md.match(/^# Daily brief — (\d{4}-\d{2}-\d{2})/m);
+    const t = md.match(/Generated automatically at ([\d:]+ UTC)/);
+    const sub = document.getElementById('brief-subtitle');
+    if (sub) sub.textContent = (m ? m[1] : 'latest') + (t ? ` · generated ${t[1]}` : '');
+    briefLoaded = true;
+  } catch (e) {
+    body.innerHTML = `<div class="brief-drawer-loading">Could not load the daily brief: ${e.message}<br><br><a href="${BRIEF_URL}" target="_blank">Open raw brief →</a></div>`;
+  }
+}
+
+function toggleBrief() {
+  const drawer = document.getElementById('brief-drawer');
+  const backdrop = document.getElementById('brief-backdrop');
+  if (drawer.classList.contains('open')) {
+    drawer.classList.remove('open');
+    backdrop.classList.remove('open');
+    drawer.setAttribute('aria-hidden', 'true');
+    return;
+  }
+  drawer.setAttribute('aria-hidden', 'false');
+  drawer.classList.add('open');
+  backdrop.classList.add('open');
+  // Re-fetch each open so users see the latest brief without a full page reload.
+  loadBrief();
+}
+
+function toggleBriefFullscreen() {
+  document.getElementById('brief-drawer').classList.toggle('fullscreen');
+}
 
 // Initial UI sync — must run after all module-level declarations (mapLang etc).
 applyThemeIcon();

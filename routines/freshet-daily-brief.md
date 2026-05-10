@@ -264,13 +264,27 @@ Before writing ANY of these words/phrases anywhere in the brief — "API down", 
 
 This guardrail exists because a prior brief (2026-05-05) falsely claimed three consecutive days of HQ 503 while the API and the cluster ingester were both healthy throughout — the agent had simply mishandled an early fetch error and didn't verify before generalising it. Don't repeat that.
 
+## Also write latest.md (MANDATORY)
+
+After writing the dated brief, ALSO copy it verbatim to
+`freshet-public/data/daily-briefs/latest.md`. The dashboard at
+`freshet.xgrunt.com` reads this file directly to render the daily-brief
+drawer. Without this copy the drawer would either fall behind a day or
+require date-guessing logic.
+
+```bash
+cp freshet-public/data/daily-briefs/YYYY-MM-DD.md freshet-public/data/daily-briefs/latest.md
+```
+
+Stage and commit `latest.md` alongside the dated brief in the same commit.
+
 ## Commit and push
 
 ```bash
 cd <homelab-infra repo root>
 git config user.name 'Freshet Daily Brief'
 git config user.email 'aachten@gmail.com'
-git add freshet-public/data/daily-briefs/YYYY-MM-DD.md
+git add freshet-public/data/daily-briefs/YYYY-MM-DD.md freshet-public/data/daily-briefs/latest.md
 git commit -m "data(freshet-brief): YYYY-MM-DD daily brief
 
 [2-3 sentence summary of what's in today's brief — pulled from your TL;DR]
