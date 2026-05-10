@@ -124,7 +124,11 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .summary.warning .summary-headline .status-dot { background: var(--orange); }
 .summary.danger .summary-headline .status-dot { background: var(--red); }
 
-.summary-bar { position: relative; height: 10px; border-radius: 5px; margin: 26px 4px 28px; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.12); background: linear-gradient(to right, #4d8a7a 0%, #4d8a7a 23.1%, #d4a050 23.1%, #d4a050 36.9%, #c47a30 36.9%, #c47a30 57.7%, #b03838 57.7%, #b03838 77.7%, #6b1818 77.7%, #6b1818 100%); }
+/* Bar gradient color stops are calibrated to BAR_MIN=107.0, BAR_MAX=109.3 (range 2.3 m).
+   Stops: green safe < 108.30 (56.5%), yellow approaching 108.30-108.48 (64.3%),
+   orange in-backyard 108.48-108.75 (76.1%), red cottage 108.75-109.01 (87.4%),
+   dark red water-inside > 109.01. If BAR_MIN/MAX change in the JS, recompute these. */
+.summary-bar { position: relative; height: 10px; border-radius: 5px; margin: 26px 4px 28px; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.12); background: linear-gradient(to right, #4d8a7a 0%, #4d8a7a 56.5%, #d4a050 56.5%, #d4a050 64.3%, #c47a30 64.3%, #c47a30 76.1%, #b03838 76.1%, #b03838 87.4%, #6b1818 87.4%, #6b1818 100%); }
 .summary-marker { position: absolute; top: -6px; transform: translateX(-50%); width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 8px solid var(--text); filter: drop-shadow(0 1px 1px rgba(0,0,0,0.3)); }
 .summary-marker-label { position: absolute; top: -26px; transform: translateX(-50%); font-size: 11px; font-weight: 700; white-space: nowrap; color: var(--text); font-variant-numeric: tabular-nums; }
 .summary-peak-tick { position: absolute; top: -3px; height: 16px; width: 2px; background: var(--text); transform: translateX(-50%); opacity: 0.55; pointer-events: none; border-radius: 1px; }
@@ -1728,9 +1732,12 @@ function renderSummary(lcData, seasonPeak) {
   }
   box.className = `summary ${statusCls}`;
 
-  // Threshold bar range: 108.0 m → 109.3 m (covers all property thresholds).
-  // Zones in the gradient align with: 108.30 / 108.48 / 108.75 / 109.01.
-  const BAR_MIN = 108.0, BAR_MAX = 109.3;
+  // Threshold bar range: 107.0 m → 109.3 m. Lower bound dropped from 108.0
+  // so the marker stays visible into post-freshet recession (e.g. when
+  // the lake falls below the moderate-flood threshold the marker would
+  // previously have pinned at the left edge and "fallen off the page").
+  // Zones in the gradient align with: 107.50 / 108.30 / 108.48 / 108.75 / 109.01.
+  const BAR_MIN = 107.0, BAR_MAX = 109.3;
   const pct = v => Math.max(0, Math.min(100, ((v - BAR_MIN) / (BAR_MAX - BAR_MIN)) * 100));
   const markerLeft = pct(latest.valeur);
   const peakLeft = pct(peak.valeur);
@@ -1743,7 +1750,10 @@ function renderSummary(lcData, seasonPeak) {
        <div class="summary-peak-label" style="left:${peakLeft}%">${tickLabel} ${peak.valeur.toFixed(2)}</div>`
     : '';
   // Suppress zone labels that would visually collide with the peak label.
+  // 107.50 = Vigilance minor-flood threshold (recession watch level);
+  // 108.30 / 108.75 / 109.17 = property thresholds + 2019 record.
   const zoneLabels = [
+    { v: 107.50, t: 'minor 107.50' },
     { v: 108.30, t: '108.30' },
     { v: 108.75, t: 'cottage 108.75' },
     { v: 109.17, t: '2019 rec.' }
