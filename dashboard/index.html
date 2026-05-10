@@ -2754,7 +2754,12 @@ async function renderReservoirsTab() {
 const TRIBUTARY_STATIONS = [
   { river: 'Rivière Gatineau', stations: [
     { id: 442, name: 'Tête des rapides Ceizur',   subtitle: 'Lac-Douaire · upstream discharge gauge' },
-    { id: 994, name: 'La Pêche',                  subtitle: 'Route 366 bridge · mid-river' },
+    // La Pêche (Vigilance station 994) removed 2026-05-10 — Hydro Météo
+    // publishes the station to Vigilance but the gauge itself reports zero
+    // readings (both metadata API and readings buffer return null/empty).
+    // Other Hydro Météo stations on Vigilance work fine, so this is a
+    // station-specific silence, not a provider outage. Re-add when the
+    // upstream gauge comes back online.
     { id: 982, name: 'Rue Cartier (Gatineau)',    subtitle: 'Lower Gatineau · before Cartier dam' },
     { id: 983, name: 'Quai des Artistes (Gatineau)', subtitle: 'Lower Gatineau · near Ottawa confluence' }
   ] }
