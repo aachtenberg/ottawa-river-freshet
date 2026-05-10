@@ -92,9 +92,52 @@ Compose a markdown brief at `freshet-public/data/daily-briefs/YYYY-MM-DD.md` (to
 
 *Generated automatically at HH:MM UTC. See `freshet-public/docs/analysis/Freshet_2026_Complete_Summary.md` for project context.*
 
+## In plain language
+
+2–4 short paragraphs, friendly tone, no jargon, no codes, no acronyms beyond
+the obvious. This is what a community member who isn't a flood-watch regular
+needs to read to understand what changed today and why it matters. The
+technical sections below are for the propeller heads.
+
+Tone: direct, lay reader. Translate every technical concept:
+  - "Bryson headpond" → "the dam's pond at the foot of Lac Coulonge" or
+    "the dam pond"
+  - "Carillon §15.3.5.1 directive overshoot" → "the regulatory ceiling at
+    the basin's terminal dam (which they're supposed to stay below in
+    spring) is being exceeded"
+  - "spill share" → "share of water going through the spillway vs the
+    turbines"
+  - "etat 4 / minor flood" → "minor flood — water's still in places it
+    shouldn't be but the trend is good"
+  - "ORRPB" → "the river management board"
+  - "m³/s" → "cubic metres per second" once, then OK to abbreviate
+  - "Vigilance 1195" → "the property's lake gauge"
+
+What to include:
+  - One sentence on the property's status (the lake at Mansfield/Fort-Coulonge)
+  - One sentence on whether the dam operators are doing anything notable
+    (drawing down, holding water, surging release, etc.)
+  - One sentence on what the forecast says (rain coming? clear?)
+  - One sentence on the bottom line for the property owner ("water's going
+    down at X cm/day, expected to clear minor flood in N days unless rain").
+  - If anything is genuinely anomalous (regulatory exceedance, posture change,
+    big surge), call it out plainly.
+
+What to avoid:
+  - Tables (those go below in the technical sections)
+  - Station IDs, codes, parameters
+  - "Carillon" / "Bryson" naked — use "the basin's terminal dam (Carillon)"
+    or "the dam at Lac Coulonge (Bryson)" the first time, then short forms
+  - Bullet lists of metrics (use prose)
+  - Numbers without context (e.g. "108.0 m" → "108.0 m, which is the
+    moderate-flood threshold for the property")
+
 ## TL;DR
 
-One or two sentences capturing what matters today. Lead with anything anomalous; otherwise state "steady state" briefly.
+One or two sentences capturing what matters today, in technical shorthand for
+readers who can read the tables. Lead with anything anomalous; otherwise state
+"steady state" briefly. This is the technical-shorthand summary; the
+plain-language version above is for the lay reader.
 
 ## Lac Coulonge (the property gauge, Vigilance 1195)
 

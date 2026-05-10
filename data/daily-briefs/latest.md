@@ -2,6 +2,16 @@
 
 *Generated automatically at 11:11 UTC. See `freshet-public/docs/analysis/Freshet_2026_Complete_Summary.md` for project context.*
 
+## In plain language
+
+The lake at the property kept dropping today — down about 8 cm to 107.91 m, still officially in "minor flood" but headed the right way. At this pace it should clear minor flood in about 5 days. **Bottom line for the property: water continues to retreat, no near-term concerns.**
+
+Up north, the rain forecast for this weekend is starting to show. The river at Mattawa (about 280 km upstream of the property) ticked up 6 cm — the first rise in three days. That water will take a couple of days to reach Lac Coulonge, so watch for the recession to slow or briefly stall over the next 24–48 hours. Two big headwater reservoirs (Baskatong and Dozois) are now actively absorbing inflow rather than passing it through, which is the normal "buffer ahead of forecast rain" posture.
+
+One thing worth flagging at the bottom of the basin: the dam at Carillon (the basin's terminal dam, near Montreal) is supposed to stay below a regulatory ceiling during spring flooding. The pond behind the dam is currently 45 cm above that ceiling, and yesterday it actually moved *further away* from compliance — the operator cut releases another 4% while the pond rose 1 cm. The framework says they should be drawing the pond down right now; they're doing the opposite.
+
+*Plain-language summary retrofitted 2026-05-10 — first brief in this format. Future briefs will lead with this section automatically.*
+
 ## TL;DR
 
 Four items today: (1) Lac Coulonge continued receding at −8 cm to 107.91 m, still in etat 4 (minor flood), pace slightly slower than yesterday's −9.5 cm. (2) The ORRPB northern-basin rain forecast is now partially verifying — Mattawa rose +6 cm to 154.41 m, its first rise after two flat days, consistent with the weekend-rain prediction; watch for downstream propagation over the next 24–48 h. (3) Active basin-wide retention flag triggered: Baskatong (+12 cm/day) and Dozois (+10 cm/day) both at or above the 10 cm/day threshold, meaning headwater operators are absorbing inflow rather than passing it. (4) Carillon §15.3.5.1 directive overshoot edged to 45 cm (from 44 cm yesterday) as the headpond ticked up 1 cm while releases fell a further 4.4%. The predicted routing-lag surge from yesterday's upper-cascade drawdown (+7–14% at five sites) has not yet arrived at Bryson or Carillon; watch tomorrow.
