@@ -4249,14 +4249,20 @@ document.addEventListener('keydown', e => {
 // Fetches data/daily-briefs/latest.md from the public mirror and renders
 // it as HTML inside the drawer. The latest.md file is overwritten daily by
 // the freshet-daily-brief Claude routine alongside the dated brief.
-const BRIEF_URL = 'https://raw.githubusercontent.com/aachtenberg/ottawa-river-freshet/main/data/daily-briefs/latest.md';
+const BRIEF_URL_BASE = 'https://raw.githubusercontent.com/aachtenberg/ottawa-river-freshet/main/data/daily-briefs/latest.md';
 let briefLoaded = false;
 
 async function loadBrief() {
   const body = document.getElementById('brief-body');
   body.innerHTML = '<div class="brief-drawer-loading">Loading…</div>';
+  // Cache-buster: raw.githubusercontent.com's CDN holds files for ~5 min
+  // and ignores `cache: 'no-store'`. Per-hour buster means the dashboard
+  // always sees a fresh brief within an hour of the routine writing it,
+  // without hammering the CDN on every drawer open.
+  const cacheBust = new Date().toISOString().slice(0, 13).replace(':', '-'); // YYYY-MM-DDTHH
+  const url = `${BRIEF_URL_BASE}?_=${cacheBust}`;
   try {
-    const r = await fetch(BRIEF_URL, { cache: 'no-store' });
+    const r = await fetch(url, { cache: 'no-store' });
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     const md = await r.text();
     if (typeof marked === 'undefined') {
