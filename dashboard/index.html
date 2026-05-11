@@ -1207,6 +1207,11 @@ async function fetchRegional() {
 // Vigilance's {metadata, readings} so the existing card / bar-chart / map
 // renderers don't need an MVCA-specific branch.
 const KIWIS_BASE = 'https://waterdata.quinteconservation.ca/KiWIS/KiWIS';
+// The KiWIS host occasionally goes unreachable (TCP black-hole, not a 5xx), in
+// which case a plain fetch() hangs until the browser's multi-minute network
+// timeout — leaving the Buckhams Bay card stuck on "Loading…". Cap it so the
+// card resolves to its unavailable state promptly.
+const KIWIS_TIMEOUT_MS = 8000;
 function latLonToWm(lat, lon) {
   const x = lon * Math.PI / 180 * 6378137;
   const y = Math.log(Math.tan(Math.PI / 4 + lat * Math.PI / 360)) * 6378137;
@@ -1218,7 +1223,12 @@ async function fetchKiwisStation(spec) {
     + `&ts_id=${spec.tsId}&header=true&metadata=true`
     + '&md_returnfields=station_name,parametertype_name,station_latitude,station_longitude'
     + `&dateformat=UNIX&from=${encodeURIComponent(since)}`;
-  const r = await fetch(url, { cache: 'no-store' });
+  let r;
+  try {
+    r = await fetch(url, { cache: 'no-store', signal: AbortSignal.timeout(KIWIS_TIMEOUT_MS) });
+  } catch (e) {
+    throw new Error(e.name === 'TimeoutError' ? 'KiWIS timeout' : `KiWIS unreachable: ${e.message}`);
+  }
   if (!r.ok) throw new Error(`KiWIS HTTP ${r.status}`);
   const arr = await r.json();
   if (!Array.isArray(arr) || !arr[0] || !Array.isArray(arr[0].data)) throw new Error('KiWIS empty');
@@ -2504,33 +2514,60 @@ function buildStationCard(id) {
   </div>`;
 }
 
-async function renderStationsTab() {
+// Bumped on every renderStationsTab() call so in-flight async station/history
+// fetches from a previous render (or a previous window selection) know to drop
+// their result instead of patching a card that's since been rebuilt.
+let stationsRenderGen = 0;
+
+// Replace a single card's DOM node in place and (re)draw its mini-chart. Used
+// when an async station or history fetch lands after the grid was painted.
+function refreshStationCard(id) {
+  const grid = document.getElementById('stations-grid');
+  const el = grid?.querySelector(`.station-card-mini[data-station-id="${id}"]`);
+  if (!el) return;
+  if (stationMiniCharts[id]) { try { stationMiniCharts[id].destroy(); } catch (_) {} delete stationMiniCharts[id]; }
+  el.outerHTML = buildStationCard(id);
+  renderStationMiniChart(id);
+}
+
+function renderStationsTab() {
   const grid = document.getElementById('stations-grid');
   if (!grid || !lastData) return;
-  // Make sure regional stations are in lastData (Overview's regional fetch
-  // populates them async; we may need them sooner if the user lands on /#stations).
-  await Promise.all(STATIONS_TAB_IDS.map(async id => {
-    if (lastData[id]) return;
-    const mvcaSpec = REGIONAL_STATIONS.find(s => s.id === id && s.source === 'mvca');
-    try {
-      lastData[id] = mvcaSpec ? await fetchKiwisStation(mvcaSpec) : await fetchStation(id);
-    } catch (e) { console.warn(`stn ${id}: ${e.message}`); }
-  }));
-  // Pre-fetch history if a >72h window is selected.
-  if (windowHours > 72) {
-    await Promise.all(STATIONS_TAB_IDS.map(async id => {
-      const key = `${id}:${windowHours}`;
-      if (historyCache[key]) return;
-      try { historyCache[key] = await fetchStationHistory(id, windowHours); }
-      catch (e) { console.warn(`history ${id}: ${e.message}`); }
-    }));
-  }
-  // Tear down any existing mini-charts before re-rendering.
+  const gen = ++stationsRenderGen;
+
+  // Paint immediately with whatever's already cached — stations without data
+  // yet show a "Loading…" placeholder card (see buildStationCard). One slow or
+  // unreachable upstream no longer blocks the whole grid.
   Object.values(stationMiniCharts).forEach(c => { try { c.destroy(); } catch (_) {} });
   stationMiniCharts = {};
   grid.innerHTML = STATIONS_TAB_IDS.map(buildStationCard).join('');
-  // Now render each chart inside its card.
   STATIONS_TAB_IDS.forEach(id => renderStationMiniChart(id));
+
+  // Fill in the rest asynchronously, patching each card as its data arrives.
+  // (Overview's regional fetch also populates lastData; first-to-finish wins.)
+  STATIONS_TAB_IDS.forEach(async id => {
+    if (lastData[id]) return;
+    const mvcaSpec = REGIONAL_STATIONS.find(s => s.id === id && s.source === 'mvca');
+    try {
+      const d = mvcaSpec ? await fetchKiwisStation(mvcaSpec) : await fetchStation(id);
+      lastData[id] = d;
+      if (gen === stationsRenderGen) refreshStationCard(id);
+    } catch (e) { console.warn(`stn ${id}: ${e.message}`); }
+  });
+
+  // History for >72h windows — cards render off live readings first, then
+  // upgrade to the full series once history lands.
+  if (windowHours > 72) {
+    const histWindow = windowHours;
+    STATIONS_TAB_IDS.forEach(async id => {
+      const key = `${id}:${histWindow}`;
+      if (historyCache[key]) return;
+      try {
+        historyCache[key] = await fetchStationHistory(id, histWindow);
+        if (gen === stationsRenderGen && lastData[id]) refreshStationCard(id);
+      } catch (e) { console.warn(`history ${id}: ${e.message}`); }
+    });
+  }
 }
 
 // ---- Reservoirs tab ----
