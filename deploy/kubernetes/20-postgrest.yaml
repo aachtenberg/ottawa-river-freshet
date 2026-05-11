@@ -11,6 +11,10 @@ spec:
   template:
     metadata:
       labels: { app: postgrest }
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "3001"
+        prometheus.io/path: "/metrics"
     spec:
       containers:
         - name: postgrest
@@ -18,6 +22,8 @@ spec:
           ports:
             - containerPort: 3000
               name: http
+            - containerPort: 3001
+              name: admin
           env:
             - name: PGRST_DB_URI
               valueFrom:
@@ -35,6 +41,9 @@ spec:
               value: public
             - name: PGRST_DB_ANON_ROLE
               valueFrom: { secretKeyRef: { name: timescaledb-credentials, key: POSTGRES_USER } }
+            # Admin server: exposes /metrics (Prometheus), /live, /ready on :3001.
+            - name: PGRST_ADMIN_SERVER_PORT
+              value: "3001"
           # Build PGRST_DB_URI from the broken-out parts using a sh wrapper:
           command:
             - sh
@@ -42,6 +51,14 @@ spec:
             - |
               export PGRST_DB_URI="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@timescaledb.freshet.svc.cluster.local:5432/${POSTGRES_DB}"
               exec postgrest
+          livenessProbe:
+            httpGet: { path: /live, port: admin }
+            initialDelaySeconds: 5
+            periodSeconds: 15
+          readinessProbe:
+            httpGet: { path: /ready, port: admin }
+            initialDelaySeconds: 5
+            periodSeconds: 10
           resources:
             requests: { cpu: 50m, memory: 64Mi }
             limits:   { cpu: 500m, memory: 256Mi }
