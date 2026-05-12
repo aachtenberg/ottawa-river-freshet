@@ -121,7 +121,46 @@ needs adjustment.
 Used for: optional non-Vigilance gauges (set the `MVCA_STATIONS` env var to
 enable; default is one station as a working example).
 
-## 9. ntfy (outbound, alerter only)
+## 9. Snow water equivalent — CaLDAS-NSRPS (ECCC GeoMet)
+
+- **URL**: `https://geo.weather.gc.ca/geomet` — WMS layer
+  `CaLDAS-NSRPS_2.5km_SnowWaterEquiv` ("Snow water equivalent (land surface)
+  [mm]"), the Canadian operational land-data-assimilation analysis at 2.5 km.
+- **Format**: queried via WMS `GetFeatureInfo` (JSON) at a fixed list of named
+  basin points — no GIS dependency. Sub-basin means are an aggregate query
+  over `swe_locations.subbasin`.
+- **Auth**: none.
+- **Cadence**: assimilates ~hourly; this stack samples it once a day. GeoMet
+  serves only the *current* analysis (single timestamp), so the archive
+  accumulates forward from when the ingester starts — source #10 below carries
+  the back-history.
+- **License**: ECCC GeoMet — Open Government Licence — Canada.
+
+Used for: SWE by sub-basin, joinable against the flow/level tables for "did
+the snowpack the maps showed match what actually came down" type analysis.
+Lands in `swe_daily` (source `caldas-nsrps`). Ingester:
+[`ingesters/swe-ingest/caldas_ingest.py`](../ingesters/swe-ingest/caldas_ingest.py).
+
+## 10. Snow water equivalent — ERA5-Land (Copernicus CDS)
+
+- **Dataset**: `reanalysis-era5-land`, variable `snow_depth_water_equivalent`
+  (despite the name, this *is* SWE — units: m of water equivalent), via the
+  Copernicus Climate Data Store API.
+- **Format**: NetCDF for an Ottawa-basin bounding box, one timestep/day
+  (00:00 UTC — SWE is slowly varying); ingester computes basin / north-half /
+  south-half means.
+- **Auth**: a CDS Personal Access Token in `CDS_API_KEY`; the ERA5-Land
+  licence must be accepted once on the CDS website or requests 403.
+- **Cadence**: ERA5-Land lags ~5 days; daily cron with a 14-day lookback.
+  History back to **1950** — this is the deep-history feed for correlation.
+- **License**: Copernicus / ECMWF licence (free, attribution).
+
+Used for: the long SWE record. Lands in `swe_daily` (source `era5land`).
+Ingester: [`ingesters/swe-ingest/era5_ingest.py`](../ingesters/swe-ingest/era5_ingest.py)
+— supports a one-shot 1950→present backfill via `ERA5_START` / `ERA5_END`
+(fetched year-by-year, resumable). Needs `cdsapi` + `netCDF4`.
+
+## 11. ntfy (outbound, alerter only)
 
 - **Default**: `https://ntfy.sh` (public free tier)
 - **Self-host option**: any ntfy instance reachable from your cron.
@@ -152,3 +191,5 @@ view layer is the API.
 | open-meteo | Free-tier limits | Bulk-call pattern stays under |
 | ORRPB | HTML scraping | Fix parser if structure changes |
 | KiWIS (MVCA) | Per-instance | Skip if endpoint moves |
+| CaLDAS-NSRPS (GeoMet) | Layer name / domain could change; current-analysis only | Re-point to a new layer; ERA5-Land covers the gap |
+| ERA5-Land (CDS) | Needs CDS token + licence accepted; ~5-day lag; CDS queue latency | If `CDS_API_KEY` missing the cron just fails loudly; backfill is resumable |

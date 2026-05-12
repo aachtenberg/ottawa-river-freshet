@@ -187,4 +187,53 @@ SELECT create_hypertable('eccc_climate_daily', 'time', if_not_exists => TRUE,
 CREATE INDEX IF NOT EXISTS eccc_climate_daily_station_time_idx
   ON eccc_climate_daily (station_id, time DESC);
 
+-- Snow water equivalent (mm), daily, Ottawa River basin.
+-- Distinct from eccc_climate_daily.snow_on_ground_cm (that's snow *depth* at a
+-- handful of ECCC stations; SWE = depth x density and is the hydrologically
+-- meaningful quantity for predicting freshet runoff). region is either a named
+-- sampling point ('temiscaming', 'maniwaki', ...) for gridded point-samples, a
+-- sub-basin slug ('upper-ottawa', 'gatineau', ...) or 'basin-total' for area
+-- means, or an in-situ station id. source distinguishes the feed:
+--   'caldas-nsrps' — ECCC GeoMet CaLDAS-NSRPS 2.5 km operational SWE analysis,
+--                    sampled at named points (current-analysis only; archive
+--                    builds forward from when ingest started).
+--   'era5land'     — Copernicus ERA5-Land snow_depth_water_equivalent, basin
+--                    bbox mean, daily, ~5-day lag, history back to 1950.
+--   'canswe'       — in-situ snow course / pillow SWE (Vionnet et al. CanSWE).
+-- See k3s/base/data/files/swe-ingest/ for the ingesters.
+CREATE TABLE IF NOT EXISTS swe_daily (
+  time        date NOT NULL,
+  region      text NOT NULL,
+  source      text NOT NULL,
+  swe_mm      double precision,
+  swe_dep_mm  double precision,        -- departure from normal, mm (NULL unless the source provides it)
+  PRIMARY KEY (region, source, time)
+);
+
+SELECT create_hypertable('swe_daily', 'time', if_not_exists => TRUE,
+  chunk_time_interval => INTERVAL '1 year');
+
+CREATE INDEX IF NOT EXISTS swe_daily_region_time_idx
+  ON swe_daily (region, source, time DESC);
+
+-- Metadata for swe_daily regions that are geographic points / sub-basins.
+-- Upserted by the ingesters (cf. dam_sites). In-situ station regions may or
+-- may not have a row here depending on whether the source supplies coordinates.
+CREATE TABLE IF NOT EXISTS swe_locations (
+  region      text PRIMARY KEY,
+  name        text,
+  kind        text,             -- 'point' | 'subbasin' | 'basin' | 'station'
+  subbasin    text,             -- sub-basin slug this region rolls up into (NULL for 'basin')
+  lat         double precision,
+  lon         double precision,
+  source      text,             -- the feed that defined this region
+  updated_at  timestamptz DEFAULT now()
+);
+
+CREATE OR REPLACE VIEW latest_swe_daily AS
+SELECT DISTINCT ON (region, source)
+  region, source, time, swe_mm, swe_dep_mm
+FROM swe_daily
+ORDER BY region, source, time DESC;
+
 NOTIFY pgrst, 'reload schema';
