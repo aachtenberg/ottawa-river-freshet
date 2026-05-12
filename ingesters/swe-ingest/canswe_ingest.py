@@ -58,11 +58,24 @@ def post(table, rows):
 
 
 def main():
-    nc_path = (sys.argv[1] if len(sys.argv) > 1 else os.environ.get("CANSWE_NC"))
-    if not nc_path or not os.path.exists(nc_path):
-        print("Usage: canswe_ingest.py <CanSWE.nc>  (or set CANSWE_NC). "
-              "Download from FRDR DOI 10.20383/103.0329.", file=sys.stderr)
+    src_arg = (sys.argv[1] if len(sys.argv) > 1 else os.environ.get("CANSWE_NC"))
+    if not src_arg:
+        print("Usage: canswe_ingest.py <CanSWE.nc | https://.../CanSWE.nc>  "
+              "(or set CANSWE_NC). Download from FRDR DOI 10.20383/103.0329.", file=sys.stderr)
         sys.exit(2)
+    if src_arg.startswith("http://") or src_arg.startswith("https://"):
+        import tempfile
+        nc_path = tempfile.NamedTemporaryFile(suffix=".nc", delete=False).name
+        print(f"CanSWE: downloading {src_arg}")
+        req = urllib.request.Request(src_arg, headers={"User-Agent": "homelab-freshet-canswe/1"})
+        with urllib.request.urlopen(req, timeout=120) as r, open(nc_path, "wb") as f:
+            f.write(r.read())
+        print(f"  -> {os.path.getsize(nc_path)} bytes")
+    else:
+        nc_path = src_arg
+        if not os.path.exists(nc_path):
+            print(f"CanSWE: file not found: {nc_path}", file=sys.stderr)
+            sys.exit(2)
 
     import numpy as np
     from netCDF4 import Dataset, num2date
