@@ -28,13 +28,16 @@ scripts are inlined into the manifests, so a fresh cluster is one
 | `60-alerter-cron.yaml` | Hourly threshold-crossing alerter CronJob + script ConfigMap |
 | `70-wsc-ingest-cron.yaml` | Hourly WSC realtime CSV ingester (level + discharge) |
 | `80-eccc-ingest-cron.yaml` | Six-hourly ECCC daily-climate bulk-CSV ingester |
+| `85-swe-ingest-cron.yaml` | Daily snow-water-equivalent ingesters → `swe_daily`: CaLDAS-NSRPS (ECCC GeoMet, no auth) + ERA5-Land (Copernicus CDS — needs `CDS_API_KEY` in `10-timescaledb.yaml` and the ERA5-Land licence accepted on the CDS website) |
 
 ## First-time apply
 
 Two values must be edited before the first apply: the DB password in
-`10-timescaledb.yaml` and the ntfy topic in `60-alerter-cron.yaml`. The
-dashboard ingress hostname in `30-dashboard.yaml` (`freshet.example.com`)
-should also be changed if you want to expose it.
+`10-timescaledb.yaml` and the ntfy topic in `60-alerter-cron.yaml`. (Optionally
+also `CDS_API_KEY` in `10-timescaledb.yaml`, if you want the ERA5-Land SWE feed —
+otherwise that one cron just fails harmlessly.) The dashboard ingress hostname in
+`30-dashboard.yaml` (`freshet.example.com`) should also be changed if you want to
+expose it.
 
 ```bash
 # 1. Set a real DB password.
@@ -62,6 +65,7 @@ kubectl apply -f 55-hq-ingest-cron.yaml
 kubectl apply -f 60-alerter-cron.yaml
 kubectl apply -f 70-wsc-ingest-cron.yaml
 kubectl apply -f 80-eccc-ingest-cron.yaml
+kubectl apply -f 85-swe-ingest-cron.yaml
 
 # 5. Trigger initial ingests so the dashboard has data immediately rather
 #    than waiting for the first scheduled run.
@@ -70,6 +74,9 @@ kubectl create job -n freshet --from=cronjob/reservoir-ingest reservoir-init
 kubectl create job -n freshet --from=cronjob/hq-ingest hq-init
 kubectl create job -n freshet --from=cronjob/wsc-ingest wsc-init
 kubectl create job -n freshet --from=cronjob/eccc-ingest eccc-init
+kubectl create job -n freshet --from=cronjob/swe-caldas-ingest swe-caldas-init
+# (the ERA5-Land 1950→present backfill is a separate one-shot — see the comment
+#  block in 85-swe-ingest-cron.yaml)
 ```
 
 ## Updating after editing source files

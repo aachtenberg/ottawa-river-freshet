@@ -10,6 +10,11 @@ stringData:
   POSTGRES_USER: freshet
   # Replace before applying — `openssl rand -base64 32` generates a strong one.
   POSTGRES_PASSWORD: REPLACE_PASSWORD
+  # Copernicus CDS Personal Access Token — only used by the swe-era5-ingest
+  # CronJob (85-swe-ingest-cron.yaml). Get it from your CDS profile page and
+  # accept the ERA5-Land dataset licence once on the CDS website. Leave the
+  # placeholder if you don't run that ingester (the cron just fails loudly).
+  CDS_API_KEY: REPLACE_CDS_TOKEN
 
 ---
 # Bootstrap SQL — kept in sync with ingesters/river-history/bootstrap.sql.
@@ -208,6 +213,45 @@ data:
 
     CREATE INDEX IF NOT EXISTS eccc_climate_daily_station_time_idx
       ON eccc_climate_daily (station_id, time DESC);
+
+    -- Snow water equivalent (mm), daily, Ottawa River basin. Distinct from
+    -- eccc_climate_daily.snow_on_ground_cm (that's snow *depth*; SWE = depth x
+    -- density and is the hydrologically meaningful quantity for freshet runoff).
+    -- region: a named sampling point / sub-basin slug / 'basin-total' / station id.
+    -- source: 'caldas-nsrps' (ECCC GeoMet, point samples, forward-only archive),
+    --         'era5land' (Copernicus ERA5-Land, basin bbox means, 1950->present),
+    --         'canswe' (in-situ snow course / pillow). See ingesters/swe-ingest/.
+    CREATE TABLE IF NOT EXISTS swe_daily (
+      time        date NOT NULL,
+      region      text NOT NULL,
+      source      text NOT NULL,
+      swe_mm      double precision,
+      swe_dep_mm  double precision,
+      PRIMARY KEY (region, source, time)
+    );
+
+    SELECT create_hypertable('swe_daily', 'time', if_not_exists => TRUE,
+      chunk_time_interval => INTERVAL '1 year');
+
+    CREATE INDEX IF NOT EXISTS swe_daily_region_time_idx
+      ON swe_daily (region, source, time DESC);
+
+    CREATE TABLE IF NOT EXISTS swe_locations (
+      region      text PRIMARY KEY,
+      name        text,
+      kind        text,
+      subbasin    text,
+      lat         double precision,
+      lon         double precision,
+      source      text,
+      updated_at  timestamptz DEFAULT now()
+    );
+
+    CREATE OR REPLACE VIEW latest_swe_daily AS
+    SELECT DISTINCT ON (region, source)
+      region, source, time, swe_mm, swe_dep_mm
+    FROM swe_daily
+    ORDER BY region, source, time DESC;
 
     NOTIFY pgrst, 'reload schema';
 ---
