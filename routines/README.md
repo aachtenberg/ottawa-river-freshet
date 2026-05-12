@@ -95,7 +95,7 @@ Each routine is one self-contained markdown file:
 ```
 freshet-public/routines/
 ├── README.md                       # this file
-├── freshet-daily-brief.md          # daily 11:00 UTC brief generator
+├── freshet-daily-brief.md          # daily 22:00 UTC brief generator (≈5 PM ET, post-ORRPB-update)
 └── ...                             # additional routines as they are added
 ```
 
@@ -105,7 +105,7 @@ Front-matter at the top of each routine file holds the structured metadata:
 ---
 trigger_id: trig_01...              # claude.ai routine ID (stable, do not change)
 name: freshet-daily-brief           # display name (matches API)
-schedule: "0 11 * * *"              # cron in UTC, OR run_once_at: ISO timestamp
+schedule: "0 22 * * *"              # cron in UTC, OR run_once_at: ISO timestamp
 environment: env_015...             # CCR environment ID (anthropic_cloud)
 model: claude-sonnet-4-6            # default for all freshet routines
 sources:                            # git checkouts available to the agent

@@ -1,8 +1,8 @@
 ---
 trigger_id: trig_01Ce1YK5Yvu4NkzV7ogrdczf
 name: freshet-daily-brief
-schedule: "0 11 * * *"
-schedule_human: "Daily at 11:00 UTC"
+schedule: "0 22 * * *"
+schedule_human: "Daily at 22:00 UTC (≈5 PM EST / 6 PM EDT — after the ~4 PM ET ORRPB afternoon update)"
 environment: env_015L3icFtPvpzLnE2iJfyBRR
 environment_name: aa-personal-cloud01
 model: claude-sonnet-4-6
@@ -287,6 +287,7 @@ Stage and commit `freshet-public/data/forecast/latest.json` alongside the brief 
 
 ## Operating instructions
 
+- **You run at ~22:00 UTC (≈5 PM EST / 6 PM EDT) — late afternoon Eastern time.** This is deliberate: the ORRPB updates its conditions/forecast page at ~4 PM ET, so by the time you run, *today's* ORRPB update is already published. The ORRPB section should reflect today's afternoon update; the "yesterday" comparison is against the prior brief, which was written ~24 h earlier (also late afternoon). Don't write the brief as if it were a morning summary of yesterday's data.
 - **Read yesterday's brief first** to compute day-over-day deltas: `git log --oneline -- freshet-public/data/daily-briefs/ | head -3` then `cat` the most recent file. If no prior brief exists, deltas are blank.
 - Use `curl -sS` or Python via Bash for the PostgREST proxy. Standard JSON, no TLS quirks.
 - The HQ proxy and feed both have a ~10-day rolling window of hourly data. Use the latest reading for "current" and the reading from ~24 h prior for "yesterday".
