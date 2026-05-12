@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "fetched_at_iso": "2026-05-10T11:30:00Z",
+  "fetched_at_iso": "2026-05-12T21:30:00Z",
   "source": {
     "url": "https://www.ottawariver.ca/conditions/?display=forecast",
-    "last_update_iso": "2026-05-09T18:33:00Z",
-    "next_update_expected_iso": "2026-05-10T20:00:00Z",
+    "last_update_iso": "2026-05-12T19:47:00Z",
+    "next_update_expected_iso": "2026-05-13T20:00:00Z",
     "next_update_cadence": "daily"
   },
   "mode": "daily-freshet",
@@ -12,5 +12,5 @@
   "further_increases_possible": true,
   "further_increases_reach": "Mattawa to Lake Coulonge",
   "further_increases_includes_lac_coulonge": true,
-  "forecast_text": "Spring runoff in the northern part of the basin is expected to rise this weekend due to forecast rain. As a result, the decline in water levels and flows between Mattawa and Pembroke is expected to slow down and may come to a stop, depending on the amount of rain received. Elsewhere along the river from Lake Coulonge to the Montreal Region, water levels and flows should continue to decrease gradually in all locations over the coming week. Because large volumes of water continue to come from the northern part of the basin, water levels along the main stem of the river are expected to remain generally high over the next few days. The northern part of the basin will remain vulnerable to heavy rainfall events in the coming weeks; therefore, further increases in water levels from Mattawa to Lake Coulonge due to high spring runoff cannot be ruled out."
+  "forecast_text": "Spring runoff in the northern part of the basin is slowly receding but remains high. Between Mattawa and Pembroke, water levels and flows along the Ottawa River continue to decline slowly. With forecast precipitation over the central portion of the basin starting tomorrow, the decline in water levels and flows from Lake Coulonge to the Montreal Region is expected to slow down and come to a halt over the next few days, before resuming gradually later next week. Because large volumes of water continue to come from the northern part of the basin, water levels along the main stem of the river are expected to remain generally high over the next few days. The northern part of the basin will remain vulnerable to heavy rainfall events in the coming weeks; therefore, further increases in water levels from Mattawa to Lake Coulonge due to high spring runoff cannot be ruled out."
 }
