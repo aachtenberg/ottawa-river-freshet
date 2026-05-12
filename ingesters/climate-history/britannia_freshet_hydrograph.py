@@ -106,6 +106,62 @@ def to_date(doy):  # render on a dummy non-leap year for clean month ticks
     return dt.date(2025, 1, 1) + dt.timedelta(days=int(doy) - 1)
 
 
+def print_thread_followup(hist, cur):
+    """Numbers backing the "Follow-up" section of the community note:
+    peak ranking, freshet-volume ranking, and the median-by-baseline-window
+    comparison. All from the same 02KF005 daily series the chart uses."""
+    print("\n=== Follow-up numbers (Britannia 02KF005) ===")
+
+    # spring (Apr-Jun) peak daily-mean flow, ranked
+    peaks = {}
+    for d, q in hist.items():
+        if 4 <= d.month <= 6:
+            peaks[d.year] = max(peaks.get(d.year, 0.0), q)
+    ranked = sorted(peaks.items(), key=lambda kv: -kv[1])
+    print("Spring (Apr–Jun) peak daily-mean flow, top 8:")
+    for i, (y, v) in enumerate(ranked[:8], 1):
+        print(f"  {i:2d}. {y}  {v:,.0f} m³/s")
+    r1976 = next((i for i, (y, _) in enumerate(ranked, 1) if y == 1976), None)
+    print(f"  (1976 ranks #{r1976})")
+    if cur:
+        cpk = max(cur.values())
+        print(f"  2026 crest so far: {cpk:,.0f} m³/s → would rank "
+              f"#{sum(1 for v in peaks.values() if v > cpk) + 1}")
+
+    # freshet volume = integral of daily mean flow, Mar 1 – Jun 30, in km³
+    vol = defaultdict(float)
+    for d, q in hist.items():
+        if 3 <= d.month <= 6:
+            vol[d.year] += q * 86400.0 / 1e9
+    volr = sorted(vol.items(), key=lambda kv: -kv[1])
+    print("Freshet volume (∫ daily mean flow, Mar 1 – Jun 30), top 8 + 2023:")
+    for i, (y, v) in enumerate(volr[:8], 1):
+        print(f"  {i:2d}. {y}  {v:4.1f} km³")
+    r2023v = next((i for i, (y, _) in enumerate(volr, 1) if y == 2023), None)
+    print(f"  (2023 ranks #{r2023v} by volume at {vol.get(2023, 0):.1f} km³)")
+    if cur:
+        v26 = sum(q * 86400.0 / 1e9 for d, q in cur.items() if 3 <= d.month <= 6)
+        lo = min(d for d in cur if d.month >= 3)
+        hi = max(cur)
+        v19 = sum(q * 86400.0 / 1e9 for d, q in hist.items()
+                  if d.year == 2019 and dt.date(2019, lo.month, lo.day) <= d <= dt.date(2019, hi.month, hi.day))
+        print(f"  2026 PARTIAL ({lo} – {hi}): {v26:.1f} km³  | 2019 same window: {v19:.1f} km³")
+
+    # "median for this day" under three baseline windows
+    def med(doy, y0, y1):
+        v = [q for d, q in hist.items() if y0 <= d.year <= y1 and d.timetuple().tm_yday == doy]
+        return float(np.median(v)) if v else float("nan")
+    print("'Median for this day' by baseline window (m³/s):")
+    for label, mm, dd in [("Apr 22", 4, 22), ("May 1", 5, 1), ("May 12", 5, 12)]:
+        doy = dt.date(2025, mm, dd).timetuple().tm_yday
+        print(f"  {label:<7} full(1960-2024)={med(doy,1960,2024):,.0f}  "
+              f"WMO(1991-2020)={med(doy,1991,2020):,.0f}  recent(2016-2024)={med(doy,2016,2024):,.0f}")
+    sf = sorted(y for y, v in peaks.items() if v >= 4500)
+    print(f"Spring peaks ≥4500 m³/s — full record: {sf}; "
+          f"within 1991-2020: {[y for y in sf if 1991 <= y <= 2020]}; "
+          f"pre-1990: {[y for y in sf if y < 1990]}")
+
+
 def main():
     print("fetching 1960-2024 history ...")
     hist = fetch_history()
@@ -172,6 +228,8 @@ def main():
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     fig.savefig(OUT, dpi=150, bbox_inches="tight")
     print("wrote", OUT)
+
+    print_thread_followup(hist, cur)
 
 
 if __name__ == "__main__":
