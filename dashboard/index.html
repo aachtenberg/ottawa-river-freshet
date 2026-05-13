@@ -770,7 +770,13 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
     <button class="range-btn" data-hours="168">7d</button>
     <button class="range-btn" data-hours="240">10d</button>
   </div>
-  <div class="section-title" style="margin-top: 18px; font-size: 13px;">Ottawa main stem (upstream → downstream)</div>
+  <div class="section-title" style="margin-top: 18px; font-size: 13px;">Main-stem river flows — ORRPB (incl. the Ontario OPG dams not in the HQ feed)</div>
+  <div class="section-subtitle" style="font-size: 12px;">
+    Average daily discharge of the Ottawa River at each monitored point, upstream → downstream, from the <a href="https://www.ottawariver.ca/conditions/?display=river" target="_blank">ORRPB conditions page</a>. Otto Holden, Des Joachims, Chenaux and Chats Falls are Ontario Power Generation dams that aren't in Hydro-Québec's open data — this is their only public release figure. (Also the data behind the "Current vs Median" flow charts.)
+  </div>
+  <div id="op-orrpb-river"><div class="skeleton">Loading ORRPB main-stem flows…</div></div>
+
+  <div class="section-title" style="margin-top: 18px; font-size: 13px;">Hydro-Québec releases — Ottawa main stem (upstream → downstream)</div>
   <div class="reservoirs-grid" id="op-grid-mainstem">
     <div class="skeleton">Loading release data…</div>
   </div>
@@ -3289,6 +3295,62 @@ function buildOpCard(meta, byId) {
   `;
 }
 
+// Ottawa main-stem river flows from ORRPB's "Average Daily Flows" table
+// (orrpb_river_flows). Includes the OPG dams (Otto Holden, Des Joachims,
+// Chenaux, Chats Falls) that aren't in Hydro-Québec's open-data feed.
+const ORRPB_RIVER_FLOW_STATIONS = [
+  ['temiscaming',  'Témiscaming',  'Upper Ottawa outlet'],
+  ['otto-holden',  'Otto Holden',  'OPG · upper Ottawa'],
+  ['des-joachims', 'Des Joachims', 'OPG · only main-stem dam with real storage'],
+  ['chenaux',      'Chenaux',      'OPG'],
+  ['chats-falls',  'Chats Falls',  'OPG / HQ'],
+  ['britannia',    'Britannia',    'Lake Deschênes at Ottawa'],
+  ['carillon',     'Carillon',     'Basin terminal'],
+];
+
+async function renderOrrpbRiverFlows() {
+  const el = document.getElementById('op-orrpb-river');
+  if (!el) return;
+  try {
+    const r = await fetch('/history/orrpb_river_flows?order=time.desc,station.asc&limit=70', { cache: 'no-store' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const rows = await r.json();
+    const byStation = {};
+    for (const row of rows) (byStation[row.station] ||= []).push(row);
+    let maxDate = '';
+    for (const s in byStation) {
+      byStation[s].sort((a, b) => (a.time < b.time ? 1 : -1)); // newest first
+      if (byStation[s][0].time > maxDate) maxDate = byStation[s][0].time;
+    }
+    const fmt = v => (v == null ? '—' : Math.round(v).toLocaleString());
+    const cells = ORRPB_RIVER_FLOW_STATIONS.map(([slug, name, sub]) => {
+      const series = byStation[slug] || [];
+      const cur = series[0];
+      const prev = cur && series.find(x => {
+        const d = (new Date(cur.time) - new Date(x.time)) / 86400000;
+        return d >= 6 && d <= 9;
+      });
+      let delta = '';
+      if (cur && prev && cur.flow_cms != null && prev.flow_cms != null) {
+        const d = Math.round(cur.flow_cms - prev.flow_cms);
+        delta = `<span style="font-size:10px;color:${d < 0 ? 'var(--green)' : 'var(--orange)'};">${d >= 0 ? '+' : ''}${d.toLocaleString()}/7d</span>`;
+      }
+      const ag = cur && cur.agency
+        ? `<span style="font-size:10px;padding:2px 6px;border-radius:4px;background:var(--surface-2);color:var(--text-muted);">${cur.agency}</span>` : '';
+      return `<div style="flex:1 1 128px;min-width:118px;padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface-2);">
+        <div style="font-size:12px;font-weight:600;">${name}</div>
+        <div style="font-size:18px;font-weight:700;line-height:1.1;margin:2px 0;">${fmt(cur && cur.flow_cms)}<span style="font-size:11px;font-weight:400;color:var(--text-muted);"> m³/s</span></div>
+        <div>${ag} ${delta}</div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:3px;">${sub}</div>
+      </div>`;
+    }).join('');
+    el.innerHTML = `<div style="display:flex;flex-wrap:wrap;gap:8px;">${cells}</div>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:6px;">Average daily flow, m³/s · ORRPB conditions page · ${maxDate} · Δ vs ~7 days prior</div>`;
+  } catch (e) {
+    el.innerHTML = `<div style="font-size:12px;color:var(--text-muted);padding:10px 0;">ORRPB main-stem flows unavailable: ${e.message}. <code>kubectl -n data create job --from=cronjob/orrpb-river-ingest orrpb-river-now</code></div>`;
+  }
+}
+
 async function renderOperationsTab() {
   const grids = {
     mainstem: document.getElementById('op-grid-mainstem'),
@@ -3296,6 +3358,7 @@ async function renderOperationsTab() {
     stlaw:    document.getElementById('op-grid-stlaw'),
   };
   if (!grids.mainstem) return;
+  renderOrrpbRiverFlows();  // independent of the HQ feed — fire and forget
   let byId;
   try {
     byId = await fetchHqOperations();
