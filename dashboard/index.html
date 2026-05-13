@@ -2714,6 +2714,10 @@ function buildReservoirCard(snap, cfg, release) {
     const spillTag = spillFrac >= 50 ? `<span style="color:var(--orange);font-weight:600;"> · ${spillFrac}% spill</span>`
                     : spillFrac > 0  ? ` · ${spillFrac}% spill` : '';
     outflowLine = `<div class="res-outflow" title="Total release at the dam (turbined + spilled), live from Hydro-Québec open data.&#10;Last update: ${ago(release.time)}">↳ ${total} m³/s out${spillTag}</div>`;
+  } else if (snap.flow_cms != null) {
+    // Fallback: outflow scraped from the ORRPB conditions page (no spill
+    // breakdown). Covers the OPG / MELCC / PSPC dams not in the HQ open data.
+    outflowLine = `<div class="res-outflow" title="Outflow at the dam — ORRPB conditions page, average daily flow.&#10;Last update: ${ago(snap.time)}">↳ ${Math.round(snap.flow_cms).toLocaleString()} m³/s out</div>`;
   }
   return `
     <div class="res-card clickable ${cls}" data-reservoir-id="${snap.reservoir_id}" onclick="openReservoirDetail('${snap.reservoir_id}')" title="${cfg.name} (${cfg.agency}) — click for detail&#10;Reading: ${reading}&#10;Range: ${cfg.low_limit.toFixed(2)} – ${cfg.high_limit.toFixed(2)} m">
