@@ -2253,7 +2253,7 @@ function openOpDetail(siteId) {
   let callout = '';
   if (flatWhileSpilling) {
     callout = `<div class="detail-callout alert"><strong>Held-headpond posture detected.</strong> Amont level is held in a ${rangeCm.toFixed(0)} cm band while ${Math.round(spillFrac*100)}% of throughput is spilled. The operator could open gates wider to draw the headpond down — see case-file Exhibit D and Exhibit F.1.</div>`;
-  } else if (spillFrac >= 0.5) {
+  } else if (!meta.noTurbine && spillFrac >= 0.5) {
     callout = `<div class="detail-callout warn"><strong>High spill share (${Math.round(spillFrac*100)}%).</strong> Most throughput is bypassing turbines, indicating freshet-period operation at or near hydraulic capacity for this plant.</div>`;
   }
 
@@ -2293,10 +2293,15 @@ function openOpDetail(siteId) {
     <div class="detail-section">
       <div class="section-label">Throughput</div>
       <div class="detail-grid">
+        ${meta.noTurbine ? `
+        <div class="row"><span class="lbl">Controlled release</span><span class="val">${Math.round(spill).toLocaleString()} m³/s</span></div>
+        <div class="row"><span class="lbl">Turbine</span><span class="val" style="color:var(--text-faint);">— (none at this site)</span></div>
+        ` : `
         <div class="row"><span class="lbl">Turbined</span><span class="val" style="color:var(--blue);">${Math.round(turb).toLocaleString()} m³/s</span></div>
         <div class="row"><span class="lbl">Spilled</span><span class="val" style="color:var(--orange);">${Math.round(spill).toLocaleString()} m³/s</span></div>
         <div class="row"><span class="lbl">% Spilled</span><span class="val">${Math.round(spillFrac*100)}%</span></div>
         <div class="row"><span class="lbl">% Turbined</span><span class="val">${Math.round((1-spillFrac)*100)}%</span></div>
+        `}
       </div>
     </div>
     ${(a || v) ? `
@@ -3085,7 +3090,7 @@ const HQ_OPERATIONS = {
   gatineau: {
     label: 'Gatineau',
     sites: [
-      { id: '3-62', name: 'Cabonga',         subtitle: 'Headwater reservoir' },
+      { id: '3-62', name: 'Cabonga',         subtitle: 'Headwater reservoir', noTurbine: true },
       { id: '3-63', name: 'Mercier',         subtitle: 'Upper Gatineau' },
       { id: '3-65', name: 'Paugan',          subtitle: 'Mid Gatineau' },
       { id: '3-66', name: 'Chelsea',         subtitle: 'Lower Gatineau' },
@@ -3211,7 +3216,7 @@ function buildOpCard(meta, byId) {
   const spillFrac = total ? spill / total : 0;
   let cls = 'normal';
   if (meta.featured) cls = 'featured';
-  else if (spillFrac >= 0.5) cls = 'high-spill';
+  else if (!meta.noTurbine && spillFrac >= 0.5) cls = 'high-spill';
   // Optional headpond / tailwater pair
   let headLine = '';
   let heldLine = '';
@@ -3271,9 +3276,14 @@ function buildOpCard(meta, byId) {
     }
   }
   const totalStr = total != null ? Math.round(total).toLocaleString() : '—';
-  const breakdown = (turb || spill)
-    ? `<span class="turbined">${Math.round(turb).toLocaleString()} turbined</span> · <span class="spilled">${Math.round(spill).toLocaleString()} spilled</span> (${Math.round(spillFrac * 100)}% spilled)`
-    : 'no breakdown';
+  let breakdown;
+  if (meta.noTurbine) {
+    breakdown = `${Math.round(spill).toLocaleString()} m³/s controlled release · no turbine`;
+  } else if (turb || spill) {
+    breakdown = `<span class="turbined">${Math.round(turb).toLocaleString()} turbined</span> · <span class="spilled">${Math.round(spill).toLocaleString()} spilled</span> (${Math.round(spillFrac * 100)}% spilled)`;
+  } else {
+    breakdown = 'no breakdown';
+  }
   const updated = ago(rel.time);
   const subtitle = meta.subtitle ? `<div style="font-size:10px;color:var(--text-faint);margin-top:1px;">${meta.subtitle}</div>` : '';
   const series = byId._series?.[meta.id] || [];
