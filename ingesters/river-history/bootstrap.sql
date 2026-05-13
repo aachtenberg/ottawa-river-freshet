@@ -236,4 +236,33 @@ SELECT DISTINCT ON (region, source)
 FROM swe_daily
 ORDER BY region, source, time DESC;
 
+-- ORRPB "Average Daily Flows (m3/s)" — main-stem Ottawa River discharge at the
+-- monitored points: Temiscaming, Otto Holden, Des Joachims, Chenaux, Chats
+-- Falls, Britannia, Carillon. Source: daily scrape of
+-- ottawariver.ca/conditions/?display=river (8-day rolling window). `station` is
+-- a stable slug ('des-joachims', 'otto-holden', ...). These are river flows ≈
+-- the run-of-river dam releases at those structures — useful because the OPG
+-- main-stem dams (Otto Holden, Des Joachims, Chenaux, Chats Falls) are not in
+-- the Hydro-Québec open-data feed (dam_releases). See
+-- k3s/base/data/files/orrpb-river-ingest/ingest.py.
+CREATE TABLE IF NOT EXISTS orrpb_river_flows (
+  time        date NOT NULL,
+  station     text NOT NULL,
+  flow_cms    double precision,
+  agency      text,
+  PRIMARY KEY (station, time)
+);
+
+SELECT create_hypertable('orrpb_river_flows', 'time', if_not_exists => TRUE,
+  chunk_time_interval => INTERVAL '1 year');
+
+CREATE INDEX IF NOT EXISTS orrpb_river_flows_station_time_idx
+  ON orrpb_river_flows (station, time DESC);
+
+CREATE OR REPLACE VIEW latest_orrpb_river_flows AS
+SELECT DISTINCT ON (station)
+  station, time, flow_cms, agency
+FROM orrpb_river_flows
+ORDER BY station, time DESC;
+
 NOTIFY pgrst, 'reload schema';

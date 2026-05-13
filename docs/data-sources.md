@@ -107,6 +107,17 @@ isn't a contract — if it breaks, the parser at
 [`ingesters/reservoir-ingest/scrape.py`](../ingesters/reservoir-ingest/scrape.py)
 needs adjustment.
 
+The same conditions page also exposes the **`?display=river` "Average Daily
+Flows (m3/s)" table** — main-stem Ottawa River discharge at Temiscaming, Otto
+Holden, Des Joachims, Chenaux, Chats Falls, Britannia and Carillon (8-day
+rolling window). [`ingesters/orrpb-river-ingest/ingest.py`](../ingesters/orrpb-river-ingest/ingest.py)
+loads it into `orrpb_river_flows`. This is the only public source for the OPG
+main-stem dams (Otto Holden, Des Joachims, Chenaux, Chats Falls), which are not
+in the Hydro-Québec open-data feed — and it's the data behind the "Current vs
+Median" flow charts. The reservoir scrape also captures the "Flow - <agency>"
+rows now (`reservoir_readings.flow_cms`: Des Joachims, Temiscaming outflow,
+reservoir releases).
+
 ## 8. Kisters KiWIS (optional)
 
 - **Base URL**: instance-specific. The river-history ingester is wired to

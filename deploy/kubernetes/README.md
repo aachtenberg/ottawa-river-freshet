@@ -25,6 +25,7 @@ scripts are inlined into the manifests, so a fresh cluster is one
 | `40-river-history-cron.yaml` | Hourly Vigilance + KiWIS + open-meteo ingester CronJob + script ConfigMap |
 | `50-reservoir-ingest-cron.yaml` | Daily ORRPB scraper CronJob + script ConfigMap |
 | `55-hq-ingest-cron.yaml` | Hourly Hydro-Québec open-data ingester (centrale + station telemetry) |
+| `56-orrpb-river-ingest-cron.yaml` | Daily ORRPB "Average Daily Flows" scrape → `orrpb_river_flows` (Temiscaming · Otto Holden · Des Joachims · Chenaux · Chats Falls · Britannia · Carillon — incl. the OPG dams not in the HQ feed) |
 | `60-alerter-cron.yaml` | Hourly threshold-crossing alerter CronJob + script ConfigMap |
 | `70-wsc-ingest-cron.yaml` | Hourly WSC realtime CSV ingester (level + discharge) |
 | `80-eccc-ingest-cron.yaml` | Six-hourly ECCC daily-climate bulk-CSV ingester |
@@ -62,6 +63,7 @@ kubectl apply -f 30-dashboard.yaml
 kubectl apply -f 40-river-history-cron.yaml
 kubectl apply -f 50-reservoir-ingest-cron.yaml
 kubectl apply -f 55-hq-ingest-cron.yaml
+kubectl apply -f 56-orrpb-river-ingest-cron.yaml
 kubectl apply -f 60-alerter-cron.yaml
 kubectl apply -f 70-wsc-ingest-cron.yaml
 kubectl apply -f 80-eccc-ingest-cron.yaml
@@ -72,6 +74,7 @@ kubectl apply -f 85-swe-ingest-cron.yaml
 kubectl create job -n freshet --from=cronjob/river-history-ingest river-init
 kubectl create job -n freshet --from=cronjob/reservoir-ingest reservoir-init
 kubectl create job -n freshet --from=cronjob/hq-ingest hq-init
+kubectl create job -n freshet --from=cronjob/orrpb-river-ingest orrpb-river-init
 kubectl create job -n freshet --from=cronjob/wsc-ingest wsc-init
 kubectl create job -n freshet --from=cronjob/eccc-ingest eccc-init
 kubectl create job -n freshet --from=cronjob/swe-caldas-ingest swe-caldas-init

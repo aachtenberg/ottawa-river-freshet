@@ -1,0 +1,186 @@
+"""
+ORRPB main-stem flow ingester — the "Average Daily Flows (m3/s)" table.
+
+Scrapes ottawariver.ca/conditions/?display=river and writes the daily Ottawa
+River discharge at the monitored points (Temiscaming, Otto Holden, Des
+Joachims, Chenaux, Chats Falls, Britannia, Carillon) to orrpb_river_flows.
+
+Why this exists: those are river flows ≈ the run-of-river releases at those
+structures, and the OPG main-stem dams (Otto Holden, Des Joachims, Chenaux,
+Chats Falls) are *not* in the Hydro-Québec open-data feed (dam_releases) — so
+ORRPB's conditions page is the only public source for them. This is also the
+data behind the "Ottawa River Flow — Current vs Median" charts that circulate.
+
+ORRPB publishes an 8-day rolling window; each pull re-uploads it cheaply
+(merge-duplicates upserts). Stdlib only (urllib + html.parser).
+
+Env: POSTGREST_URL, ORRPB_RIVER_URL (override the source URL), SCRAPE_USER_AGENT.
+"""
+
+import os
+import re
+import sys
+import urllib.request
+from datetime import datetime, timezone, timedelta
+from html.parser import HTMLParser
+
+ORRPB_URL = os.environ.get("ORRPB_RIVER_URL",
+                           "https://www.ottawariver.ca/conditions/?display=river")
+POSTGREST = os.environ.get("POSTGREST_URL", "http://postgrest.data.svc.cluster.local:3000")
+USER_AGENT = os.environ.get(
+    "SCRAPE_USER_AGENT",
+    "freshet-xgrunt-com/1.0 (+https://freshet.xgrunt.com; community flood monitoring)")
+
+# ORRPB row label (lower-cased substring) -> stable station slug.
+STATION_MATCH = [
+    ("temiscaming", "temiscaming"),
+    ("otto holden", "otto-holden"),
+    ("joachim",     "des-joachims"),
+    ("chenaux",     "chenaux"),
+    ("chats",       "chats-falls"),
+    ("britannia",   "britannia"),
+    ("deschenes",   "britannia"),     # "Lake Deschenes at Britannia"
+    ("carillon",    "carillon"),
+]
+
+
+class TableExtractor(HTMLParser):
+    """Capture every <table>'s rows-of-cells (cell = list of text fragments)."""
+    def __init__(self):
+        super().__init__()
+        self.tables = []
+        self._t = self._r = self._c = None
+
+    def handle_starttag(self, tag, attrs):
+        if tag == "table":
+            self._t = []; self.tables.append(self._t)
+        elif tag == "tr" and self._t is not None:
+            self._r = []; self._t.append(self._r)
+        elif tag in ("td", "th") and self._r is not None:
+            self._c = []; self._r.append(self._c)
+
+    def handle_endtag(self, tag):
+        if tag == "table": self._t = None
+        elif tag == "tr": self._r = None
+        elif tag in ("td", "th"): self._c = None
+
+    def handle_data(self, data):
+        if self._c is not None:
+            self._c.append(data)
+
+
+def cell_text(cell):
+    return re.sub(r"\s+", " ", "".join(cell).strip()) if cell else ""
+
+
+def find_flows_table(tables):
+    """The flows table is the one whose first row's first cell mentions
+    'average daily flow' (ORRPB header: 'Average Daily Flows (m3/s)')."""
+    for tbl in tables:
+        if tbl and "average daily flow" in cell_text(tbl[0][0] if tbl[0] else "").lower():
+            return tbl
+    return None
+
+
+def parse_dates(header_row):
+    out = []
+    today = datetime.now(timezone.utc)
+    for cell in (cell_text(c) for c in header_row[1:]):
+        m = re.match(r"^(\d{4})-(\d{2})-(\d{2})$", cell)
+        if m:
+            out.append(datetime(int(m[1]), int(m[2]), int(m[3]), tzinfo=timezone.utc))
+            continue
+        m = re.match(r"^([A-Za-z]{3,})\s+(\d{1,2})$", cell)
+        if m:
+            try:
+                mon = datetime.strptime(m[1][:3], "%b").month
+            except ValueError:
+                continue
+            d = datetime(today.year, mon, int(m[2]), tzinfo=timezone.utc)
+            if d - today > timedelta(days=10):
+                d = d.replace(year=today.year - 1)
+            out.append(d)
+    return out
+
+
+def slug_for(label):
+    low = label.lower()
+    for needle, slug in STATION_MATCH:
+        if needle in low:
+            return slug
+    return None
+
+
+def parse_table(tbl):
+    if len(tbl) < 2:
+        return []
+    dates = parse_dates(tbl[0])
+    if not dates:
+        print(f"no dates parsed from header: {tbl[0]!r}", file=sys.stderr)
+        return []
+    rows = []
+    for row in tbl[1:]:
+        if len(row) < 2:
+            continue
+        c0 = cell_text(row[0])
+        name = re.sub(r"Graph View.*", "", c0).strip()
+        agm = re.search(r"Agency:\s*([A-Za-z/.\- ]+)", c0)
+        agency = agm.group(1).strip() if agm else None
+        slug = slug_for(name)
+        if not slug:
+            continue
+        for i, cell in enumerate(row[1:]):
+            if i >= len(dates):
+                break
+            txt = cell_text(cell)
+            if not txt or txt in ("—", "-", "N/A"):
+                continue
+            try:
+                val = float(txt.replace(",", ""))
+            except ValueError:
+                continue
+            rows.append({"time": dates[i].date().isoformat(), "station": slug,
+                         "flow_cms": val, "agency": agency})
+    return rows
+
+
+def post_rows(rows):
+    if not rows:
+        print("nothing to post", file=sys.stderr)
+        return
+    import json
+    body = json.dumps(rows).encode("utf-8")
+    req = urllib.request.Request(
+        f"{POSTGREST}/orrpb_river_flows", data=body, method="POST",
+        headers={"Content-Type": "application/json", "Prefer": "resolution=merge-duplicates"})
+    with urllib.request.urlopen(req, timeout=60) as r:
+        print(f"  POST /orrpb_river_flows -> HTTP {r.status} ({len(rows)} rows)")
+
+
+def main():
+    req = urllib.request.Request(ORRPB_URL, headers={
+        "User-Agent": USER_AGENT, "Accept": "text/html,application/xhtml+xml"})
+    with urllib.request.urlopen(req, timeout=30) as r:
+        html = r.read().decode("utf-8", "replace")
+    ex = TableExtractor(); ex.feed(html)
+    tbl = find_flows_table(ex.tables)
+    if not tbl:
+        print("ORRPB river page: 'Average Daily Flows' table not found — layout change?",
+              file=sys.stderr)
+        sys.exit(1)
+    rows = parse_table(tbl)
+    by_station = {}
+    for r in rows:
+        if r["station"] not in by_station or r["time"] > by_station[r["station"]]["time"]:
+            by_station[r["station"]] = r
+    for slug, r in sorted(by_station.items()):
+        print(f"  {slug:14s} {r['time']}  {r['flow_cms']:>7.0f} m³/s  ({r['agency']})")
+    if not rows:
+        print("parsed 0 flow rows — aborting", file=sys.stderr)
+        sys.exit(1)
+    post_rows(rows)
+    print(f"Done: {len(rows)} rows, {len(by_station)} stations.")
+
+
+if __name__ == "__main__":
+    main()

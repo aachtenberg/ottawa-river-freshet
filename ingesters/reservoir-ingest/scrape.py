@@ -158,29 +158,39 @@ def parse_table(tbl):
 
     readings = {}  # (reservoir_id, ts_iso) -> dict
     current_label = None
+    label_re = re.compile(r'^(Level|Flow)\s*-\s*(.+)$')
 
     for row in tbl[1:]:
-        if len(row) < 3:
+        if len(row) < 2:
             continue
-        first = cell_text(row[0])
-        first = re.sub(r'Graph View.*', '', first).strip()
-        type_cell = cell_text(row[1])
-        m = re.match(r'^(Level|Flow)\s*-\s*(.+)$', type_cell)
-        if not m:
-            # Reservoir name on a row by itself (rare layout).
-            if first:
-                current_label = first
+        # ORRPB lays each reservoir out as a "Level - <agency>" row whose first
+        # cell is the reservoir name, followed by a "Flow - <agency>" row whose
+        # name cell is omitted — so on that row the "Flow - X" label lands in
+        # column 0, not column 1, and the 8 daily values start at column 1.
+        # Handle both: if column 0 is itself a "Level/Flow - X" label it's a
+        # continuation row (values at row[1:]); otherwise column 0 is the
+        # reservoir name and column 1 is the label (values at row[2:]).
+        c0 = re.sub(r'Graph View.*', '', cell_text(row[0])).strip()
+        c1 = cell_text(row[1])
+        m0, m1 = label_re.match(c0), label_re.match(c1)
+        if m1:
+            if c0:
+                current_label = c0
+            kind, agency, values = m1.group(1), m1.group(2).strip(), row[2:]
+        elif m0:
+            kind, agency, values = m0.group(1), m0.group(2).strip(), row[1:]
+        else:
+            # bare reservoir-name row (rare layout) — but not a row of numbers
+            if c0 and not re.match(r'^[\d.,]+$', c0):
+                current_label = c0
             continue
-        kind, agency = m.group(1), m.group(2).strip()
-        if first:
-            current_label = first
         if not current_label:
             continue
         rid = RESERVOIR_KEY_MAP.get(current_label)
         if not rid:
             continue
 
-        for i, cell in enumerate(row[2:]):
+        for i, cell in enumerate(values):
             if i >= len(dates):
                 break
             txt = cell_text(cell)
