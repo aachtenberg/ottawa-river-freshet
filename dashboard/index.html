@@ -718,13 +718,14 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
   <div class="section-title" style="margin-top: 4px;">Reservoir storage — basin-wide</div>
   <div class="section-subtitle">
     Percent-full of the major Ottawa River basin reservoirs. When upper-basin reservoirs approach 90%, operators lose discretion to absorb new inflow — that's the signal a freshet pulse will pass through to Lac Coulonge instead of being held back.
-    Source: <a href="https://www.ottawariver.ca/conditions/?display=reservoir" target="_blank">ORRPB conditions page</a>, scraped daily.
+    Level data: <a href="https://www.ottawariver.ca/conditions/?display=reservoir" target="_blank">ORRPB conditions page</a>, scraped daily. Operating limits: same ORRPB pages (per-location System Constraints tables). Storage capacities: <a href="https://www.environnement.gouv.qc.ca/eau/regions/" target="_blank">MELCC regional water portraits</a> for Quebec reservoirs, <a href="https://www.hydroquebec.com/generation/runoff/abitibi.html" target="_blank">HQ runoff prose</a> for Dozois, and operator-specific docs for Ontario/federal sites — each card links to its source.
     <button id="reservoir-methodology-btn" onclick="document.getElementById('reservoir-methodology').style.display = document.getElementById('reservoir-methodology').style.display === 'block' ? 'none' : 'block'" style="background:transparent;border:none;color:var(--blue);font-size:11px;cursor:pointer;padding:0;margin-left:6px;text-decoration:underline">How is percent-full calculated?</button>
     <div id="reservoir-methodology" style="display:none;margin-top:8px;padding:10px 12px;background:var(--surface-2);border-radius:6px;font-size:11px;line-height:1.55;color:var(--text-muted);">
       <p style="margin-bottom:6px;"><strong>Percent full</strong> is estimated using the difference between the published high and low operating limits for each reservoir. The low operating limit represents the minimum level at which a generating station or dam can maintain outflow under normal operating conditions.</p>
       <p style="margin-bottom:6px;">A simple linear approximation is applied across this operating range to estimate how full a reservoir is at a given level. This provides a reasonable point-in-time estimate of percent full based solely on water level relative to the operating limits.</p>
       <p style="margin-bottom:6px;">Reservoir level data is captured as a point-in-time measurement, while official daily values are typically finalized using 24-hour averaged data. As a result, the percent full displayed on cards reflects current conditions, but the reported daily percent-full value may lag slightly.</p>
-      <p style="margin:0;">Official calculation methods used by reservoir operators may differ and may incorporate additional operational or hydrological factors. For authoritative information, consult the respective reservoir operators. Methodology adapted from Contributor B's community-published reservoir gauge.</p>
+      <p style="margin-bottom:6px;">Official calculation methods used by reservoir operators may differ and may incorporate additional operational or hydrological factors. For authoritative information, consult the respective reservoir operators. Methodology adapted from Contributor B's community-published reservoir gauge.</p>
+      <p style="margin:0;"><strong>Storage volumes</strong> shown on each card (e.g. "1,696 / 1,871 M m³") use the published useful-storage capacity from each reservoir's operator: MELCC regional water portraits for most Quebec reservoirs, Hydro-Québec's runoff prose for Dozois, OPG/PSPC documentation for Ontario and federal sites. Click the "[source]" link in any card's detail view to see the citation. Rapide-7 is a small headpond fed by the upstream Decelles reservoir and has no published useful-storage volume of its own; Des Joachims is held at its prior value pending a primary OPG citation.</p>
     </div>
     <span id="reservoir-status-line" style="display:block; margin-top:6px; font-size:11px; color:var(--text-faint);"></span>
     <span id="reservoir-calibration-warning" style="display:none; margin-top:4px; font-size:11px; color:var(--orange);">⚠ Operating limits are starting estimates from operator documentation — not yet calibrated. Percent-full numbers may drift ± a few points until limits are finalized.</span>
@@ -2174,10 +2175,16 @@ function openReservoirDetail(reservoirId) {
   const pct = pctFull(snap.level_m, cfg.low_limit, cfg.high_limit);
   const priorPct = pctFull(snap.prior_level_m, cfg.low_limit, cfg.high_limit);
   const change = (pct != null && priorPct != null) ? pct - priorPct : null;
-  const volume = pct != null ? Math.round(cfg.capacity_mcm * pct / 100) : null;
+  const volume = (pct != null && cfg.capacity_mcm != null) ? Math.round(cfg.capacity_mcm * pct / 100) : null;
   const range = (cfg.high_limit - cfg.low_limit).toFixed(2);
   const cmFromHigh = snap.level_m != null ? ((cfg.high_limit - snap.level_m) * 100).toFixed(0) : '—';
   const cmFromLow = snap.level_m != null ? ((snap.level_m - cfg.low_limit) * 100).toFixed(0) : '—';
+  const capacityFull = cfg.capacity_mcm != null
+    ? `${cfg.capacity_mcm.toLocaleString()} M m³ at full`
+    : 'no published storage volume';
+  const capacityCite = cfg.capacity_source
+    ? ` <a href="${cfg.capacity_source}" target="_blank" rel="noopener" style="color:var(--text-faint);text-decoration:underline;">[source]</a>`
+    : '';
 
   // Plain-language read of the state
   let callout = '';
@@ -2190,7 +2197,7 @@ function openReservoirDetail(reservoirId) {
 
   const body = `
     <h3>${cfg.name}<span class="station-id"> · ${cfg.agency}</span></h3>
-    <div class="now-meta">${cfg.low_limit.toFixed(2)} – ${cfg.high_limit.toFixed(2)} m operating range · ${range} m total · ${cfg.capacity_mcm.toLocaleString()} M m³ at full</div>
+    <div class="now-meta">${cfg.low_limit.toFixed(2)} – ${cfg.high_limit.toFixed(2)} m operating range · ${range} m total · ${capacityFull}${capacityCite}</div>
     <div class="now-line">${pct != null ? pct.toFixed(1) : '—'}<span class="unit">% full</span></div>
     ${callout}
     <div class="detail-section">
@@ -2683,10 +2690,10 @@ function buildReservoirCard(snap, cfg, release) {
   const cls = fillClass(pct);
   const barColor = fillBarColor(pct);
   const barWidth = pct != null ? Math.min(100, pct) : 0;
-  const volume = pct != null ? Math.round(cfg.capacity_mcm * pct / 100) : null;
+  const volume = (pct != null && cfg.capacity_mcm != null) ? Math.round(cfg.capacity_mcm * pct / 100) : null;
   const volumeStr = volume != null
     ? `${volume.toLocaleString()} M m³ / ${Math.round(cfg.capacity_mcm).toLocaleString()}`
-    : '—';
+    : (cfg.capacity_mcm == null ? '—' : '—');
   const changeText = change == null
     ? '—'
     : Math.abs(change) < 0.05
