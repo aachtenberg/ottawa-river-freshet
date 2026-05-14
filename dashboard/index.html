@@ -641,6 +641,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
   <button data-tab="reservoirs">Reservoirs</button>
   <button data-tab="tributaries">Tributaries</button>
   <button data-tab="operations">Operations</button>
+  <button data-tab="flow">Flow</button>
 </nav>
 
 <div class="tab-panel active" data-tab="overview">
@@ -782,6 +783,46 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
   <div class="reservoirs-grid" id="op-grid-gatineau"></div>
   <div class="section-title" style="margin-top: 18px; font-size: 13px;">Lower St-Lawrence (downstream of Carillon)</div>
   <div class="reservoirs-grid" id="op-grid-stlaw"></div>
+</div>
+
+<div class="tab-panel" data-tab="flow">
+  <div class="section-title" style="margin-top: 4px;">Wave propagation — three views</div>
+  <div class="section-subtitle">
+    The Ottawa is a system, not a place. A freshet pulse that hits Témiscaming arrives at Carillon several days later — the river carries the wave downstream as a physical signal. Each panel below tells the same story with a different visual grammar; this page exists so the community can tell us which is most useful.
+    <br><br>
+    Source: <strong>mean daily discharge (m³/s)</strong> from the ORRPB main stem (Témiscaming → Carillon), backfilled from <a href="https://www.ottawariver.ca/conditions/?display=river" target="_blank">ORRPB's per-location archive</a> for the past year. Pick a window below — short windows show the current 2026 freshet, longer windows include the 2025 freshet and summer/fall recession for context.
+  </div>
+  <div class="range-picker" id="range-picker-flow" style="margin-top: 14px;">
+    <span class="label">Window</span>
+    <button class="range-btn" data-days="7">7d</button>
+    <button class="range-btn" data-days="14">14d</button>
+    <button class="range-btn active" data-days="30">30d</button>
+    <button class="range-btn" data-days="60">60d</button>
+    <button class="range-btn" data-days="90">90d</button>
+    <button class="range-btn" data-days="180">6mo</button>
+    <button class="range-btn" data-days="400">1 yr</button>
+  </div>
+
+  <!-- Viz 1: Multi-line time series -->
+  <div class="section-title" style="margin-top: 22px; font-size: 13px;">1 · Multi-line time series <span style="font-weight:400;color:var(--text-muted);font-size:11px;">· last 30 days · one line per station</span></div>
+  <div class="section-subtitle" style="margin-bottom: 8px;">The familiar form. Magnitude differences (upstream = thinner river, downstream = bigger) and day-to-day changes are both readable, but you have to mentally trace each line to spot the wave moving downstream.</div>
+  <div style="position: relative; height: 340px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px;">
+    <canvas id="flow-multiline"></canvas>
+  </div>
+
+  <!-- Viz 2: Stacked small multiples -->
+  <div class="section-title" style="margin-top: 22px; font-size: 13px;">2 · Stacked small multiples <span style="font-weight:400;color:var(--text-muted);font-size:11px;">· each panel = one station · top is upstream, bottom is downstream</span></div>
+  <div class="section-subtitle" style="margin-bottom: 8px;">The page itself becomes a map of the river. Watch the peak march down the stack — what you see at the top arrives at the bottom several days later.</div>
+  <div id="flow-smallmultiples" style="background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 6px 0;"></div>
+
+  <!-- Viz 3: Hovmöller heatmap -->
+  <div class="section-title" style="margin-top: 22px; font-size: 13px;">3 · Hovmöller heatmap <span style="font-weight:400;color:var(--text-muted);font-size:11px;">· station × day · color = flow (per-station normalized)</span></div>
+  <div class="section-subtitle" style="margin-bottom: 8px;">A meteorologist's tool, repurposed. Stations stack vertically (upstream at top), days run left-to-right. The freshet wave appears as a diagonal stripe sloping down and to the right — the slope <em>is</em> the travel time. Each row is normalized to its own station so smaller upstream stations stay legible alongside Carillon.</div>
+  <div id="flow-hovmoller" style="background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px;"></div>
+
+  <div class="section-subtitle" style="margin-top: 18px; font-size: 11px; color: var(--text-faint);">
+    Which of these did you find clearest? Let us know in the community discussion — the most useful view will be promoted into the main Overview tab.
+  </div>
 </div>
 
 <div class="bar-detail-modal" id="bar-detail-modal" onclick="closeBarDetail(event)" aria-hidden="true">
@@ -1275,6 +1316,73 @@ async function fetchKiwisStation(spec) {
       geom_p: geom
     },
     readings
+  };
+}
+
+// WSC adapter: read from the local wsc_readings hypertable (populated hourly
+// by the wsc-ingest cronjob from wateroffice.ec.gc.ca). Reshapes into the
+// same { metadata, readings } envelope the rest of the dashboard expects
+// from Vigilance. Window matches the dashboard-wide windowHours so 7d / 30d
+// / 90d selections deepen the chart without re-pulling from the WSC API.
+async function fetchWscStation(spec) {
+  const since = new Date(Date.now() - Math.max(72, windowHours) * 3600 * 1000).toISOString();
+  const url = `/history/wsc_readings?station_code=eq.${spec.wscCode}`
+    + `&time=gte.${since}&order=time.asc&select=time,level_m,flow_cms`;
+  let r;
+  try {
+    r = await fetch(url, { cache: 'no-store' });
+  } catch (e) {
+    throw new Error(`WSC unreachable: ${e.message}`);
+  }
+  if (!r.ok) throw new Error(`WSC HTTP ${r.status}`);
+  const rows = await r.json();
+  if (!rows.length) throw new Error('WSC no rows in window');
+
+  // Level series for the sparkline. We capture the most recent non-null
+  // DISCHARGE separately so the Q line on the card works.
+  const readings = [];
+  let latestQ = null;
+  for (const row of rows) {
+    if (row.level_m != null && Number.isFinite(row.level_m)) {
+      readings.push({ valeur: row.level_m, date_prise_valeur: row.time });
+    }
+    if (row.flow_cms != null && Number.isFinite(row.flow_cms)) {
+      latestQ = row.flow_cms;
+    }
+  }
+  if (!readings.length) throw new Error('WSC no level data');
+  const last = readings[readings.length - 1];
+
+  // 3-hour trend in m/h (matches Vigilance trend_niv units).
+  const lastMs = new Date(last.date_prise_valeur).getTime();
+  const recent = readings.filter(r => lastMs - new Date(r.date_prise_valeur).getTime() <= 3 * 3600 * 1000);
+  let trend_niv = null;
+  if (recent.length >= 2) {
+    const a = recent[0], b = recent[recent.length - 1];
+    const hours = (new Date(b.date_prise_valeur) - new Date(a.date_prise_valeur)) / 3600000;
+    if (hours > 0) trend_niv = (b.valeur - a.valeur) / hours;
+  }
+
+  return {
+    metadata: {
+      id: spec.id,
+      label: spec.wscCode,
+      description: spec.name,
+      plan_deau: spec.river || 'Ottawa basin tributary',
+      fournisseur_nom: 'Water Survey of Canada',
+      fournisseur_url: 'https://wateroffice.ec.gc.ca/',
+      dern_valeur_niv: last.valeur,
+      dern_valeur_deb: latestQ,
+      etat_niv: null,
+      etat_deb: null,
+      etat_max: null,
+      trend_niv,
+      trend_deb: null,
+      derniere_lecture: last.date_prise_valeur,
+      date_prise_valeur: last.date_prise_valeur,
+      geom_p: null,
+    },
+    readings,
   };
 }
 
@@ -2440,9 +2548,21 @@ function setOpWindow(hours) {
   renderOperationsTab();
 }
 
+document.getElementById('range-picker-flow').addEventListener('click', (e) => {
+  const btn = e.target.closest('.range-btn');
+  if (!btn) return;
+  const days = Number(btn.dataset.days);
+  if (!Number.isFinite(days) || days <= 0 || days === flowTabDays) return;
+  flowTabDays = days;
+  document.querySelectorAll('#range-picker-flow .range-btn').forEach(b => {
+    b.classList.toggle('active', Number(b.dataset.days) === days);
+  });
+  renderFlowTab();
+});
+
 // ---- Tab navigation (hash-routed) ----
 function activateTab(name) {
-  if (!['overview', 'stations', 'reservoirs', 'tributaries', 'operations'].includes(name)) name = 'overview';
+  if (!['overview', 'stations', 'reservoirs', 'tributaries', 'operations', 'flow'].includes(name)) name = 'overview';
   document.querySelectorAll('.tab-strip button').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.dataset.tab === name));
   if (location.hash !== '#' + name) history.replaceState(null, '', '#' + name);
@@ -2450,6 +2570,7 @@ function activateTab(name) {
   if (name === 'reservoirs') renderReservoirsTab();
   if (name === 'tributaries') renderTributariesTab();
   if (name === 'operations') renderOperationsTab();
+  if (name === 'flow') renderFlowTab();
 }
 document.getElementById('tab-strip').addEventListener('click', e => {
   const btn = e.target.closest('button[data-tab]');
@@ -2807,7 +2928,45 @@ async function renderReservoirsTab() {
 // They don't directly affect Lac Coulonge but constrain ORRPB's options at
 // Carillon — a rising tributary forces lower-river outflow up, which
 // propagates upstream as backwater pressure.
+// All Ottawa River tributaries with live gauge coverage, grouped by river,
+// ordered upstream → downstream along the main stem. Each station has a
+// `source` ('vigilance' | 'wsc'); without it, fetchStation() against MSP
+// Vigilance is the default. WSC stations carry a `wscCode` (e.g. '02JE020')
+// and a synthetic numeric `id` in the 300000+ range to avoid colliding with
+// Vigilance IDs.
 const TRIBUTARY_STATIONS = [
+  { river: 'Rivière Kipawa', stations: [
+    { id: 257, name: 'Kipawa @ Laniel', subtitle: 'Below the dam at Laniel · regulated outflow' }
+  ] },
+  { river: 'Mattawa River', stations: [
+    { id: 300020, source: 'wsc', wscCode: '02JE020', river: 'Mattawa River',
+      name: 'Mattawa below Bouillon Lake', subtitle: 'WSC · joins Ottawa at Mattawa' }
+  ] },
+  { river: 'Petawawa River', stations: [
+    { id: 300101, source: 'wsc', wscCode: '02KB001', river: 'Petawawa River',
+      name: 'Petawawa near Petawawa', subtitle: 'WSC · joins Ottawa at Pembroke' }
+  ] },
+  { river: 'Bonnechere River', stations: [
+    { id: 300109, source: 'wsc', wscCode: '02KC009', river: 'Bonnechere River',
+      name: 'Bonnechere near Castleford', subtitle: 'WSC · joins Ottawa near Renfrew' }
+  ] },
+  { river: 'Madawaska River', stations: [
+    { id: 300204, source: 'wsc', wscCode: '02KD004', river: 'Madawaska River',
+      name: 'Madawaska at Palmer Rapids', subtitle: 'WSC · upstream of Stewartville dam' }
+  ] },
+  { river: 'Mississippi River (ON)', stations: [
+    { id: 300401, source: 'wsc', wscCode: '02KF001', river: 'Mississippi River (ON)',
+      name: 'Mississippi at Fergusons Falls', subtitle: 'WSC · upper' },
+    { id: 300406, source: 'wsc', wscCode: '02KF006', river: 'Mississippi River (ON)',
+      name: 'Mississippi at Appleton',        subtitle: 'WSC · lower (joins Ottawa at Galetta)' }
+  ] },
+  { river: 'Rivière Coulonge', stations: [
+    { id: 1004, name: 'Coulonge @ Mansfield (Rte 148)', subtitle: 'Hydro Météo · unregulated; joins Ottawa at Fort-Coulonge' }
+  ] },
+  { river: 'Rideau River', stations: [
+    { id: 300504, source: 'wsc', wscCode: '02LA004', river: 'Rideau River',
+      name: 'Rideau at Ottawa', subtitle: 'WSC · joins Ottawa at the Rideau Falls' }
+  ] },
   { river: 'Rivière Gatineau', stations: [
     { id: 442, name: 'Tête des rapides Ceizur',   subtitle: 'Lac-Douaire · upstream discharge gauge' },
     // La Pêche (Vigilance station 994) removed 2026-05-10 — Hydro Météo
@@ -2818,9 +2977,29 @@ const TRIBUTARY_STATIONS = [
     // upstream gauge comes back online.
     { id: 982, name: 'Rue Cartier (Gatineau)',    subtitle: 'Lower Gatineau · before Cartier dam' },
     { id: 983, name: 'Quai des Artistes (Gatineau)', subtitle: 'Lower Gatineau · near Ottawa confluence' }
-  ] }
+  ] },
+  { river: 'Rivière du Lièvre', stations: [
+    { id: 196, name: 'Lac du Poisson Blanc', subtitle: 'Mid Lièvre · at Notre-Dame-du-Laus' }
+  ] },
+  { river: 'Rivière Rouge', stations: [
+    { id: 39, name: 'Rouge @ McNeil Chute', subtitle: 'Lower Rouge · upstream of chute' }
+  ] },
+  { river: 'Rivière de la Petite Nation', stations: [
+    { id: 1007, name: 'Petite Nation @ Saint-André-Avellin', subtitle: 'Rte 321 bridge · joins Ottawa at Plaisance' }
+  ] },
+  { river: 'South Nation River', stations: [
+    { id: 300605, source: 'wsc', wscCode: '02LB005', river: 'South Nation River',
+      name: 'South Nation near Plantagenet Springs', subtitle: 'WSC · joins Ottawa at Plantagenet' }
+  ] },
 ];
-const TRIBUTARY_STATION_IDS = TRIBUTARY_STATIONS.flatMap(g => g.stations.map(s => s.id));
+const TRIBUTARY_STATION_SPECS = TRIBUTARY_STATIONS.flatMap(g => g.stations);
+const TRIBUTARY_STATION_IDS = TRIBUTARY_STATION_SPECS.map(s => s.id);
+
+function fetchTributary(spec) {
+  if (spec.source === 'wsc') return fetchWscStation(spec);
+  if (spec.source === 'mvca') return fetchKiwisStation(spec);
+  return fetchStation(spec.id);
+}
 let tributaryMiniCharts = {};
 
 async function renderTributariesTab() {
@@ -2842,18 +3021,29 @@ async function renderTributariesTab() {
   paint();
   // Now fetch any missing station data + history in the background. Re-paint when done.
   let didFetch = false;
-  await Promise.all(TRIBUTARY_STATION_IDS.map(async id => {
-    if (lastData?.[id]) return;
+  await Promise.all(TRIBUTARY_STATION_SPECS.map(async spec => {
+    // WSC fetcher reads from wsc_readings keyed on windowHours — re-fetch when
+    // the window grows so the sparkline extends past the original 72h pull.
+    // (Vigilance fetches a fixed 72h buffer; longer ranges come from the
+    // historyCache pull below.)
+    const wscNeedsRefetch = spec.source === 'wsc'
+      && lastData?.[spec.id]
+      && (lastData[spec.id].readings?.length || 0) < windowHours * 6;  // ~10/hr at 5-min cadence
+    if (lastData?.[spec.id] && !wscNeedsRefetch) return;
     if (!lastData) lastData = {};
-    try { lastData[id] = await fetchStation(id); didFetch = true; }
-    catch (e) { console.warn(`trib ${id}: ${e.message}`); }
+    try { lastData[spec.id] = await fetchTributary(spec); didFetch = true; }
+    catch (e) { console.warn(`trib ${spec.id} (${spec.source || 'vigilance'}): ${e.message}`); }
   }));
   if (windowHours > 72) {
-    await Promise.all(TRIBUTARY_STATION_IDS.map(async id => {
-      const key = `${id}:${windowHours}`;
+    // Server-side history (river_readings table) only covers Vigilance stations.
+    // WSC stations get their long history directly from fetchWscStation above,
+    // which reads wsc_readings sized to windowHours.
+    await Promise.all(TRIBUTARY_STATION_SPECS.map(async spec => {
+      if (spec.source === 'wsc' || spec.source === 'mvca') return;
+      const key = `${spec.id}:${windowHours}`;
       if (historyCache[key]) return;
-      try { historyCache[key] = await fetchStationHistory(id, windowHours); didFetch = true; }
-      catch (e) { console.warn(`trib history ${id}: ${e.message}`); }
+      try { historyCache[key] = await fetchStationHistory(spec.id, windowHours); didFetch = true; }
+      catch (e) { console.warn(`trib history ${spec.id}: ${e.message}`); }
     }));
   }
   if (didFetch) {
@@ -3363,6 +3553,271 @@ async function renderOrrpbRiverFlows() {
   }
 }
 
+// ---- Flow tab: three propagation visualizations sharing one fetch ----
+// Stations are the 7 ORRPB main-stem reporting points, upstream → downstream.
+// Data source: orrpb_river_flows (daily mean discharge, m³/s). Britannia and
+// Carillon are backfilled to mid-April from WSC realtime / dam_releases; the
+// 5 OPG stations only have data from May 5 onward because ORRPB only publishes
+// an 8-day rolling window. Colors run cool→warm to hint at flow direction.
+const FLOW_TAB_STATIONS = [
+  ['temiscaming',  'Témiscaming',  '#7A5ED8'],
+  ['otto-holden',  'Otto Holden',  '#5B8BD0'],
+  ['des-joachims', 'Des Joachims', '#3AAFD4'],
+  ['chenaux',      'Chenaux',      '#3CB371'],
+  ['chats-falls',  'Chats Falls',  '#E0A93C'],
+  ['britannia',    'Britannia',    '#D85A30'],
+  ['carillon',     'Carillon',     '#C44545'],
+];
+let flowTabDays = 30;  // default window — full 2026 freshet now that ORRPB year-back is scraped
+const flowTabState = { lastFetchTs: 0, data: null, daysAtFetch: 0 };
+let flowMultilineChart = null;
+let flowSmallMultipleCharts = {};
+
+async function renderFlowTab() {
+  const containers = ['flow-multiline', 'flow-smallmultiples', 'flow-hovmoller']
+    .map(id => document.getElementById(id));
+  if (!containers.every(Boolean)) return;
+
+  const now = Date.now();
+  if (flowTabState.data && flowTabState.daysAtFetch === flowTabDays && (now - flowTabState.lastFetchTs) < 300000) {
+    renderFlowMultiline(flowTabState.data);
+    renderFlowSmallMultiples(flowTabState.data);
+    renderFlowHovmoller(flowTabState.data);
+    return;
+  }
+
+  try {
+    const since = new Date(now - flowTabDays * 86400000).toISOString();
+    const r = await fetch(
+      `/history/orrpb_river_flows?time=gte.${since}&order=time.asc,station.asc`,
+      { cache: 'no-store' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const rows = await r.json();
+    const byStation = {};
+    const dateSet = new Set();
+    for (const row of rows) {
+      if (row.flow_cms == null) continue;
+      const date = String(row.time).slice(0, 10);
+      (byStation[row.station] ||= []).push({ date, flow: row.flow_cms });
+      dateSet.add(date);
+    }
+    for (const s in byStation) byStation[s].sort((a, b) => a.date.localeCompare(b.date));
+    const dates = Array.from(dateSet).sort();
+    flowTabState.data = { byStation, dates };
+    flowTabState.lastFetchTs = now;
+    flowTabState.daysAtFetch = flowTabDays;
+
+    renderFlowMultiline(flowTabState.data);
+    renderFlowSmallMultiples(flowTabState.data);
+    renderFlowHovmoller(flowTabState.data);
+  } catch (e) {
+    containers.forEach(c => {
+      c.innerHTML = `<div style="padding:20px;color:var(--text-muted);font-size:12px;">Flow data unavailable: ${e.message}</div>`;
+    });
+  }
+}
+
+// Viz 1 — Multi-line: every station on one chart, shared time axis.
+function renderFlowMultiline({ byStation, dates }) {
+  const isDark = isDarkMode();
+  const grid = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
+  const txt  = isDark ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.55)';
+  const datasets = FLOW_TAB_STATIONS.map(([slug, name, color]) => {
+    const byDate = Object.fromEntries((byStation[slug] || []).map(p => [p.date, p.flow]));
+    return {
+      label: name,
+      data: dates.map(d => byDate[d] ?? null),
+      borderColor: color,
+      backgroundColor: color + '22',
+      borderWidth: 2,
+      pointRadius: 0,
+      pointHoverRadius: 4,
+      tension: 0.25,
+      spanGaps: true,
+    };
+  });
+  const canvas = document.getElementById('flow-multiline');
+  if (!canvas) return;
+  if (flowMultilineChart) flowMultilineChart.destroy();
+  flowMultilineChart = new Chart(canvas, {
+    type: 'line',
+    data: { labels: dates.map(d => d.slice(5)), datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false, animation: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { position: 'top', align: 'end',
+          labels: { color: txt, boxWidth: 14, boxHeight: 2, font: { size: 11 }, padding: 10 } },
+        tooltip: {
+          backgroundColor: isDark ? 'rgba(30,30,30,0.95)' : 'rgba(255,255,255,0.98)',
+          titleColor: isDark ? '#f0f0f0' : '#1a1a1a',
+          bodyColor:  isDark ? '#f0f0f0' : '#1a1a1a',
+          borderColor: isDark ? '#444' : '#ddd', borderWidth: 1,
+          callbacks: {
+            label: (ctx) => `${ctx.dataset.label}: ${Math.round(ctx.parsed.y).toLocaleString()} m³/s`
+          }
+        }
+      },
+      scales: {
+        x: { grid: { color: grid }, ticks: { color: txt, font: { size: 10 }, maxTicksLimit: 10 } },
+        y: { grid: { color: grid }, ticks: { color: txt, font: { size: 10 },
+               callback: v => v.toLocaleString() }, beginAtZero: true,
+             title: { display: true, text: 'm³/s', color: txt, font: { size: 10 } } }
+      }
+    }
+  });
+}
+
+// Viz 2 — Stacked small multiples: one mini chart per station, geographic order.
+function renderFlowSmallMultiples({ byStation, dates }) {
+  const isDark = isDarkMode();
+  const txt = isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.5)';
+  const container = document.getElementById('flow-smallmultiples');
+  if (!container) return;
+  Object.values(flowSmallMultipleCharts).forEach(c => { try { c.destroy(); } catch (_) {} });
+  flowSmallMultipleCharts = {};
+  container.innerHTML = '';
+
+  FLOW_TAB_STATIONS.forEach(([slug, name, color], idx) => {
+    const byDate = Object.fromEntries((byStation[slug] || []).map(p => [p.date, p.flow]));
+    const data = dates.map(d => byDate[d] ?? null);
+    const valid = data.filter(v => v != null);
+    let peakLabel = '';
+    if (valid.length) {
+      const max = Math.max(...valid);
+      const peakIdx = data.indexOf(max);
+      peakLabel = `peak ${Math.round(max).toLocaleString()} m³/s · ${dates[peakIdx].slice(5)}`;
+    }
+    const isLast = idx === FLOW_TAB_STATIONS.length - 1;
+    const row = document.createElement('div');
+    row.style.cssText = `display:flex; align-items:center; gap:10px; padding: 6px 14px ${isLast ? '10px' : '6px'} 14px; border-bottom: ${isLast ? 'none' : '1px solid var(--border)'};`;
+    row.innerHTML = `
+      <div style="flex: 0 0 120px; font-size: 11px; line-height: 1.25;">
+        <div style="font-weight: 600; color: var(--text);">${name}</div>
+        <div style="font-size: 9.5px; color: var(--text-faint); font-variant-numeric: tabular-nums;">${peakLabel}</div>
+      </div>
+      <div style="flex: 1; position: relative; height: 46px;">
+        <canvas></canvas>
+      </div>
+    `;
+    container.appendChild(row);
+    const canvas = row.querySelector('canvas');
+    flowSmallMultipleCharts[slug] = new Chart(canvas, {
+      type: 'line',
+      data: {
+        labels: dates.map(d => d.slice(5)),
+        datasets: [{
+          data,
+          borderColor: color,
+          backgroundColor: color + '28',
+          borderWidth: 1.6,
+          fill: true,
+          pointRadius: 0,
+          pointHoverRadius: 3,
+          tension: 0.3,
+          spanGaps: true,
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false, animation: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: isDark ? 'rgba(30,30,30,0.95)' : 'rgba(255,255,255,0.98)',
+            titleColor: isDark ? '#f0f0f0' : '#1a1a1a',
+            bodyColor:  isDark ? '#f0f0f0' : '#1a1a1a',
+            borderColor: isDark ? '#444' : '#ddd', borderWidth: 1,
+            displayColors: false,
+            callbacks: { label: (ctx) => `${Math.round(ctx.parsed.y).toLocaleString()} m³/s` }
+          }
+        },
+        scales: {
+          x: { display: isLast, grid: { display: false },
+               ticks: { color: txt, font: { size: 9 }, maxTicksLimit: 8, autoSkip: true } },
+          y: { display: false, grid: { display: false } }
+        }
+      }
+    });
+  });
+}
+
+// Viz 3 — Hovmöller heatmap: station × day grid, per-station normalized color.
+function renderFlowHovmoller({ byStation, dates }) {
+  const isDark = isDarkMode();
+  const container = document.getElementById('flow-hovmoller');
+  if (!container) return;
+
+  const cellH = 26;
+  const headerH = 24;
+  const labelW = 110;
+  const cw = Math.max(320, container.clientWidth || 800);
+  const innerW = cw - labelW - 8;
+  const cellW = Math.max(2, innerW / dates.length);
+  const totalH = headerH + cellH * FLOW_TAB_STATIONS.length + 6;
+
+  const stationMinMax = {};
+  for (const [slug] of FLOW_TAB_STATIONS) {
+    const vals = (byStation[slug] || []).map(p => p.flow).filter(v => v != null);
+    if (vals.length) stationMinMax[slug] = { min: Math.min(...vals), max: Math.max(...vals) };
+  }
+  const stops = isDark
+    ? [[0.0,[36,46,62]], [0.5,[80,130,200]], [1.0,[220,90,70]]]
+    : [[0.0,[238,236,228]], [0.5,[100,160,220]], [1.0,[196,60,60]]];
+  function colorFor(t) {
+    if (!Number.isFinite(t)) return isDark ? '#252525' : '#f0eee9';
+    t = Math.max(0, Math.min(1, t));
+    for (let i = 0; i < stops.length - 1; i++) {
+      const [t0, c0] = stops[i], [t1, c1] = stops[i+1];
+      if (t <= t1) {
+        const f = (t - t0) / (t1 - t0);
+        return `rgb(${Math.round(c0[0]+(c1[0]-c0[0])*f)},${Math.round(c0[1]+(c1[1]-c0[1])*f)},${Math.round(c0[2]+(c1[2]-c0[2])*f)})`;
+      }
+    }
+    return `rgb(${stops[stops.length-1][1].join(',')})`;
+  }
+  const txt = isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.55)';
+
+  let svg = `<svg viewBox="0 0 ${cw} ${totalH}" preserveAspectRatio="none" style="width:100%; height:${totalH}px; font-family: inherit; display:block;" xmlns="http://www.w3.org/2000/svg">`;
+  const labelEvery = Math.max(1, Math.ceil(dates.length / 8));
+  dates.forEach((d, i) => {
+    if (i % labelEvery === 0 || i === dates.length - 1) {
+      const x = labelW + i * cellW + cellW / 2;
+      svg += `<text x="${x}" y="${headerH - 8}" font-size="9" fill="${txt}" text-anchor="middle">${d.slice(5)}</text>`;
+    }
+  });
+  FLOW_TAB_STATIONS.forEach(([slug, name], rowIdx) => {
+    const y = headerH + rowIdx * cellH;
+    svg += `<text x="${labelW - 8}" y="${y + cellH/2 + 4}" font-size="11" fill="${txt}" text-anchor="end" font-weight="500">${name}</text>`;
+    const byDate = Object.fromEntries((byStation[slug] || []).map(p => [p.date, p.flow]));
+    const mm = stationMinMax[slug];
+    dates.forEach((d, i) => {
+      const v = byDate[d];
+      const t = (mm && v != null && mm.max > mm.min) ? (v - mm.min) / (mm.max - mm.min) : NaN;
+      const x = labelW + i * cellW;
+      const fill = colorFor(t);
+      const titleText = v != null ? `${name} · ${d}: ${Math.round(v).toLocaleString()} m³/s` : `${name} · ${d}: no data`;
+      svg += `<rect x="${x}" y="${y + 2}" width="${cellW - 0.5}" height="${cellH - 4}" fill="${fill}"><title>${titleText}</title></rect>`;
+    });
+  });
+  svg += '</svg>';
+
+  const legend = `<div style="display:flex; align-items:center; gap:8px; margin-top:10px; font-size:10.5px; color:var(--text-muted);">
+    <span>per-station scale: low</span>
+    <svg width="160" height="12" style="border-radius:2px; overflow:hidden;">
+      ${Array.from({length: 32}, (_, i) => `<rect x="${i*5}" y="0" width="5" height="12" fill="${colorFor(i/31)}"/>`).join('')}
+    </svg>
+    <span>high (within its own 30-day range)</span>
+  </div>`;
+  container.innerHTML = svg + legend;
+}
+
+// Repaint the heatmap when the container width changes (Chart.js handles its own).
+window.addEventListener('resize', () => {
+  if (!document.querySelector('.tab-panel[data-tab="flow"].active')) return;
+  if (flowTabState.data) renderFlowHovmoller(flowTabState.data);
+});
+
 async function renderOperationsTab() {
   const grids = {
     mainstem: document.getElementById('op-grid-mainstem'),
@@ -3426,6 +3881,7 @@ async function fetchData() {
     if (document.querySelector('.tab-panel[data-tab="reservoirs"].active')) renderReservoirsTab();
     if (document.querySelector('.tab-panel[data-tab="tributaries"].active')) renderTributariesTab();
     if (document.querySelector('.tab-panel[data-tab="operations"].active')) renderOperationsTab();
+    if (document.querySelector('.tab-panel[data-tab="flow"].active')) renderFlowTab();
     renderWindow(1279);
     renderWindow(1195);
     renderWindow(1004);
