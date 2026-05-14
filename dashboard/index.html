@@ -1326,7 +1326,11 @@ async function fetchKiwisStation(spec) {
 // / 90d selections deepen the chart without re-pulling from the WSC API.
 async function fetchWscStation(spec) {
   const since = new Date(Date.now() - Math.max(72, windowHours) * 3600 * 1000).toISOString();
-  const url = `/history/wsc_readings?station_code=eq.${spec.wscCode}`
+  // Use the hourly continuous-aggregate view rather than the raw 5-min table —
+  // ~12× fewer rows, ~10× smaller payload, ~4× faster postgrest serialization.
+  // TimescaleDB's real-time aggregation auto-combines materialized buckets
+  // with newer raw data, so the latest hour is still up-to-date.
+  const url = `/history/wsc_readings_hourly?station_code=eq.${spec.wscCode}`
     + `&time=gte.${since}&order=time.asc&select=time,level_m,flow_cms`;
   let r;
   try {
@@ -2451,7 +2455,11 @@ function updateChartTitles() {
 
 async function fetchStationHistory(stationId, hours) {
   const since = new Date(Date.now() - hours * 3600 * 1000).toISOString();
-  const url = `/history/river_readings?station_id=eq.${stationId}&time=gte.${since}&order=time.asc&select=time,level_m`;
+  // Use the hourly continuous-aggregate view. Vigilance ingests at ~hourly
+  // cadence already, so the CA is mostly a passthrough — but querying through
+  // the view gives postgrest a uniformly-sized response and lets future
+  // higher-cadence sources auto-decimate without dashboard changes.
+  const url = `/history/river_readings_hourly?station_id=eq.${stationId}&time=gte.${since}&order=time.asc&select=time,level_m`;
   const r = await fetch(url, { cache: 'no-store' });
   if (!r.ok) throw new Error(`history HTTP ${r.status}`);
   const rows = await r.json();
