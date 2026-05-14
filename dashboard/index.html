@@ -817,7 +817,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 
   <!-- Viz 3: Hovmöller heatmap -->
   <div class="section-title" style="margin-top: 22px; font-size: 13px;">3 · Hovmöller heatmap <span style="font-weight:400;color:var(--text-muted);font-size:11px;">· station × day · color = flow (per-station normalized)</span></div>
-  <div class="section-subtitle" style="margin-bottom: 8px;">A meteorologist's tool, repurposed. Stations stack vertically (upstream at top), days run left-to-right. The freshet wave appears as a diagonal stripe sloping down and to the right — the slope <em>is</em> the travel time. Each row is normalized to its own station so smaller upstream stations stay legible alongside Carillon.</div>
+  <div class="section-subtitle" style="margin-bottom: 8px;">A meteorologist's tool, repurposed. Stations stack vertically (upstream at top), days run left-to-right. A diagonal stripe of bright cells <em>is</em> the freshet wave moving through the system — its slope tells you the direction. A textbook upper-basin snowmelt freshet would slope <em>down</em> and to the right (upper stations peak first, lower later). On longer windows that include 2026 you'll see the opposite: the stripe slopes <em>up</em> and to the right because the lower-basin tributaries (Gatineau, Madawaska, etc.) peaked around Apr 21-22 while upper-basin Témiscaming didn't peak until May 2. The slope <em>is</em> the story of where the water came from. Each row is normalized to its own station so smaller upstream stations stay legible alongside Carillon.</div>
   <div id="flow-hovmoller" style="background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px;"></div>
 
   <div class="section-subtitle" style="margin-top: 18px; font-size: 11px; color: var(--text-faint);">
@@ -3817,6 +3817,7 @@ window.addEventListener('resize', () => {
   if (!document.querySelector('.tab-panel[data-tab="flow"].active')) return;
   if (flowTabState.data) renderFlowHovmoller(flowTabState.data);
 });
+
 
 async function renderOperationsTab() {
   const grids = {
