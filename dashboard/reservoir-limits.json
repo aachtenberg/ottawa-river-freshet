@@ -5,7 +5,7 @@
   "_calibration_source": "ottawariver.ca/location/<reservoir>/ — System Constraints table (Operation · All Year, Lower/Upper Limit columns)",
   "_source_url": "https://www.ottawariver.ca/conditions/?display=reservoir",
   "reservoirs": {
-    "dozois":                 { "name": "Dozois",                  "agency": "HQ",       "low_limit": 336.80, "high_limit": 345.95, "capacity_mcm": 2530 },
+    "dozois":                 { "name": "Dozois",                  "agency": "HQ",       "low_limit": 336.80, "high_limit": 345.95, "capacity_mcm": 1871 },
     "rapide_7":               { "name": "Rapide-7",                "agency": "HQ",       "low_limit": 307.24, "high_limit": 309.37, "capacity_mcm": 549, "outflow_site_id": "3-28" },
     "quinze":                 { "name": "Quinze",                  "agency": "MELCCFP",  "low_limit": 259.94, "high_limit": 263.59, "capacity_mcm": 1910, "outflow_site_id": "3-31" },
     "lady_evelyn":            { "name": "Lady Evelyn",             "agency": "OPG",      "low_limit": 284.40, "high_limit": 289.51, "capacity_mcm": 370  },
