@@ -161,6 +161,49 @@ SELECT DISTINCT ON (station_code)
 FROM wsc_readings
 ORDER BY station_code, time DESC;
 
+-- Hourly continuous aggregate over wsc_readings.
+-- The Tributaries tab needs ~30 days of sparkline data per station; the raw
+-- table is 5-minute resolution (8.6K rows per station for 30d), which makes
+-- the multi-station fetch CPU-bound on postgrest and clogs Chart.js. This CA
+-- pre-materializes hourly means, cutting the row count 12× while preserving
+-- enough detail to see freshet pulses.
+CREATE MATERIALIZED VIEW IF NOT EXISTS wsc_readings_hourly
+WITH (timescaledb.continuous) AS
+SELECT
+  station_code,
+  time_bucket('1 hour', time) AS time,
+  AVG(level_m)  AS level_m,
+  AVG(flow_cms) AS flow_cms
+FROM wsc_readings
+GROUP BY station_code, time_bucket('1 hour', time)
+WITH NO DATA;
+
+SELECT add_continuous_aggregate_policy('wsc_readings_hourly',
+  start_offset      => INTERVAL '3 days',
+  end_offset        => INTERVAL '30 minutes',
+  schedule_interval => INTERVAL '30 minutes',
+  if_not_exists     => TRUE);
+
+-- Same pattern for river_readings, which is hourly-ish from Vigilance.
+-- The hourly CA is mostly a passthrough but standardizes the schema and
+-- gives the dashboard a stable view to query regardless of source cadence.
+CREATE MATERIALIZED VIEW IF NOT EXISTS river_readings_hourly
+WITH (timescaledb.continuous) AS
+SELECT
+  station_id,
+  time_bucket('1 hour', time) AS time,
+  AVG(level_m)  AS level_m,
+  AVG(flow_cms) AS flow_cms
+FROM river_readings
+GROUP BY station_id, time_bucket('1 hour', time)
+WITH NO DATA;
+
+SELECT add_continuous_aggregate_policy('river_readings_hourly',
+  start_offset      => INTERVAL '3 days',
+  end_offset        => INTERVAL '30 minutes',
+  schedule_interval => INTERVAL '30 minutes',
+  if_not_exists     => TRUE);
+
 -- ECCC Climate Data daily observations.
 -- Source: api.weather.gc.ca / climate.weather.gc.ca CSV exports.
 -- station_id is the ECCC numeric identifier (e.g. 4337 = Maniwaki).
@@ -263,6 +306,38 @@ CREATE OR REPLACE VIEW latest_orrpb_river_flows AS
 SELECT DISTINCT ON (station)
   station, time, flow_cms, agency
 FROM orrpb_river_flows
+ORDER BY station, time DESC;
+
+-- ORRPB "Water levels at 24:00h in metres" — main-stem Ottawa River 24:00h
+-- water-surface elevation at the 12 monitored points: Otto Holden, Mattawa,
+-- Des Joachims, Pembroke, Lake Coulonge, Chenaux, Chats Lake, Britannia,
+-- Gatineau, Thurso, Grenville, Carillon. Source: daily scrape of
+-- ottawariver.ca/conditions/ (default ?display, 8-day rolling window).
+-- Distinct from river_readings (CEHQ Vigilance live, hourly, 4 stations
+-- overlap) because the ORRPB table is the only public source for OPG-dam
+-- headwater elevations (Otto Holden, Des Joachims, Chenaux, Chats Lake,
+-- Carillon — none on CEHQ Vigilance) and is what the public-facing
+-- "Ottawa River Water Levels" community chart matches.
+-- Sibling of orrpb_river_flows; same ingester populates both. See
+-- k3s/base/data/files/orrpb-river-ingest/ingest.py.
+CREATE TABLE IF NOT EXISTS orrpb_river_levels (
+  time        date NOT NULL,
+  station     text NOT NULL,
+  level_m     double precision,
+  agency      text,
+  PRIMARY KEY (station, time)
+);
+
+SELECT create_hypertable('orrpb_river_levels', 'time', if_not_exists => TRUE,
+  chunk_time_interval => INTERVAL '1 year');
+
+CREATE INDEX IF NOT EXISTS orrpb_river_levels_station_time_idx
+  ON orrpb_river_levels (station, time DESC);
+
+CREATE OR REPLACE VIEW latest_orrpb_river_levels AS
+SELECT DISTINCT ON (station)
+  station, time, level_m, agency
+FROM orrpb_river_levels
 ORDER BY station, time DESC;
 
 NOTIFY pgrst, 'reload schema';

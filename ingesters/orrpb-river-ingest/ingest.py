@@ -1,22 +1,29 @@
 """
-ORRPB main-stem flow ingester — the "Average Daily Flows (m3/s)" table.
+ORRPB main-stem flow + level ingester.
 
-Scrapes ottawariver.ca/conditions/?display=river and writes the daily Ottawa
-River discharge at the monitored points (Temiscaming, Otto Holden, Des
-Joachims, Chenaux, Chats Falls, Britannia, Carillon) to orrpb_river_flows.
+Two ORRPB tables, one cron job:
+  1. "Average Daily Flows (m3/s)"     — ottawariver.ca/conditions/?display=river
+     → orrpb_river_flows (7 stations: Temiscaming, Otto Holden, Des Joachims,
+       Chenaux, Chats Falls, Britannia, Carillon).
+  2. "Water levels at 24:00h in metres" — ottawariver.ca/conditions/ (default)
+     → orrpb_river_levels (12 stations: Otto Holden, Mattawa, Des Joachims,
+       Pembroke, Lake Coulonge, Chenaux, Chats Lake, Britannia, Gatineau,
+       Thurso, Grenville, Carillon).
 
-Why this exists: those are river flows ≈ the run-of-river releases at those
-structures, and the OPG main-stem dams (Otto Holden, Des Joachims, Chenaux,
-Chats Falls) are *not* in the Hydro-Québec open-data feed (dam_releases) — so
-ORRPB's conditions page is the only public source for them. This is also the
-data behind the "Ottawa River Flow — Current vs Median" charts that circulate.
+Why both exist: the OPG main-stem dams (Otto Holden, Des Joachims, Chenaux,
+Chats Falls) are not in the Hydro-Québec open-data feed, and only ORRPB
+publishes headwater levels for them. The "Current vs Median" flow charts in
+the community ride on the flows table; the daily "Ottawa River Water Levels"
+bar chart that gets re-shared on Facebook rides on the levels table.
 
-ORRPB publishes an 8-day rolling window; each pull re-uploads it cheaply
-(merge-duplicates upserts). Stdlib only (urllib + html.parser).
+ORRPB publishes 8-day rolling windows for both; each pull re-uploads them
+cheaply (merge-duplicates upserts). Stdlib only (urllib + html.parser).
 
-Env: POSTGREST_URL, ORRPB_RIVER_URL (override the source URL), SCRAPE_USER_AGENT.
+Env: POSTGREST_URL, ORRPB_RIVER_URL (override flows URL),
+     ORRPB_LEVELS_URL (override levels URL), SCRAPE_USER_AGENT.
 """
 
+import json
 import os
 import re
 import sys
@@ -24,15 +31,17 @@ import urllib.request
 from datetime import datetime, timezone, timedelta
 from html.parser import HTMLParser
 
-ORRPB_URL = os.environ.get("ORRPB_RIVER_URL",
-                           "https://www.ottawariver.ca/conditions/?display=river")
+ORRPB_FLOWS_URL  = os.environ.get("ORRPB_RIVER_URL",
+                                  "https://www.ottawariver.ca/conditions/?display=river")
+ORRPB_LEVELS_URL = os.environ.get("ORRPB_LEVELS_URL",
+                                  "https://www.ottawariver.ca/conditions/")
 POSTGREST = os.environ.get("POSTGREST_URL", "http://postgrest.data.svc.cluster.local:3000")
 USER_AGENT = os.environ.get(
     "SCRAPE_USER_AGENT",
     "freshet-xgrunt-com/1.0 (+https://freshet.xgrunt.com; community flood monitoring)")
 
 # ORRPB row label (lower-cased substring) -> stable station slug.
-STATION_MATCH = [
+FLOW_STATION_MATCH = [
     ("temiscaming", "temiscaming"),
     ("otto holden", "otto-holden"),
     ("joachim",     "des-joachims"),
@@ -40,6 +49,25 @@ STATION_MATCH = [
     ("chats",       "chats-falls"),
     ("britannia",   "britannia"),
     ("deschenes",   "britannia"),     # "Lake Deschenes at Britannia"
+    ("carillon",    "carillon"),
+]
+
+# Levels table has 12 stations; slugs intentionally diverge slightly from
+# flows where the geography differs (chats-falls = dam outflow, chats-lake =
+# headpond elevation).
+LEVEL_STATION_MATCH = [
+    ("otto holden", "otto-holden"),
+    ("mattawa",     "mattawa"),
+    ("joachim",     "des-joachims"),
+    ("pembroke",    "pembroke"),
+    ("coulonge",    "lake-coulonge"),  # "Lake Coulonge at Fort-Coulonge"
+    ("chenaux",     "chenaux"),
+    ("chats lake",  "chats-lake"),
+    ("deschenes",   "britannia"),      # "Lake Deschenes at Britannia (Ottawa)"
+    ("britannia",   "britannia"),
+    ("gatineau",    "gatineau"),
+    ("thurso",      "thurso"),
+    ("grenville",   "grenville"),
     ("carillon",    "carillon"),
 ]
 
@@ -73,11 +101,20 @@ def cell_text(cell):
     return re.sub(r"\s+", " ", "".join(cell).strip()) if cell else ""
 
 
-def find_flows_table(tables):
-    """The flows table is the one whose first row's first cell mentions
-    'average daily flow' (ORRPB header: 'Average Daily Flows (m3/s)')."""
+def fetch_html(url):
+    req = urllib.request.Request(url, headers={
+        "User-Agent": USER_AGENT, "Accept": "text/html,application/xhtml+xml"})
+    with urllib.request.urlopen(req, timeout=30) as r:
+        return r.read().decode("utf-8", "replace")
+
+
+def find_table(tables, needles):
+    """Return the first table whose first row's text contains any needle."""
     for tbl in tables:
-        if tbl and "average daily flow" in cell_text(tbl[0][0] if tbl[0] else "").lower():
+        if not tbl or not tbl[0]:
+            continue
+        first = " ".join(cell_text(c) for c in tbl[0]).lower()
+        if any(n in first for n in needles):
             return tbl
     return None
 
@@ -103,15 +140,21 @@ def parse_dates(header_row):
     return out
 
 
-def slug_for(label):
+def slug_for(label, matches):
     low = label.lower()
-    for needle, slug in STATION_MATCH:
+    for needle, slug in matches:
         if needle in low:
             return slug
     return None
 
 
-def parse_table(tbl):
+def parse_value_table(tbl, matches, value_key):
+    """Generic ORRPB rolling-window-table parser.
+
+    Each station row has a label cell at column 0 with optional 'Agency: X'
+    text, then 8 daily value cells. Returns rows keyed for orrpb_river_flows
+    / orrpb_river_levels (controlled by `value_key`: 'flow_cms' or 'level_m').
+    """
     if len(tbl) < 2:
         return []
     dates = parse_dates(tbl[0])
@@ -126,7 +169,7 @@ def parse_table(tbl):
         name = re.sub(r"Graph View.*", "", c0).strip()
         agm = re.search(r"Agency:\s*([A-Za-z/.\- ]+)", c0)
         agency = agm.group(1).strip() if agm else None
-        slug = slug_for(name)
+        slug = slug_for(name, matches)
         if not slug:
             continue
         for i, cell in enumerate(row[1:]):
@@ -139,47 +182,83 @@ def parse_table(tbl):
                 val = float(txt.replace(",", ""))
             except ValueError:
                 continue
-            rows.append({"time": dates[i].date().isoformat(), "station": slug,
-                         "flow_cms": val, "agency": agency})
+            rows.append({
+                "time": dates[i].date().isoformat(),
+                "station": slug,
+                value_key: val,
+                "agency": agency,
+            })
     return rows
 
 
-def post_rows(rows):
+def post_rows(table, rows):
     if not rows:
-        print("nothing to post", file=sys.stderr)
+        print(f"  nothing to post to {table}", file=sys.stderr)
         return
-    import json
     body = json.dumps(rows).encode("utf-8")
     req = urllib.request.Request(
-        f"{POSTGREST}/orrpb_river_flows", data=body, method="POST",
+        f"{POSTGREST}/{table}", data=body, method="POST",
         headers={"Content-Type": "application/json", "Prefer": "resolution=merge-duplicates"})
     with urllib.request.urlopen(req, timeout=60) as r:
-        print(f"  POST /orrpb_river_flows -> HTTP {r.status} ({len(rows)} rows)")
+        print(f"  POST /{table} -> HTTP {r.status} ({len(rows)} rows)")
 
 
-def main():
-    req = urllib.request.Request(ORRPB_URL, headers={
-        "User-Agent": USER_AGENT, "Accept": "text/html,application/xhtml+xml"})
-    with urllib.request.urlopen(req, timeout=30) as r:
-        html = r.read().decode("utf-8", "replace")
+def latest_per_station(rows):
+    by = {}
+    for r in rows:
+        if r["station"] not in by or r["time"] > by[r["station"]]["time"]:
+            by[r["station"]] = r
+    return by
+
+
+def scrape_flows():
+    print(f"Fetching {ORRPB_FLOWS_URL}")
+    html = fetch_html(ORRPB_FLOWS_URL)
     ex = TableExtractor(); ex.feed(html)
-    tbl = find_flows_table(ex.tables)
+    tbl = find_table(ex.tables, ["average daily flow"])
     if not tbl:
         print("ORRPB river page: 'Average Daily Flows' table not found — layout change?",
               file=sys.stderr)
-        sys.exit(1)
-    rows = parse_table(tbl)
-    by_station = {}
-    for r in rows:
-        if r["station"] not in by_station or r["time"] > by_station[r["station"]]["time"]:
-            by_station[r["station"]] = r
-    for slug, r in sorted(by_station.items()):
-        print(f"  {slug:14s} {r['time']}  {r['flow_cms']:>7.0f} m³/s  ({r['agency']})")
+        return False
+    rows = parse_value_table(tbl, FLOW_STATION_MATCH, "flow_cms")
     if not rows:
-        print("parsed 0 flow rows — aborting", file=sys.stderr)
+        print("parsed 0 flow rows", file=sys.stderr)
+        return False
+    by = latest_per_station(rows)
+    for slug, r in sorted(by.items()):
+        print(f"  flow  {slug:14s} {r['time']}  {r['flow_cms']:>7.0f} m³/s  ({r['agency']})")
+    post_rows("orrpb_river_flows", rows)
+    return True
+
+
+def scrape_levels():
+    print(f"Fetching {ORRPB_LEVELS_URL}")
+    html = fetch_html(ORRPB_LEVELS_URL)
+    ex = TableExtractor(); ex.feed(html)
+    tbl = find_table(ex.tables, ["water levels", "water level at"])
+    if not tbl:
+        print("ORRPB conditions page: 'Water levels at 24:00h' table not found — layout change?",
+              file=sys.stderr)
+        return False
+    rows = parse_value_table(tbl, LEVEL_STATION_MATCH, "level_m")
+    if not rows:
+        print("parsed 0 level rows", file=sys.stderr)
+        return False
+    by = latest_per_station(rows)
+    for slug, r in sorted(by.items()):
+        print(f"  level {slug:14s} {r['time']}  {r['level_m']:>7.2f} m    ({r['agency']})")
+    post_rows("orrpb_river_levels", rows)
+    return True
+
+
+def main():
+    ok_flows  = scrape_flows()
+    ok_levels = scrape_levels()
+    # Allow one half to fail without failing the whole job — ORRPB sometimes
+    # ships only one of the two tables on transitional days.
+    if not (ok_flows or ok_levels):
         sys.exit(1)
-    post_rows(rows)
-    print(f"Done: {len(rows)} rows, {len(by_station)} stations.")
+    print("Done.")
 
 
 if __name__ == "__main__":

@@ -652,6 +652,11 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 <div class="section-subtitle" id="corridor-subtitle" data-i18n="watershed_sub">Main-stem stations upstream → downstream. Bar height = level (MASL); colour = current flood state; arrow = daily change vs. ~24 h ago. Click a bar to see its 2017/2019/2023 references.</div>
 <div class="chart-wrap"><div class="chart-container" style="height: 280px;"><canvas id="corridorChart"></canvas></div></div>
 
+<div class="section-title" style="margin-top: 24px;" data-i18n="orrpb_daily">ORRPB daily snapshot — 24:00h water levels</div>
+<div class="section-subtitle" id="orrpb-daily-subtitle" data-i18n="orrpb_daily_sub">Same 14-station bar chart that gets posted to Facebook each morning. Source: ORRPB "Water levels at 24:00h in metres" table at <a href="https://www.ottawariver.ca/conditions/" target="_blank">ottawariver.ca/conditions</a>, scraped daily. Constance Bay (MVCA) and Below Carillon (CEHQ) come from the live feeds since ORRPB doesn't publish them. Colour: <span style="color:rgb(224,75,74);font-weight:600;">rising</span> / <span style="color:rgb(76,175,80);font-weight:600;">falling</span> / <span style="color:rgb(245,200,66);font-weight:600;">no change</span> vs. the prior day.</div>
+<div class="chart-wrap"><div class="chart-container" style="height: 320px;"><canvas id="orrpbDailyChart"></canvas></div></div>
+<div id="orrpb-daily-status" style="font-size:11px; color:var(--text-faint); margin-top:-8px; margin-bottom:8px;"></div>
+
 <div class="range-picker" id="range-picker">
   <span class="label" data-i18n="window">Window</span>
   <button class="range-btn" data-hours="1">1h</button>
@@ -953,8 +958,12 @@ const PAGE_STRINGS = {
   window:         { en: 'Window',                           fr: 'Période' },
   loading:        { en: 'Loading live data…',               fr: 'Chargement des données en direct…' },
   watershed:      { en: 'Watershed snapshot — current levels', fr: 'Aperçu du bassin — niveaux actuels' },
-  watershed_sub:  { en: 'Main-stem stations upstream → downstream. Bar height = level (MASL); colour = current flood state; arrow = daily change vs. ~24 h ago. Click a bar to see its 2017/2019/2023 references.',
-                    fr: 'Stations principales d\'amont en aval. Hauteur de la barre = niveau (MASL); couleur = état de crue actuel; flèche = variation quotidienne sur ~24 h. Cliquez sur une barre pour voir les références 2017 / 2019 / 2023.' },
+  watershed_sub:  { en: 'Main-stem stations upstream → downstream. Bar height = level (MASL); colour = current flood state (<span style="color:rgb(156,26,26);font-weight:600;">major</span> / <span style="color:rgb(224,127,47);font-weight:600;">moderate</span> / <span style="color:rgb(239,159,39);font-weight:600;">minor</span> / <span style="color:rgb(245,200,66);font-weight:600;">pre-alert</span> / <span style="color:rgb(76,175,80);font-weight:600;">normal</span> / <span style="color:rgb(79,163,199);font-weight:600;">no threshold</span>); arrow = daily change vs. ~24 h ago. Click a bar to see its 2017/2019/2023 references.',
+                    fr: 'Stations principales d\'amont en aval. Hauteur de la barre = niveau (MASL); couleur = état de crue actuel (<span style="color:rgb(156,26,26);font-weight:600;">majeure</span> / <span style="color:rgb(224,127,47);font-weight:600;">modérée</span> / <span style="color:rgb(239,159,39);font-weight:600;">mineure</span> / <span style="color:rgb(245,200,66);font-weight:600;">pré-alerte</span> / <span style="color:rgb(76,175,80);font-weight:600;">normal</span> / <span style="color:rgb(79,163,199);font-weight:600;">sans seuil</span>); flèche = variation quotidienne sur ~24 h. Cliquez sur une barre pour voir les références 2017 / 2019 / 2023.' },
+  orrpb_daily:    { en: 'ORRPB daily snapshot — 24:00h water levels',
+                    fr: 'Aperçu quotidien CPRBO — niveaux d\'eau à 24:00h' },
+  orrpb_daily_sub:{ en: 'Same 14-station bar chart that gets posted to Facebook each morning. Source: ORRPB "Water levels at 24:00h in metres" table at <a href="https://www.ottawariver.ca/conditions/" target="_blank">ottawariver.ca/conditions</a>, scraped daily. Constance Bay (MVCA) and Below Carillon (CEHQ) come from the live feeds since ORRPB doesn\'t publish them. Colour: <span style="color:rgb(224,75,74);font-weight:600;">rising</span> / <span style="color:rgb(76,175,80);font-weight:600;">falling</span> / <span style="color:rgb(245,200,66);font-weight:600;">no change</span> vs. the prior day.',
+                    fr: 'Le même graphique à 14 stations diffusé sur Facebook chaque matin. Source : table « Niveaux d\'eau à 24:00h en mètres » du CPRBO à <a href="https://www.ottawariver.ca/conditions/" target="_blank">ottawariver.ca/conditions</a>, extraction quotidienne. Constance Bay (CVRM) et Aval-Carillon (CEHQ) proviennent des flux en direct car le CPRBO ne les publie pas. Couleur : <span style="color:rgb(224,75,74);font-weight:600;">en hausse</span> / <span style="color:rgb(76,175,80);font-weight:600;">en baisse</span> / <span style="color:rgb(245,200,66);font-weight:600;">stable</span> par rapport à la veille.' },
   regional:       { en: 'Regional context — Ottawa River corridor', fr: 'Contexte régional — corridor de la rivière des Outaouais' },
   regional_sub:   { en: 'Upstream-to-downstream gauges along the Ottawa River. Upstream stations lead Lac Coulonge by hours-to-days and flag incoming pulses. Buckhams Bay (MVCA) and Britannia are separate gauges 15 km apart on Lac Deschênes — Buckhams is upstream and routinely reads higher; the two are commonly confused in local reporting.',
                     fr: 'Stations d\'amont en aval le long de la rivière des Outaouais. Les stations amont précèdent Lac Coulonge de quelques heures à plusieurs jours et signalent les vagues entrantes. Baie Buckhams (MVCA) et Britannia sont deux jauges distinctes séparées de 15 km sur le lac Deschênes — Buckhams est en amont et lit habituellement plus haut; les deux sont souvent confondues dans les médias locaux.' },
@@ -968,7 +977,12 @@ function tPage(key) { return (PAGE_STRINGS[key] && PAGE_STRINGS[key][pageLang]) 
 function applyPageLang() {
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const k = el.dataset.i18n;
-    if (PAGE_STRINGS[k]) el.textContent = tPage(k);
+    if (!PAGE_STRINGS[k]) return;
+    const val = tPage(k);
+    // Allow markup (coloured legend chips, links) in i18n values when present.
+    // Plain-text values still render identically via innerHTML.
+    if (val.includes('<')) el.innerHTML = val;
+    else                   el.textContent = val;
   });
   document.querySelectorAll('#page-lang-toggle button').forEach(b => {
     b.classList.toggle('active', b.dataset.lang === pageLang);
@@ -1008,6 +1022,7 @@ function toggleTheme() {
   // Re-render anything that uses isDarkMode() at draw-time.
   if (lastData) {
     if (typeof renderCorridorBar === 'function') renderCorridorBar();
+    if (typeof renderORRPBDailyBar === 'function') renderORRPBDailyBar();
     if (typeof renderWindow === 'function') { renderWindow(1279); renderWindow(1195); renderWindow(1004); }
   }
 }
@@ -2160,6 +2175,232 @@ function renderCorridorBar() {
       }
     }]
   });
+}
+
+// ---- ORRPB daily snapshot bar chart (Dan-style FB chart) ------------------
+// 14 stations matching the bar chart that the community reposts each morning.
+// 12 ORRPB main-stem stations from orrpb_river_levels (24:00h elevations) +
+// Constance Bay (MVCA station 99001 "Buckhams Bay") and Below Carillon (CEHQ
+// station 1264 "Rigaud") which ORRPB doesn't publish. Order is hydrological
+// upstream → downstream by elevation, identical to Dan's chart.
+const ORRPB_DAILY_BAR_STATIONS = [
+  { slug: 'otto-holden',   label: 'Otto Holden',   src: 'orrpb' },
+  { slug: 'mattawa',       label: 'Mattawa',       src: 'orrpb' },
+  { slug: 'des-joachims',  label: 'Des Joachims',  src: 'orrpb' },
+  { slug: 'pembroke',      label: 'Pembroke',      src: 'orrpb' },
+  { slug: 'lake-coulonge', label: 'Lake Coulonge', src: 'orrpb' },
+  { slug: 'chenaux',       label: 'Chenaux',       src: 'orrpb' },
+  { slug: 'chats-lake',    label: 'Chats Lake',    src: 'orrpb' },
+  { slug: 'constance-bay', label: 'Constance Bay', src: 'cehq', stationId: 99001 },
+  { slug: 'britannia',     label: 'Britannia',     src: 'orrpb' },
+  { slug: 'gatineau',      label: 'Gatineau',      src: 'orrpb' },
+  { slug: 'thurso',        label: 'Thurso',        src: 'orrpb' },
+  { slug: 'grenville',     label: 'Grenville',     src: 'orrpb' },
+  { slug: 'carillon',      label: 'Carillon',      src: 'orrpb' },
+  { slug: 'below-carillon',label: 'Below Carillon',src: 'cehq', stationId: 1264 },
+];
+
+// Daily-change threshold: |Δ| < 1 cm is treated as "no change" (yellow).
+// Matches the Dan-style chart which colours moves of ±0.01 m as flat.
+const ORRPB_DAILY_FLAT_THRESHOLD_M = 0.01;
+
+const ORRPB_DAILY_COLORS = {
+  up:   { fill: 'rgba(224,75,74,0.88)',  edge: 'rgb(224,75,74)' },
+  down: { fill: 'rgba(76,175,80,0.88)',  edge: 'rgb(76,175,80)' },
+  flat: { fill: 'rgba(245,200,66,0.92)', edge: 'rgb(212,170,40)' },
+};
+
+let orrpbDailyChart = null;
+let orrpbDailyLevelsCache = null;
+
+// Pull the last 3 days of ORRPB level rows once per fetchData cycle. Tiny
+// payload (~36 rows for 12 stations × 3 days); we need 'yesterday' for the
+// daily-change indicator. Cached for the lifetime of the page; refreshed by
+// renderORRPBDailyBar() if it's been more than 30 min.
+async function fetchORRPBDailyLevels(force = false) {
+  if (!force && orrpbDailyLevelsCache &&
+      Date.now() - orrpbDailyLevelsCache._fetchedAt < 30 * 60 * 1000) {
+    return orrpbDailyLevelsCache.rows;
+  }
+  const since = new Date(Date.now() - 5 * 24 * 3600 * 1000).toISOString().slice(0, 10);
+  const r = await fetch(`/history/orrpb_river_levels?time=gte.${since}&order=time.asc`,
+                        { cache: 'no-store' });
+  if (!r.ok) throw new Error(`orrpb levels HTTP ${r.status}`);
+  const rows = await r.json();
+  orrpbDailyLevelsCache = { rows, _fetchedAt: Date.now() };
+  return rows;
+}
+
+// Return { latest, prior, deltaM } for one ORRPB station given its rows
+// (already sorted ascending by `time`). prior is the most recent row strictly
+// before latest.time. deltaM is null if we don't have both.
+function orrpbStationLatest(rows, slug) {
+  const series = rows.filter(r => r.station === slug && r.level_m != null);
+  if (!series.length) return { latest: null, prior: null, deltaM: null };
+  const latest = series[series.length - 1];
+  let prior = null;
+  for (let i = series.length - 2; i >= 0; i--) {
+    if (series[i].time < latest.time) { prior = series[i]; break; }
+  }
+  const deltaM = prior ? latest.level_m - prior.level_m : null;
+  return { latest, prior, deltaM };
+}
+
+// Same idea for the two bonus stations sourced from CEHQ lastData[id].readings.
+// readings come ascending by date_prise_valeur; we pick the latest reading and
+// the reading closest to 24h before it. Returns null if data is unavailable
+// or the 24h-back match is more than 6h off.
+function cehqStationLatest(stationId) {
+  const s = lastData?.[stationId];
+  if (!s?.readings?.length) return { latest: null, prior: null, deltaM: null };
+  const readings = s.readings;
+  const latest = readings[readings.length - 1];
+  const latestT = new Date(latest.date_prise_valeur).getTime();
+  const targetT = latestT - 24 * 3600 * 1000;
+  let prior = null, bestDiff = Infinity;
+  for (let i = readings.length - 2; i >= 0; i--) {
+    const t = new Date(readings[i].date_prise_valeur).getTime();
+    if (latestT - t < 12 * 3600 * 1000) continue;
+    const dt = Math.abs(t - targetT);
+    if (dt < bestDiff) { prior = readings[i]; bestDiff = dt; }
+  }
+  if (!prior || bestDiff > 6 * 3600 * 1000) {
+    return {
+      latest: { level_m: latest.valeur, time: latest.date_prise_valeur },
+      prior: null, deltaM: null,
+    };
+  }
+  return {
+    latest: { level_m: latest.valeur, time: latest.date_prise_valeur },
+    prior:  { level_m: prior.valeur,  time: prior.date_prise_valeur },
+    deltaM: latest.valeur - prior.valeur,
+  };
+}
+
+function orrpbDailyDirection(deltaM) {
+  if (deltaM == null) return 'flat';
+  if (deltaM >  ORRPB_DAILY_FLAT_THRESHOLD_M) return 'up';
+  if (deltaM < -ORRPB_DAILY_FLAT_THRESHOLD_M) return 'down';
+  return 'flat';
+}
+
+async function renderORRPBDailyBar() {
+  const canvas = document.getElementById('orrpbDailyChart');
+  const statusEl = document.getElementById('orrpb-daily-status');
+  if (!canvas) return;
+
+  let levels = [];
+  try {
+    levels = await fetchORRPBDailyLevels();
+  } catch (e) {
+    if (statusEl) statusEl.textContent = `ORRPB daily levels unavailable: ${e.message}`;
+    return;
+  }
+
+  const items = ORRPB_DAILY_BAR_STATIONS.map(cfg => {
+    const result = cfg.src === 'orrpb'
+      ? orrpbStationLatest(levels, cfg.slug)
+      : cehqStationLatest(cfg.stationId);
+    return { cfg, ...result };
+  }).filter(it => it.latest != null);
+
+  if (!items.length) {
+    if (statusEl) statusEl.textContent = 'No ORRPB daily levels yet — has the scrape run?';
+    return;
+  }
+
+  const isDark = isDarkMode();
+  const txt  = isDark ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.55)';
+  const grid = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
+  const dataMax = Math.max(...items.map(i => i.latest.level_m));
+
+  if (orrpbDailyChart) orrpbDailyChart.destroy();
+  orrpbDailyChart = new Chart(canvas, {
+    type: 'bar',
+    data: {
+      labels: items.map(i => i.cfg.label),
+      datasets: [{
+        data: items.map(i => i.latest.level_m),
+        backgroundColor: items.map(i => ORRPB_DAILY_COLORS[orrpbDailyDirection(i.deltaM)].fill),
+        borderColor:     items.map(i => ORRPB_DAILY_COLORS[orrpbDailyDirection(i.deltaM)].edge),
+        borderWidth: 1,
+        borderRadius: 2,
+      }],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      animation: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: isDark ? 'rgba(30,30,30,0.95)' : 'rgba(255,255,255,0.98)',
+          titleColor: isDark ? '#f0f0f0' : '#1a1a1a',
+          bodyColor:  isDark ? '#f0f0f0' : '#1a1a1a',
+          borderColor: isDark ? '#444' : '#ddd', borderWidth: 1,
+          callbacks: {
+            label: (ctx) => {
+              const it = items[ctx.dataIndex];
+              const lines = [`${it.latest.level_m.toFixed(2)} m`];
+              if (it.deltaM != null) {
+                const sign = it.deltaM > 0 ? '+' : '';
+                lines.push(`24 h: ${sign}${it.deltaM.toFixed(2)} m`);
+              }
+              lines.push(it.cfg.src === 'orrpb' ? 'ORRPB 24:00h' : 'live (CEHQ/MVCA)');
+              return lines;
+            },
+          },
+        },
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: txt, font: { size: 10 }, maxRotation: 40, minRotation: 40 } },
+        y: {
+          grid: { color: grid },
+          ticks: { color: txt, font: { size: 10 }, callback: v => v.toFixed(0) + ' m' },
+          title: { display: true, text: 'Water level (m)', color: txt, font: { size: 10 } },
+          beginAtZero: true,
+          suggestedMax: dataMax + 12,
+        },
+      },
+    },
+    plugins: [{
+      id: 'orrpbDailyLabels',
+      afterDatasetsDraw: (chart) => {
+        const { ctx } = chart;
+        const ds = chart.getDatasetMeta(0).data;
+        ctx.save();
+        ctx.textAlign = 'center';
+        items.forEach((it, i) => {
+          const bar = ds[i];
+          if (!bar) return;
+          // Value label above bar top.
+          ctx.fillStyle = isDark ? '#f0f0f0' : '#222';
+          ctx.font = '600 10px -apple-system, BlinkMacSystemFont, sans-serif';
+          ctx.fillText(it.latest.level_m.toFixed(2), bar.x, bar.y - 16);
+          // Daily-change arrow + value, just below.
+          if (it.deltaM != null) {
+            const dir = orrpbDailyDirection(it.deltaM);
+            const arrow = dir === 'up' ? '↑' : dir === 'down' ? '↓' : '→';
+            const sign = it.deltaM > 0 ? '+' : '';
+            ctx.fillStyle = isDark ? '#aaa' : '#555';
+            ctx.font = '500 10px -apple-system, BlinkMacSystemFont, sans-serif';
+            ctx.fillText(`${arrow} ${sign}${it.deltaM.toFixed(2)}`, bar.x, bar.y - 4);
+          }
+        });
+        ctx.restore();
+      },
+    }],
+  });
+
+  if (statusEl) {
+    const newest = items
+      .map(i => i.latest.time)
+      .filter(Boolean)
+      .sort()
+      .pop();
+    const orrpbCount = items.filter(i => i.cfg.src === 'orrpb').length;
+    const liveCount  = items.length - orrpbCount;
+    statusEl.textContent = `${orrpbCount} ORRPB + ${liveCount} live · most recent ${newest || '—'}`;
+  }
 }
 
 // ---- Bar-detail modal: tight-scale view of a single station's references ----
@@ -3883,6 +4124,7 @@ async function fetchData() {
     renderSummary(lc, lcPeak);
     renderCards(data, seasonPeaks);
     renderCorridorBar();
+    renderORRPBDailyBar();
     if (document.querySelector('.tab-panel[data-tab="stations"].active')) renderStationsTab();
     // Reservoirs / Tributaries tabs depend on lastData[545] (Mattawa) for the
     // Des Joachims state pill — refresh them too so the pill appears once
@@ -3914,6 +4156,7 @@ async function fetchData() {
       await precomputeEcccPeaks(rows.filter(r => r.ok && r.data).map(r => r.data.metadata));
       renderRegional(rows);
       renderCorridorBar(); // refresh now that regional stations are in lastData
+      renderORRPBDailyBar(); // ditto — Buckhams (99001) + Rigaud (1264) ride in regional
     }).catch(err => {
       document.getElementById('regional-cards').innerHTML = `<div class="card">Regional data unavailable: ${err.message}</div>`;
     });
