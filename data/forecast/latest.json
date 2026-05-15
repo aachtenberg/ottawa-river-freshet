@@ -1,16 +1,16 @@
 {
   "schema_version": 1,
-  "fetched_at_iso": "2026-05-14T22:00:00Z",
+  "fetched_at_iso": "2026-05-15T22:00:00Z",
   "source": {
     "url": "https://www.ottawariver.ca/conditions/?display=forecast",
-    "last_update_iso": "2026-05-14T19:37:00Z",
-    "next_update_expected_iso": "2026-05-15T20:00:00Z",
-    "next_update_cadence": "daily"
+    "last_update_iso": "2026-05-15T19:18:00Z",
+    "next_update_expected_iso": "2026-05-19T20:00:00Z",
+    "next_update_cadence": "unknown"
   },
   "mode": "daily-freshet",
   "freshet_active": true,
-  "further_increases_possible": true,
-  "further_increases_reach": "Mattawa to Lake Coulonge",
-  "further_increases_includes_lac_coulonge": true,
-  "forecast_text": "Spring runoff in the northern part of the basin is slowly receding but remains high. With precipitations received recently over the basin, the decline in water levels and flows from Mattawa to the Montreal Region is expected to slow down and come to a halt over the next few days, before resuming gradually later next week. Because large volumes of water continue to come from the northern part of the basin, water levels along the main stem of the river are expected to remain generally high over the next few days. The northern part of the basin will remain vulnerable to heavy rainfall events in the coming weeks; therefore, further increases in water levels from Mattawa to Lake Coulonge due to high spring runoff cannot be ruled out."
+  "further_increases_possible": false,
+  "further_increases_reach": null,
+  "further_increases_includes_lac_coulonge": false,
+  "forecast_text": "Spring runoff in the northern part of the basin is slowly receding but remains high. Along the main stem of the Ottawa River, the decline in water levels and flows has slowed down in all locations due to recent rainfall and continued large volumes of water from the north. Over the next few days, water levels are expected to be fairly stable in all locations, remaining near or slightly below minor flood levels from Mattawa to Lake Deschenes. Later next week, levels and flows are expected to decrease in all locations at a rate that will depend on amount of rainfall in northern part of the basin."
 }
