@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "fetched_at_iso": "2026-05-15T22:00:00Z",
+  "fetched_at_iso": "2026-05-16T22:06:34Z",
   "source": {
     "url": "https://www.ottawariver.ca/conditions/?display=forecast",
     "last_update_iso": "2026-05-15T19:18:00Z",
@@ -12,5 +12,5 @@
   "further_increases_possible": false,
   "further_increases_reach": null,
   "further_increases_includes_lac_coulonge": false,
-  "forecast_text": "Spring runoff in the northern part of the basin is slowly receding but remains high. Along the main stem of the Ottawa River, the decline in water levels and flows has slowed down in all locations due to recent rainfall and continued large volumes of water from the north. Over the next few days, water levels are expected to be fairly stable in all locations, remaining near or slightly below minor flood levels from Mattawa to Lake Deschenes. Later next week, levels and flows are expected to decrease in all locations at a rate that will depend on amount of rainfall in northern part of the basin."
+  "forecast_text": "Spring runoff in the northern part of the basin is slowly receding but remains high. Along the main stem of the Ottawa River, the decline in water levels and flows has slowed down in all locations due to recent rainfall and continued large volumes of water from the north. Over the next few days, water levels are expected to be fairly stable in all locations, remaining near of slightly below minor flood levels from Mattawa to Lake Deschenes. Later next week, levels and flows are expected to decrease in all locations at a rate that will depend on amount of rainfall in northern part of the basin."
 }
