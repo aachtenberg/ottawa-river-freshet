@@ -2548,6 +2548,40 @@ function openReservoirDetail(reservoirId) {
     else callout = `<div class="detail-callout info"><strong>Drawn down / refilling.</strong> ${cmFromLow} cm above low operating limit.</div>`;
   }
 
+  // Water Management Plan operating rules — only rendered for reservoirs whose
+  // reservoir-limits.json entry carries a `wmp` block (currently Bark Lake, on
+  // the Madawaska). These are the legally enforceable operating constraints at
+  // the dam, distinct from the ICOLD storage limits used for the % full bar.
+  let wmpSection = '';
+  const w = cfg.wmp;
+  if (w) {
+    const lvl = snap.level_m;
+    const rows = [];
+    if (w.summer_min_m != null) {
+      const vs = (lvl != null)
+        ? `${lvl >= w.summer_min_m ? '+' : ''}${((lvl - w.summer_min_m) * 100).toFixed(0)} cm vs target`
+        : '—';
+      rows.push(`<div class="row"><span class="lbl">Summer-min target</span><span class="val">${w.summer_min_m.toFixed(2)} m · ${vs}</span></div>`);
+    }
+    if (w.spring_redraw_max_m_per_day != null)
+      rows.push(`<div class="row"><span class="lbl">Spring redraw cap</span><span class="val">≤ ${w.spring_redraw_max_m_per_day.toFixed(2)} m/day</span></div>`);
+    if (w.min_flow_cms != null)
+      rows.push(`<div class="row"><span class="lbl">Mandatory min flow</span><span class="val">${w.min_flow_cms} m³/s</span></div>`);
+    if (w.flood_threshold_cms != null)
+      rows.push(`<div class="row"><span class="lbl">Downstream flood threshold</span><span class="val">${w.flood_threshold_cms} m³/s</span></div>`);
+    if (w.compliance_gauge)
+      rows.push(`<div class="row"><span class="lbl">Compliance gauge</span><span class="val">${w.compliance_gauge}</span></div>`);
+    const src = w.source
+      ? ` <a href="${w.source}" target="_blank" rel="noopener" style="color:var(--text-faint);text-decoration:underline;">[plan]</a>`
+      : '';
+    wmpSection = `
+    <div class="detail-section">
+      <div class="section-label">Water Management Plan operating rules${src}</div>
+      <div class="detail-grid">${rows.join('')}</div>
+      ${w.note ? `<div style="font-size:11px;color:var(--text-muted);line-height:1.55;margin-top:8px;">${w.note}</div>` : ''}
+    </div>`;
+  }
+
   const body = `
     <h3>${cfg.name}<span class="station-id"> · ${cfg.agency}</span></h3>
     <div class="now-meta">${cfg.low_limit.toFixed(2)} – ${cfg.high_limit.toFixed(2)} m operating range · ${range} m total · ${capacityFull}${capacityCite}</div>
@@ -2564,6 +2598,7 @@ function openReservoirDetail(reservoirId) {
         <div class="row"><span class="lbl">Last reading</span><span class="val">${ago(snap.time)}</span></div>
       </div>
     </div>
+    ${wmpSection}
     <div class="detail-section">
       <div class="section-label">How "% full" is calculated</div>
       <div style="font-size:11px;color:var(--text-muted);line-height:1.55;">Linear interpolation between published high (${cfg.high_limit.toFixed(2)} m) and low (${cfg.low_limit.toFixed(2)} m) operating limits. Methodology by Contributor B; operator-published % full is not available from official sites.</div>
