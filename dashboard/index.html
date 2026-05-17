@@ -949,6 +949,8 @@ let lastData = null;
 let lastSeasonPeaks = {};
 let forecastData = null;     // ORRPB forecast snapshot — see loadForecast()
 let forecastLoading = null;
+let forecastFetchedAt = 0;   // perf clock of the last *successful* forecast load
+const FORECAST_TTL_MS = 30 * 60 * 1000;  // re-pull on long-open tabs every 30 min
 
 // ---- Page-level i18n + theme (persisted) ---------------------------------
 let pageLang = (typeof localStorage !== 'undefined' && localStorage.getItem('pageLang')) || 'en';
@@ -1842,7 +1844,14 @@ const FORECAST_URL = 'https://raw.githubusercontent.com/aachtenberg/ottawa-river
 const FORECAST_STALE_HOURS = 36;  // older than this → fall back to generic boilerplate
 
 async function loadForecast() {
-  if (forecastData !== null) return forecastData;
+  // Serve the cached snapshot only while it's within the in-session TTL. A
+  // flood-watch tab stays open for days, so an unconditional cache would
+  // freeze the forecast and silently age out to boilerplate after
+  // FORECAST_STALE_HOURS. Re-fetch when stale; always retry after a miss
+  // (and keep the last good snapshot rather than flapping to null).
+  if (forecastData !== null && (Date.now() - forecastFetchedAt) < FORECAST_TTL_MS) {
+    return forecastData;
+  }
   if (forecastLoading) return forecastLoading;
   forecastLoading = (async () => {
     try {
@@ -1855,7 +1864,12 @@ async function loadForecast() {
       return null;
     }
   })();
-  forecastData = await forecastLoading;
+  const result = await forecastLoading;
+  forecastLoading = null;            // let the next refresh cycle retry
+  if (result !== null) {             // preserve last good snapshot on a miss
+    forecastData = result;
+    forecastFetchedAt = Date.now();
+  }
   return forecastData;
 }
 
@@ -2865,8 +2879,12 @@ window.addEventListener('hashchange', () => activateTab(location.hash.slice(1) |
 // ---- Stations tab: 10 mini-charts in a 2-col grid ----
 const STATIONS_TAB_IDS = [951, 545, 1279, 1195, 1004, 99001, 984, 548, 550, 981, 1264];
 // Map each river gauge to its nearest weather station key for precip context.
+// Each river gauge → its nearest station in FREEZE_STATIONS, so the per-card
+// chip reflects precip *at* the gauge (matching the "nearest weather station"
+// UI wording). Val-d'Or / Rouyn-Noranda stay in FREEZE_STATIONS as upstream
+// freeze-night sensors but are too far (200–250 km) to represent any gauge.
 const GAUGE_TO_WX = {
-  951: "Val-d'Or, QC", 545: 'Rouyn-Noranda, QC', 1279: 'Pembroke, ON',
+  951: 'Temiskaming Shores, ON', 545: 'Pembroke, ON', 1279: 'Pembroke, ON',
   1195: 'Pembroke, ON', 1004: 'Pembroke, ON',
   984: 'Ottawa-Gatineau', 548: 'Ottawa-Gatineau', 550: 'Ottawa-Gatineau',
   981: 'Hawkesbury, ON', 1264: 'Hawkesbury, ON'
