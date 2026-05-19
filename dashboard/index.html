@@ -691,7 +691,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 </div>
 
 <div class="property">
-  <h3 data-i18n="property_t">Property thresholds (from 2019 observations)</h3>
+  <h3 data-i18n="property_t">Property thresholds &amp; surveyed flood lines</h3>
   <div id="thresh-list" class="skeleton">Loading…</div>
 </div>
 
@@ -840,7 +840,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 <div class="footer">
   <strong>Live data</strong> from Quebec MSP Vigilance API (Stations <a href="https://vigilance.geo.msp.gouv.qc.ca/stations/1195" target="_blank">1195 Lac Coulonge</a> and <a href="https://vigilance.geo.msp.gouv.qc.ca/stations/1004" target="_blank">1004 Coulonge River</a>).
   Auto-refreshes every 10 minutes. Operated by Hydro-Québec and Hydro Météo respectively.
-  Property thresholds from personal 2019 flood observations.
+  Property thresholds from personal 2019 flood observations; 20-yr / 100-yr lines from the 2019 Lebel land survey (geodetic, ≈gauge datum ±5 cm).
   All timestamps shown in Eastern (America/Toronto).
   <br><strong>Unofficial dashboard</strong> — for official guidance consult <a href="https://www.ottawariver.ca/forecasts" target="_blank">ORRPB</a> and local authorities.
   <br><strong>Case file</strong> — this dashboard is paired with a multi-year analytical case file on the post-2017 freshet regime change at Lac Coulonge: <a href="https://github.com/aachtenberg/ottawa-river-freshet/blob/main/docs/exhibits/Exhibit_0_Plain_Language.html" target="_blank">plain-language story</a> · <a href="https://github.com/aachtenberg/ottawa-river-freshet/tree/main/data/daily-briefs" target="_blank">daily briefs</a> · <a href="https://github.com/aachtenberg/ottawa-river-freshet" target="_blank">full repository</a>.
@@ -857,13 +857,23 @@ const STATIONS = {
 // Property thresholds. `histCount` = number of years out of HISTORICAL_RECORD_YEARS
 // where the annual daily max equalled or exceeded `level`. Sourced from
 // data/lac-coulonge-monthly-1972-2025.csv.
+// The 109.05 / 109.34 m rows are NOT personal observations: they are the
+// surveyed 20-yr / 100-yr flood-recurrence elevations from the 2019 Lebel
+// land survey (geodetic MSL). The property sits on Lac Coulonge itself, so
+// the gauge datum and survey datum align to within ~5 cm (the surveyed 20-yr
+// line lands 4 cm above the personally-observed "water inside" level), which
+// is why they can be read directly off this gauge. The histCount cross-check
+// is a real signal: the surveyor's "20-yr" line has been reached only once in
+// 54 years of record and the "100-yr" line never.
 const PROPERTY_THRESHOLDS = [
   { level: 108.30, desc: 'Water approaching property (2019: Apr 25)',     histCount: 6 },
   { level: 108.48, desc: 'Water in backyard, driveway, big tree (2019: Apr 26)', histCount: 4 },
   { level: 108.52, desc: 'Crawl space to floor joists (2017 peak)',       histCount: 4 },
   { level: 108.75, desc: 'Water at end of bricks on cottage (2019: Apr 27)', histCount: 3 },
   { level: 109.01, desc: 'WATER INSIDE cottage, garage, RV (2019: Apr 28)', histCount: 1 },
-  { level: 109.17, desc: '2019 record — all-time high',                   histCount: 1 }
+  { level: 109.05, desc: '20-year flood line (2019 Lebel land survey)',   histCount: 1 },
+  { level: 109.17, desc: '2019 record — all-time high',                   histCount: 1 },
+  { level: 109.34, desc: '100-year flood line — whole lot below (2019 survey)', histCount: 0 }
 ];
 const HISTORICAL_RECORD_YEARS = 54; // 1972-2025
 
@@ -969,7 +979,7 @@ const PAGE_STRINGS = {
   regional:       { en: 'Regional context — Ottawa River corridor', fr: 'Contexte régional — corridor de la rivière des Outaouais' },
   regional_sub:   { en: 'Upstream-to-downstream gauges along the Ottawa River. Upstream stations lead Lac Coulonge by hours-to-days and flag incoming pulses. Buckhams Bay (MVCA) and Britannia are separate gauges 15 km apart on Lac Deschênes — Buckhams is upstream and routinely reads higher; the two are commonly confused in local reporting.',
                     fr: 'Stations d\'amont en aval le long de la rivière des Outaouais. Les stations amont précèdent Lac Coulonge de quelques heures à plusieurs jours et signalent les vagues entrantes. Baie Buckhams (MVCA) et Britannia sont deux jauges distinctes séparées de 15 km sur le lac Deschênes — Buckhams est en amont et lit habituellement plus haut; les deux sont souvent confondues dans les médias locaux.' },
-  property_t:     { en: 'Property thresholds (from 2019 observations)', fr: 'Seuils de la propriété (selon observations 2019)' },
+  property_t:     { en: 'Property thresholds & surveyed flood lines', fr: 'Seuils de la propriété et cotes de crue relevées' },
   freeze_h:       { en: 'Basin freeze & precipitation outlook', fr: 'Aperçu du gel et précipitations dans le bassin' },
   freeze_sub:     { en: 'Overnight lows + 48 h precipitation across the basin. The freeze-night counter uses upstream stations only (snowmelt signal); downstream rows are local forecast for visitors watching the lower-corridor gauges.',
                     fr: 'Minimums nocturnes + précipitations sur 48 h dans le bassin. Le compteur de nuits de gel n\'utilise que les stations en amont (signal de fonte); les stations en aval sont des prévisions locales pour les visiteurs surveillant les jauges du corridor inférieur.' }
