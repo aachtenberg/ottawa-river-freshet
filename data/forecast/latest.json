@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "fetched_at_iso": "2026-05-19T22:05:00Z",
+  "fetched_at_iso": "2026-05-20T22:05:00Z",
   "source": {
     "url": "https://www.ottawariver.ca/conditions/?display=forecast",
     "last_update_iso": "2026-05-19T19:46:00Z",
     "next_update_expected_iso": "2026-05-21T20:00:00Z",
-    "next_update_cadence": "unknown"
+    "next_update_cadence": "daily"
   },
   "mode": "daily-freshet",
   "freshet_active": true,
