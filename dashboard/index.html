@@ -649,7 +649,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 <div class="cards" id="cards"></div>
 
 <div class="section-title" style="margin-top: 24px;" data-i18n="watershed">Watershed snapshot — current levels</div>
-<div class="section-subtitle" id="corridor-subtitle" data-i18n="watershed_sub">Main-stem stations upstream → downstream. Bar height = level (MASL); colour = current flood state; arrow = daily change vs. ~24 h ago. Click a bar to see its 2017/2019/2023 references.</div>
+<div class="section-subtitle" id="corridor-subtitle" data-i18n="watershed_sub">Main-stem stations upstream → downstream. Bar height = level (MASL); colour = current flood state; arrows = change over ~24 h and ~72 h. Click a bar to see its 2017/2019/2023 references.</div>
 <div class="chart-wrap"><div class="chart-container" style="height: 280px;"><canvas id="corridorChart"></canvas></div></div>
 
 <div class="section-title" style="margin-top: 24px;" data-i18n="orrpb_daily">ORRPB daily snapshot — 24:00h water levels</div>
@@ -970,8 +970,8 @@ const PAGE_STRINGS = {
   window:         { en: 'Window',                           fr: 'Période' },
   loading:        { en: 'Loading live data…',               fr: 'Chargement des données en direct…' },
   watershed:      { en: 'Watershed snapshot — current levels', fr: 'Aperçu du bassin — niveaux actuels' },
-  watershed_sub:  { en: 'Main-stem stations upstream → downstream. Bar height = level (MASL); colour = current flood state (<span style="color:rgb(156,26,26);font-weight:600;">major</span> / <span style="color:rgb(224,127,47);font-weight:600;">moderate</span> / <span style="color:rgb(239,159,39);font-weight:600;">minor</span> / <span style="color:rgb(245,200,66);font-weight:600;">pre-alert</span> / <span style="color:rgb(76,175,80);font-weight:600;">normal</span> / <span style="color:rgb(79,163,199);font-weight:600;">no threshold</span>); arrow = daily change vs. ~24 h ago. Click a bar to see its 2017/2019/2023 references.',
-                    fr: 'Stations principales d\'amont en aval. Hauteur de la barre = niveau (MASL); couleur = état de crue actuel (<span style="color:rgb(156,26,26);font-weight:600;">majeure</span> / <span style="color:rgb(224,127,47);font-weight:600;">modérée</span> / <span style="color:rgb(239,159,39);font-weight:600;">mineure</span> / <span style="color:rgb(245,200,66);font-weight:600;">pré-alerte</span> / <span style="color:rgb(76,175,80);font-weight:600;">normal</span> / <span style="color:rgb(79,163,199);font-weight:600;">sans seuil</span>); flèche = variation quotidienne sur ~24 h. Cliquez sur une barre pour voir les références 2017 / 2019 / 2023.' },
+  watershed_sub:  { en: 'Main-stem stations upstream → downstream. Bar height = level (MASL); colour = current flood state (<span style="color:rgb(156,26,26);font-weight:600;">major</span> / <span style="color:rgb(224,127,47);font-weight:600;">moderate</span> / <span style="color:rgb(239,159,39);font-weight:600;">minor</span> / <span style="color:rgb(245,200,66);font-weight:600;">pre-alert</span> / <span style="color:rgb(76,175,80);font-weight:600;">normal</span> / <span style="color:rgb(79,163,199);font-weight:600;">no threshold</span>); arrows = change over ~24 h and ~72 h. Click a bar to see its 2017/2019/2023 references.',
+                    fr: 'Stations principales d\'amont en aval. Hauteur de la barre = niveau (MASL); couleur = état de crue actuel (<span style="color:rgb(156,26,26);font-weight:600;">majeure</span> / <span style="color:rgb(224,127,47);font-weight:600;">modérée</span> / <span style="color:rgb(239,159,39);font-weight:600;">mineure</span> / <span style="color:rgb(245,200,66);font-weight:600;">pré-alerte</span> / <span style="color:rgb(76,175,80);font-weight:600;">normal</span> / <span style="color:rgb(79,163,199);font-weight:600;">sans seuil</span>); flèches = variation sur ~24 h et ~72 h. Cliquez sur une barre pour voir les références 2017 / 2019 / 2023.' },
   orrpb_daily:    { en: 'ORRPB daily snapshot — 24:00h water levels',
                     fr: 'Aperçu quotidien CPRBO — niveaux d\'eau à 24:00h' },
   orrpb_daily_sub:{ en: 'Same 14-station bar chart that gets posted to Facebook each morning. Source: ORRPB "Water levels at 24:00h in metres" table at <a href="https://www.ottawariver.ca/conditions/" target="_blank">ottawariver.ca/conditions</a>, scraped daily. Constance Bay (MVCA) and Below Carillon (CEHQ) come from the live feeds since ORRPB doesn\'t publish them. Colour: <span style="color:rgb(224,75,74);font-weight:600;">rising</span> / <span style="color:rgb(76,175,80);font-weight:600;">falling</span> / <span style="color:rgb(245,200,66);font-weight:600;">no change</span> vs. the prior day.',
@@ -2044,21 +2044,34 @@ const STATUS_BAR_COLORS = {
 };
 let corridorChart = null;
 
-function dailyChangeCm(readings) {
+// Level change in cm over the trailing `hours` window, measured against the
+// reading nearest that mark. Returns null when the nearest reading is more
+// than 6 h off-target — avoids misleading deltas on stations with ingest gaps,
+// or whose live buffer is shorter than the requested window (e.g. a 72 h ask
+// on a station with only ~60 h of buffered readings).
+function changeCm(readings, hours) {
   if (!readings || readings.length < 2) return null;
   const latest = readings[readings.length - 1];
   const latestT = new Date(latest.date_prise_valeur).getTime();
-  const targetT = latestT - 24 * 3600 * 1000;
+  const targetT = latestT - hours * 3600 * 1000;
   let best = readings[0];
   let bestDiff = Math.abs(new Date(best.date_prise_valeur).getTime() - targetT);
   for (const r of readings) {
     const diff = Math.abs(new Date(r.date_prise_valeur).getTime() - targetT);
     if (diff < bestDiff) { best = r; bestDiff = diff; }
   }
-  // Reject if our nearest reading is more than 6 h off the 24 h mark — avoids
-  // misleading deltas on stations with ingest gaps.
   if (bestDiff > 6 * 3600 * 1000) return null;
   return (latest.valeur - best.valeur) * 100;
+}
+function dailyChangeCm(readings) { return changeCm(readings, 24); }
+
+// Format a cm change into a glanceable arrow + colour. Shared by the
+// watershed-snapshot 24 h and 72 h labels so both render identically.
+function fmtChangeLabel(cm, isDark) {
+  const arrow = cm > 0.5 ? '↑' : cm < -0.5 ? '↓' : '→';
+  const colour = cm > 0.5 ? 'rgb(224,75,74)' : cm < -0.5 ? 'rgb(76,175,80)' : (isDark ? '#aaa' : '#666');
+  const sign = cm > 0 ? '+' : '';
+  return { colour, text: `${arrow} ${sign}${cm.toFixed(1)} cm` };
 }
 
 function renderCorridorBar() {
@@ -2075,10 +2088,11 @@ function renderCorridorBar() {
     const masl = s.metadata.dern_valeur_niv + offset;
     const eff = getEffectiveEtat(s.metadata);
     const change = dailyChangeCm(s.readings);
+    const change72 = changeCm(s.readings, 72);
     const name = (STATION_NAMES[id] && STATION_NAMES[id][mapLang]) || s.metadata.label || `${id}`;
     const refPeaks = ORRPB_HISTORIC_PEAKS[id]?.peaks;
     const peak2019 = refPeaks?.[2019] ?? null;     // already in MASL
-    items.push({ id, name, masl, eff, change, peak2019 });
+    items.push({ id, name, masl, eff, change, change72, peak2019 });
   }
   if (!items.length) return;
   // Y-axis must include the 2019 record where present, plus a small headroom.
@@ -2119,6 +2133,10 @@ function renderCorridorBar() {
                 const sign = it.change > 0 ? '+' : '';
                 lines.push(`24 h: ${sign}${it.change.toFixed(1)} cm`);
               }
+              if (it.change72 != null) {
+                const sign = it.change72 > 0 ? '+' : '';
+                lines.push(`72 h: ${sign}${it.change72.toFixed(1)} cm`);
+              }
               if (it.peak2019 != null) {
                 const headroom = ((it.peak2019 - it.masl) * 100).toFixed(0);
                 lines.push(`2019 record: ${it.peak2019.toFixed(2)} m  (${headroom} cm above)`);
@@ -2134,8 +2152,9 @@ function renderCorridorBar() {
           grid: { color: grid },
           ticks: { color: txt, font: { size: 10 }, callback: v => v.toFixed(0) + ' m' },
           title: { display: true, text: 'MASL', color: txt, font: { size: 10 } },
-          // Leave room above the tallest bar for value labels + 2019 reference line.
-          suggestedMax: dataMax + Math.max(3, span * 0.05)
+          // Leave room above the tallest bar for the stacked value + 24 h +
+          // 72 h labels and the 2019 reference line.
+          suggestedMax: dataMax + Math.max(10, span * 0.15)
         }
       }
     },
@@ -2163,18 +2182,26 @@ function renderCorridorBar() {
             ctx.stroke();
             ctx.restore();
           }
-          // Value label, above bar top.
+          // Value label, stacked above the two change rows (24 h + 72 h).
           ctx.fillStyle = isDark ? '#f0f0f0' : '#222';
           ctx.font = '600 10px -apple-system, BlinkMacSystemFont, sans-serif';
-          ctx.fillText(`${it.masl.toFixed(2)} m`, bar.x, bar.y - 16);
-          // Daily change, just below value, coloured by direction.
+          ctx.fillText(`${it.masl.toFixed(2)} m`, bar.x, bar.y - 27);
+          // 24 h change — primary trend, just below the value.
           if (it.change != null) {
-            const arrow = it.change > 0.5 ? '↑' : it.change < -0.5 ? '↓' : '→';
-            const colour = it.change > 0.5 ? 'rgb(224,75,74)' : it.change < -0.5 ? 'rgb(76,175,80)' : (isDark ? '#aaa' : '#666');
-            const sign = it.change > 0 ? '+' : '';
-            ctx.fillStyle = colour;
+            const f = fmtChangeLabel(it.change, isDark);
+            ctx.fillStyle = f.colour;
             ctx.font = '500 10px -apple-system, BlinkMacSystemFont, sans-serif';
-            ctx.fillText(`${arrow} ${sign}${it.change.toFixed(1)} cm`, bar.x, bar.y - 4);
+            ctx.fillText(`24 h  ${f.text}`, bar.x, bar.y - 15);
+          }
+          // 72 h change — slower trend that cuts through plateau noise.
+          // Smaller + dimmer so the 24 h reading stays primary.
+          if (it.change72 != null) {
+            const f = fmtChangeLabel(it.change72, isDark);
+            ctx.fillStyle = f.colour;
+            ctx.globalAlpha = 0.8;
+            ctx.font = '500 9px -apple-system, BlinkMacSystemFont, sans-serif';
+            ctx.fillText(`72 h  ${f.text}`, bar.x, bar.y - 4);
+            ctx.globalAlpha = 1;
           }
         });
         // Once per chart, draw the 2019 legend swatch in the top-right corner.
