@@ -2459,7 +2459,10 @@ function openBarDetail(stationId) {
     })();
 
   const rowHtml = rows.map(r => {
-    const diff = r.level - currentMasl;
+    // Diff is framed as `current vs reference` (matches the dashboard's
+    // ubiquitous "X cm below threshold" convention and the red/green
+    // .above/.below CSS — current above a reference = alarm = red).
+    const diff = currentMasl - r.level;
     const cm = Math.abs(diff) * 100;
     const sign = diff > 0 ? `${cm.toFixed(0)} cm above` : diff < 0 ? `${cm.toFixed(0)} cm below` : 'AT this level';
     const cls = r.isCurrent ? 'current' : '';
