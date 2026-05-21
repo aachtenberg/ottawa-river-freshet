@@ -11,6 +11,20 @@ https://www.hydroquebec.com/production/debits-niveaux-eau.html and writes:
 
 Filtered to the Ottawa basin window (lat 45-48, lon -80 to -74) so we don't
 ingest the entire Quebec hydro fleet. Adjust BBOX env vars to widen scope.
+
+Feed-degradation handling
+-------------------------
+Hydro-Québec degrades specific egress IPs by serving them a frozen copy of the
+JSON (see cloudflare/hq-feed-relay/). To survive that automatically each feed
+is fetched through a three-step chain, taking the freshest result:
+
+  1. the Cloudflare relay                        (HQ_*_URL)
+  2. the relay again with the edge cache bypassed (?nocache=1)
+  3. a GitHub-Actions mirror on independent egress (HQ_*_FALLBACK_URL)
+
+If every path is still stale, the run ingests the freshest data it found and
+posts a one-shot ntfy alert (fired only on the transition into/out of the
+stale state, so a multi-hour HQ outage produces one alert, not one per run).
 """
 
 import os, json, sys, ssl, urllib.request
@@ -31,6 +45,11 @@ STATIONS_URL = os.environ.get(
     'HQ_STATIONS_URL',
     'https://www.hydroquebec.com/data/documents-donnees/donnees-ouvertes/json/Donnees_VUE_STATIONS_ET_TARAGES.json',
 )
+# Independent-egress fallback (GitHub Actions release mirror). Empty = no
+# fallback, so the ingester still runs fine before Tier 2 is deployed.
+CENTRALES_FALLBACK_URL = os.environ.get('HQ_CENTRALES_FALLBACK_URL', '')
+STATIONS_FALLBACK_URL = os.environ.get('HQ_STATIONS_FALLBACK_URL', '')
+
 POSTGREST = os.environ.get('POSTGREST_URL', 'http://postgrest.data.svc.cluster.local:3000')
 
 # Ottawa basin bounding box. Première-Chute (47.6, -79.45) is the upper limit;
@@ -41,6 +60,15 @@ LON_MIN = float(os.environ.get('HQ_LON_MIN', '-80.0'))
 LON_MAX = float(os.environ.get('HQ_LON_MAX', '-74.0'))
 
 POST_BATCH = int(os.environ.get('HQ_POST_BATCH', '2000'))
+
+# A healthy feed's newest point lags real time by ~3 h. STALE_HOURS is the
+# threshold past which we stop trusting a path and try the next one;
+# ALERT_HOURS is when we conclude HQ itself is degraded and notify.
+STALE_HOURS = float(os.environ.get('HQ_STALE_HOURS', '6'))
+ALERT_HOURS = float(os.environ.get('HQ_ALERT_HOURS', '10'))
+
+NTFY_URL = os.environ.get('NTFY_URL', 'http://ntfy.infrastructure.svc.cluster.local')
+NTFY_TOPIC = os.environ.get('NTFY_TOPIC', 'freshet-mansfield')
 
 
 def fetch_json(url):
@@ -141,8 +169,99 @@ def upsert_sites(rows):
     return len(rows)
 
 
-def ingest_centrales():
-    payload = fetch_json(CENTRALES_URL)
+# --- feed freshness + degradation handling --------------------------------
+
+def feed_max_ts(payload, collection_key):
+    """Newest observation timestamp anywhere in a feed, as a normalized
+    'YYYY-MM-DDTHH:MM:SSZ' string (lexically sortable). '' if the feed is
+    empty."""
+    newest = ''
+    for site in payload.get(collection_key, []):
+        for comp in site.get('Composition', []):
+            for ts in (comp.get('Donnees') or {}):
+                n = normalize_ts(ts)
+                if n > newest:
+                    newest = n
+    return newest
+
+
+def age_hours(ts_str):
+    """Hours between now and a timestamp string. Accepts both the feed's
+    'YYYY-MM-DDTHH:MM:SSZ' form and PostgREST's ISO '+00:00' form. inf when
+    missing or unparseable."""
+    if not ts_str:
+        return float('inf')
+    s = ts_str.replace('Z', '+00:00')
+    try:
+        t = datetime.fromisoformat(s)
+    except ValueError:
+        return float('inf')
+    if t.tzinfo is None:
+        t = t.replace(tzinfo=timezone.utc)
+    return (datetime.now(timezone.utc) - t).total_seconds() / 3600.0
+
+
+def fetch_freshest(label, primary_url, fallback_url, collection_key):
+    """Fetch a feed through the relay → relay-nocache → GitHub-mirror chain.
+    Returns (payload, source, age_hours) for the freshest feed found,
+    short-circuiting as soon as one is within STALE_HOURS."""
+    sep = '&' if '?' in primary_url else '?'
+    attempts = [
+        ('relay',         primary_url),
+        ('relay/nocache', f'{primary_url}{sep}nocache=1'),
+    ]
+    if fallback_url:
+        attempts.append(('github-mirror', fallback_url))
+
+    best = None  # (age, payload, source)
+    for source, url in attempts:
+        try:
+            payload = fetch_json(url)
+        except Exception as e:
+            print(f'  {label}: {source} fetch failed: {e}', file=sys.stderr)
+            continue
+        mx = feed_max_ts(payload, collection_key)
+        age = age_hours(mx)
+        print(f'  {label}: {source} newest={mx or "n/a"} age={age:.1f}h')
+        if best is None or age < best[0]:
+            best = (age, payload, source)
+        if mx and age <= STALE_HOURS:
+            return payload, source, age
+
+    if best is None:
+        raise RuntimeError(f'{label}: every feed source failed')
+    print(f'  {label}: all sources stale — using freshest ({best[2]}, {best[0]:.1f}h)',
+          file=sys.stderr)
+    return best[1], best[2], best[0]
+
+
+def db_max_ts(table, time_col='time'):
+    """Newest timestamp already stored in a PostgREST table, or None."""
+    url = f'{POSTGREST}/{table}?select={time_col}&order={time_col}.desc&limit=1'
+    try:
+        rows = fetch_json(url)
+    except Exception as e:
+        print(f'  db_max_ts({table}) failed: {e}', file=sys.stderr)
+        return None
+    return rows[0][time_col] if rows else None
+
+
+def ntfy_alert(title, body, priority='4', tags='warning'):
+    req = urllib.request.Request(
+        f'{NTFY_URL}/{NTFY_TOPIC}',
+        data=body.encode('utf-8'),
+        headers={'Title': title, 'Priority': priority, 'Tags': tags},
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=15) as r:
+            print(f'  ntfy alert sent ({r.status}): {title}')
+    except Exception as e:
+        print(f'  ntfy alert failed: {e}', file=sys.stderr)
+
+
+# --- ingest ---------------------------------------------------------------
+
+def ingest_centrales(payload):
     sites = [s for s in payload.get('Site', []) if in_basin(s)]
     print(f'centrales: {len(sites)} basin sites in window')
 
@@ -215,8 +334,7 @@ def ingest_centrales():
     post_rows('dam_inflows', inflow_rows)
 
 
-def ingest_stations():
-    payload = fetch_json(STATIONS_URL)
+def ingest_stations(payload):
     stations = [s for s in payload.get('Station', []) if in_basin(s)]
     print(f'stations: {len(stations)} basin sites in window')
 
@@ -246,16 +364,45 @@ def ingest_stations():
 
 def main():
     started = datetime.now(timezone.utc)
+
+    # Snapshot DB freshness before the run so we can alert only on the
+    # transition into / out of a stale state (no per-run alert spam).
+    age_before = age_hours(db_max_ts('dam_releases'))
+
     try:
-        ingest_centrales()
+        cen_payload, cen_src, cen_age = fetch_freshest(
+            'centrales', CENTRALES_URL, CENTRALES_FALLBACK_URL, 'Site')
+        ingest_centrales(cen_payload)
     except Exception as e:
         print(f'centrales ingest failed: {e}', file=sys.stderr)
         raise
+
     try:
-        ingest_stations()
+        sta_payload, sta_src, sta_age = fetch_freshest(
+            'stations', STATIONS_URL, STATIONS_FALLBACK_URL, 'Station')
+        ingest_stations(sta_payload)
     except Exception as e:
         print(f'stations ingest failed: {e}', file=sys.stderr)
         raise
+
+    age_after = age_hours(db_max_ts('dam_releases'))
+    print(f'feed freshness: centrales {cen_age:.1f}h via {cen_src}, '
+          f'stations {sta_age:.1f}h via {sta_src}; '
+          f'dam_releases in DB now {age_after:.1f}h old')
+
+    if age_after > ALERT_HOURS and age_before <= ALERT_HOURS:
+        ntfy_alert(
+            '⚠️ HQ Operations feed stale',
+            f'Hydro-Québec release feed has not advanced in {age_after:.0f}h.\n'
+            f'Tried the relay, a cache-bypass and the GitHub mirror — all '
+            f'stale. The dashboard Operations tab will lag until HQ recovers.',
+            priority='4', tags='warning')
+    elif age_after <= ALERT_HOURS and age_before > ALERT_HOURS and age_before != float('inf'):
+        ntfy_alert(
+            '✅ HQ Operations feed recovered',
+            f'Hydro-Québec release feed is fresh again ({age_after:.1f}h old).',
+            priority='3', tags='white_check_mark')
+
     elapsed = (datetime.now(timezone.utc) - started).total_seconds()
     print(f'HQ ingest complete in {elapsed:.1f}s')
 
