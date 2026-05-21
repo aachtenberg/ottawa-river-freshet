@@ -58,6 +58,9 @@ Tables and key columns:
 - `river_stations`         — lookup: `station_id` → name, thresholds, source
 - `latest_reservoir_readings` — ORRPB reservoir snapshot
 - `wsc_readings`           — Water Survey Canada hourly
+- `orrpb_river_flows`      — ORRPB main-stem avg daily discharge: `station`, `flow_cms`, `time` (slugs: `temiscaming`, `otto-holden`, `des-joachims`, `chenaux`, `chats-falls`, `britannia`, `carillon`)
+- `orrpb_river_levels`     — ORRPB main-stem daily levels: `station`, `level_m`, `time` (slugs: `mattawa`, `pembroke`, `des-joachims`, `otto-holden`, `chenaux`, `lake-coulonge`, `britannia`, `carillon`, …)
+- `reservoir_readings`     — ORRPB + operator reservoir history (day-over-day): `reservoir_id`, `level_m`, `flow_cms`, `agency`, `time`
 
 Example queries (substitute IDs as needed):
 - Bryson release latest: `https://freshet.xgrunt.com/history/dam_releases?site_id=eq.3-46&order=time.desc&limit=1`
@@ -67,7 +70,9 @@ Example queries (substitute IDs as needed):
 
 Key IDs: `3-46` Bryson centrale, `1-2964` Bryson amont, `1-2965` Bryson aval. Cascade: `3-33` Première-Chute, `3-31` Quinze, `3-32` Îles, `3-29` Rapide-2, `3-28` Rapide-7, `3-60` Carillon, `3-65` Paugan, `3-67` Rapides-Farmers. Directive-monitoring stations: `1-2968` Carillon amont (headpond level), `1-3675` Quai-de-Hull (Hull dock; trigger gauge for the Carillon spring-flood envelope).
 
-Reservoir storage: `latest_reservoir_readings` (one row per reservoir) — covers Baskatong, Cabonga, Dozois, Témiscaming, Bark Lake, etc. Use day-over-day level deltas to track the basin's storage refill posture during recession.
+Reservoir storage: `latest_reservoir_readings` (one row per reservoir) — covers Baskatong, Cabonga, Dozois, Témiscaming, Bark Lake, etc. Use day-over-day level deltas to track the basin's storage refill posture during recession. For the basin-balance count (how many reservoirs are falling/steady vs. rising), use `reservoir_readings` and compare the latest day to the prior day across all `reservoir_id`s.
+
+Upper-basin watch: Témiscaming outflow is `orrpb_river_flows?station=eq.temiscaming` (ORRPB main-stem avg daily discharge); a cross-check outflow with operator levels is `reservoir_readings?reservoir_id=eq.timiskaming` (PSPC). The two agree until ORRPB's most-recent day, which is preliminary and often revised — prefer the PSPC value for "today" and note if they disagree by >50 m³/s. Mid-valley levels (`mattawa`, `pembroke`, `des-joachims`) are in `orrpb_river_levels`. Cascade *inflows* to Lake Temiscaming are the Quinze releases (`dam_releases` site `3-31`).
 
 ## Sources to pull (when proxy is missing data)
 
@@ -94,12 +99,48 @@ Compose a markdown brief at `freshet-public/data/daily-briefs/YYYY-MM-DD.md` (to
 
 ## In plain language
 
-2–4 short paragraphs, friendly tone, no jargon, no codes, no acronyms beyond
-the obvious. This is what a community member who isn't a flood-watch regular
-needs to read to understand what changed today and why it matters. The
-technical sections below are for the propeller heads.
+Friendly tone, no jargon, no codes, no acronyms beyond the obvious. This is
+what a community member who isn't a flood-watch regular needs to read to
+understand what changed today and why it matters. The technical sections
+below are for the propeller heads.
 
-Tone: direct, lay reader. Translate every technical concept:
+Write this section as **two co-equal threads**, each its own labeled
+sub-section (`### Upstream — the upper basin` and `### At the property —
+Lac Coulonge / Mansfield`). The watershed has two stories on most days and
+neither is a footnote to the other: where the water is coming from, and what
+it's doing at the property. Give each 2–3 short paragraphs.
+
+### Upstream — the upper basin
+
+The "where is the water coming from, and is the system loading or easing"
+story — the upper Ottawa above Lac Coulonge. Cover:
+  - The Témiscaming trend — inflow and outflow direction, and how today sits
+    against the freshet peak. Use milestone framing wherever the numbers
+    support it: "N days past the May 2 peak of X m³/s", "outflow below 2,000
+    for the first time since …", "Nth straight day of decline". Compute
+    round-number threshold crossings and day-streaks explicitly — that
+    texture is what makes this thread readable rather than a number dump.
+  - Reservoir balance — of the tracked reservoirs, how many are falling or
+    holding steady vs. still filling. Rising headwater reservoirs during
+    recession mean operators are *absorbing* inflow (a normal refill
+    posture), not a problem — say so plainly so it isn't misread as a threat.
+  - The mid-valley reach — Mattawa and Pembroke level direction, and whether
+    Pembroke is still in minor flood. Note that Des-Joachims can't begin its
+    next deliberate refill until Mattawa settles back into its normal range.
+
+### At the property — Lac Coulonge / Mansfield
+
+The lower-basin story for the property owner. Cover:
+  - One sentence on the property's status (the lake at Mansfield/Fort-Coulonge).
+  - One sentence on whether the dam operators are doing anything notable
+    (drawing down, holding water, surging release, etc.).
+  - One sentence on what the forecast says (rain coming? clear?).
+  - One sentence on the bottom line for the property owner ("water's going
+    down at X cm/day, expected to clear minor flood in N days unless rain").
+  - If anything is genuinely anomalous (regulatory exceedance, posture
+    change, big surge), call it out plainly.
+
+Tone for both threads: direct, lay reader. Translate every technical concept:
   - "Bryson headpond" → "the dam's pond at the foot of Lac Coulonge" or
     "the dam pond"
   - "Carillon §15.3.5.1 directive overshoot" → "the regulatory ceiling at
@@ -112,16 +153,10 @@ Tone: direct, lay reader. Translate every technical concept:
   - "ORRPB" → "the river management board"
   - "m³/s" → "cubic metres per second" once, then OK to abbreviate
   - "Vigilance 1195" → "the property's lake gauge"
-
-What to include:
-  - One sentence on the property's status (the lake at Mansfield/Fort-Coulonge)
-  - One sentence on whether the dam operators are doing anything notable
-    (drawing down, holding water, surging release, etc.)
-  - One sentence on what the forecast says (rain coming? clear?)
-  - One sentence on the bottom line for the property owner ("water's going
-    down at X cm/day, expected to clear minor flood in N days unless rain").
-  - If anything is genuinely anomalous (regulatory exceedance, posture change,
-    big surge), call it out plainly.
+  - "Témiscaming outflow" → "the flow leaving Lake Temiscaming" (the upper
+    basin's main release toward Mattawa and the rest of the river)
+  - "second-stage / next refill" → "the next round of deliberate water
+    storage" at a reservoir
 
 What to avoid:
   - Tables (those go below in the technical sections)
@@ -175,6 +210,33 @@ Note any change of >5% in any value, or any breach of the 47-cm headpond operati
 | Paugan (Gatineau) | | |
 | Rapides-Farmers (Gatineau mouth) | | |
 | Carillon (basin terminal) | | |
+
+## Upper basin watch (Témiscaming + mid-valley)
+
+The technical backing for the "Upstream" plain-language thread. Pull
+`orrpb_river_flows` (station `temiscaming`), `reservoir_readings`
+(`reservoir_id=timiskaming`, PSPC cross-check), and `orrpb_river_levels`
+(`mattawa`, `pembroke`). Report:
+
+| Metric | Today | 7 d ago | Δ | Milestone |
+|---|---|---|---|---|
+| Témiscaming outflow (m³/s) | | | | *e.g. "N days past May 2 peak (2,741); first sub-2,000 since Apr 24"* |
+| Témiscaming outflow — PSPC cross-check (m³/s) | | | | *flag if it disagrees with ORRPB by >50 m³/s* |
+| Quinze release → into the lake (m³/s) | | | | |
+| Mattawa level (m) | | | | *e.g. "Nth straight day of decline"* |
+| Pembroke level (m) | | | | *still in minor flood? Y/N* |
+
+Then the reservoir-balance count: across all `reservoir_id`s in
+`reservoir_readings`, compare the latest day to the prior day and report
+`<falling> falling · <steady ±2 cm> steady · <rising> rising`. State which
+side outnumbers the other and name the notable risers (upper-basin storage
+reservoirs in normal refill is expected, not an anomaly).
+
+Milestone bookkeeping: track the freshet peak value/date, the running count
+of consecutive decline days at Témiscaming and Mattawa, and the most recent
+date each crossed a round-number threshold. These carry day-over-day, so
+read yesterday's brief to continue the streak rather than recomputing from
+scratch. Skip the whole section if `orrpb_river_flows` is empty/stale (>48 h).
 
 ## Carillon §15.3.5.1 directive check
 
