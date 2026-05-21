@@ -124,9 +124,11 @@ story — the upper Ottawa above Lac Coulonge. Cover:
     holding steady vs. still filling. Rising headwater reservoirs during
     recession mean operators are *absorbing* inflow (a normal refill
     posture), not a problem — say so plainly so it isn't misread as a threat.
-  - The mid-valley reach — Mattawa and Pembroke level direction, and whether
-    Pembroke is still in minor flood. Note that Des-Joachims can't begin its
-    next deliberate refill until Mattawa settles back into its normal range.
+  - The mid-valley reach — Mattawa and Pembroke level *direction* (rising /
+    falling / flat). Do not assert a flood state for Pembroke unless the
+    ORRPB conditions page explicitly gives one — the level table carries no
+    threshold. Note that Des-Joachims can't begin its next deliberate refill
+    until Mattawa settles back into its normal range.
 
 ### At the property — Lac Coulonge / Mansfield
 
@@ -224,7 +226,7 @@ The technical backing for the "Upstream" plain-language thread. Pull
 | Témiscaming outflow — PSPC cross-check (m³/s) | | | | *flag if it disagrees with ORRPB by >50 m³/s* |
 | Quinze release → into the lake (m³/s) | | | | |
 | Mattawa level (m) | | | | *e.g. "Nth straight day of decline"* |
-| Pembroke level (m) | | | | *still in minor flood? Y/N* |
+| Pembroke level (m) | | | | *direction only — orrpb_river_levels carries no flood threshold* |
 
 Then the reservoir-balance count: across all `reservoir_id`s in
 `reservoir_readings`, compare the latest day to the prior day and report
