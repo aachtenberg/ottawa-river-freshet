@@ -1261,16 +1261,17 @@ function renderFreezePanel(weather) {
   }).join('');
 }
 
-async function fetchRegional() {
-  const results = await Promise.allSettled(REGIONAL_STATIONS.map(s =>
-    s.source === 'mvca' ? fetchKiwisStation(s) : fetchStation(s.id)
-  ));
-  return REGIONAL_STATIONS.map((s, i) => ({
-    meta: s,
-    ok: results[i].status === 'fulfilled',
-    data: results[i].status === 'fulfilled' ? results[i].value : null,
-    error: results[i].status === 'rejected' ? results[i].reason?.message : null
-  }));
+// Fire all regional fetches in parallel and return an array of per-station
+// promises that each resolve to {meta, ok, data, error}. Callers can attach a
+// per-station `.then` so cards render as each fetch settles, rather than
+// blocking on the slowest (MVCA/KiWIS in particular has an 8s timeout).
+function regionalFetchPromises() {
+  return REGIONAL_STATIONS.map(s => {
+    const p = s.source === 'mvca' ? fetchKiwisStation(s) : fetchStation(s.id);
+    return p
+      .then(data => ({ meta: s, ok: true, data }))
+      .catch(err => ({ meta: s, ok: false, error: err?.message || 'error' }));
+  });
 }
 
 // MVCA's Buckhams Bay gauge is published via Kisters KiWIS (same backend the
@@ -1437,49 +1438,78 @@ function classifyPeak(readings, latest) {
   };
 }
 
-function renderRegional(rows) {
-  const ETAT_BADGES = {
-    6: { cls: 'major', label: 'Major flood' },
-    5: { cls: 'near',  label: 'Near major' },
-    4: { cls: 'near',  label: 'Moderate' },
-    3: { cls: 'near',  label: 'Minor' },
-    2: { cls: 'peaked',label: 'Pre-alert' },
-    1: { cls: 'peaked',label: 'Normal' }
-  };
+// ETAT badge map shared by the regional card renderers below.
+const REGIONAL_ETAT_BADGES = {
+  6: { cls: 'major', label: 'Major flood' },
+  5: { cls: 'near',  label: 'Near major' },
+  4: { cls: 'near',  label: 'Moderate' },
+  3: { cls: 'near',  label: 'Minor' },
+  2: { cls: 'peaked',label: 'Pre-alert' },
+  1: { cls: 'peaked',label: 'Normal' }
+};
+
+// Pre-populate the regional grid with per-station skeleton cards so each card
+// can be replaced individually as its fetch resolves (rather than blocking the
+// whole grid on the slowest of ~9 fetches — e.g. the MVCA/KiWIS long tail).
+function renderRegionalSkeleton() {
   const container = document.getElementById('regional-cards');
-  container.innerHTML = rows.map(({ meta, ok, data, error }) => {
-    if (!ok) return `<div class="card" data-station-id="${meta.id}"><div class="label">${meta.name}</div><div class="sub">Unavailable: ${error || 'error'}</div></div>`;
-    const latest = data.readings[data.readings.length - 1];
-    const pk = classifyPeak(data.readings, latest);
-    const t = formatTrend(data.metadata.trend_niv);
-    const eff = getEffectiveEtat(data.metadata);
-    const badgeInfo = ETAT_BADGES[eff];
-    const synthetic = isEffectiveEtatSynthetic(data.metadata);
-    const synth = synthetic ? ' <span style="font-weight:400;opacity:0.8" title="Estimated from ORRPB / ECCC historical record">(est.)</span>' : '';
-    const badge = badgeInfo ? `<span class="badge ${badgeInfo.cls}">${badgeInfo.label}${synth}</span>` : '';
-    const orrpb = getOrrpbContext(data.metadata);
-    const orrpbLine = orrpb ? `<br><span style="font-size:10px;opacity:0.8;color:var(--text-muted)">ORRPB ref: ${orrpb.context}</span>` : '';
-    const peakBadge = pk.isPeaked ? `<span class="badge peaked">↓ ${pk.dropCm.toFixed(1)} cm off peak</span>` : '';
-    const peakLabel = pk.isPeaked ? 'Peak' : 'High so far';
-    const publicLabel = data.metadata.label ? `<span class="station-id">${data.metadata.label}</span>` : '';
-    const dispCurrent = displayLevel(data.metadata, latest.valeur);
-    const dispPeak = displayLevel(data.metadata, pk.peak.valeur);
-    return `
-      <div class="card" data-station-id="${meta.id}">
-        <div class="label">${meta.name}${publicLabel} — ${meta.subtitle}</div>
-        <div class="value">
-          <span>${dispCurrent.toFixed(3)}</span>
-          <span class="unit">m</span>
-          <span class="trend ${t.cls}">${t.text}</span>
-        </div>
-        ${flowRow(data.metadata)}
-        <div class="sub">
-          Reading ${ago(latest.date_prise_valeur)} · ${peakLabel}: <strong>${dispPeak.toFixed(3)} m</strong>
-          <br>${badge}${peakBadge}${orrpbLine}
-        </div>
+  if (!container) return;
+  container.innerHTML = REGIONAL_STATIONS.map(meta => `
+    <div class="card skeleton" data-station-id="${meta.id}">
+      <div class="label">${meta.name}</div>
+      <div class="sub">Loading…</div>
+    </div>
+  `).join('');
+}
+
+function regionalCardHTML({ meta, ok, data, error }) {
+  if (!ok) return `<div class="card" data-station-id="${meta.id}"><div class="label">${meta.name}</div><div class="sub">Unavailable: ${error || 'error'}</div></div>`;
+  const latest = data.readings[data.readings.length - 1];
+  const pk = classifyPeak(data.readings, latest);
+  const t = formatTrend(data.metadata.trend_niv);
+  const eff = getEffectiveEtat(data.metadata);
+  const badgeInfo = REGIONAL_ETAT_BADGES[eff];
+  const synthetic = isEffectiveEtatSynthetic(data.metadata);
+  const synth = synthetic ? ' <span style="font-weight:400;opacity:0.8" title="Estimated from ORRPB / ECCC historical record">(est.)</span>' : '';
+  const badge = badgeInfo ? `<span class="badge ${badgeInfo.cls}">${badgeInfo.label}${synth}</span>` : '';
+  const orrpb = getOrrpbContext(data.metadata);
+  const orrpbLine = orrpb ? `<br><span style="font-size:10px;opacity:0.8;color:var(--text-muted)">ORRPB ref: ${orrpb.context}</span>` : '';
+  const peakBadge = pk.isPeaked ? `<span class="badge peaked">↓ ${pk.dropCm.toFixed(1)} cm off peak</span>` : '';
+  const peakLabel = pk.isPeaked ? 'Peak' : 'High so far';
+  const publicLabel = data.metadata.label ? `<span class="station-id">${data.metadata.label}</span>` : '';
+  const dispCurrent = displayLevel(data.metadata, latest.valeur);
+  const dispPeak = displayLevel(data.metadata, pk.peak.valeur);
+  return `
+    <div class="card" data-station-id="${meta.id}">
+      <div class="label">${meta.name}${publicLabel} — ${meta.subtitle}</div>
+      <div class="value">
+        <span>${dispCurrent.toFixed(3)}</span>
+        <span class="unit">m</span>
+        <span class="trend ${t.cls}">${t.text}</span>
       </div>
-    `;
-  }).join('');
+      ${flowRow(data.metadata)}
+      <div class="sub">
+        Reading ${ago(latest.date_prise_valeur)} · ${peakLabel}: <strong>${dispPeak.toFixed(3)} m</strong>
+        <br>${badge}${peakBadge}${orrpbLine}
+      </div>
+    </div>
+  `;
+}
+
+// Replace a single skeleton/card in the regional grid in place. Called as each
+// per-station fetch resolves so fast stations don't wait on slow ones.
+function renderRegionalCard(row) {
+  const container = document.getElementById('regional-cards');
+  if (!container) return;
+  const existing = container.querySelector(`[data-station-id="${row.meta.id}"]`);
+  const html = regionalCardHTML(row).trim();
+  if (existing) {
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html;
+    existing.replaceWith(tmp.firstElementChild);
+  } else {
+    container.insertAdjacentHTML('beforeend', html);
+  }
 }
 
 // ---- ORRPB historical peaks (from "Know Your Levels" PDF, 2025-05-06) ---------
@@ -4187,8 +4217,15 @@ async function fetchData() {
   btn.disabled = true;
   btn.classList.add('loading');
   btn.textContent = 'Refreshing';
-  
+
   try {
+    // Kick off the 9 regional fetches *before* awaiting primaries so their
+    // network round-trips overlap. We hold the promises here and attach the
+    // per-card render handlers after `lastData` is initialised below — that
+    // way each card lands in the grid as its own fetch resolves, isolating
+    // the slow MVCA/KiWIS tail to just Buckhams Bay.
+    const regionalPromises = regionalFetchPromises();
+
     // Pull live readings + season-to-date peaks in parallel. Season peaks are
     // best-effort — fall back to null on failure so the cards still render.
     const peakOrNull = id => fetchSeasonPeak(id).catch(e => { console.warn(`season peak ${id}: ${e.message}`); return null; });
@@ -4242,16 +4279,29 @@ async function fetchData() {
       document.getElementById('freeze-grid').classList.remove('skeleton');
     });
 
-    // Regional downstream stations (non-blocking; partial failures fine)
-    fetchRegional().then(async rows => {
-      // Cache regional data in lastData so the map drawer can render markers without re-fetching.
-      rows.forEach(r => { if (r.ok && r.data) lastData[r.meta.id] = r.data; });
-      await precomputeEcccPeaks(rows.filter(r => r.ok && r.data).map(r => r.data.metadata));
-      renderRegional(rows);
-      renderCorridorBar(); // refresh now that regional stations are in lastData
-      renderORRPBDailyBar(); // ditto — Buckhams (99001) + Rigaud (1264) ride in regional
-    }).catch(err => {
-      document.getElementById('regional-cards').innerHTML = `<div class="card">Regional data unavailable: ${err.message}</div>`;
+    // Regional downstream stations: per-card rendering. Each fetch was kicked
+    // off at the top of fetchData() (parallel with primaries) so the network
+    // hop is already in flight by the time we get here. Now wire a render
+    // callback per station so a slow one (notably MVCA/KiWIS, which has an 8s
+    // client-side timeout) doesn't gate the rest of the grid.
+    renderRegionalSkeleton();
+    regionalPromises.forEach(p => {
+      p.then(async row => {
+        if (row.ok) {
+          lastData[row.meta.id] = row.data;
+          // ECCC peaks are needed for the flood-state badge on stations
+          // Vigilance can't classify. ensureEcccPeaks is cached so per-call
+          // dispatch is cheap (and dedup'd across stations sharing a WSC id).
+          try { await precomputeEcccPeaks([row.data.metadata]); } catch (_) {}
+        }
+        renderRegionalCard(row);
+        // Corridor + ORRPB bars include regional stations — refresh as each
+        // arrives so they fill in progressively instead of in one batch.
+        renderCorridorBar();
+        renderORRPBDailyBar();
+      }).catch(err => {
+        console.warn(`regional render failed for ${p}:`, err);
+      });
     });
     
     const latestLC = lc.readings[lc.readings.length - 1];

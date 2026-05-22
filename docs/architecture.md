@@ -87,9 +87,21 @@ TimescaleDB hypertable: reservoir_readings
 
 k3s/data  hq-ingest (CronJob, hourly :27)
    │ pull Hydro-Québec open-data feeds (centrale releases + station levels)
+   │ via Cloudflare Worker relay (hq-feed-relay.aachten.workers.dev)
+   │   ├─ relay stale?  retry relay ?nocache=1
+   │   └─ still stale?  GitHub-Actions mirror (independent egress)
    │ filter to Ottawa basin (lat 45-48, lon -80 to -74)
    ▼ (upsert)
 TimescaleDB hypertables: dam_releases, dam_inflows, dam_levels, dam_sites
+
+
+Cloudflare Worker  hq-feed-relay  (cloudflare/hq-feed-relay/)
+   │ path-pinned proxy for the two HQ feeds; egresses from Cloudflare,
+   │ which HQ serves fresh (the cluster IP gets a frozen cached copy)
+   ▼
+GitHub Actions  mirror-hq-feeds.yml (hourly :17)
+   │ fetch HQ feeds from a GitHub runner (independent egress)
+   ▼ publish as release assets → hq-ingest fallback URLs
 
 
 k3s/data  wsc-ingest (CronJob, hourly :37)
@@ -99,11 +111,24 @@ k3s/data  wsc-ingest (CronJob, hourly :37)
 TimescaleDB hypertable: wsc_readings
 
 
+k3s/data  orrpb-river-ingest (CronJob, daily 21:40 UTC)
+   │ scrape ottawariver.ca/conditions ?display=river (Average Daily Flows)
+   │ main-stem OPG dams not in the HQ feed (Otto Holden, Des Joachims, ...)
+   ▼ (upsert)
+TimescaleDB hypertable: orrpb_river_flows
+
+
 k3s/data  eccc-ingest (CronJob, every 6h :47)
    │ pull ECCC daily climate bulk CSV
    │ for 9 watershed climate stations (Maniwaki, Témiscamingue, Val-d'Or, ...)
    ▼ (upsert)
 TimescaleDB hypertable: eccc_climate_daily
+
+
+k3s/data  swe-caldas-ingest (CronJob, daily)   swe-era5-ingest (CronJob, daily)
+   │ ECCC GeoMet CaLDAS-NSRPS (current)         │ Copernicus ERA5-Land (1950→)
+   ▼ (upsert)                                   ▼ (upsert)
+TimescaleDB hypertables: swe_daily, swe_locations
 ```
 
 ## Components
@@ -179,9 +204,63 @@ Filters both to the Ottawa basin window (lat 45–48, lon -80 to -74) so the
 ingester targets ~21 centrales + ~77 level stations rather than the entire
 Quebec hydro fleet. Each pull contains ~10 days of hourly data.
 
-The HQ CDN refuses Python's default Alpine TLS handshake; the ingester sets
-`ctx.set_ciphers('DEFAULT:@SECLEVEL=1')` to work around. Site metadata is
-upserted (`merge-duplicates`); time-series data is `ignore-duplicates`.
+Site metadata is upserted (`merge-duplicates`); time-series data is
+`ignore-duplicates`.
+
+**Feed relay & fallback chain.** The ingester does *not* fetch
+`hydroquebec.com` directly. The cluster's egress IP gets adverse treatment
+from HQ's edge — intermittent `SSLV3_ALERT_HANDSHAKE_FAILURE`, and when a
+connection does succeed, a **stale cached copy** of the JSON (the original
+`SECLEVEL=1` cipher workaround was no longer sufficient). The ingester now
+walks a three-tier chain:
+
+1. **Cloudflare Worker relay** — `hq-feed-relay.aachten.workers.dev`
+   ([`cloudflare/hq-feed-relay/`](../../cloudflare/hq-feed-relay/)), a
+   path-pinned proxy deployed with `wrangler`. It egresses from Cloudflare,
+   which HQ serves the fresh feed. 15-minute edge cache.
+2. **Relay with `?nocache=1`** — if the relayed feed looks frozen, retry
+   skipping the Worker's edge cache *and* appending a unique query string so
+   HQ's own CDN can't serve a stale object either.
+3. **GitHub-Actions mirror** — if every relay path is still stale (HQ has
+   degraded the Cloudflare colo too), fall back to release assets published
+   hourly by [`mirror-hq-feeds.yml`](../../.github/workflows/mirror-hq-feeds.yml),
+   which fetches the feeds from a GitHub runner on independent, rotating
+   egress.
+
+A feed is judged "stale" when its newest timestamp is older than a freshness
+threshold. If all paths fail, the ingester posts a **one-shot** ntfy alert —
+fired only on the transition into (and out of) the stale state, not every
+run. URLs and the ntfy target are env vars on
+[`k3s/base/data/hq-ingest.yml`](../../k3s/base/data/hq-ingest.yml).
+
+### ORRPB river-flows ingester (k3s/data · `orrpb-river-ingest`)
+
+Daily Python CronJob (21:40 UTC, offset from `reservoir-ingest`). Scrapes the
+`?display=river` "Average Daily Flows (m³/s)" table from
+`ottawariver.ca/conditions` — main-stem Ottawa River discharge at Temiscaming,
+Otto Holden, Des Joachims, Chenaux, Chats Falls, Britannia and Carillon
+(8-day rolling window), upserting into `orrpb_river_flows`. This is the **only
+public source** for the OPG main-stem dams (Otto Holden, Des Joachims,
+Chenaux, Chats Falls), which are absent from the HQ open-data feed. Same
+configMapGenerator + init-container bootstrap pattern as the other ingesters.
+
+### SWE ingesters (k3s/data · `swe-caldas-ingest`, `swe-era5-ingest`)
+
+Two daily Python CronJobs that populate snow-water-equivalent history,
+joinable against the flow/level tables:
+
+- **`swe-caldas-ingest`** — samples ECCC GeoMet's CaLDAS-NSRPS 2.5 km
+  operational analysis by WMS `GetFeatureInfo` at named basin points. No
+  auth. GeoMet serves only the *current* analysis, so this feed accumulates
+  forward from when the ingester starts.
+- **`swe-era5-ingest`** — pulls Copernicus ERA5-Land
+  (`snow_depth_water_equivalent`) via the CDS API for the deep history back
+  to **1950**. Requires a CDS Personal Access Token (`CDS_API_KEY`) and the
+  `cdsapi` + `netCDF4` libraries; supports a resumable one-shot 1950→present
+  backfill.
+
+Both write to `swe_daily` (discriminated by `source`); `swe_locations` holds
+the sampled-point / sub-basin metadata.
 
 ### WSC realtime ingester (k3s/data · `wsc-ingest`)
 
@@ -214,10 +293,13 @@ TimescaleDB is the **only durable state** in the stack. Hypertables:
 | `dam_inflows` | `(site_id, time)` | HQ open-data centrales | daily |
 | `dam_levels` | `(station_id, time)` | HQ open-data stations | hourly |
 | `wsc_readings` | `(station_code, time)` | WSC realtime CSV | 5-min |
+| `orrpb_river_flows` | `(station, date)` | ORRPB river-flows scrape | daily |
 | `eccc_climate_daily` | `(station_id, time)` | ECCC bulk CSV | daily |
+| `swe_daily` | `(location, source, date)` | CaLDAS-NSRPS + ERA5-Land | daily |
 
-`river_stations` (provider-tagged) and `dam_sites` (centrales + stations
-metadata) are regular tables for upsert-on-change semantics.
+`river_stations` (provider-tagged), `dam_sites` (centrales + stations
+metadata) and `swe_locations` (sampled-point / sub-basin metadata) are
+regular tables for upsert-on-change semantics.
 
 PostgREST sits in front of the DB and exposes a JSON API. The dashboard's nginx
 proxies `/history/*` to PostgREST with **GET/HEAD/OPTIONS only** ([nginx.conf:24-30](../k3s/base/apps/files/freshet-dashboard/nginx.conf#L24-L30))
@@ -254,7 +336,7 @@ flowchart LR
         direction TB
         proxy["nginx /history/<br/>(PostgREST GET-only)"]
         db[(TimescaleDB)]
-        ingesters["hq · wsc · river-history<br/>· reservoir · eccc ingesters"]
+        ingesters["hq · wsc · river-history · reservoir<br/>· orrpb-river · eccc · swe ingesters"]
         ingesters --> db
         proxy --> db
     end
@@ -367,8 +449,12 @@ both serve full history on demand, and a backfill Job can rebuild
 | Vigilance Crues (QC MSP) | Dashboard, alerter, ingester | Hard — drives 7 of 8 regional stations + property gauge | Dashboard shows skeleton/error; alerter logs and exits 0; ingester logs partial success |
 | open-meteo | Dashboard freeze tracker | Soft — ancillary forecast info | Freeze tracker hides; rest of dashboard unaffected |
 | MVCA Kisters KiWIS | Dashboard (Buckhams Bay), ingester | Soft — one regional card, doesn't gate property alerts | Buckhams Bay card shows "Unavailable"; rest of corridor unchanged |
-| ORRPB conditions page | Reservoir ingester only | Soft — reservoir context, not real-time | Daily scrape job logs and exits 0; stale data persists |
-| ntfy | Alerter | Hard for alerts only | Alerter logs and exits 1 (no fallback channel) |
+| ORRPB conditions page | Reservoir + orrpb-river ingesters | Soft — reservoir/flow context, not real-time | Daily scrape jobs log and exit 0; stale data persists |
+| Hydro-Québec open-data | hq-ingest → Operations tab + dam forecasts | Hard for the Operations tab | hq-ingest walks the relay → `?nocache=1` → GitHub-mirror fallback chain; one-shot ntfy alert if all stale |
+| hq-feed-relay (Cloudflare Worker) | hq-ingest (primary HQ path) | Soft — degrades to the GitHub mirror | Ingester falls through to `HQ_*_FALLBACK_URL` |
+| GitHub-Actions HQ mirror | hq-ingest (last-resort HQ path) | Soft — only used when relay is stale | If it too is stale, ingester posts the one-shot ntfy alert and exits |
+| ECCC GeoMet / Copernicus CDS | SWE ingesters | Soft — analysis history, not real-time | Daily jobs log and exit; CDS needs `CDS_API_KEY` or fails loudly |
+| ntfy | Alerter, hq-ingest stale alert | Hard for alerts only | Alerter logs and exits 1 (no fallback channel) |
 | Cloudflare tunnel | Public dashboard access | Hard for external users | Local NodePort still works for in-network access |
 
 ## Failure modes
@@ -408,11 +494,25 @@ Single-cluster k3s, two namespaces:
 - **`apps`** — user-facing components: `freshet-dashboard` (Deployment + Service +
   external NodePort), `freshet-alerter` (CronJob).
 - **`data`** — durable storage and ingesters: TimescaleDB (StatefulSet),
-  PostgREST (Deployment), `river-history-ingest` (CronJob),
-  `reservoir-ingest` (CronJob).
+  PostgREST (Deployment), and the CronJob ingesters `river-history-ingest`,
+  `reservoir-ingest`, `hq-ingest`, `wsc-ingest`, `orrpb-river-ingest`,
+  `eccc-ingest`, `swe-caldas-ingest`, `swe-era5-ingest`.
 
 `headless-gpu` is the node with the PVC for TimescaleDB; node affinity in the
 StatefulSet pins it there. Other workloads schedule freely.
+
+**Off-cluster components.** Two pieces of the stack live outside k3s and are
+deployed independently:
+
+- **`hq-feed-relay`** — a Cloudflare Worker
+  ([`cloudflare/hq-feed-relay/`](../../cloudflare/hq-feed-relay/)) deployed
+  with `npx wrangler deploy` against the owner's Cloudflare account. It has no
+  cluster footprint; `hq-ingest` reaches it over the public internet. Changing
+  it means editing `worker.js` / `wrangler.toml` and redeploying — it is not
+  managed by Kustomize.
+- **GitHub Actions workflows** — `mirror-hq-feeds.yml` (hourly HQ-feed mirror)
+  and `mirror-freshet-public.yml` (public-repo mirror) run in GitHub's
+  infrastructure, not the cluster.
 
 ConfigMapGenerator delivers all script files (HTML, Python, SQL) to their
 Deployments / CronJobs. Hash-suffixed ConfigMap names mean editing a script

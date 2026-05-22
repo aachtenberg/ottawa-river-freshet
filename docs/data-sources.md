@@ -30,9 +30,35 @@ Used for: live river levels for 18 main-stem + Gatineau + Lièvre stations
 - **Discovery**: linked from `hydroquebec.com/production/debits-niveaux-eau.html` via the page's `crues.min.js` widget
 - **Format**: per-site JSON with hourly + daily series under `Composition.Donnees`
 - **Cadence**: HQ refreshes ~twice daily; rolling ~10-day window per pull
-- **TLS quirk**: HQ's CDN refuses Python's default Alpine TLS handshake (SSLV3 alert). The ingester sets `ctx.set_ciphers('DEFAULT:@SECLEVEL=1')` to work around.
 - **License**: open-data; HQ's "use at your own risk" caveat applies
 - **Stability**: filename suggests "rating curves" (TARAGES) but content is pure level/flow telemetry — no Q-vs-H tables
+
+### Access path: relay + fallback chain
+
+`hq-ingest` does **not** hit `hydroquebec.com` directly. The homelab cluster's
+egress IP gets adverse treatment from HQ's edge — intermittent
+`SSLV3_ALERT_HANDSHAKE_FAILURE`, and when a connection does succeed, a **stale
+cached copy** of the JSON frozen hours or days behind the live feed. The
+ingester walks a three-tier chain instead:
+
+1. **Cloudflare Worker relay** — `https://hq-feed-relay.aachten.workers.dev`
+   with paths `/centrales` and `/stations`. A path-pinned proxy (not an open
+   proxy) deployed with `wrangler` from
+   [`cloudflare/hq-feed-relay/`](../../cloudflare/hq-feed-relay/); see that
+   directory's `README.md` for deploy steps. It egresses from Cloudflare,
+   which HQ serves the fresh feed. 15-minute edge cache.
+2. **Relay `?nocache=1`** — appended automatically when the relayed feed looks
+   frozen; skips the Worker's edge cache *and* busts HQ's own CDN cache with a
+   unique query string.
+3. **GitHub-Actions mirror** — release assets on the public
+   `ottawa-river-freshet` repo, refreshed hourly by
+   [`mirror-hq-feeds.yml`](../../.github/workflows/mirror-hq-feeds.yml) from a
+   GitHub runner on independent egress. Last resort, used when HQ has degraded
+   the Cloudflare colo too.
+
+If every path is stale, `hq-ingest` posts a one-shot ntfy alert (on the
+stale-state transition, not every run). Relay and fallback URLs are env vars
+on [`k3s/base/data/hq-ingest.yml`](../../k3s/base/data/hq-ingest.yml).
 
 Used for: the Operations tab and the live Bryson Δh / spill-share evidence in Exhibit D. Centrale release goes to `dam_releases`, station levels to `dam_levels`.
 
@@ -195,7 +221,8 @@ view layer is the API.
 | Source | Stability concern | Fallback |
 |---|---|---|
 | Vigilance | Undocumented JSON | Site change → fix client code |
-| Hydro-Québec open-data | Static JSON URL, TLS quirk on Alpine | If filename changes, follow link from `debits-niveaux-eau.html` |
+| Hydro-Québec open-data | Cluster IP gets TLS rejects + stale cached feed | Cloudflare Worker relay → `?nocache=1` → GitHub-Actions mirror; one-shot ntfy alert if all stale |
+| hq-feed-relay (Cloudflare Worker) | Worker or Cloudflare colo could be degraded too | Ingester falls through to the GitHub-mirror release assets |
 | WSC realtime | Inline-CSV endpoint, not heavily documented | If broken, fall back to ECCC OGC API |
 | ECCC realtime | Stable OGC API | Quota / 429 not seen yet |
 | ECCC bulk daily | Stable, but be polite | Throttle if needed |
