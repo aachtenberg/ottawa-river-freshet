@@ -75,6 +75,18 @@ The honest restatement of the original chart's finding is therefore:
 about as it always has*. That is a fact about the rating curve at the
 gauge, not an answer to the dam-management question.
 
+**Where this sits in the convergent picture.** This note tests the
+"total volume" variable. The
+[Pre-Freshet Reservoir Scout](Pre_Freshet_Reservoir_Scout.md) tests
+the "winter drawdown / empty bucket" variable. The
+[Dan Poole 2023/2026 community note](../../data/community-notes/2026-05-23_pembroke_2023_vs_2026.md)
+isolates the "peak-time outflow shape" variable as the only one with
+a signal. All three are tabulated in
+[`Pembroke_Thread_Synthesis.md`](Pembroke_Thread_Synthesis.md), which
+names each FB-thread participant and the variable they proposed.
+Read together they triangulate to peak-time gate scheduling at
+Des Joachims as the remaining unobserved lever.
+
 ---
 
 ## Three thread arguments, three readings

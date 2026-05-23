@@ -52,6 +52,18 @@ The methodology, datasets, and figures are below; the unlock that made
 this possible (ORRPB per-location historical archive) is documented in
 [`ingesters/orrpb-location-history/scrape.py`](../../ingesters/orrpb-location-history/scrape.py).
 
+**Where this sits in the convergent picture.** Pre-freshet storage is
+one of five variables the May-2026 Facebook thread proposed as the
+explanation for the Pembroke peak. Four of the five — total spring
+volume, lumped 90-day V, pre-freshet drawdown (this note), and
+instantaneous-vs-cumulative framing — come back null on public data.
+The fifth — peak-time Des Joachims outflow scheduling, isolated by
+the 2023/2026 natural experiment — is the one that survives. See
+[`Pembroke_Thread_Synthesis.md`](Pembroke_Thread_Synthesis.md) for
+the full mapping of who pointed at what and how each was tested, and
+[`2026-05-23_pembroke_2023_vs_2026.md`](../../data/community-notes/2026-05-23_pembroke_2023_vs_2026.md)
+for the Dan Poole 2023/2026 audit that isolates the surviving lever.
+
 ---
 
 ## What changed since the May-23 feasibility scout
