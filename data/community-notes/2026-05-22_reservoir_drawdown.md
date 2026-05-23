@@ -10,6 +10,24 @@ Baseline) in the case file and to the daily-brief series in
 
 ---
 
+## In plain language
+
+After the 2026 freshet, the FB thread asked the obvious question — did the regulators do a decent job? The honest answer turns out to be **two answers, depending which question you actually mean.**
+
+**Were the storage reservoirs drawn down?** Mostly yes. Of the 13 principal reservoirs, **9 of 13 were down to a third of their operating range or lower on April 1**, including every one that feeds the upper river. So Gilbert Dionne's "they weren't drawn down" claim is mostly false for storage. The four that *weren't* — **Cabonga (60%), Kiamika (45%), Mitchinamecus (43%), Bark Lake (43%)** — all sit on the Gatineau, Lièvre, and Madawaska, which join the Ottawa downstream of the upper-river communities. They don't reach Lac Coulonge.
+
+**Was the river itself kept at a normal winter level going in?** **No.** Lac Coulonge ran above its winter norm through most of January and February — above the historical 90th percentile on 41 of 59 winter days — and was being deliberately held there by Bryson dam operations. The data shows the pond was raised 0.75 m from its fall low and then held flat at ~106.55 m all winter. The operator briefly drew it down 24 cm in early March, demonstrated they could, then refilled it within two days back to the high setpoint. That's not weather. That is a deliberate operating choice. The case for action against this is real, and it has nothing to do with whether the storage reservoirs were emptied.
+
+**On Steve Deon's correction** ("not record-breaking, top-5"): correct — Lac Coulonge peaked at 108.63 m on April 20, fourth-highest in the modern record, well below the 20-year flood line. A big freshet, top handful, not the biggest.
+
+**On Dan Poole's framing** ("drew down to median but not to floor"): correct, and the cross-check matches exactly — 23.8% at Quinze, 12.9% at Baskatong, both at their 30-year medians. Operators followed long-standing practice; the problem is the practice is calibrated to a climate that no longer matches what's coming through the system.
+
+**The fix isn't yelling at any one operator.** It's a snowpack-indexed drawdown requirement written into the operators' licences — at the regulator level — so the system as a whole stays in step with the climate it's now in.
+
+Detail and sources below.
+
+---
+
 ## The question in the thread
 
 After the 2026 freshet the flood-watch group asked the obvious thing:

@@ -1369,6 +1369,7 @@ What HQ counsel, ORRPB, MNRF, ECCC, and the IJC would each have to do to refute 
 - `ingesters/climate-history/{lc_brit_regression,stepchange_analysis}.py` — reproducible analysis scripts
 - `docs/reports/2025-02-18_ORFA_8_Ways.pdf` + `2025-02-18_ORFA_8_Ways_extract.md` — the canonical ORFA policy whitepaper and its case-file extract (4 contributing factors + 8 actions; the policy frame this case file's analytical work supports). Companion letter template at `2025_ORFA_letter_template.docx`.
 - `docs/reports/2004_Carillon_IWMP_operating_envelope.md` — HQ's own §2.1 four-envelope table + 39-day Hull/Carillon non-compliance verification
+- `docs/analysis/2026-05-22_mitigation_diagnosis.md` — focused analytical synthesis of the mitigation question: levers ranked by magnitude (Carillon §2.1 / Gatineau storage / Bryson headpond / snowpack-indexed coordination), the §2a quantified target gap (~17 pp / ~2,000 Mm³), §2b honest Lac Coulonge dissection, plus the structural diagnosis (climate + operational drift, fragmented licensing). Companion to this complete summary; iterable / open to PRs.
 
 Each exhibit is editorially designed for Facebook sharing (matched typography: Fraunces serif + IBM Plex Sans/Mono; consistent palette). They can be posted individually as a five-day series, or sent as a media-ready package.
 

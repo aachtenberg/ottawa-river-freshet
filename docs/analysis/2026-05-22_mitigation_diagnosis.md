@@ -1,12 +1,36 @@
 # Mitigation diagnosis — 2026 freshet and the 2017 regime change
 
-*Internal working-notes synthesis, 2026-05-22. Developed alongside the
-[`orrpb-2026-drawdown/`](orrpb-2026-drawdown/README.md) dataset and the
-case-file exhibits (A, B, the Carillon directive notes, the 2016
-management-change claim). **Private working draft — not for FB
-distribution or public republication; an analytical position to refine,
+*Working analytical synthesis, first published 2026-05-22. Developed
+alongside a working ORRPB daily-data extract (private working copy due
+to redistribution restrictions on the underlying ORRPB tables; all
+figures below are computed conclusions) and the case-file exhibits
+(A, B, the Carillon directive notes, the 2016 management-change
+claim). **An analytical position to refine as evidence is added —
 not a final statement.** Companion to the public community note at
-`freshet-public/data/community-notes/2026-05-22_reservoir_drawdown.md`.*
+[`../../data/community-notes/2026-05-22_reservoir_drawdown.md`](../../data/community-notes/2026-05-22_reservoir_drawdown.md)
+and the complete summary at
+[`Freshet_2026_Complete_Summary.md`](Freshet_2026_Complete_Summary.md).
+Iteration welcome — open an issue or PR against this document if the
+analysis can be sharpened, corrected, or extended.*
+
+---
+
+## In plain language
+
+The 2026 freshet was largely unavoidable at the size it reached. The inflow volume was simply too large for any realistic operating regime to stop a 108-plus-metre peak at Lac Coulonge.
+
+What was actually available, in plain numbers:
+
+- **The reservoirs were drawn down to long-standing 30-year median practice, but no further.** Across the 13 principal reservoirs the system was about a quarter full on April 1 (storage-weighted, 23 %) — not nearly empty as a strict reading of policy would suggest. Operators don't fully empty their reservoirs; they manage with a calculated cushion. *Even Quinze, often cited as well-drawn, still had 311 million cubic metres of water in it on April 1; Baskatong had 393 million.* (Cross-checked against FB community contributor Dan Poole's independent numbers — they match.)
+- **Closing the gap fully would have recovered roughly 2 billion extra cubic metres of pre-freshet buffer** across the system — about **15–40 cm off the lower-Ottawa crests** (Hull, Hawkesbury, Île Bizard, Lac des Deux-Montagnes).
+- **For Lac Coulonge specifically, the shave is much smaller — about 10–25 cm at best.** The reservoirs that actually feed the upper river were already drawn down well; the four that weren't (Cabonga, Kiamika, Mitchinamecus, Bark Lake) all sit on tributaries that join the Ottawa *downstream* of Lac Coulonge. So the big system lever benefits the lower river, not the upper.
+- **2026 was less bad than it could have been because of weather, not operator skill.** Three sub-zero nights April 19–21 stopped active melt and held the rising limb back. A faster melt with no cold snap would have produced a higher crest — *especially in restricted reaches like Lac Coulonge, where the dam can't pass flow fast enough so water backs up*. Dan Poole's point on the FB thread, and the case-file complete summary documents the freeze as one of three factors keeping the peak below worst-case.
+
+**The structural finding.** The past decade has brought above-normal snowpack and rainfall (Dan's framing), and the inflows are bigger and faster than the historical operating envelope was sized for. Operators are following long-standing practice — but the climate has moved underneath that practice. Four super-floods in 10 years vs one in the prior 45 is what that mismatch looks like.
+
+**Where the case for action lands honestly.** For the **lower-Ottawa communities** (below the Gatineau confluence): the storage-drawdown ask is real, large, and immediate. For the **upper-river communities** (Pembroke, Fort-Coulonge / Lac Coulonge, Mansfield): the storage lever is mostly already used; the case for action is a **multi-year frequency-reduction case** — the trend that turned one super-flood-in-45-years into four-in-ten — not a "fix it for 2026" case.
+
+**The fix is not at the operator level.** Each operator follows its own licence and constraints; no entity has the explicit job of looking at the whole system and saying "this calibration no longer matches the inflows." That gets solved by writing snowpack-indexed pre-positioning requirements into each operator's licence — regulator-level action through CEHQ (Quebec), MNRF / dam safety (Ontario), and federal where it applies.
 
 ---
 
@@ -44,16 +68,16 @@ Summary, Carillon Project (October 2004)**, §2.1 "General Constraints
 Associated with Forebay Management." The constraint table and four
 operating envelopes are already transcribed and analysed in the case
 file at
-[`../freshet-public/docs/reports/2004_Carillon_IWMP_operating_envelope.md`](../freshet-public/docs/reports/2004_Carillon_IWMP_operating_envelope.md);
+[`../reports/2004_Carillon_IWMP_operating_envelope.md`](../reports/2004_Carillon_IWMP_operating_envelope.md);
 that document is the authoritative case-file extract and predates this
 diagnosis. The same table also appears as page 3 of the ORFA *Eight
 Ways to End the Super Floods* whitepaper (Feb 2025) — see
-[`../freshet-public/docs/reports/2025-02-18_ORFA_8_Ways_extract.md`](../freshet-public/docs/reports/2025-02-18_ORFA_8_Ways_extract.md)
+[`../reports/2025-02-18_ORFA_8_Ways_extract.md`](../reports/2025-02-18_ORFA_8_Ways_extract.md)
 — and was independently posted to FB by Alexandre Morin on 2026-05-22.
 The §15.3.5.1 reference earlier notes used lives in the longer 2004
 *évaluation de sécurité* (Section 15, p.314); both documents express
 the same constraint. Documentary chain at
-[`case-file/correspondence/2021-2023_Morin_MNRF_Carillon_directive.md`](case-file/correspondence/2021-2023_Morin_MNRF_Carillon_directive.md).
+the case-file Morin↔MNRF correspondence chain (2021–2023, summarised in the [Freshet 2026 Complete Summary](Freshet_2026_Complete_Summary.md#documented-riparian-to-mnrf-correspondence-chain-2021-2023-added-may-2026)).
 
 §2.1 sets four forebay constraints:
 
@@ -119,7 +143,7 @@ that act on the upper system.
 
 ### 2. Gatineau / Lièvre storage drawn deeper
 
-On April 1, 2026 (per [`reservoir_drawdown_apr1.csv`](orrpb-2026-drawdown/reservoir_drawdown_apr1.csv)):
+On April 1, 2026 (per a working ORRPB daily-data extract; computed conclusions only — raw tables are not redistributed per ORRPB terms):
 
 - **Cabonga** — 60 % of band, low point Jan 20 (54 %); never drew down
   for the freshet
@@ -134,7 +158,7 @@ river. It is purely a lower-Ottawa lever.
 
 ### 2a. Quantified target gap — what "lower and earlier" actually means
 
-Working from `orrpb-2026-drawdown/raw/` daily series for the 13 principal
+Working from a daily-series extract of the ORRPB per-location pages (scraped 2026-05-23, computed conclusions only) for the 13 principal
 reservoirs (excluding the Haileybury duplicate gauge), and weighting each
 reservoir by its **usable storage (Mm³)** from the ICOLD-Canada case
 study, the 2026 storage-weighted standing was:
@@ -233,7 +257,7 @@ showing up in operator-by-operator numbers.
   lower-Ottawa peak is on the order of 20–40 %, consistent with the
   15–40 cm shave estimated in the "hard answer first" section above.
 
-Numbers verified against `orrpb-2026-drawdown/raw/` 2026-05-23.
+Numbers verified against the ORRPB per-location daily-data extract pulled 2026-05-23.
 
 ### 2b. What the storage lever would have done for Lac Coulonge — honestly, not much
 
@@ -333,6 +357,17 @@ days of low water before the freshet arrived. **For the crest itself,
 the benefit is small** — run-of-river arithmetic limits it to a few cm
 at the peak. This lever lives on the upper Ottawa and is HQ's call.
 
+Dan Poole framed the related hydraulic point on the FB thread: *"the
+faster the flow, the higher the peak — especially in those areas with
+restrictions."* That is exactly what makes Lac Coulonge a restricted
+reach. The Bryson dam has a finite discharge capacity; when inflow
+exceeds what the dam can pass, water backs up at Lac Coulonge whether
+or not the operator wants it to. That's why the freshet peak at
+restricted reaches is partly *forced upward* by the dam itself — and
+why a faster melt would have produced a higher 2026 peak, even with
+the same total volume. Wayne's "lower the headpond" ask buys
+rising-limb timing; it doesn't make the dam pass faster at peak.
+
 ### 4. Snowpack-indexed coordination (the structural fix)
 
 Today the system draws to fixed April-1 targets regardless of basin
@@ -366,13 +401,17 @@ Ranked by my confidence:
 The volume → peak relationship is unchanged (Steve Deon, Exhibit A);
 what has changed is the **inflow distribution**. Bigger snowpacks,
 faster simultaneous southern + northern tributary melt, rain-on-snow
-events. The operating envelope was sized for 1972–2010 hydrology and
-is now being exceeded routinely. This is the structural driver.
+events. Dan Poole framed this directly on the FB thread: *"over the
+past decade, we've increasingly seen above-normal snowpack and
+rainfall, leading to higher flood risk during the critical period
+from mid-April to mid-May."* The operating envelope was sized for
+1972–2010 hydrology and is now being exceeded routinely. This is the
+structural driver.
 
 ### B. Operations drifted in the wrong direction over the same window
 
 The case file documents a 2016 management-change claim
-([`freshet-public/docs/reports/2016_management_change_claim.md`](../freshet-public/docs/reports/2016_management_change_claim.md));
+([`../reports/2016_management_change_claim.md`](../reports/2016_management_change_claim.md));
 the Bryson refurbishment timeline (Hydro-Québec, ~2017 onward) lines
 up; this conversation's fresh data work has now added the elevated
 2026 winter baseline, the de-facto Carillon floor sitting 88 cm above
