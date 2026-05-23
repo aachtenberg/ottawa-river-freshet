@@ -92,8 +92,29 @@ Hull dock has been 1.36 to 1.86 m above the 42.61 m servitude threshold for the 
 
 **This is not "directive not followed" in the loose sense the case file previously argued. This is "operating outside the binding spring-flood envelope of HQ's own published Impounded Water Management Plan, by 41 to 46 cm, every day for thirteen days, with the trigger condition unambiguously in effect."**
 
+## Extended verification — ORRPB daily data, 39 consecutive days (added 2026-05-23)
+
+The HQ live telemetry above covers 12–13 days because the live ingester only began retaining data in early May 2026. ORRPB's public per-location pages (`ottawariver.ca/location/<name>/`) carry daily levels going back much further; pulling Hull and Carillon for the full freshet window closes the trigger-condition test from 13 days to **39 consecutive days**.
+
+Method: POST the date range to the ORRPB Hull and Carillon location pages, extract the embedded `jsCurrent` daily series, identify all days where Hull > 42.61 m servitude, count Carillon overshoots against the 40.08 m flood-period ceiling. Computed on the homelab dataset (private working copy at `ottawa-river-vigilance/orrpb-2026-drawdown/raw/river-hull.json` and `raw/river-carillon.json`).
+
+Results:
+
+| Quantity | Value |
+|---|---|
+| First day Hull > 42.61 m (trigger condition activates) | **2026-04-13** |
+| Last day Hull > 42.61 m (within the observation window) | **2026-05-21** |
+| Consecutive days with the trigger condition in force | **39** |
+| Days with Carillon above the 40.08 m flood-period ceiling | **39 of 39** |
+| Maximum overshoot above 40.08 m | **+0.44 m on 2026-04-15** (Carillon 40.52, Hull 43.31) |
+| Carillon's lowest level during the 39-day window | **40.43 m on 2026-05-13** (still 0.81 m above the 39.62 m floor) |
+
+**Interpretation.** What the 13-day live-telemetry window already established — that Carillon was operating outside its published §2.1 spring-flood envelope by 41–46 cm — extends cleanly to a 39-day window starting on the day the trigger condition first activated. There is no part of the trigger period where Carillon was at or below the binding 40.08 m ceiling. The earlier finding is not a sampling artifact of the live-telemetry start date.
+
+On the floor side, separately: Carillon's lowest level in the entire 39-day flood-period window was 40.43 m. The §2.1 *permitted* floor during flood is 39.62 m, and the §2.1 *required* ceiling during flood is 40.08 m — so the observed 40.43 m sits **between the two**, above the binding ceiling and well above the permitted floor. HQ effectively operated the 2026 freshet at the *outside-boating-season* minimum (40.54 m) — neither invoking the permitted lower flood-period floor *nor* respecting the binding flood-period ceiling. The ceiling side is regulatory non-compliance; the floor side is non-invocation of a permitted option.
+
 ## Other open verification next steps
 
 - Locate "Item 1j Carillon 2010 LRIA Approval" (referenced in Morin/MNRF correspondence) to verify whether the 2004 envelope was carried forward unchanged into the 2010 LRIA-approved version. If yes, the 40.08 m ceiling is a binding LRIA obligation.
 - Establish what "as per agreement" references in the table — likely the 1983 Ottawa River Regulation Agreement or a parallel Carillon-specific agreement with Ontario riparians. The source-document margin note "what Agreement?" flagged this question and it remains open.
-- Extend the Hull dock verification backward in time. The current telemetry only covers 12 days; once a multi-year dam_levels record accumulates (the live ingester has been running since 2026-05-02 with no retention policy), the same exceedance test can be applied across multiple freshets to establish whether the 2026 pattern is the standard pattern or an outlier.
+- Extend the Hull dock verification across multiple freshets. The 2026 ORRPB pull above closes the trigger-condition test for the current freshet. Re-running the same scrape over prior freshet windows (2025, 2024, 2023 — historical data is available through the same ORRPB endpoint, ~16 months per query) would establish whether the 39/39 non-compliance pattern is the 2026 outlier or the standard pattern. The published ORFA *Eight Ways* whitepaper notes that the 2024 freshet showed an analogous pattern with reservoirs at 50 % capacity on April 1 ([`2025-02-18_ORFA_8_Ways_extract.md`](2025-02-18_ORFA_8_Ways_extract.md)), so the case may well be multi-year.
