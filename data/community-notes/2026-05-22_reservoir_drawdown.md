@@ -104,6 +104,60 @@ Lac Coulonge went on to peak at **108.63 m on April 20** — the
 fourth-highest in the modern record, and about 0.4 m below the
 property-survey 20-year flood line. A large freshet; not a record one.
 
+### What the operating record shows
+
+Three details in the level record make the choice unambiguous.
+
+**1. The pond was deliberately raised into winter.** From the seasonal
+low in October 2025 (~105.7 m), Lac Coulonge climbed steadily to reach
+106.55 m by January 10, 2026. From there it held flat at **106.55–106.58
+m for the full month of February** — a 5-cm band over seven weeks. River
+reaches do not hold themselves that flat; that is a controlled setpoint.
+
+**2. Early March 2026 — caught in the act.** Between Feb 28 and Mar 6 the
+pond was drawn down to 106.37 m (~24 cm below the setpoint). Then, in
+**two days**, it was pushed back up to 106.61 m and re-locked at the
+same elevated level. The asymmetry — gradual release, sharp refill —
+is the signature of an operator-driven cycle, not hydrology, and it
+cannot be explained by upstream inflow (the upper Ottawa was being
+drawn down through the same window, sending *more* water downstream,
+not less). Whatever the reason for the brief drawdown — test,
+maintenance, ice operation — the **refill** is the revealing part: the
+operator demonstrated, on the record, that 106.37 m was achievable, then
+chose 106.55+ instead, with the freshet 4–5 weeks away.
+
+**3. The reach is the Bryson generating station's headpond.**
+[Bryson](https://www.hydroquebec.com/projects/project-bryson/) is run by
+**Hydro-Québec** — a 61 MW run-of-river station whose refurbishment
+program ran from roughly 2017 onward, with major work on three
+generating units carried out around 2021–2023. Lac Coulonge's winter
+level *is* a Bryson gate-operation decision. The structural incentive
+to maintain a higher headpond — more hydraulic head, more generation,
+peak winter demand — is real. Whether that incentive *drove* the
+elevated 2026 setpoint is something gauge data cannot prove; what gauge
+data does show is the elevated setpoint itself, and that the operator
+demonstrably had the alternative.
+
+### What the elevated baseline can and cannot tell us
+
+This is a finding about **operating posture**, not flood storage. Lac
+Coulonge is run-of-river — its drawable range is on the order of *hours*
+of peak freshet flow, not the days or weeks of real storage. Drawing it
+3 ft lower before April 1 would have shifted the rising-limb timing
+modestly and given shoreline residents a few extra days of low water,
+but the crest itself is hydraulically set: at the freshet peak the dam
+is passing essentially everything, and pond level is governed by flood
+inflow, channel hydraulics and downstream backwater, not by where the
+operator started.
+
+So the elevated 2026 winter baseline is best read **as an indicator
+that the river was being operated high through the pre-freshet window,
+with the operator demonstrably preferring head over headroom** — not
+as a claim that drawing Lac Coulonge down alone would have shaved the
+peak. The flood-relevant lever lives upstream, in the storage
+reservoirs from Question 1. The reach baseline is what tells us about
+the **intent**.
+
 ## Why both answers can be true at once
 
 Storage drawdown and river-reach level are **different levers**, and
@@ -134,24 +188,45 @@ it.
   (every reservoir absorbed the freshet and is now easing off 80–99 %
   full); the "earlier and lower" half is precisely the reach-baseline
   gap above.
+- **Wayne Freeland** — "the pond could have been lowered, look at last
+  summer's lows": correct on capability. Lac Coulonge sat at 105.67 m
+  in October 2025, and the all-time recorded low is 105.07 — so the
+  pond demonstrably tolerates levels well below the 106.55 m winter
+  setpoint, and the early-March cycle above confirms the operator can
+  move it on a days-to-week timeline. He's also right that it is a
+  Bryson (HQ) generating call. The honest caveat is the run-of-river
+  one: because Lac Coulonge is a headpond and not real storage,
+  lowering it would have helped the *rising-limb timing* more than the
+  *crest itself*, and the bigger flood-relevant lever lives upstream.
 - **Steve Deon** — "not record-breaking, a large top-5 freshet": correct,
   and consistent with the peak above — 2026 was the fourth-highest
   modern peak at Lac Coulonge, not the highest.
-- The flat "NO" / "definitely not" replies, and the unqualified "YES,"
-  both miss that the answer is split: **storage, mostly yes; river
-  baseline, no.**
+- **Dan Poole** — "drew down to the 30-year median but not to low-limit;
+  Quinze 23.8 % (311 Mm³ remaining), Baskatong 12.9 % (393 Mm³
+  remaining)": numbers cross-checked against the same ORRPB data and
+  match to the second decimal. The "median-but-not-floor" framing is
+  the right one and lands the same finding from a different angle:
+  operators followed long-standing practice; the problem is that the
+  long-standing practice is calibrated to a climatology that no longer
+  matches what is coming through the system. Dan also notes the
+  Apr 19–21 cold snap held the rising limb back — without it the crest
+  would have been higher. So part of "they managed the recession well"
+  is weather doing operator-work; worth naming honestly.
 
 ## The verdict
 
 On the public evidence: the regulators **drew the storage reservoirs
-down** — most of them hard, the upper-river ones especially — but
-**carried the river itself into the freshet high**, ~5–14 cm above its
-winter norm, and held it there through March. The first is competent
-operation. The second is the part residents felt, and the part the data
-supports them on. The fix is not a louder argument about reservoir
-levels; it is system-coordinated, snowpack-indexed drawdown that
-includes the river reaches, and an ORRPB that publishes the April-1
-numbers so this can be audited without a scraper.
+down** — most of them hard, the upper-river ones especially. But the
+operator at Bryson **deliberately raised the Lac Coulonge headpond into
+winter and held it elevated** through the pre-freshet window, briefly
+demonstrating in early March that a 24-cm lower setpoint was achievable
+and then re-locking the higher one within two days. The first is
+competent flood operation; the second is an operating choice that
+preferred hydraulic head over flood headroom, on a reach the residents
+along it felt going into the melt. The fix is not a louder argument
+about reservoir levels; it is **system-coordinated, snowpack-indexed
+drawdown that includes the run-of-river reaches**, and an ORRPB that
+publishes the April-1 numbers so this can be audited without a scraper.
 
 ---
 
@@ -166,6 +241,10 @@ numbers so this can be audited without a scraper.
 - **Geography of confluences:** the Gatineau River joins the Ottawa at
   Gatineau, the Lièvre near Masson, the Madawaska at Arnprior — all
   downstream of the Fort-Coulonge / Mansfield reach.
+- **Bryson generating station / operator:** Hydro-Québec project page
+  for the [Bryson refurbishment](https://www.hydroquebec.com/projects/project-bryson/)
+  and 2017 [project bulletin](https://www.hydroquebec.com/data/projets/projet-bryson/pdf/bulletin-information-bryson-en.pdf?v=2017-12-19);
+  ORRPB notice of [temporary lowering for Bryson construction work](https://ottawariver.ca/ottawa-river-temporary-lowering-of-water-levels-for-work-at-bryson-generating-station/).
 - **Companion:** Exhibit B (Winter Baseline) in the case file, which
   treats the Lac Coulonge winter-baseline question in full.
 - This note presents *computed conclusions* (percent-of-band, winter
