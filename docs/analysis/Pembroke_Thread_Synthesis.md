@@ -33,6 +33,15 @@ One came back with a signal. They converge on the same conclusion.
 | **Timing-pushback commenter** (role) | Instantaneous flow, not cumulative | [Freshet_Volume_vs_Peakedness.md](Freshet_Volume_vs_Peakedness.md) | Confirmed: Q_pk alone explains 99.7 % of peak height variance. |
 | **Dan Poole** | Peak-time Des Joachims outflow shape (gate operations on the day) | [2026-05-23_pembroke_2023_vs_2026.md](../../data/community-notes/2026-05-23_pembroke_2023_vs_2026.md) | **Signal.** 2023 vs 2026: same DJ peak outflow, same DJ headpond trajectory, Petawawa rose at the same rate — yet 2026 Pembroke peaked 14 cm lower and rose 3× slower. The only remaining lever is DJ outflow Q *scheduling* during the event. |
 
+![Five proposed causes, one survives the data](../../data/community-notes/2026-05-23_five_variables_one_signal.png)
+
+*The same table as a single image. Five variables proposed by the
+thread, four eliminated with the statistic that killed them, one
+surviving — flowing into the Pembroke peak. The yellow footer marks
+the public-record instrument (Westmeath flow gauge, decommissioned
+1993, refused for reinstall 2021) that would have measured the
+surviving lever directly.*
+
 **The convergent reading.** Four of the five variables the thread
 proposed are testable on public data and come back null. The fifth —
 peak-time gate scheduling at Des Joachims — is the only one that
@@ -120,6 +129,14 @@ With three of the four observable variables identical between years,
 the only remaining lever for the 3× Pembroke shape difference is how
 Des Joachims released its peak-day water across the event. Same water
 budget, different schedule.
+
+![2023 vs 2026 — three observable knobs held constant, one moved 3×](../../data/community-notes/2026-05-23_2023_vs_2026_isolation.png)
+
+*The four observable variables in 2023 vs 2026, with the verdict
+chips beneath. Three SAME, one 3× DIFFERENT. The argument is
+visual: if you held three knobs constant and one knob moved, the
+explanation has to lie in a fifth knob you couldn't observe. That
+fifth knob is the daily outflow schedule from Des Joachims.*
 
 ---
 

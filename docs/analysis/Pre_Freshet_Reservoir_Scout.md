@@ -64,6 +64,11 @@ the full mapping of who pointed at what and how each was tested, and
 [`2026-05-23_pembroke_2023_vs_2026.md`](../../data/community-notes/2026-05-23_pembroke_2023_vs_2026.md)
 for the Dan Poole 2023/2026 audit that isolates the surviving lever.
 
+![Where pre-freshet storage sits among the five proposed causes](../../data/community-notes/2026-05-23_five_variables_one_signal.png)
+
+*This note tests the third box from the top — "pre-freshet reservoir
+state". The X on it is what the next 250 lines of text earn.*
+
 ---
 
 ## What changed since the May-23 feasibility scout
@@ -209,6 +214,31 @@ storage and high peak are decoupled in both directions of the variable.
 ---
 
 ## Figures (`data/community-notes/`)
+
+![Upper-river pre-freshet storage vs Britannia peak](../../data/community-notes/2026-05-23_pre_freshet_upper_river.png)
+
+*Upper-river-only scatter, the directly-relevant test for the
+Pembroke / Lac Coulonge reach. r = −0.009 on n = 30 paired years
+(1990–2024). The three top peaks (2019, 2017, 2023) sit on the
+left side of the chart — entering the freshet drawn down, not
+full. The "more headroom would have lowered the peak" hypothesis
+predicts the opposite slope from the one the data shows.*
+
+![Basin-wide pre-freshet storage vs Britannia peak](../../data/community-notes/2026-05-23_pre_freshet_storage_vs_peak.png)
+
+*Same regression, capacity-weighted across all 13 ORRPB principal
+reservoirs (not just the upper-river six). r = −0.117, p = 0.534.
+Same null result. The 2012 point on the far right (74 % of band,
+peak = 59.51 m) is the inverse experiment — high storage, low
+peak — that decouples the hypothesis in the other direction.*
+
+![Per-reservoir April-1 % of band, 1990–2025](../../data/community-notes/2026-05-23_pre_freshet_band_heatmap.png)
+
+*Heatmap of every reservoir × year. Blue = drawn down (low %),
+red = high. The dominant colour is blue: across 36 years and
+13 reservoirs, the operators ran the system drawn down on April 1
+as a matter of course. 2012 is the visibly red column — the lone
+"full bucket" year, and not a high-peak year.*
 
 - `2026-05-23_pre_freshet_storage_vs_peak.png` — basin-wide aggregate
   % of band vs Britannia spring max, n = 30

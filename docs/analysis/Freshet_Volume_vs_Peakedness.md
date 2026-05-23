@@ -87,6 +87,13 @@ names each FB-thread participant and the variable they proposed.
 Read together they triangulate to peak-time gate scheduling at
 Des Joachims as the remaining unobserved lever.
 
+![Where total volume sits among the five proposed causes](../../data/community-notes/2026-05-23_five_variables_one_signal.png)
+
+*This note tests the top two boxes — "total spring volume" (chart
+author) and "lumped 90-day V" (Steve Deon). Both come back null
+once Q_pk enters the model. The X marks on them are what this note's
+regression earns.*
+
 ---
 
 ## Three thread arguments, three readings
@@ -229,6 +236,42 @@ timing. With n = 9 post-2016 the t-tests come back at p ≈ 0.2–0.4 —
 headline result of this note does not depend on these.
 
 ### Figures (`data/community-notes/`)
+
+![Volume vs peak level, Mar 15 – Jun 15 window](../../data/community-notes/2026-05-23_peakedness_volume_mar15_jun15.png)
+
+*V vs peak level scatter, the same shape the FB chart shows. R² ≈ 0.80
+on its own. The pre-2016 and post-2016 points sit on a single curve —
+which is exactly what the chart author argued. The hidden problem is
+that this curve is a rating curve, not a causal one.*
+
+![Volume vs peak level, Apr 1 – Jun 15 window](../../data/community-notes/2026-05-23_peakedness_volume_apr01_jun15.png)
+
+*Robustness check on the tighter WMP window. Same shape, same fit.
+The choice of window doesn't change the conclusion.*
+
+![Peakedness vs V, Mar 15 – Jun 15](../../data/community-notes/2026-05-23_peakedness_vs_V_mar15_jun15.png)
+
+*"Peakedness" = Q_pk / V_total, plotted against V. If V caused the
+peak, peakedness should be flat in V (high-V years would just be
+proportionally peakier). It isn't — there's structure, meaning V
+and Q_pk vary independently year-to-year even though they correlate
+on average.*
+
+![Peakedness vs V, Apr 1 – Jun 15](../../data/community-notes/2026-05-23_peakedness_vs_V_apr01_jun15.png)
+
+*Same diagnostic on the WMP window. Same structure.*
+
+![Model-[A] residuals by year, Mar 15 – Jun 15](../../data/community-notes/2026-05-23_residuals_mar15_jun15.png)
+
+*Residuals of the V-only model against year. If post-2016 operators
+were producing higher peaks "for the same V", you would see the
+post-2016 dots sit above the zero line. They don't. The rating
+curve is stable.*
+
+![Model-[A] residuals by year, Apr 1 – Jun 15](../../data/community-notes/2026-05-23_residuals_apr01_jun15.png)
+
+*Same residual plot on the WMP window. Same result: no post-2016
+shift on the hydraulic relationship.*
 
 - `2026-05-23_peakedness_volume_mar15_jun15.png` — V vs peak level,
   pre/post coloured, poly2(V) curve
