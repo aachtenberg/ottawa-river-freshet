@@ -1,15 +1,6 @@
-# Daily brief — 2026-05-24 *(backfilled)*
+# Daily brief — 2026-05-25
 
-*Backfilled 2026-05-25 from a manual routine re-run. The scheduled
-2026-05-24 22:00 UTC session crashed mid-run after parsing ORRPB and
-never produced a commit. This brief was generated at 2026-05-25 00:05 UTC
-using the freshest available data, then filed under 2026-05-24 to keep the
-historical record contiguous. Telemetry inside therefore reflects basin
-state ~26 h after the scheduled run would have, but the direction-of-
-travel observations (Témiscaming streak break, mid-valley reach) remain
-the canonical day-over-day reference for subsequent briefs.*
-
-*See `freshet-public/docs/analysis/Freshet_2026_Complete_Summary.md` for project context.*
+*Generated automatically at 00:05 UTC. See `freshet-public/docs/analysis/Freshet_2026_Complete_Summary.md` for project context.*
 
 ## In plain language
 
