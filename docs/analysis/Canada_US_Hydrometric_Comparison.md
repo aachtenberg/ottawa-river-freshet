@@ -74,6 +74,8 @@ argument in something other than rhetoric.
 [^8]: Vincent et al. (2020), AHCCD third generation — https://www.tandfonline.com/doi/full/10.1080/07055900.2020.1765728. Mekis et al. (2018) for automated-station count.
 [^9]: FERC eLibrary — https://www.ferc.gov/ferc-online/elibrary; 18 CFR 4.41 — https://www.ecfr.gov/current/title-18/chapter-I/subchapter-B/part-4/subpart-E/section-4.41.
 [^10]: Hydro-Québec open hydrometric data — https://www.hydroquebec.com/documents-data/open-data/hydrometric-data/. OPG Water System Data Portal — https://www.opg.com/power-generation/our-power/hydro/water-system-data-portal/. BC Hydro — https://www.bchydro.com/energy-in-bc/operations/transmission/transmission-system/actual-flow-data.html. Manitoba Hydro — https://www.hydro.mb.ca/corporate/operations/water-levels/.
+[^11]: ECCC, "Hydrometric program: a national partnership" — https://www.canada.ca/en/environment-climate-change/services/water-overview/quantity/monitoring/survey/hydrometric-program-national-partnership.html. The 1975-origin bilateral-agreement structure and the National Administrator's Table governance body are described here. Service-level obligations under those agreements are detailed in ECCC's "Hydrometric data and information service standards" — Chapter 2 (program structure and partner roles) https://www.canada.ca/en/environment-climate-change/services/meteorological-service-standards/publications/hydrometric-data-information/chapter-2.html and Chapter 3 (service levels) https://www.canada.ca/en/environment-climate-change/services/meteorological-service-standards/publications/hydrometric-data-information/chapter-3.html.
+[^12]: ECCC, "Evaluation of the National Hydrological Services" — https://www.canada.ca/en/environment-climate-change/corporate/transparency/priorities-management/evaluations/national-hydrological-services.html (summative Treasury Board evaluation covering 2018–19 → 2021–22). The 1,144 fully-or-partially-federally-funded station figure is from this evaluation. The "at a glance" summary is at https://www.canada.ca/en/environment-climate-change/corporate/transparency/priorities-management/evaluations/national-hydrological-services/at-a-glance.html.
 
 ---
 
@@ -87,11 +89,21 @@ infrastructure.
 ### 1. Cooperative cost-recovery funding model
 
 WSC hydrometric stations are not funded out of a single federal budget
-line. Each station has a federal share and a partner share — provincial
-agency, Conservation Authority, dam operator, municipality, sometimes
-more than one. When a partner pulls out, the federal share is rarely
-sufficient to keep the station running on its own, and the gauge goes
-dark.
+line. The **National Hydrometric Program** has been administered since
+**1975** under bilateral hydrometric agreements between ECCC and each
+provincial / territorial government, plus Crown–Indigenous Relations
+and Northern Affairs Canada for Nunavut — 12 partner agreements in
+total, governed through the **National Administrator's Table**. Each
+station has a federal share and a partner share — provincial agency,
+Conservation Authority, dam operator, municipality, sometimes more
+than one — with cost-sharing apportioned "in accordance with each
+party's need for the data." [^11] As of the most recent Treasury Board
+evaluation (2018-19 → 2021-22), of the ECCC-operated stations, **only
+1,144 are fully or partially federally funded** — the remainder are
+operated by ECCC on behalf of provincial / territorial governments or
+third-party partners. [^12] When a partner pulls out, the federal share
+is rarely sufficient to keep the station running on its own, and the
+gauge goes dark.
 
 The mid-1990s contraction (Pilon et al. 1996 documented 363 stations /
 5.2 % of the network lost between 1990 and 1996) maps onto the
