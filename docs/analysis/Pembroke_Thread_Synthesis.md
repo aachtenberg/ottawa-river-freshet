@@ -38,9 +38,10 @@ One came back with a signal. They converge on the same conclusion.
 *The same table as a single image. Five variables proposed by the
 thread, four eliminated with the statistic that killed them, one
 surviving — flowing into the Pembroke peak. The yellow footer marks
-the public-record instrument (Westmeath flow gauge, decommissioned
-1993, refused for reinstall 2021) that would have measured the
-surviving lever directly.*
+the public-record instrument (Westmeath gauge WSC 02KC005,
+45.895°N 76.912°W, stage-only record 1935-1995 operated by OPG,
+decommissioned, refused for reinstall 2021) that would have measured
+the surviving lever's downstream response directly.*
 
 **The convergent reading.** Four of the five variables the thread
 proposed are testable on public data and come back null. The fifth —
@@ -53,8 +54,10 @@ This is not a case of "we haven't ruled out gate operations." It is a
 case of **the public record having ruled out everything else** that
 could plausibly explain the Pembroke shape difference. The remaining
 lever is the operator-internal one: the daily outflow schedule from
-Des Joachims, which OPG holds and the Westmeath gauge — decommissioned
-1993, refused for reinstall in 2021 — would have measured directly.
+Des Joachims, which OPG holds and the Westmeath gauge (WSC 02KC005,
+stage-only, OPG-operated, decommissioned with last record 1995-07-31,
+refused for reinstall in 2021) would have indirectly constrained
+through its level response.
 
 The thread, read across all five voices together, is not five
 competing theories. It is five constraints triangulating one variable.
@@ -156,11 +159,16 @@ direction across notes. After this thread:
    not ATIP-able under commercial-data exemption but covered by
    federal hydrometric purposes when the question is framed as a
    public-safety / land-use one.
-4. **The Westmeath gauge** (downstream of DJ, decommissioned 1993,
-   refused for reinstall in 2021) is the missing public instrument
-   that would have made the audit direct. Its absence is now itself
-   load-bearing evidence — Marie's "they don't want us to see"
-   framing has a specific instrument it attaches to.
+4. **The Westmeath gauge** (WSC 02KC005, 45.895°N 76.912°W, downstream
+   of DJ, OPG-operated, stage-only record 1935-1995, refused for
+   reinstall in 2021) is the missing public instrument that would have
+   constrained the audit. The "flow gauge" framing earlier in the
+   case file is technically off: Westmeath was a stage gauge with no
+   discharge record in HYDAT. A full audit would have required a
+   reinstalled stage gauge paired with a published rating-curve
+   program. Its absence is still load-bearing evidence — Marie's
+   "they don't want us to see" framing has a specific public-record
+   instrument it attaches to.
 
 The "two questions, not one" framing from the May-22 community note —
 *were the storage reservoirs drawn down?* and *was the river kept low

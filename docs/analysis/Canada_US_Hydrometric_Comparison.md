@@ -188,13 +188,29 @@ from the FERC-USGS architecture:
   legal consequence. There is no regulator who can compel restoration.
 
 The Westmeath case study lives at the precise intersection of these
-three features. The gauge was decommissioned in 1993 (cooperative
-funding model collapse). The province cannot reinstall it
+three features. The gauge (WSC 02KC005, at 45.895° N 76.912° W,
+operated by Ontario Power Generation, stage-only record 1935-1995,
+not in the federal Reference Hydrometric Basin Network) was
+decommissioned (cooperative funding model collapse: OPG walked, no
+RHBN-priority budget caught it). The province cannot reinstall it
 unilaterally (constitutional fragmentation). And the operator whose
-scheduling decisions would be measured by it has no statutory
+scheduling decisions would be constrained by it has no statutory
 obligation to fund it (no FERC equivalent). All three structural
 features point the same way: the absence of the gauge is the
 equilibrium, not the anomaly.
+
+The historical record is also instructive about what "reinstall"
+would and would not buy us. Across 60 years (1935-1995), 02KC005
+published level only, never discharge, so a literal reinstall under
+its old terms would give stage, not flow. To make Westmeath useful
+for operator-decision auditing, the reinstall needs to be paired
+with a published rating-curve program (repeated ADCP boat surveys
+across the flow range, with maintenance after every channel-shaping
+flood). That second step is what the federal RHBN designation
+historically funded at priority stations. Without it, even a
+reinstalled Westmeath would be a level gauge in an "assumed datum",
+useful for downstream-response inference but not directly comparable
+to upstream operator releases.
 
 ---
 
