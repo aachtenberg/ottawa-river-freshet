@@ -10,7 +10,7 @@ The cleanest path to fill the gap is **not** to re-engage OPG. OPG walked away f
 
 The cleanest path is **a new Quebec-side station at Waltham**, directly across the Ottawa River from the historic 02KC005 site, installed by Centre d'expertise hydrique du Québec (CEHQ) under a standard WSC-CEHQ cost-sharing agreement. Same reach, same hydraulic signal, no OPG involvement required, no Ontario MPP coordination required, fully within the existing federal-provincial hydrometric cooperative funding model.
 
-This document is the case file's articulated ask for that install. It is intended to be relayed to the Pontiac MNA, the Quebec Minister of Environment (MELCC, currently Benoit Charette), the federal Minister of Environment and Climate Change (ECCC, currently Steven Guilbeault), and ORFA leadership for coordination with the alliance's *Eight Ways to End the Super Floods* policy frame.
+This document is the case file's articulated ask for that install. It is intended to be relayed to the Pontiac MNA, the Quebec Minister of Environment (MELCCFP, currently Pascale Déry), the federal Minister of Environment, Climate Change and Nature (ECCC, currently Julie Dabrusin, in the role since May 13, 2025), and ORFA leadership for coordination with the alliance's *Eight Ways to End the Super Floods* policy frame.
 
 ## The ask in one paragraph
 
@@ -89,9 +89,9 @@ The case file suggests a coordinated multi-channel relay:
 
 1. **Pontiac MNA (provincial, Quebec)**. The local constituent channel into MELCC. The constituent argument: 2017, 2019, 2026 floods all affected Pontiac; the QC-side install is the lowest-friction path to filling the public-record gap upstream of where Vigilance currently covers.
 
-2. **Quebec Minister of Environment (MELCC, Benoit Charette as of 2026 per ORFA targeting)**. The institutional decision-maker. The framing here matches ORFA's *Eight Ways* whitepaper: this is part of basin-wide flood-management infrastructure that QC has both the authority and the interest to fund.
+2. **Quebec Minister of Environment (MELCCFP, Pascale Déry as of 2026)**. The institutional decision-maker. The framing here matches ORFA's *Eight Ways* whitepaper: this is part of basin-wide flood-management infrastructure that QC has both the authority and the interest to fund. Note: ORFA's February 2025 whitepaper targeted Benoit Charette in this role; the portfolio has since changed hands.
 
-3. **Federal Minister of Environment and Climate Change (ECCC, Steven Guilbeault as of 2026 per ORFA targeting)**. The federal cost-share counterpart. The argument: ECCC already cost-shares dozens of CEHQ stations under the existing bilateral; this is one more in a hydrologically important reach where the federal side has long-standing data continuity from 02KC005.
+3. **Federal Minister of Environment, Climate Change and Nature (ECCC, Julie Dabrusin since May 2025)**. The federal cost-share counterpart. The argument: ECCC already cost-shares dozens of CEHQ stations under the existing bilateral; this is one more in a hydrologically important reach where the federal side has long-standing data continuity from 02KC005. Note: ORFA's February 2025 whitepaper targeted Steven Guilbeault in this role; the portfolio changed hands in May 2025.
 
 4. **ORFA leadership**. To incorporate into the alliance's coordinated ministerial-relations work alongside the existing *Eight Ways* asks. This is structurally compatible with Action 1 (basin-wide pre-freshet drawdown protocols) and Action 8 (basin-wide observational expansion), not in tension with any of the eight.
 
