@@ -159,16 +159,17 @@ direction across notes. After this thread:
    not ATIP-able under commercial-data exemption but covered by
    federal hydrometric purposes when the question is framed as a
    public-safety / land-use one.
-4. **The Westmeath gauge** (WSC 02KC005, 45.895°N 76.912°W, downstream
-   of DJ, OPG-operated, stage-only record 1935-1995, refused for
-   reinstall in 2021) is the missing public instrument that would have
-   constrained the audit. The "flow gauge" framing earlier in the
-   case file is technically off: Westmeath was a stage gauge with no
-   discharge record in HYDAT. A full audit would have required a
-   reinstalled stage gauge paired with a published rating-curve
-   program. Its absence is still load-bearing evidence — Marie's
-   "they don't want us to see" framing has a specific public-record
-   instrument it attaches to.
+4. **The Westmeath gauge** (WSC 02KC005, 45.895°N 76.912°W, on the
+   long Ottawa main-stem reach upstream of Carillon, OPG-operated,
+   stage-only record 1935-1995, refused for reinstall in 2021) is
+   the missing public instrument that would have constrained the
+   audit. The "flow gauge" framing earlier in the case file is
+   technically off: Westmeath was a stage gauge with no discharge
+   record in HYDAT. A full audit would have required a reinstalled
+   stage gauge paired with a published rating-curve program. Its
+   absence is still load-bearing evidence — Marie's "they don't
+   want us to see" framing has a specific public-record instrument
+   it attaches to.
 
 The "two questions, not one" framing from the May-22 community note —
 *were the storage reservoirs drawn down?* and *was the river kept low

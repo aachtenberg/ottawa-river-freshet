@@ -5,14 +5,15 @@
 
 > **Why this note exists.** The freshet case file keeps bumping into
 > missing or inaccessible datasets — the 1994 end-of-record cliff at
-> Bryson / Chats Falls / Carillon, the decommissioned Westmeath flow
-> gauge between Des Joachims and Pembroke, the absence of a public
-> operator-outflow schedule, the lack of a published rating curve at
-> Lac Coulonge. Every time, the operator-side answer is some version
-> of "that data isn't publicly available." This note documents why,
-> by comparing the public observational infrastructure the US and
-> Canadian governments built out over 2000–2026. It's the structural
-> background against which the Westmeath-reinstall ask makes sense.
+> Bryson / Chats Falls / Carillon, the decommissioned Westmeath stage
+> gauge on the long Ottawa main-stem reach upstream of Carillon, the
+> absence of a public operator-outflow schedule, the lack of a
+> published rating curve at Lac Coulonge. Every time, the operator-
+> side answer is some version of "that data isn't publicly available."
+> This note documents why, by comparing the public observational
+> infrastructure the US and Canadian governments built out over
+> 2000–2026. It's the structural background against which the
+> Westmeath-reinstall ask makes sense.
 
 ---
 
@@ -354,8 +355,9 @@ following are useful for further context:
 
 *Related case-file material:* the [Pembroke FB thread
 synthesis](Pembroke_Thread_Synthesis.md) describes how the absence of
-a Westmeath flow gauge is the load-bearing data gap for the
-2023-vs-2026 attribution question. The [Freshet 2026 Complete
+a Westmeath stage gauge in the long Ottawa reach upstream of Carillon
+is the load-bearing data gap for the 2023-vs-2026 attribution
+question. The [Freshet 2026 Complete
 Summary](Freshet_2026_Complete_Summary.md) describes how the broader
 case-file argument depends on inferences that would not be necessary
 under a US-style disclosure regime.
