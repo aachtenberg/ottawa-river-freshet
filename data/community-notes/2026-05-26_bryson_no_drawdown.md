@@ -56,7 +56,7 @@ The case-file Exhibit B documents which prior super-flood years drew down before
 
 ## Figure
 
-![Bryson head pond no pre-freshet drawdown](2026-05-26_no_drawdown.png)
+![Bryson head pond no pre-freshet drawdown](figures/2026-05-26_no_drawdown.png)
 
 *Lac Coulonge at Fort-Coulonge, January 1 to June 15, 2026. The grey band is the per-day historic envelope (high/low across the 1988 to 2020 record). The green line is the 1991 to 2020 daily median. The blue line is 2026 observed. The orange dashed line at 109.05 m is the 2019 land survey 20-year flood line at the property. The median dips only 7 cm between mid-winter and the late-March trough. 2026 (blue) ran above median throughout the pre-freshet window before climbing 198 cm to the April 20 peak.*
 

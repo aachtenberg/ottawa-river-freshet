@@ -86,7 +86,7 @@ The historic record really is all over the map. Individual years swing 1 to 2 me
 
 ## Figure
 
-![Chenaux 2025 vs 2026 freshet, ORRPB published data](2026-05-26_chenaux_2025_vs_2026.png)
+![Chenaux 2025 vs 2026 freshet, ORRPB published data](figures/2026-05-26_chenaux_2025_vs_2026.png)
 
 *Side by side: 2025 freshet (last year, May 1 to June 15) and 2026 freshet so far (May 1 to May 26). Grey band is ORRPB's historic high to low envelope (back to 1988). Green is the 1991 to 2020 daily median. Blue is the observed line. The current 2026 reading sits 50 cm below the historic high for May 26 (set in 1992). The "fast refill" Rick observed is the rapid rise in the last six days of the right panel.*
 

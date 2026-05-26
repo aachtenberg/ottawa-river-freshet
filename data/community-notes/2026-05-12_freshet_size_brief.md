@@ -40,7 +40,7 @@ big* a freshet is, for three reasons:
 
 ## A better view: the spring hydrograph against the climatology
 
-![Ottawa River at Britannia — 2026 freshet vs the 1960–2024 record](2026-05-12_britannia_hydrograph.png)
+![Ottawa River at Britannia — 2026 freshet vs the 1960–2024 record](figures/2026-05-12_britannia_hydrograph.png)
 
 This is the Ottawa River at **Britannia** (Lac Deschênes, WSC station
 02KF005) — the longest continuous *flow* record in the basin, and the
