@@ -293,7 +293,10 @@ Three operational implications for case-file material:
    in the same way (an external mandate with a budget line that
    bypasses the cost-recovery negotiation). The Westmeath argument is
    strongest when it's framed as a missing-statutory-instrument
-   problem, not a missing-Westmeath problem.
+   problem, not a missing-Westmeath problem. The case file's specific
+   operational ask, routed through the QC side of the river to bypass
+   the partner-walked-away problem at OPG, is in
+   [docs/reports/2026-05-26_Westmeath_Waltham_Gauge_QC_install_proposal.md](../reports/2026-05-26_Westmeath_Waltham_Gauge_QC_install_proposal.md).
 
 3. **Private-stage-gauge installation is a tactical fit, not a
    substitute.** A private pressure-transducer stage gauge at

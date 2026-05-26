@@ -169,7 +169,11 @@ direction across notes. After this thread:
    stage gauge paired with a published rating-curve program. Its
    absence is still load-bearing evidence — Marie's "they don't
    want us to see" framing has a specific public-record instrument
-   it attaches to.
+   it attaches to. The case file's operational proposal for filling
+   this gap by installing a new QC-side station at Waltham (opposite
+   the historic 02KC005 site, via CEHQ-WSC cost-share, bypassing
+   OPG) is in
+   [docs/reports/2026-05-26_Westmeath_Waltham_Gauge_QC_install_proposal.md](../reports/2026-05-26_Westmeath_Waltham_Gauge_QC_install_proposal.md).
 
 The "two questions, not one" framing from the May-22 community note —
 *were the storage reservoirs drawn down?* and *was the river kept low
