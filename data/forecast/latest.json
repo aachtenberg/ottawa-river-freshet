@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "fetched_at_iso": "2026-05-25T20:30:00Z",
+  "fetched_at_iso": "2026-05-26T21:30:00Z",
   "source": {
     "url": "https://www.ottawariver.ca/conditions/?display=forecast",
-    "last_update_iso": "2026-05-21T19:35:00Z",
-    "next_update_expected_iso": "2026-05-26T20:00:00Z",
+    "last_update_iso": "2026-05-26T19:35:00Z",
+    "next_update_expected_iso": "2026-06-02T20:00:00Z",
     "next_update_cadence": "weekly"
   },
   "mode": "weekly-notice",
@@ -12,5 +12,5 @@
   "further_increases_possible": false,
   "further_increases_reach": null,
   "further_increases_includes_lac_coulonge": false,
-  "forecast_text": "Water levels and flows along the main stem of the Ottawa River are stabilizing or increasing slightly following recent rainfall. Over the next few days, levels and flows should decline gradually or start stabilizing depending on locations. With no major precipitation in sight, water levels and flows are expected to decline more rapidly starting next week. However, over the next two weeks, conditions are expected to remain above average for this time of year at all locations due to the large volumes of water still coming from the north. This will be the last daily River Conditions Forecast message for the 2026 spring freshet; this service will be replaced with a weekly forecast, updated every Tuesday."
+  "forecast_text": "Flows and water levels along the main stem of the Ottawa River are within seasonal values for this time of year, and are expected to remain stable or decrease gradually over the coming week depending on location."
 }
