@@ -1979,13 +1979,25 @@ function renderSummary(lcData, seasonPeak) {
   }
   box.className = `summary ${statusCls}`;
 
-  // Threshold bar range: 107.0 m → 109.3 m. Lower bound dropped from 108.0
-  // so the marker stays visible into post-freshet recession (e.g. when
-  // the lake falls below the moderate-flood threshold the marker would
-  // previously have pinned at the left edge and "fallen off the page").
-  // Zones in the gradient align with: 107.50 / 108.30 / 108.48 / 108.75 / 109.01.
-  const BAR_MIN = 107.0, BAR_MAX = 109.3;
+  // Threshold bar range. During active freshet we zoom in on the flood band
+  // (107.0 m floor, 109.3 m ceiling, gradient hard-coded in the .summary-bar
+  // CSS rule). Once ORRPB has shifted to weekly notices or the basin is off-
+  // season, the lake recedes well below 107.0 m (30-year median at this gauge
+  // is 106.42 m) so the marker would pin at the left edge. In that mode we
+  // drop the floor to 106.0 m and apply a recalculated gradient inline so the
+  // danger-zone colors land at the same elevation thresholds, just with more
+  // green safe-zone on the left for the marker to live in.
+  const postFreshet = isDeclined && fcst && (fcst.mode === 'weekly-notice' || fcst.mode === 'off-season');
+  const BAR_MIN = postFreshet ? 106.0 : 107.0;
+  const BAR_MAX = 109.3;
   const pct = v => Math.max(0, Math.min(100, ((v - BAR_MIN) / (BAR_MAX - BAR_MIN)) * 100));
+  // Recalculated gradient stops for the wider post-freshet range. Same zone
+  // thresholds (108.30 yellow / 108.48 orange / 108.75 red / 109.01 dark red)
+  // remapped onto BAR_MIN=106.0, BAR_MAX=109.3 (range 3.3 m).
+  const postFreshetGradient =
+    'linear-gradient(to right, #4d8a7a 0%, #4d8a7a 69.7%, #d4a050 69.7%, #d4a050 75.2%, ' +
+    '#c47a30 75.2%, #c47a30 83.3%, #b03838 83.3%, #b03838 91.2%, #6b1818 91.2%, #6b1818 100%)';
+  const barStyle = postFreshet ? `background: ${postFreshetGradient};` : '';
   const markerLeft = pct(latest.valeur);
   const peakLeft = pct(peak.valeur);
   // Only show the peak label/tick if peak is meaningfully separate from current (>=1 cm).
@@ -1998,14 +2010,19 @@ function renderSummary(lcData, seasonPeak) {
     : '';
   // Suppress zone labels that would visually collide with the peak label.
   // 107.50 = Vigilance minor-flood threshold (recession watch level);
-  // 108.30 / 108.75 / 109.17 = property thresholds + 2019 record.
-  const zoneLabels = [
+  // 108.30 / 108.75 / 109.17 = property thresholds + 2019 record. In
+  // post-freshet mode we also show the 30-year median (106.42 m at this
+  // gauge) as an additional zone marker, since the lake recedes near it.
+  const zoneSpecs = [
     { v: 107.50, t: 'minor 107.50' },
     { v: 108.30, t: '108.30' },
     { v: 108.75, t: 'cottage 108.75' },
     { v: 109.17, t: '2019 rec.' }
-  ].filter(z => !showPeakSeparate || Math.abs(pct(z.v) - peakLeft) > 8)
-   .map(z => `<div class="summary-zone-label" style="left:${pct(z.v)}%">${z.t}</div>`).join('');
+  ];
+  if (postFreshet) zoneSpecs.unshift({ v: 106.42, t: 'median 106.42' });
+  const zoneLabels = zoneSpecs
+    .filter(z => !showPeakSeparate || Math.abs(pct(z.v) - peakLeft) > 8)
+    .map(z => `<div class="summary-zone-label" style="left:${pct(z.v)}%">${z.t}</div>`).join('');
 
   const marginValue = cottageMargin > 0 ? `${cottageMargin.toFixed(0)} cm` : 'breached';
   // Footnote — relays ORRPB's actual published forecast when fresh; falls
@@ -2033,7 +2050,7 @@ function renderSummary(lcData, seasonPeak) {
       <span class="status-dot"></span>
       <strong>${statusText}</strong>
     </div>
-    <div class="summary-bar">
+    <div class="summary-bar" style="${barStyle}">
       ${zoneLabels}
       ${peakTick}
       <div class="summary-marker" style="left:${markerLeft}%"></div>
