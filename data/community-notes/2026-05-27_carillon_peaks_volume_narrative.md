@@ -27,7 +27,9 @@ This is the visual answer to the thread's question in one chart. **The three col
 
 The red bars tell the rate-change story. **In the first 50 years (1950 to 1999), four floods are spread thinly across the record:** 1951, 1960, 1974, 1976. The gap between 1976 and the next flood is 41 years. **Then between 2017 and 2026, four floods occur in 10 years.** Visually, the right end of the chart is denser in red bars than any prior decade.
 
-The chart also makes clear that floods do happen at Carillon outside the recent decade. There was one in 1951, one in 1960, and two close together in 1974 and 1976. What is unprecedented is the *clustering*, not the *occurrence*. Figures 1 and 2 break that into the two prior 25-year windows that Kathy specifically asked for.
+The chart also makes clear that floods do happen at Carillon outside the recent decade. There was one in 1951, one in 1960, and two close together in 1974 and 1976. What is unprecedented at the strict 7,500 cms threshold is the *clustering*, not the *occurrence*. Figures 1 and 2 break that into the two prior 25-year windows that Kathy specifically asked for.
+
+(Caveat worth flagging: at the strict flood threshold, 2017-2026 is 4 vs 2 over the 1970s, a real 2x. But if we loosen the threshold one notch to top-quintile peaks, **the 1970s actually out-cluster 2017-2026** (5 high-peak years 1972-1981 vs 4 in 2017-2026), and the 1970s match the recent decade on rolling 10-year mean. The body of the distribution looks similar; the top tail has moved. The [1970s precedent companion note](2026-05-27_1970s_precedent_for_recent_decade.md) carries the full head-to-head.)
 
 ## Figure 1: Carillon peak flow, 1950 to 1974
 
