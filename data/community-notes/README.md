@@ -12,6 +12,7 @@ For the visual exhibits (Exhibits 0 through H), see `../../docs/exhibits/`.
 
 | Date | Title | One-line summary |
 |---|---|---|
+| 2026-05-27 | [Rolphton / Mattawa FB tangent](2026-05-27_rolphton_mattawa_thread.md) | Dan Poole on why Deux Rivières runs dry while Mattawa floods; two-stage refill at Otto Holden matches the Des Joachims pattern, confirming basin-wide OPG operating protocol |
 | 2026-05-26 | [Cascade 2025 vs 2026](2026-05-26_cascade_2025_vs_2026.md) | 2026 freshet 13-39% higher peak flow + 4-14% more May volume than 2025; both years 59-168% above 30-year median |
 | 2026-05-26 | [Bryson no pre-freshet drawdown](2026-05-26_bryson_no_drawdown.md) | 30-year median at the property head pond shows just 7 cm seasonal variation; no flood-management drawdown posture |
 | 2026-05-26 | [Lake Coulonge 2026 vs median](2026-05-26_lake_coulonge_2026.md) | 2026 peak 108.63 m on Apr 20 set new April 20 record; 42 cm below 2019 land survey 20-yr line; 2019 owns 61 days of historic-high record |
