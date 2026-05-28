@@ -79,6 +79,41 @@ This bounds what operations can accomplish. The case file's existing ORFA Action
 
 The 2023 case is intermediate: it was peakedness-driven at Carillon (above the trend line in Figure 4 of the main exhibit), but the basin still drove reservoirs into flow-through within about three weeks of freshet onset. Earlier and deeper drawdown would have extended Stage 1, but probably not eliminated Stage 2 / 3.
 
+## Where Dan's Stage 1 dominates: the 2026 upper-basin peak
+
+The 2023 chart above shows Dan's three-stage model at Carillon, where the basin peak comes during the Stage 1-to-Stage 2 transition. But the same model implies something specific for the **upper Ottawa main stem** (Lac Coulonge, Pembroke, the property gauge) in 2026: if Stage 2 / 3 hasn't started yet upstream, the upper main stem peak should be driven entirely by unregulated tributary inflow, not by regulated cascade release.
+
+The 2026 data lets us test that directly. Unregulated upper-basin tributaries that join the Ottawa River between the regulated cascade and Pembroke:
+
+| Tributary | WSC station | Joins Ottawa at | 2026 peak (cms) | 2026 peak date |
+|---|---|---|---|---|
+| Bonnechere | 02KC009 | Castleford (near Renfrew) | 108 | 2026-04-15 (data window started this day; actual peak may be earlier) |
+| **Petawawa** | 02KB001 | Petawawa, ON | **479** | **2026-04-20** |
+| Madawaska (Palmer Rapids) | 02KD004 | upstream of Arnprior | 416 | 2026-04-23 |
+
+For reference, **Lac Coulonge peaked at 108.63 m on 2026-04-20**, exactly the same day as the Petawawa peak. The Quebec-side tributaries (Coulonge, Noire, Black) are not WSC-gauged in real time but feed the same reach and would have peaked in the same window based on their similar watershed area and snowmelt timing.
+
+Now compare those tributary peaks to when the upper-basin reservoirs reached their peak fill levels in 2026:
+
+| Reservoir | 2026 peak (m) | 2026 peak date | Days after Lac Coulonge peak |
+|---|---|---|---|
+| Timiskaming | 178.98 | 2026-05-07 | +17 |
+| Quinze | 263.25 | 2026-05-13 | +23 |
+| Lady Evelyn | 289.23 | 2026-05-21 | +31 |
+| Baskatong | 221.94 | 2026-05-23 | +33 |
+| Cabonga | 360.41 | 2026-05-26 | +36 |
+
+**On April 20, 2026, when Lac Coulonge peaked, the upper Ottawa cascade was still in Dan's Stage 1.** Quinze was at 88% of band, Timiskaming at 84%, Cabonga at 90%. They were still absorbing inflow, not running at maximum release. The peak at Lac Coulonge was driven by water arriving from the unregulated tributaries downstream of the cascade (Petawawa, Bonnechere, Madawaska upstream of Bark Lake, Coulonge, Black, Noire), not by any release from the regulated upper basin.
+
+This is the operational situation Dan's framing predicts: **upper-basin reservoirs help on the rising limb, but only against the water that flows through them.** Tributaries that join the main stem downstream of the cascade bypass that buffering entirely. The property gauge at Lac Coulonge sees the sum, and the April peak was driven by what the cascade couldn't reach.
+
+The two-peak anatomy of the 2026 freshet at the basin scale is then:
+
+- **Peak 1 (upper main stem, 2026-04-20):** tributary-driven (Petawawa, Coulonge, Noire, Madawaska, etc.). Driven by snowmelt in unregulated sub-basins. Outside the reach of any reservoir operations decision.
+- **Peak 2 (Hull, mid-May):** Gatineau tributary surge (Paugan, Rapides-Farmers) driving Hull above the 42.61 m §15.3.5.1 directive trigger. This peak forced Carillon to release more, which in turn forced upper-basin operators into Stage 2 / 3 releases (Timiskaming and Quinze hitting near-max in this same window).
+
+For the upper-basin communities, the first peak was the operationally relevant one. For the lower-basin / Hull / Carillon, the second peak was. Dan's three-stage model applies at the Carillon level for the second peak. At the upper main stem in late April, only Stage 1 was active and the peak still happened because that part of the river isn't regulated to begin with.
+
 ## What we cannot yet test from this data
 
 - **Outflow at each reservoir, daily.** HQ public hourly outflow data only goes back to April 22, 2026. We do not have direct dam-outflow series for 2017, 2019, or 2023. The Stage 2 / 3 inference here is from reservoir levels alone (which is what ORRPB publishes).
