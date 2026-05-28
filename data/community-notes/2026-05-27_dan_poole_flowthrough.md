@@ -91,7 +91,7 @@ The 2026 data lets us test that directly. Unregulated upper-basin tributaries th
 | **Petawawa** | 02KB001 | Petawawa, ON | **479** | **2026-04-20** |
 | Madawaska (Palmer Rapids) | 02KD004 | upstream of Arnprior | 416 | 2026-04-23 |
 
-For reference, **Lac Coulonge peaked at 108.63 m on 2026-04-20**, exactly the same day as the Petawawa peak. The Quebec-side tributaries (Coulonge, Noire, Black) are not WSC-gauged in real time but feed the same reach and would have peaked in the same window based on their similar watershed area and snowmelt timing.
+For reference, **Lac Coulonge peaked at 108.63 m on 2026-04-20**, exactly the same day as the Petawawa peak. The Coulonge River tributary itself (Hydro Météo Station 1004, Route 148 bridge, unregulated) peaked at **110.335 m on April 21 at 00:00 — just 2 cm below Quebec's major flood threshold for that tributary** (per the Freshet 2026 Complete Summary). The Coulonge tributary nearly produced a Major Flood event on its own snowmelt, an hour after Lac Coulonge crested, while the entire regulated cascade was still in Stage 1. The Quebec-side tributaries Noire and Black are not real-time gauged in our archive but feed the same reach and would have peaked in the same window based on their similar watershed area and snowmelt timing.
 
 Now compare those tributary peaks to when the upper-basin reservoirs reached their peak fill levels in 2026:
 
@@ -113,6 +113,26 @@ The two-peak anatomy of the 2026 freshet at the basin scale is then:
 - **Peak 2 (Hull, mid-May):** Gatineau tributary surge (Paugan, Rapides-Farmers) driving Hull above the 42.61 m §15.3.5.1 directive trigger. This peak forced Carillon to release more, which in turn forced upper-basin operators into Stage 2 / 3 releases (Timiskaming and Quinze hitting near-max in this same window).
 
 For the upper-basin communities, the first peak was the operationally relevant one. For the lower-basin / Hull / Carillon, the second peak was. Dan's three-stage model applies at the Carillon level for the second peak. At the upper main stem in late April, only Stage 1 was active and the peak still happened because that part of the river isn't regulated to begin with.
+
+## 2026 is distinctive: the only year in the post-2017 cluster where the basin peak came on the first wave
+
+The four super-flood years at Lac Coulonge (peak >= 108.5 m) are 2017, 2019, 2023, and 2026. Comparing peak dates across them, the daily-max month per year from the ORRPB monthly summary (with the all-time-max date confirmed where available):
+
+| Year | Daily max | Month of peak | Notes |
+|---|---|---|---|
+| 2017 | 108.52 m | May | April mean 107.18, May mean 107.61. Peak occurred in May. |
+| 2019 | 109.17 m | **May 12** | Confirmed in the Freshet 2026 Complete Summary as the "second peak, 13 days after first peak, record set." |
+| 2023 | 108.77 m | May | April mean 107.09, May mean 107.38. Peak occurred in May. |
+| 2026 | 108.633 m | **April 20** | The first wave, on the rising limb. No second peak materialised. |
+
+**2026 is the only year in this cluster where the basin peak occurred in April, on the first wave.** In 2017, 2019, and 2023 the basin peak occurred in May, after the rising-limb pulse had already passed and either a second freshet wave (2019) or a sustained late-spring melt-and-rain phase (2017, 2023) drove the higher peak.
+
+This matters for Dan's flow-through framing in two ways:
+
+1. **At Lac Coulonge, the May peaks in 2017, 2019, and 2023 came AFTER the cascade had reached Stage 2 / 3.** By mid-May in those years, upper-basin reservoirs were at near-max and operators were running near-maximum releases. The basin peak that the property gauge measured had cascade flow-through built in, on top of whatever tributary water was still arriving.
+2. **At Lac Coulonge, the April peak in 2026 came BEFORE the cascade reached Stage 2 / 3.** On April 20, 2026, Quinze was at 88%, Timiskaming at 84%, Cabonga at 90% of band. They were buffering, not flow-through. The 108.63 m peak was driven by the unregulated tributaries alone, with the cascade still absorbing the upper-Ottawa portion of the freshet.
+
+So the answer to "what did the operators contribute to the 2026 peak at Lac Coulonge" is closer to "nothing on the rising side, because they were absorbing." The unregulated upper-basin tributaries — Petawawa, Bonnechere, Madawaska upstream of Bark Lake, Coulonge, Noire, Black — drove that peak on their own. The case file has documented this as a refinement of the "blame the operators" framing that surfaces on the FB thread from time to time. The lower-Ottawa case (Hull, Hawkesbury, Carillon) is operationally testable because Stage 2 / 3 ran in May. The upper-Ottawa case (Lac Coulonge, Pembroke) in 2026 is not, because the peak arrived before the cascade reached flow-through.
 
 ## What we cannot yet test from this data
 
