@@ -99,75 +99,17 @@ Compose a markdown brief at `freshet-public/data/daily-briefs/YYYY-MM-DD.md` (to
 
 ## In plain language
 
-Friendly tone, no jargon, no codes, no acronyms beyond the obvious. This is
-what a community member who isn't a flood-watch regular needs to read to
-understand what changed today and why it matters. The technical sections
-below are for the propeller heads.
+Friendly, jargon-free prose for a community reader. Translate every technical concept (e.g. "Bryson headpond" → "the dam pond at the foot of Lac Coulonge"; "Carillon §15.3.5.1 overshoot" → "the regulatory ceiling at the basin's terminal dam is being exceeded"; "spill share" → "share going through the spillway vs the turbines"). Never use raw station IDs or codes; always pair numbers with context (e.g. "108.0 m — the moderate-flood threshold"). No tables or bullet lists of metrics in this section.
 
-Write this section as **two co-equal threads**, each its own labeled
-sub-section (`### Upstream — the upper basin` and `### At the property —
-Lac Coulonge / Mansfield`). The watershed has two stories on most days and
-neither is a footnote to the other: where the water is coming from, and what
-it's doing at the property. Give each 2–3 short paragraphs.
+Structure as **two co-equal threads**, each its own `###` sub-section:
 
 ### Upstream — the upper basin
 
-The "where is the water coming from, and is the system loading or easing"
-story — the upper Ottawa above Lac Coulonge. Cover:
-  - The Témiscaming trend — inflow and outflow direction, and how today sits
-    against the freshet peak. Use milestone framing wherever the numbers
-    support it: "N days past the May 2 peak of X m³/s", "outflow below 2,000
-    for the first time since …", "Nth straight day of decline". Compute
-    round-number threshold crossings and day-streaks explicitly — that
-    texture is what makes this thread readable rather than a number dump.
-  - Reservoir balance — of the tracked reservoirs, how many are falling or
-    holding steady vs. still filling. Rising headwater reservoirs during
-    recession mean operators are *absorbing* inflow (a normal refill
-    posture), not a problem — say so plainly so it isn't misread as a threat.
-  - The mid-valley reach — Mattawa and Pembroke level *direction* (rising /
-    falling / flat). Do not assert a flood state for Pembroke unless the
-    ORRPB conditions page explicitly gives one — the level table carries no
-    threshold. Note that Des-Joachims can't begin its next deliberate refill
-    until Mattawa settles back into its normal range.
+2–3 short paragraphs covering the "where is water coming from and is the system loading or easing" story. Cover the Témiscaming inflow/outflow trend with milestone framing ("N days past the May 2 peak of X m³/s", "Nth straight day of decline", round-number crossings); the reservoir balance (how many falling/steady vs. rising — rising during recession means operators are absorbing inflow, a normal refill posture, say so plainly); and the mid-valley reach (Mattawa and Pembroke level direction — direction only for Pembroke, no flood-state assertions since the level table carries no threshold).
 
 ### At the property — Lac Coulonge / Mansfield
 
-The lower-basin story for the property owner. Cover:
-  - One sentence on the property's status (the lake at Mansfield/Fort-Coulonge).
-  - One sentence on whether the dam operators are doing anything notable
-    (drawing down, holding water, surging release, etc.).
-  - One sentence on what the forecast says (rain coming? clear?).
-  - One sentence on the bottom line for the property owner ("water's going
-    down at X cm/day, expected to clear minor flood in N days unless rain").
-  - If anything is genuinely anomalous (regulatory exceedance, posture
-    change, big surge), call it out plainly.
-
-Tone for both threads: direct, lay reader. Translate every technical concept:
-  - "Bryson headpond" → "the dam's pond at the foot of Lac Coulonge" or
-    "the dam pond"
-  - "Carillon §15.3.5.1 directive overshoot" → "the regulatory ceiling at
-    the basin's terminal dam (which they're supposed to stay below in
-    spring) is being exceeded"
-  - "spill share" → "share of water going through the spillway vs the
-    turbines"
-  - "etat 4 / minor flood" → "minor flood — water's still in places it
-    shouldn't be but the trend is good"
-  - "ORRPB" → "the river management board"
-  - "m³/s" → "cubic metres per second" once, then OK to abbreviate
-  - "Vigilance 1195" → "the property's lake gauge"
-  - "Témiscaming outflow" → "the flow leaving Lake Temiscaming" (the upper
-    basin's main release toward Mattawa and the rest of the river)
-  - "second-stage / next refill" → "the next round of deliberate water
-    storage" at a reservoir
-
-What to avoid:
-  - Tables (those go below in the technical sections)
-  - Station IDs, codes, parameters
-  - "Carillon" / "Bryson" naked — use "the basin's terminal dam (Carillon)"
-    or "the dam at Lac Coulonge (Bryson)" the first time, then short forms
-  - Bullet lists of metrics (use prose)
-  - Numbers without context (e.g. "108.0 m" → "108.0 m, which is the
-    moderate-flood threshold for the property")
+2–3 short paragraphs: the property's current status; whether operators are doing anything notable; what the forecast says; and the bottom line ("water down X cm/day, expected to clear minor flood in N days unless rain"). Call out any genuine anomaly (regulatory exceedance, posture change, big surge).
 
 ## TL;DR
 
@@ -306,27 +248,15 @@ Schema (write all fields; use `null` only when truly unknown):
 
 ### Field semantics
 
-- `fetched_at_iso` — your routine's run timestamp, UTC ISO-8601.
-- `source.last_update_iso` — the "Last Update: …" timestamp ORRPB prints on the forecast page, converted to UTC ISO-8601. Convert from the EDT/EST Eastern timezone the page renders in.
-- `source.next_update_expected_iso` — same conversion for the "Next Update: …" line. If the page omits one (e.g. off-season), set to `null`.
-- `source.next_update_cadence` — `"daily"`, `"weekly"`, or `"unknown"`. Inferred from the gap between `last_update_iso` and `next_update_expected_iso` and from any explicit cadence text on the page (e.g. "weekly summary", "next bulletin in seven days"). If the page only shows a single dated update with no next-update commitment, default to `"unknown"`.
-- `mode` — one of:
-  - `"daily-freshet"` — daily ORRPB forecast updates with active-freshet language (snowmelt, runoff, rising/falling levels framed in m³/s, peak warnings).
-  - `"weekly-notice"` — ORRPB has shifted to weekly summaries / bulletins, typically post-freshet through fall. Cadence ≥5 days between updates and language no longer references active spring runoff.
-  - `"off-season"` — winter/dormant period; no current forecast, page may show "summary will resume" or similar.
-  - `"unreachable"` — page returned a non-2xx after the verify-before-outage guardrail completed. **In this case, DO NOT overwrite `latest.json` — preserve the last-known-good file.** Update only the brief markdown to note the outage. (To distinguish from the file simply being missing on the dashboard, the dashboard has its own staleness check based on `fetched_at_iso`.)
-- `freshet_active` — `true` when `mode` is `daily-freshet`, otherwise `false`.
-- `further_increases_possible` — `true` when ORRPB's forecast prose contains language like *"further increases … cannot be ruled out"*, *"levels expected to rise"*, *"second peak possible"*, or equivalent. Set `false` when ORRPB explicitly forecasts continued decline with no caveat. `null` if the page is silent on the question (off-season or weekly notice with no flood framing).
-- `further_increases_reach` — short geographic descriptor as ORRPB writes it, e.g. `"Mattawa to Lac Coulonge"`, `"Lake Coulonge to the Montreal Region"`, `"northern basin"`. `null` if not applicable.
-- `further_increases_includes_lac_coulonge` — `true` if the named reach explicitly includes Lac Coulonge or any point upstream of it (Pembroke, Mattawa, etc., since their water flows past Lac Coulonge). The case file's property gauge is Lac Coulonge, so this boolean is what the dashboard uses.
-- `forecast_text` — the verbatim forecast paragraph(s), single string, newlines preserved. Truncate at ~1500 characters if unusually long.
-
-### Mode-detection examples
-
-- *"Last Update: 2026-05-07 4:16 PM EDT, Next Update: 2026-05-08 4:15 PM EDT"* + active-freshet prose → `mode: "daily-freshet"`.
-- *"Last Update: 2026-08-12, Next Update: 2026-08-19"* + summer water-level summary prose → `mode: "weekly-notice"`.
-- Page renders only a generic "freshet has ended" notice or last update is >30 days ago → `mode: "off-season"`.
-- Page returns 503 / blank after the guardrail confirms it → do not write the file.
+- `fetched_at_iso` — routine run timestamp, UTC ISO-8601.
+- `source.last_update_iso` / `next_update_expected_iso` — ORRPB's "Last Update / Next Update" lines, converted from Eastern to UTC. `null` if absent.
+- `source.next_update_cadence` — `"daily"` | `"weekly"` | `"unknown"`. Infer from the gap between the two updates and any cadence text on the page.
+- `mode` — `"daily-freshet"` (active runoff, daily updates), `"weekly-notice"` (post-freshet summary cadence ≥5 days), `"off-season"` (dormant / generic notice / last update >30 days), or `"unreachable"` (page returned non-2xx after the guardrail). **If `unreachable`, DO NOT overwrite `latest.json` — preserve last-known-good and note the outage in the brief markdown only.**
+- `freshet_active` — `true` iff `mode == "daily-freshet"`.
+- `further_increases_possible` — `true` for "further increases cannot be ruled out" / "levels expected to rise" / "second peak possible" or equivalent. `false` if ORRPB explicitly forecasts continued decline. `null` if silent.
+- `further_increases_reach` — verbatim geographic phrase (e.g. "Mattawa to Lac Coulonge"). `null` if N/A.
+- `further_increases_includes_lac_coulonge` — `true` if the reach explicitly includes Lac Coulonge or anywhere upstream (Pembroke, Mattawa, etc.). Dashboard uses this boolean directly.
+- `forecast_text` — verbatim forecast paragraph(s), single string, newlines preserved, truncate at ~1500 chars.
 
 ### Write the file
 
@@ -351,13 +281,12 @@ Stage and commit `freshet-public/data/forecast/latest.json` alongside the brief 
 
 ## Operating instructions
 
-- **You run at ~22:00 UTC (≈5 PM EST / 6 PM EDT) — late afternoon Eastern time.** This is deliberate: the ORRPB updates its conditions/forecast page at ~4 PM ET, so by the time you run, *today's* ORRPB update is already published. The ORRPB section should reflect today's afternoon update; the "yesterday" comparison is against the prior brief, which was written ~24 h earlier (also late afternoon). Don't write the brief as if it were a morning summary of yesterday's data.
-- **Read yesterday's brief first** to compute day-over-day deltas: `git log --oneline -- freshet-public/data/daily-briefs/ | head -3` then `cat` the most recent file. If no prior brief exists, deltas are blank.
-- Use `curl -sS` or Python via Bash for the PostgREST proxy. Standard JSON, no TLS quirks.
-- The HQ proxy and feed both have a ~10-day rolling window of hourly data. Use the latest reading for "current" and the reading from ~24 h prior for "yesterday".
-- Vigilance metadata (when used as fallback) returns `dern_valeur_niv` (current level), `seuils_niv` (flood thresholds), `etat_niv` (state code 0=normal up to 6=major).
-- ORRPB pages are HTML; parse with stdlib `html.parser` or regex out the relevant rows. Don't be heroic — extract Lac Coulonge / Britannia / Carillon and the forecast prose.
-- If a single source is genuinely unreachable, still produce the brief with that section marked unreachable (after the verify guardrail). Don't fail the whole job.
+- You run at 22:00 UTC (~5 PM ET) — *after* the ~4 PM ET ORRPB update, so today's ORRPB data is already published. Write as a late-afternoon snapshot, not a morning summary of yesterday.
+- **Read yesterday's brief first** for day-over-day deltas and milestone bookkeeping: `git log --oneline -- freshet-public/data/daily-briefs/ | head -3` then `cat` the most recent file.
+- Use `curl -sS` or Python for the PostgREST proxy — standard JSON, no TLS quirks. HQ proxy has a ~10-day rolling window of hourly data.
+- Vigilance fallback metadata: `dern_valeur_niv` (current), `seuils_niv` (thresholds), `etat_niv` (state 0=normal..6=major).
+- ORRPB pages are HTML; parse with stdlib `html.parser`. Extract Lac Coulonge / Britannia / Carillon and the forecast prose.
+- If one source is genuinely unreachable (post-guardrail), mark that section unreachable and continue. Don't fail the whole job.
 
 ## Verify-before-declaring-outage guardrail (MANDATORY)
 
@@ -388,31 +317,29 @@ Stage and commit `latest.md` alongside the dated brief in the same commit.
 
 ## Commit and push
 
+ALL THREE FILES in one commit (the routine has historically forgotten `forecast/latest.json` and `latest.md` — explicit `git add` lines required):
+
 ```bash
 cd <homelab-infra repo root>
 git config user.name 'Freshet Daily Brief'
 git config user.email 'aachten@gmail.com'
 git add freshet-public/data/daily-briefs/YYYY-MM-DD.md \
         freshet-public/data/daily-briefs/latest.md \
-        freshet-public/data/forecast/latest.json    # MANDATORY — see "Structured forecast snapshot" above. Skip ONLY if the JSON was not written this run because ORRPB was unreachable (after the verify-before-outage guardrail).
+        freshet-public/data/forecast/latest.json
 git commit -m "data(freshet-brief): YYYY-MM-DD daily brief
 
-[2-3 sentence summary of what's in today's brief — pulled from your TL;DR]
+[2-3 sentence summary pulled from your TL;DR]
 
 Generated by the freshet-daily-brief routine."
 git push origin main
 ```
 
-**Don't forget the forecast snapshot.** If you wrote `data/forecast/latest.json` per the "Structured forecast snapshot" section above, it MUST be in this `git add` and the same commit. The dashboard's Brief drawer and post-peak status text both depend on it being committed daily; the routine missed it on 2026-05-09 and 2026-05-10 because the `git add` line above wasn't explicit. If `forecast/latest.json` was deliberately not written this run (because ORRPB was unreachable after the guardrail), say so explicitly in the commit message.
-
-If push fails (e.g. someone else committed in between), `git pull --rebase` and retry once.
-
-**Public mirror is automatic.** The `aachtenberg/ottawa-river-freshet` repo is kept in sync by a GitHub Actions workflow (`.github/workflows/mirror-freshet-public.yml`) that fires on every push to `main` touching `freshet-public/**`. You do NOT need to subtree-push yourself — `git push origin main` is sufficient.
+Skip `forecast/latest.json` from `git add` ONLY if ORRPB was unreachable this run (per guardrail) — and say so in the commit message. If push fails, `git pull --rebase` and retry once. The public mirror is automatic (GitHub Actions on push to main).
 
 ## Failure handling
 
-- If `git push origin main` fails: `git pull --rebase` and retry once. If still failing, write the brief locally and exit non-zero with a note in your final message.
-- If ALL data sources are GENUINELY unreachable (after the verify-before-outage guardrail), still write a brief with `## TL;DR` saying "All sources unreachable today." and commit it — proves the routine ran.
-- Don't open issues or send notifications. The brief committed to the repo IS the output.
+- Push fails → `git pull --rebase` and retry once. Still failing → write the brief locally and exit non-zero with a note.
+- ALL sources genuinely unreachable (post-guardrail) → still commit a brief with `## TL;DR` saying "All sources unreachable today." to prove the routine ran.
+- Don't open issues or send notifications. The committed brief IS the output.
 
-Finish with a one-sentence summary stating: (a) path of the brief, and (b) anything notable.
+Finish with one sentence stating: (a) brief path, (b) anything notable.
