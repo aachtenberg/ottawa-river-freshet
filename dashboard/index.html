@@ -669,20 +669,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
   <button class="range-btn" data-hours="720">30d</button>
 </div>
 
-<div class="section-title" id="wa-title">Waltham (Ottawa River — upstream)</div>
-<div class="section-subtitle" id="wa-info">—</div>
-<div class="chart-wrap"><div class="chart-container"><canvas id="waChart"></canvas></div></div>
-<div class="thresholds" id="wa-legend"></div>
-
-<div class="section-title" style="margin-top: 24px;" id="lc-title">Lac Coulonge (Ottawa River)</div>
+<div class="section-title" id="lc-title">Lac Coulonge (Ottawa River)</div>
 <div class="section-subtitle" id="lc-info">—</div>
 <div class="chart-wrap"><div class="chart-container"><canvas id="lcChart"></canvas></div></div>
 <div class="thresholds" id="lc-legend"></div>
-
-<div class="section-title" style="margin-top: 24px;" id="cr-title">Coulonge River tributary at Route 148</div>
-<div class="section-subtitle" id="cr-info">—</div>
-<div class="chart-wrap"><div class="chart-container"><canvas id="crChart"></canvas></div></div>
-<div class="thresholds" id="cr-legend"></div>
 
 <div class="section-title" style="margin-top: 28px;" data-i18n="regional">Regional context — Ottawa River corridor</div>
 <div class="section-subtitle" data-i18n="regional_sub">Upstream-to-downstream gauges along the Ottawa River. Upstream stations lead Lac Coulonge by hours-to-days and flag incoming pulses.</div>
@@ -838,8 +828,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 </div>
 
 <div class="footer">
-  <strong>Live data</strong> from Quebec MSP Vigilance API (Stations <a href="https://vigilance.geo.msp.gouv.qc.ca/stations/1195" target="_blank">1195 Lac Coulonge</a> and <a href="https://vigilance.geo.msp.gouv.qc.ca/stations/1004" target="_blank">1004 Coulonge River</a>).
-  Auto-refreshes every 10 minutes. Operated by Hydro-Québec and Hydro Météo respectively.
+  <strong>Live data</strong> for the property gauge from <a href="https://www.hydroquebec.com/generation/water-flow-management.html" target="_blank">Hydro-Québec open data</a> (Fort-Coulonge, station 1-2983), with Quebec MSP <a href="https://vigilance.geo.msp.gouv.qc.ca/stations/1195" target="_blank">Vigilance 1195 (Lac Coulonge)</a> as the secondary source. Regional Ontario gauges from Environment Canada (WSC).
+  Auto-refreshes every 10 minutes.
   Property thresholds from personal 2019 flood observations; 20-yr / 100-yr lines from the 2019 Lebel land survey (geodetic, ≈gauge datum ±5 cm).
   All timestamps shown in Eastern (America/Toronto).
   <br><strong>Unofficial dashboard</strong> — for official guidance consult <a href="https://www.ottawariver.ca/forecasts" target="_blank">ORRPB</a> and local authorities.
@@ -849,9 +839,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 <script>
 const API_BASE = 'https://inedit-ro.geo.msp.gouv.qc.ca';
 const STATIONS = {
-  1279: { chartId: 'waChart', infoId: 'wa-info', legendId: 'wa-legend', color: '#7A5ED8' },
-  1195: { chartId: 'lcChart', infoId: 'lc-info', legendId: 'lc-legend', color: '#378ADD' },
-  1004: { chartId: 'crChart', infoId: 'cr-info', legendId: 'cr-legend', color: '#D85A30' }
+  1195: { chartId: 'lcChart', infoId: 'lc-info', legendId: 'lc-legend', color: '#378ADD' }
 };
 
 // Property thresholds. `histCount` = number of years out of HISTORICAL_RECORD_YEARS
@@ -938,7 +926,6 @@ const FREEZE_STATIONS = [
 const REGIONAL_STATIONS = [
   { id: 951,  name: 'Temiscaming', subtitle: 'Lake Timiskaming village gauge · headwaters' },
   { id: 545,  name: 'Mattawa',     subtitle: 'Otto Holden tailwater · earliest northern pulse' },
-  { id: 1279, name: 'Waltham',     subtitle: 'Route 148 · immediate upstream' },
   // Buckhams Bay is the local gauge for Constance Bay residents (MVCA, 2022+).
   // It sits at the NW (upstream) end of Lac Deschênes, with Aylmer mid-lake
   // and Britannia at the downstream/SE end. Buckhams reads ~10–30 cm higher
@@ -1035,7 +1022,7 @@ function toggleTheme() {
   if (lastData) {
     if (typeof renderCorridorBar === 'function') renderCorridorBar();
     if (typeof renderORRPBDailyBar === 'function') renderORRPBDailyBar();
-    if (typeof renderWindow === 'function') { renderWindow(1279); renderWindow(1195); renderWindow(1004); }
+    if (typeof renderWindow === 'function') { renderWindow(1195); }
   }
 }
 // Apply persisted theme on load (must happen before paint to avoid flash).
@@ -1642,6 +1629,28 @@ async function precomputeEcccPeaks(metas) {
   await Promise.all(ids.map(ensureEcccPeaks));
 }
 
+// Vigilance station -> cluster-side same-gauge source. Quebec MSP's public
+// Vigilance mirror periodically stalls (their internal partners endpoint
+// stays fresh, but it's auth-gated; see project memory for details). When
+// that happens we splice rows from our own ingest of the equivalent
+// upstream into the Vigilance series so each card stays live.
+//
+// Datum verified ±0.02 m at overlapping timestamps for every mapping below
+// (probed 2026-05-29). The dashboard's per-station datumOffset applies
+// after the splice, so display values stay consistent.
+const FALLBACK_SOURCES = {
+  // Vigilance ID -> { path, key, label }
+  //   path:  PostgREST endpoint (under /history/)
+  //   key:   query param name that selects the station
+  //   label: human note for the inline comment
+  1195: { path: 'dam_levels',   key: 'station_id',   value: '1-2983',  note: 'HQ Fort Coulonge — property gauge' },
+  545:  { path: 'wsc_readings', key: 'station_code', value: '02JE013', note: 'WSC Mattawa, ON (Otto Holden tailwater)' },
+  951:  { path: 'wsc_readings', key: 'station_code', value: '02JE025', note: 'WSC Témiscaming' },
+  548:  { path: 'wsc_readings', key: 'station_code', value: '02KF005', note: 'WSC Britannia / Ottawa' },
+  550:  { path: 'wsc_readings', key: 'station_code', value: '02LA015', note: 'WSC Hull marina — Carillon directive trigger' },
+};
+const FALLBACK_LOOKBACK_H = 72;
+
 async function fetchStation(id) {
   const [mdR, rdR] = await Promise.all([
     fetch(`${API_BASE}/station_details_metadata_api?id=eq.${id}`, { cache: 'no-store' }),
@@ -1649,7 +1658,39 @@ async function fetchStation(id) {
   ]);
   if (!mdR.ok || !rdR.ok) throw new Error(`HTTP ${mdR.status}/${rdR.status}`);
   const [md, rd] = await Promise.all([mdR.json(), rdR.json()]);
-  return { metadata: md[0], readings: rd[0].valeurs_niv };
+  let readings = rd[0].valeurs_niv || [];
+
+  // Quebec's public Vigilance mirror is unreliable — it freezes or returns null
+  // readings for hours-to-days. For any station with a same-gauge cluster source
+  // (HQ open-data or WSC) we treat that source as PRIMARY and use Vigilance only
+  // to backfill history older than the cluster window. Datum verified ±0.02 m at
+  // overlapping timestamps (see FALLBACK_SOURCES). This keeps every card live and
+  // independent of Vigilance; if Vigilance recovers it simply extends older history.
+  const fb = FALLBACK_SOURCES[id];
+  if (fb) {
+    try {
+      const since = new Date(Date.now() - FALLBACK_LOOKBACK_H * 3600 * 1000).toISOString();
+      const r = await fetch(`/history/${fb.path}?${fb.key}=eq.${fb.value}&time=gte.${since}&order=time.asc&select=time,level_m`, { cache: 'no-store' });
+      if (r.ok) {
+        const rows = await r.json();
+        const cluster = rows
+          .filter(row => row.level_m != null)
+          .map(row => ({ valeur: row.level_m, date_prise_valeur: row.time, _source: fb.path }));
+        if (cluster.length) {
+          // Cluster owns its window; keep only Vigilance points older than the
+          // earliest cluster row so a frozen/stale Vigilance value never leaks in.
+          const clusterStartMs = parseVigilance(cluster[0].date_prise_valeur)?.getTime() || 0;
+          const older = readings.filter(v => (parseVigilance(v.date_prise_valeur)?.getTime() || 0) < clusterStartMs);
+          readings = older.concat(cluster);
+        }
+      }
+    } catch (e) {
+      // Best-effort; never break on the cluster source.
+      console.warn(`Cluster source for ${id} (${fb.note}) failed:`, e);
+    }
+  }
+
+  return { metadata: md[0], readings };
 }
 
 function renderStatus(type, message) {
@@ -1671,9 +1712,7 @@ function renderCards(data, seasonPeaks = {}) {
     // Featured — sits on top, full-width, large numbers. Property gauge.
     { id: 1195, name: 'Lac Coulonge',  subtitle: 'Ottawa River · Hydro-Québec · property gauge', cls: 'primary feature' },
     // Supporting context row below.
-    { id: 545,  name: 'Mattawa',       subtitle: 'Otto Holden tailwater · earliest upstream pulse', cls: 'headwater' },
-    { id: 1279, name: 'Waltham',       subtitle: 'Ottawa River · upstream (Route 148)',  cls: 'upstream' },
-    { id: 1004, name: 'Coulonge River', subtitle: 'Route 148 bridge · unregulated',       cls: 'tributary' }
+    { id: 545,  name: 'Mattawa',       subtitle: 'Otto Holden tailwater · earliest upstream pulse', cls: 'headwater' }
   ];
   container.innerHTML = items.filter(item => data[item.id]).map(item => {
     const d = data[item.id];
@@ -2081,8 +2120,8 @@ function windowLabel(h) {
 }
 
 // ---- Watershed snapshot bar chart ----------------------------------------
-// Main-stem stations upstream → downstream. Tributary 1004 excluded.
-const CORRIDOR_BAR_STATIONS = [951, 545, 1279, 1195, 99001, 984, 548, 550, 981, 1264];
+// Main-stem stations upstream → downstream.
+const CORRIDOR_BAR_STATIONS = [951, 545, 1195, 99001, 984, 548, 550, 981, 1264];
 const STATUS_BAR_COLORS = {
   6: 'rgba(156,26,26,0.85)',  5: 'rgba(224,75,74,0.85)',
   4: 'rgba(224,127,47,0.85)', 3: 'rgba(239,159,39,0.85)',
@@ -2818,24 +2857,33 @@ function openOpDetail(siteId) {
 }
 
 function updateChartTitles() {
-  const waLbl = lastData?.[1279]?.metadata?.label;
   const lcLbl = lastData?.[1195]?.metadata?.label;
-  const crLbl = lastData?.[1004]?.metadata?.label;
-  const waSub = waLbl ? ` <span class="station-id">${waLbl}</span>` : '';
   const lcSub = lcLbl ? ` <span class="station-id">${lcLbl}</span>` : '';
-  const crSub = crLbl ? ` <span class="station-id">${crLbl}</span>` : '';
   const w = windowLabel(windowHours);
-  document.getElementById('wa-title').innerHTML = `Waltham (Ottawa River — upstream)${waSub} — last ${w}`;
   document.getElementById('lc-title').innerHTML = `Lac Coulonge (Ottawa River)${lcSub} — last ${w}`;
-  document.getElementById('cr-title').innerHTML = `Coulonge River tributary at Route 148${crSub} — last ${w}`;
 }
 
 async function fetchStationHistory(stationId, hours) {
   const since = new Date(Date.now() - hours * 3600 * 1000).toISOString();
-  // Use the hourly continuous-aggregate view. Vigilance ingests at ~hourly
-  // cadence already, so the CA is mostly a passthrough — but querying through
-  // the view gives postgrest a uniformly-sized response and lets future
-  // higher-cadence sources auto-decimate without dashboard changes.
+  // Same promote-to-primary rule as fetchStation: if the station has a same-gauge
+  // cluster source, pull the full window from there so the 7d/14d/30d charts stay
+  // live even while the Vigilance river_readings table is frozen. Fall back to the
+  // Vigilance hourly continuous-aggregate only when the cluster source is empty.
+  const fb = FALLBACK_SOURCES[stationId];
+  if (fb) {
+    try {
+      const cu = `/history/${fb.path}?${fb.key}=eq.${fb.value}&time=gte.${since}&order=time.asc&select=time,level_m`;
+      const cr = await fetch(cu, { cache: 'no-store' });
+      if (cr.ok) {
+        const crows = (await cr.json()).filter(x => x.level_m != null);
+        if (crows.length) return crows.map(x => ({ date_prise_valeur: x.time, valeur: x.level_m }));
+      }
+    } catch (e) {
+      console.warn(`cluster history for ${stationId} failed: ${e.message}`);
+    }
+  }
+  // Vigilance hourly continuous-aggregate — querying through the view gives
+  // postgrest a uniformly-sized response and decimates higher-cadence sources.
   const url = `/history/river_readings_hourly?station_id=eq.${stationId}&time=gte.${since}&order=time.asc&select=time,level_m`;
   const r = await fetch(url, { cache: 'no-store' });
   if (!r.ok) throw new Error(`history HTTP ${r.status}`);
@@ -2892,9 +2940,7 @@ function setWindow(hours) {
     b.classList.toggle('active', Number(b.dataset.hours) === hours);
   });
   updateChartTitles();
-  renderWindow(1279);
   renderWindow(1195);
-  renderWindow(1004);
   // Stations / Tributaries tabs redraw too — their mini-charts share windowHours with Overview.
   if (document.querySelector('.tab-panel[data-tab="stations"].active')) {
     renderStationsTab();
@@ -2964,15 +3010,15 @@ document.getElementById('tab-strip').addEventListener('click', e => {
 window.addEventListener('hashchange', () => activateTab(location.hash.slice(1) || 'overview'));
 
 // ---- Stations tab: 10 mini-charts in a 2-col grid ----
-const STATIONS_TAB_IDS = [951, 545, 1279, 1195, 1004, 99001, 984, 548, 550, 981, 1264];
+const STATIONS_TAB_IDS = [951, 545, 1195, 99001, 984, 548, 550, 981, 1264];
 // Map each river gauge to its nearest weather station key for precip context.
 // Each river gauge → its nearest station in FREEZE_STATIONS, so the per-card
 // chip reflects precip *at* the gauge (matching the "nearest weather station"
 // UI wording). Val-d'Or / Rouyn-Noranda stay in FREEZE_STATIONS as upstream
 // freeze-night sensors but are too far (200–250 km) to represent any gauge.
 const GAUGE_TO_WX = {
-  951: 'Temiskaming Shores, ON', 545: 'Pembroke, ON', 1279: 'Pembroke, ON',
-  1195: 'Pembroke, ON', 1004: 'Pembroke, ON',
+  951: 'Temiskaming Shores, ON', 545: 'Pembroke, ON',
+  1195: 'Pembroke, ON',
   984: 'Ottawa-Gatineau', 548: 'Ottawa-Gatineau', 550: 'Ottawa-Gatineau',
   981: 'Hawkesbury, ON', 1264: 'Hawkesbury, ON'
 };
@@ -3348,9 +3394,6 @@ const TRIBUTARY_STATIONS = [
       name: 'Mississippi at Fergusons Falls', subtitle: 'WSC · upper' },
     { id: 300406, source: 'wsc', wscCode: '02KF006', river: 'Mississippi River (ON)',
       name: 'Mississippi at Appleton',        subtitle: 'WSC · lower (joins Ottawa at Galetta)' }
-  ] },
-  { river: 'Rivière Coulonge', stations: [
-    { id: 1004, name: 'Coulonge @ Mansfield (Rte 148)', subtitle: 'Hydro Météo · unregulated; joins Ottawa at Fort-Coulonge' }
   ] },
   { river: 'Rideau River', stations: [
     { id: 300504, source: 'wsc', wscCode: '02LA004', river: 'Rideau River',
@@ -4247,13 +4290,13 @@ async function fetchData() {
     // best-effort — fall back to null on failure so the cards still render.
     const peakOrNull = id => fetchSeasonPeak(id).catch(e => { console.warn(`season peak ${id}: ${e.message}`); return null; });
     const stationOrNull = id => fetchStation(id).catch(e => { console.warn(`station ${id}: ${e.message}`); return null; });
-    const [lc, cr, wa, mt, lcPeak, crPeak, waPeak, mtPeak] = await Promise.all([
-      fetchStation(1195), fetchStation(1004), fetchStation(1279), stationOrNull(545),
-      peakOrNull(1195), peakOrNull(1004), peakOrNull(1279), peakOrNull(545)
+    const [lc, mt, lcPeak, mtPeak] = await Promise.all([
+      fetchStation(1195), stationOrNull(545),
+      peakOrNull(1195), peakOrNull(545)
     ]);
-    const data = { 1195: lc, 1004: cr, 1279: wa };
+    const data = { 1195: lc };
     if (mt) data[545] = mt;
-    const seasonPeaks = { 1195: lcPeak, 1004: crPeak, 1279: waPeak, 545: mtPeak };
+    const seasonPeaks = { 1195: lcPeak, 545: mtPeak };
     lastData = data;
     lastSeasonPeaks = seasonPeaks;
     // Pull ECCC annual peaks for any station Vigilance can't classify (etat_niv=0).
@@ -4280,9 +4323,7 @@ async function fetchData() {
     if (document.querySelector('.tab-panel[data-tab="tributaries"].active')) renderTributariesTab();
     if (document.querySelector('.tab-panel[data-tab="operations"].active')) renderOperationsTab();
     if (document.querySelector('.tab-panel[data-tab="flow"].active')) renderFlowTab();
-    renderWindow(1279);
     renderWindow(1195);
-    renderWindow(1004);
     renderProperty(lc.readings[lc.readings.length - 1].valeur, lc.metadata.trend_niv);
     updateChartTitles();
 
@@ -4343,18 +4384,17 @@ async function fetchData() {
 
 // ---- Map drawer (lazy-loaded Leaflet) ----------------------------------
 // Stations to render on the map; superset of hero + regional cards.
-const MAP_STATIONS = [951, 545, 1279, 1195, 1004, 99001, 984, 548, 550, 981, 1264];
+const MAP_STATIONS = [951, 545, 1195, 99001, 984, 548, 550, 981, 1264];
 // Status-bucket → CSS class. Mirrors Vigilance's etat_niv 1–6, plus 0 for stations
 // without configured flood thresholds (we still show them, just neutral colour).
 function statusClass(etat) { return `status-${etat == null ? 0 : etat}`; }
 // Ottawa River main-stem waypoints in upstream → downstream order. Station
 // coords come from the API (resolved at render time); intermediates fill in
-// the river's notable bends. Tributary 1004 is intentionally excluded.
+// the river's notable bends.
 const RIVER_ROUTE = [
   { stationId: 951 },                             // Temiscaming village
   { stationId: 545 },                             // Mattawa
   { lat: 45.83, lon: -77.11, label: 'Pembroke' },
-  { stationId: 1279 },                            // Waltham
   { stationId: 1195 },                            // Lac Coulonge
   { lat: 45.55, lon: -76.30, label: 'Bristol' },  // mid-bend SE of Lac Coulonge
   { stationId: 99001 },                           // Buckhams Bay (MVCA) — NW end of Lac Deschênes
@@ -4446,9 +4486,7 @@ const MAP_LABELS = {
 const STATION_NAMES = {
   951:  { en: 'Temiscaming',     fr: 'Témiscaming' },
   545:  { en: 'Mattawa',         fr: 'Mattawa' },
-  1279: { en: 'Waltham',         fr: 'Waltham' },
   1195: { en: 'Lac Coulonge',    fr: 'Lac Coulonge' },
-  1004: { en: 'Coulonge River',  fr: 'Rivière Coulonge' },
   99001:{ en: 'Buckhams Bay',    fr: 'Baie Buckhams' },
   984:  { en: 'Aylmer',          fr: 'Aylmer' },
   548:  { en: 'Britannia',       fr: 'Britannia' },
@@ -4495,7 +4533,7 @@ function wmToLatLon([x, y]) {
 
 // Priority order for the sticky-cluster collision pass. The property gauge
 // always wins; then upstream early-warning stations; then downstream context.
-const CALLOUT_PRIORITY = [1195, 545, 1279, 1004, 951, 548, 984, 550, 981, 1264];
+const CALLOUT_PRIORITY = [1195, 545, 951, 548, 984, 550, 981, 1264];
 function rectsOverlap(a, b) {
   return !(a.right < b.left || a.left > b.right || a.bottom < b.top || a.top > b.bottom);
 }
