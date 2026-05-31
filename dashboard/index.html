@@ -1646,27 +1646,42 @@ async function precomputeEcccPeaks(metas) {
   await Promise.all(ids.map(ensureEcccPeaks));
 }
 
-// Vigilance station -> cluster-side same-gauge source. Quebec MSP's public
-// Vigilance mirror periodically stalls (their internal partners endpoint
-// stays fresh, but it's auth-gated; see project memory for details). When
-// that happens we splice rows from our own ingest of the equivalent
-// upstream into the Vigilance series so each card stays live.
+// Vigilance station -> cluster-side same-gauge source, used to keep each card
+// live independent of Quebec MSP's public Vigilance feed.
+//
+// Two modes (see `onStall`):
+//   - default       : the cluster source is PRIMARY for its window and
+//                      Vigilance backfills only the older history. Used for the
+//                      WSC-native regional gauges, where WSC is the canonical
+//                      source anyway.
+//   - onStall: true : Vigilance (fetched from the inedit primary host) is
+//                      PRIMARY; the cluster source is spliced in ONLY when the
+//                      Vigilance series goes stale, so a Vigilance regression
+//                      can't blank the card. Lac Coulonge runs this way now
+//                      that the inedit-primary ingester is reliable
+//                      (see project_vigilance_freeze_fallback memory).
 //
 // Datum verified ±0.02 m at overlapping timestamps for every mapping below
 // (probed 2026-05-29). The dashboard's per-station datumOffset applies
 // after the splice, so display values stay consistent.
 const FALLBACK_SOURCES = {
-  // Vigilance ID -> { path, key, label }
-  //   path:  PostgREST endpoint (under /history/)
-  //   key:   query param name that selects the station
-  //   label: human note for the inline comment
-  1195: { path: 'dam_levels',   key: 'station_id',   value: '1-2983',  note: 'HQ Fort Coulonge — property gauge' },
+  // Vigilance ID -> { path, key, value, note, onStall? }
+  //   path:    PostgREST endpoint (under /history/)
+  //   key:     query param name that selects the station
+  //   value:   station id within that endpoint
+  //   note:    human note for logs
+  //   onStall: Vigilance-primary; splice this source only when Vigilance stale
+  1195: { path: 'dam_levels',   key: 'station_id',   value: '1-2983',  note: 'HQ Fort Coulonge — property gauge', onStall: true },
   545:  { path: 'wsc_readings', key: 'station_code', value: '02JE013', note: 'WSC Mattawa, ON (Otto Holden tailwater)' },
   951:  { path: 'wsc_readings', key: 'station_code', value: '02JE025', note: 'WSC Témiscaming' },
   548:  { path: 'wsc_readings', key: 'station_code', value: '02KF005', note: 'WSC Britannia / Ottawa' },
   550:  { path: 'wsc_readings', key: 'station_code', value: '02LA015', note: 'WSC Hull marina — Carillon directive trigger' },
 };
 const FALLBACK_LOOKBACK_H = 72;
+// A Vigilance series is "stale" if its most recent point is older than this.
+// Vigilance/HQ both publish ~hourly, so 6 h tolerates a few missed cycles
+// before the onStall fallback reaches for the cluster source.
+const FALLBACK_STALE_H = 6;
 
 async function fetchStation(id) {
   const [mdR, rdR] = await Promise.all([
@@ -1677,33 +1692,49 @@ async function fetchStation(id) {
   const [md, rd] = await Promise.all([mdR.json(), rdR.json()]);
   let readings = rd[0].valeurs_niv || [];
 
-  // For any station with a same-gauge cluster source (HQ open-data or WSC) we
-  // treat that source as PRIMARY and use Vigilance only to backfill history
-  // older than the cluster window. Datum verified ±0.02 m at overlapping
-  // timestamps (see FALLBACK_SOURCES). This keeps the covered cards live and
-  // independent even if Vigilance regresses again; if Vigilance is current it
-  // simply supplies the older history.
+  // Same-gauge cluster source (HQ open-data or WSC). Behaviour depends on the
+  // entry's `onStall` flag (see FALLBACK_SOURCES). Datum verified ±0.02 m at
+  // overlapping timestamps; the per-station datumOffset applies after.
   const fb = FALLBACK_SOURCES[id];
   if (fb) {
-    try {
-      const since = new Date(Date.now() - FALLBACK_LOOKBACK_H * 3600 * 1000).toISOString();
-      const r = await fetch(`/history/${fb.path}?${fb.key}=eq.${fb.value}&time=gte.${since}&order=time.asc&select=time,level_m`, { cache: 'no-store' });
-      if (r.ok) {
-        const rows = await r.json();
-        const cluster = rows
-          .filter(row => row.level_m != null)
-          .map(row => ({ valeur: row.level_m, date_prise_valeur: row.time, _source: fb.path }));
-        if (cluster.length) {
-          // Cluster owns its window; keep only Vigilance points older than the
-          // earliest cluster row so a stale Vigilance value never leaks in.
-          const clusterStartMs = parseVigilance(cluster[0].date_prise_valeur)?.getTime() || 0;
-          const older = readings.filter(v => (parseVigilance(v.date_prise_valeur)?.getTime() || 0) < clusterStartMs);
-          readings = older.concat(cluster);
+    // For onStall sources Vigilance is primary, so only reach for the cluster
+    // source when the Vigilance series has actually gone stale — otherwise skip
+    // the request entirely and serve pure Vigilance.
+    const latestVigMs = readings.reduce(
+      (m, v) => Math.max(m, parseVigilance(v.date_prise_valeur)?.getTime() || 0), 0);
+    const vigStale = (Date.now() - latestVigMs) > FALLBACK_STALE_H * 3600 * 1000;
+    if (!fb.onStall || vigStale) {
+      try {
+        const since = new Date(Date.now() - FALLBACK_LOOKBACK_H * 3600 * 1000).toISOString();
+        const r = await fetch(`/history/${fb.path}?${fb.key}=eq.${fb.value}&time=gte.${since}&order=time.asc&select=time,level_m`, { cache: 'no-store' });
+        if (r.ok) {
+          const rows = await r.json();
+          const cluster = rows
+            .filter(row => row.level_m != null)
+            .map(row => ({ valeur: row.level_m, date_prise_valeur: row.time, _source: fb.path }));
+          if (cluster.length) {
+            if (fb.onStall) {
+              // Vigilance stale: keep the full Vigilance series and append only
+              // the cluster rows newer than the last Vigilance point, so the
+              // card stays current without overwriting good Vigilance history.
+              const newer = cluster.filter(c => (parseVigilance(c.date_prise_valeur)?.getTime() || 0) > latestVigMs);
+              if (newer.length) {
+                readings = readings.concat(newer);
+                console.info(`Vigilance ${id} stale (>${FALLBACK_STALE_H}h); spliced ${newer.length} rows from ${fb.note}`);
+              }
+            } else {
+              // Cluster owns its window; keep only Vigilance points older than
+              // the earliest cluster row so a stale Vigilance value never leaks.
+              const clusterStartMs = parseVigilance(cluster[0].date_prise_valeur)?.getTime() || 0;
+              const older = readings.filter(v => (parseVigilance(v.date_prise_valeur)?.getTime() || 0) < clusterStartMs);
+              readings = older.concat(cluster);
+            }
+          }
         }
+      } catch (e) {
+        // Best-effort; never break on the cluster source.
+        console.warn(`Cluster source for ${id} (${fb.note}) failed:`, e);
       }
-    } catch (e) {
-      // Best-effort; never break on the cluster source.
-      console.warn(`Cluster source for ${id} (${fb.note}) failed:`, e);
     }
   }
 
@@ -1727,7 +1758,7 @@ function renderCards(data, seasonPeaks = {}) {
   const container = document.getElementById('cards');
   const items = [
     // Featured — sits on top, full-width, large numbers. Property gauge.
-    { id: 1195, name: 'Lac Coulonge',  subtitle: 'Ottawa River · Hydro-Québec · property gauge', cls: 'primary feature' },
+    { id: 1195, name: 'Lac Coulonge',  subtitle: 'Ottawa River · Vigilance (MSP) · property gauge', cls: 'primary feature' },
     // Supporting context row below.
     { id: 545,  name: 'Mattawa',       subtitle: 'Otto Holden tailwater · earliest upstream pulse', cls: 'headwater' },
     { id: 1279, name: 'Waltham',       subtitle: 'Ottawa River · upstream (Route 148)',  cls: 'upstream' },
