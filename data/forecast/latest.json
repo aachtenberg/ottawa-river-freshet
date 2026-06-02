@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "fetched_at_iso": "2026-06-01T22:00:00Z",
+  "fetched_at_iso": "2026-06-02T22:00:00Z",
   "source": {
     "url": "https://www.ottawariver.ca/conditions/?display=forecast",
-    "last_update_iso": "2026-05-26T19:35:00Z",
-    "next_update_expected_iso": "2026-06-02T20:00:00Z",
+    "last_update_iso": "2026-06-02T19:33:00Z",
+    "next_update_expected_iso": "2026-06-09T20:00:00Z",
     "next_update_cadence": "weekly"
   },
   "mode": "weekly-notice",
