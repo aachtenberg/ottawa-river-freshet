@@ -1,8 +1,8 @@
 # Daily brief — 2026-06-07
 
-*Generated automatically at 22:00 UTC. See `freshet-public/docs/analysis/Freshet_2026_Complete_Summary.md` for project context.*
+*Generated automatically at 22:05 UTC. See `freshet-public/docs/analysis/Freshet_2026_Complete_Summary.md` for project context.*
 
-*Data sources: cluster proxy (freshet.xgrunt.com) — confirmed HTTP 200 via guardrail probe (proxy dam_releases 200/117b, proxy dam_levels 200/76b, ORRPB forecast 200/130,553b). All PostgREST queries successful via curl. HQ hourly data current to June 7 T10:00 UTC; Vigilance current to June 7 T11:00 UTC; ORRPB PSPC/ORRPB daily series current to June 7.*
+*Data sources: cluster proxy (freshet.xgrunt.com) — confirmed HTTP 200 via guardrail probe (proxy dam_releases 200/116b, proxy dam_levels 200/77b, ORRPB forecast page 200/130,634b). All PostgREST queries successful via curl. HQ hourly data current to June 7 T18–T19:00 UTC (2–3 PM ET); Vigilance current to June 7 T20:00 UTC (4 PM ET); ORRPB conditions river page scraped at 22:00 UTC; ORRPB PSPC/ORRPB daily series current to June 7.*
 
 ---
 
@@ -10,39 +10,42 @@
 
 ### Upstream — the upper basin
 
-Today is Day 37 of the recession since the May 2 freshet peak, and the rate of decline at Lake Témiscaming has stalled for the third straight day. Flow out of the lake settled at 780 cubic metres per second — barely changed from yesterday's 782 and the 755 recorded on June 5 (the June 5 figure has since been revised slightly upward from the 749 reported in the previous brief; still firmly below 800). For three days running, the flow is in the 755–782 m³/s range, neither pushing lower nor bouncing significantly. To put that in context: at the May 2 peak, the same release was roughly 2,741 m³/s — today's reading is about 28% of that. The absence of further decline for three days suggests the upper basin's snowmelt contribution has largely run its course and the system is settling into early-summer base conditions. Whether flows resume declining or tick slightly upward next week likely depends on precipitation over the next few days.
+Today is Day 37 of the recession since the May 2 freshet peak. The flow out of Lake Témiscaming settled at 790 cubic metres per second for today — slightly higher than the 782 recorded yesterday and the 755 the day before, but the three-day range (755–790 m³/s) reflects natural variability rather than a new surge. The river remains at roughly 29% of its May 2 peak (around 2,741 m³/s) and the upper basin is showing every sign of transitioning into early-summer base conditions. The anticipated sub-700 crossing has not materialised — a mild upward wobble over three days — but the system is not loading. Sub-800 m³/s is now three straight days running, which was last seen before the spring flood.
 
-The mid-valley is telling a similar story. The river at Mattawa — midway between Lake Témiscaming and the Lac Coulonge area — had a blip yesterday (rising 8 cm) but pulled back 6 cm today, sitting at 152.65 metres, very close to where it was on June 5. The river at Pembroke, another 150 kilometres downstream, saw a 3-centimetre bounce today after falling 7 centimetres yesterday — both of these small oscillations are consistent with day-to-day noise in cascade operations rather than any new upstream input. Across the 14 tracked reservoirs in the basin, three are gently rising (Bark Lake, Des Joachims, and Mitchinamecus — the largest by only 6 centimetres), one is easing (Dozois, down 3 centimetres), and the rest are essentially unchanged. This is a modest shift toward retention compared with the pattern of the last several days, but the movements are small enough that no active "hold-back" posture is indicated.
+The mid-valley tells the same story. The river at Mattawa — midway between Lake Témiscaming and the property — registered 152.62 metres at midnight, down 9 centimetres from the night before, resolving the one-day blip that appeared on June 6. The river at Pembroke, about 150 kilometres further downstream, is also essentially flat. Among 14 tracked reservoirs, three are gently rising (Bark Lake, Des Joachims, and Mitchinamecus), ten are unchanged, and one (Dozois) is very slowly falling. The three risers are small reservoirs with near-zero outflows — a normal early-summer refill posture in quiet conditions.
 
 ### At the property — Lac Coulonge / Mansfield
 
-The lake at the property is in fully normal conditions and continuing a gradual drift lower. As of 11 AM UTC today (7 AM local time), the live gauge reads 106.23 metres — down about 2 centimetres from the same reading 24 hours earlier. The overnight level tracked by the Ottawa River board was 106.24 metres, exactly where it sat the night before, so the midnight-to-midnight picture is essentially flat while the live reading shows a slight continued decline through the morning. The lake is sitting comfortably in normal territory — about 77 centimetres below the first cautionary threshold (107.00 metres), and about 127 centimetres below the minor-flood level. The Ottawa River board forecast remains unchanged (last updated June 2, next update scheduled for Monday June 9): stable or gradually decreasing, no precipitation flag, no flood concerns at any location.
+The lake is in normal territory and continuing a slow drift lower. The live gauge at 4 PM today reads 106.22 metres, down about 2 centimetres from the same time yesterday. The midnight reading on the Ottawa River board (106.23 m tonight vs 106.24 m last night) confirms a modest one-centimetre overnight decline. The lake is 78 centimetres below the first cautionary threshold and in no flood danger. The Ottawa River board forecast remains on its post-freshet weekly schedule — unchanged since June 2, next update Monday June 9 — calling for stable or gradually decreasing levels with no flood concerns and no precipitation flags.
 
-Two developments at the dams bookend the property on either side, and both are worth noting. At the dam pond behind Bryson Generating Station — immediately downstream of the property at the outlet of Lac Coulonge — the water level has risen back to 105.20 metres. That matches the event peak reached on June 1, which was the highest point during the entire post-freshet period, and it is 53 centimetres above the top of the dam's normal operating range (104.67 metres). Releases from Bryson are slightly lower than yesterday, but the dam pond is rising anyway because inflows are outpacing outflows. This is now Day 10 of the headpond operating above its normal ceiling. Simultaneously, at Carillon — the basin's terminal dam near Hawkesbury — the spillway gates that were fully closed just two days ago have been quietly reopened. The dam is now releasing about 2,657 cubic metres per second, up 12% from yesterday, with about 5% of that going through the spillway gates. This is not a flood signal for the property (it's downstream of everything), but it does indicate that the lower basin is carrying more water than the turbines alone can handle, and operators have adjusted accordingly.
+At Bryson — the dam pond immediately downstream of the property at the outlet of Lac Coulonge — the headpond stands at 105.19 metres, essentially unchanged from this morning's reading of 105.20 m. This is 52 centimetres above the top of the dam's normal operating range and matches the event peak set on June 1. This is now Day 10 of the headpond sitting above its normal ceiling, with no sign of imminent relief. Releases are steady and stable; the elevated level is driven by inflows from upstream exceeding the dam's releases, not by any operational change at Bryson itself.
+
+The main afternoon development is at Carillon — the basin's terminal dam near Hawkesbury. Operators made a significant operational shift during the day: turbine generation was reduced by about 13% (from roughly 2,518 m³/s to 2,184 m³/s) while spillway discharge jumped by 127% (from 139 to 315 m³/s). The total outflow from Carillon fell slightly versus this morning, but the mix changed dramatically — from turbine-dominant to notable spill. The Carillon headpond and the downstream Hull dock gauge both fell about 8–9 centimetres during the day, meaning Carillon is releasing water faster than the river above it is supplying. None of this creates a flood concern at the property; Carillon is at the opposite end of the system.
 
 ---
 
 ## TL;DR
 
-Lac Coulonge **106.23 m live / 106.24 m midnight** (live −2 cm/24h; midnight flat day-over-day; etat 0, 77 cm below pre-alert). **⚠⚠⚠ Bryson headpond Day 10 breach BACK AT EVENT PEAK: 105.11→105.20 m (+9 cm); 53 cm above band ceiling 104.67 m — matches June 1 peak.** Bryson spill −7.1% (217.78→202.23 m³/s; above 5% flag ⚠). **⚠⚠⚠ CARILLON SPILLWAY REOPENED (REVERSED): 0%→5.22% spill; total +12.1% (2,371→2,657 m³/s); turbined +6.2%. Reversed 2 days after "spillway closed" (June 5) flag.** Cascade otherwise uniformly stable (all sites ±2% except Paugan −4.8%). **Témiscaming 780 m³/s — plateau Day 3 (755–782 range June 5–7); sub-800 Day 3; sub-900 Day 3; Day 37 post-peak.** Mattawa: blip resolved (152.71→152.65, −6 cm); Pembroke +3 cm bounce. Reservoir balance: **3 rising · 10 steady · 1 falling** (bark_lake +4, des_joachims +6, mitchinamecus +5; dozois −3). Hull dock 41.85 m → §15.3.5.1 INACTIVE Day 13 (76 cm below 42.61 m trigger; rising +4 cm today — small reversal of decline). Carillon amont 41.10 m (+4 cm). ORRPB forecast: unchanged, weekly cadence (next update June 9).
+Lac Coulonge **106.22 m live (T20 UTC) / 106.23 m midnight** (live −2 cm/24h; midnight −1 cm; etat 0, 78 cm below pre-alert). **⚠⚠⚠ Bryson headpond Day 10 at event peak: 105.19 m, 52 cm above band ceiling 104.67 m — flat vs this morning.** Bryson releases all within ±1% threshold. **⚠⚠⚠ CARILLON MAJOR AFTERNOON SHIFT: turbined −13.3% (2,518→2,184 m³/s); spilled +127% (139→315 m³/s; 5.22%→12.61%); total −5.9% since morning. Vs yesterday EOD: turbined −5.6% ⚠; spill 0%→12.61% ⚠⚠; total +8.1%.** Carillon amont −9 cm intraday (41.10→41.01 m); Hull dock −8 cm intraday (41.85→41.77 m). **⚠ Paugan −5.1%; ⚠⚠ Rapides-Farmers −9.3%.** Témiscaming **790 m³/s** (updated PSPC June 7) — sub-800 Day 3 continues; 755→782→790 mild uptick, not strong decline; Day 37 post-peak. Mattawa −9 cm (152.71→152.62 m; resumed decline). Reservoir balance: **3 rising · 10 steady · 1 falling**. Hull dock 41.77 m → §15.3.5.1 INACTIVE Day 13 (84 cm below 42.61 m trigger). ORRPB forecast: unchanged (weekly; next update June 9).
 
 ---
 
 ## Lac Coulonge (the property gauge, Vigilance 1195)
 
-*Sources: proxy `river_readings` station 1195 (June 7 T11:00 UTC / 7:00 AM ET); proxy `orrpb_river_levels` station `lake-coulonge` (midnight series). ORRPB conditions river page confirms Lake Coulonge at 106.24 m (03:00 ET reading) — consistent with proxy.*
+*Sources: proxy `river_readings` station 1195 (June 7 T20:00 UTC / 4:00 PM ET — most recent; T18:00–T19:00 also queried for trend); proxy `orrpb_river_levels` station `lake-coulonge` (midnight series); ORRPB conditions river page (June 7 15:00 ET — confirms 106.22 m, consistent).*
 
 | Metric | Value |
 |---|---|
-| Current level (proxy station 1195, June 7 T11:00 UTC / 7:00 AM ET) | **106.23 m** |
-| ORRPB midnight (June 7) | **106.24 m** |
+| Current level (proxy station 1195, June 7 T20:00 UTC / 4:00 PM ET) | **106.22 m** |
+| ORRPB conditions page (June 7 15:00 ET) | **106.22 m** |
+| ORRPB midnight (June 7) | **106.23 m** |
 | ORRPB midnight (June 6) | 106.24 m |
-| 24h delta (same-hour proxy: June 6 T10:00 106.255 → June 7 T11:00 106.232) | **−2.3 cm ≈ −2 cm** |
-| 24h delta (midnight-to-midnight: June 6 → June 7) | **0 cm — flat** |
+| 24h delta (same-hour proxy: June 6 T20:00 106.239 → June 7 T20:00 106.219) | **−2.0 cm** |
+| 24h delta (midnight-to-midnight: June 6 → June 7) | **−1 cm** |
 | Flood state | **etat 0 — fully normal** (no threshold exceeded) |
-| Distance to pre-alert (107.00 m) | **77 cm below** |
-| Distance to minor flood (107.50 m) | 127 cm below |
-| Distance to moderate flood (108.00 m) | 177 cm below |
+| Distance to pre-alert (107.00 m) | **78 cm below** |
+| Distance to minor flood (107.50 m) | 128 cm below |
+| Distance to moderate flood (108.00 m) | 178 cm below |
 
 **ORRPB midnight level series (recent):**
 
@@ -55,110 +58,109 @@ Lac Coulonge **106.23 m live / 106.24 m midnight** (live −2 cm/24h; midnight f
 | June 3 | 106.32 | −4 cm | Brief resumption |
 | June 4 | 106.31 | −1 cm | Near-flat |
 | June 5 | 106.32 | +1 cm | Tick-up |
-| June 6 | 106.24 | −8 cm | Resumed decline |
-| **June 7** | **106.24** | **0 cm** | **Flat — live at 106.23 m, slight intraday drift** |
+| June 6 | 106.24 | **−8 cm** | Resumed decline |
+| **June 7** | **106.23** | **−1 cm** | **Essentially flat at midnight; live 106.22 m at 4 PM ET** |
 
-*7-day pace (May 31 → June 7): 106.36 → 106.24 = −12 cm / 7 = −1.7 cm/day avg. Pace has slowed significantly from the May 25–30 rate of ~12 cm/day. Lake is near seasonal equilibrium.*
+*7-day pace (May 31 → June 7): 106.36 → 106.23 = −13 cm / 7 = −1.9 cm/day avg. Lake near seasonal equilibrium; very slow recession.*
 
 ---
 
 ## Bryson operating posture (HQ proxy)
 
-*Source: proxy `dam_releases` (site 3-46, June 7 T10:00 UTC — most recent hourly) and `dam_levels` (stations 1-2964 amont T10:00 UTC, 1-2965 aval T10:00 UTC). "Yesterday" = June 6 T19:00 UTC (most recent prior snapshot). Guardrail confirmed: proxy 200/117b for dam_releases, 200/76b for dam_levels.*
+*Source: proxy `dam_releases` (site 3-46, June 7 T18:00 UTC — most recent hourly) and `dam_levels` (stations 1-2964 amont T19:00 UTC, 1-2965 aval T19:00 UTC). "Yesterday" = June 6 T23:00 UTC. Guardrail: proxy dam_releases 200/116b, dam_levels 200/77b.*
 
-| Metric | Today (June 7 T10:00) | Yesterday (June 6 T19:00) | Δ |
+| Metric | Today (June 7 T18–19 UTC / 2–3 PM ET) | Yesterday (June 6 T23:00 UTC) | Δ |
 |---|---|---|---|
-| Total release (m³/s) | 496.11 | 510.75 | −14.64 (−2.9%) |
-| Turbined (m³/s) | 293.88 | 292.97 | +0.91 (+0.3%) |
-| Spilled (m³/s) | 202.23 | 217.78 | **−15.55 (−7.1%) ⚠** |
-| Spill share (%) | **40.76%** | 42.65% | −1.89 pp |
-| Headpond / amont (1-2964, m) | **105.20** | 105.11 | **+9 cm — Day 10 breach; EVENT PEAK MATCHED ⚠⚠⚠** |
-| Tailwater / aval (1-2965, m) | 87.46 | 87.52 | −6 cm |
-| Δh (head differential, m) | **17.74** | 17.59 | +0.15 m |
+| Total release (m³/s) | 495.9 | 494.05 | +1.85 (+0.4%) |
+| Turbined (m³/s) | 294.33 | 294.02 | +0.31 (+0.1%) |
+| Spilled (m³/s) | 201.57 | 200.03 | +1.54 (+0.8%) |
+| Spill share (%) | **40.65%** | 40.49% | +0.16 pp |
+| Headpond / amont (1-2964, m) | **105.19** | 105.17 | **+2 cm — Day 10 breach; 52 cm above ceiling** |
+| Tailwater / aval (1-2965, m) | 87.49 | 87.46 | +3 cm |
+| Δh (head differential, m) | **17.70** | 17.71 | −0.01 m |
 
-**Headpond operating band (104.20–104.67 m):** At 105.20 m, the headpond is **53 cm above the upper bound** — Day 10 of the upper breach. Today's reading matches the June 1 event peak (105.20 m), meaning the brief improvement seen June 2–5 (+15, +1, −3 cm respectively) has been fully reversed. Releases fell −2.9% and spill fell −7.1% (above the 5% flag threshold), but the headpond rose anyway, confirming inflows from Rapide-7 / lateral drainage continue to exceed Bryson's release. The 5% flag is triggered on the spill series; the other two series are within threshold.
+**Headpond operating band (104.20–104.67 m):** At 105.19 m, the headpond is **52 cm above the upper bound** — Day 10 of the upper breach. Today's reading is essentially identical to the event peak of 105.20 m (June 1 and this morning at T10:00). No series crossed the 5% flag threshold today; Bryson is in a stable-but-elevated posture. The headpond has fluctuated within 105.03–105.20 m since Day 4 with no clear downward trend.
 
-**Updated headpond series:**
+**Headpond series (Day 10):**
 
-| Date/Time (UTC) | Headpond (m) | vs. band ceiling 104.67 m |
+| Date (approx. T19–T23 UTC) | Headpond (m) | vs. band ceiling 104.67 m |
 |---|---|---|
-| May 29 T19:00 | 104.92 | +25 cm — upper breach Day 1 |
-| May 30 T19:00 | 104.98 | +31 cm (Day 2) |
-| May 31 T19:00 | 105.08 | +41 cm (Day 3) |
-| June 1 T19:00 | 105.20 | +53 cm (Day 4 — prior event peak) |
-| June 2 T19:00 | 105.05 | +38 cm (Day 5; −15 cm) |
-| June 3 T19:00 | 105.06 | +39 cm (Day 6) |
-| June 4 T19:00 | 105.03 | +36 cm (Day 7) |
-| June 5 T19:00 | 105.10 | +43 cm (Day 8; reversal) |
-| June 6 T19:00 | 105.11 | +44 cm (Day 9; +1 cm) |
-| **June 7 T10:00** | **105.20** | **+53 cm (Day 10; +9 cm — EVENT PEAK RE-MATCHED)** |
-
-*The partial headpond improvement of Days 5–7 (−17 cm from peak) has now been fully reversed. The headpond is back at the maximum seen during this event. Upstream propagation of the cascade step-downs has not produced the expected pressure relief at Bryson. Watch Rapide-7 outflow (currently 341 m³/s, flat) as the key upstream driver.*
+| May 29 | 104.92 | +25 cm — Day 1 |
+| May 30 | 104.98 | +31 cm (Day 2) |
+| May 31 | 105.08 | +41 cm (Day 3) |
+| June 1 | 105.20 | +53 cm (Day 4 — event peak) |
+| June 2 | 105.05 | +38 cm (Day 5) |
+| June 3 | 105.06 | +39 cm (Day 6) |
+| June 4 | 105.03 | +36 cm (Day 7; minimum recovery) |
+| June 5 | 105.10 | +43 cm (Day 8) |
+| June 6 | 105.17 | +50 cm (Day 9, T23:00) |
+| **June 7** | **105.19** | **+52 cm (Day 10, T19:00)** |
 
 ---
 
 ## Main-stem cascade (HQ centrales, m³/s total release)
 
-*Source: proxy `dam_releases`, June 7 T09:00–T10:00 UTC. "Yesterday" = June 6 T18:00–T19:00 UTC. Spill% = spilled / total.*
+*Source: proxy `dam_releases`, June 7 T18:00–T19:00 UTC. "Yesterday" = June 6 T23:00 UTC.*
 
 | Site | Total (m³/s) | Spill % | Δ total vs yesterday | Notes |
 |---|---|---|---|---|
-| Première-Chute (3-33) | 445.35 | 5.20% | −7.53 (−1.7%) | Minor step-down |
-| Quinze (3-31) | 459.23 | 1.62% | −0.32 (0.0%) | Flat |
-| Îles (3-32) | 470.23 | 2.32% | −0.11 (0.0%) | Flat |
-| Rapide-2 (3-29) | 344.49 | 3.08% | −0.35 (−0.1%) | Flat |
-| Rapide-7 (3-28) | 341.43 | 0.0% | +1.49 (+0.4%) | Flat; 0% spill |
-| Bryson (3-46) | 496.11 | 40.76% | −14.64 (−2.9%) | Spill −7.1% ⚠; headpond +9 cm ⚠⚠⚠ |
-| Paugan — Gatineau R. (3-65) | 379.39 | 0.0% | −19.12 (−4.8%) | Just below 5% flag; 0% spill |
-| Rapides-Farmers — Gatineau mouth (3-67) | 415.82 | 16.82% | −2.78 (−0.7%) | Spill continues |
-| Carillon — basin terminal (3-60) | 2,656.85 | **5.22%** | **+285.94 (+12.1%) ⚠⚠⚠** | **SPILLWAY REOPENED (0%→5.22%); turbined +6.2%** |
+| Première-Chute (3-33) | 447.1 | 5.19% | −1.1 (−0.2%) | Stable |
+| Quinze (3-31) | 459.01 | 1.59% | +0.2 (+0.0%) | Flat |
+| Îles (3-32) | 469.0 | 2.33% | −2.1 (−0.4%) | Flat |
+| Rapide-2 (3-29) | 344.12 | 3.28% | −0.4 (−0.1%) | Flat |
+| Rapide-7 (3-28) | 341.74 | 0.0% | +1.5 (+0.4%) | Flat; 0% spill |
+| Bryson (3-46) | 495.9 | 40.65% | +1.9 (+0.4%) | Flat; headpond Day 10 ⚠ |
+| Paugan — Gatineau R. (3-65) | 377.98 | 0.0% | **−20.3 (−5.1%) ⚠** | Just crosses 5% flag |
+| Rapides-Farmers — Gatineau mouth (3-67) | 379.78 | 8.85% | **−39.0 (−9.3%) ⚠⚠** | Sharp Gatineau step-down |
+| Carillon — basin terminal (3-60) | 2,499.3 | **12.61%** | **+186.5 (+8.1%) ⚠** | **Turbined −5.6% ⚠; spill 0%→12.61% ⚠⚠; see cascade notes** |
 
 **Cascade notes:**
 
-- **Upper cascade (Première-Chute, Quinze, Îles):** Flat to slightly lower; Première-Chute −1.7% but the upper three sites remain stable at 445–470 m³/s. No new coordinated step-downs.
-- **Rapide-2, Rapide-7, Bryson:** Flat on releases; the headpond rise despite flat releases confirms the inflow-outflow imbalance at Bryson is inflow-driven, not a release change.
-- **Paugan −4.8%:** Gatineau main step-down in progress (379 m³/s vs 399 yesterday); just below the 5% alert flag.
-- **Carillon SPILLWAY REOPENED ⚠⚠⚠:** Total release +285.94 m³/s (+12.1%); spilled 138.76 m³/s has returned after being 0 m³/s on June 5–6. Turbined component also rose +6.2% (2,371→2,518 m³/s), suggesting the turbines are close to or at nameplate capacity and additional inflow is being passed through spill. This directly reverses the June 5 anomaly flag ("CARILLON CLOSES SPILLWAY"). Inflows to the Carillon headpond — from the Ottawa below Chats Falls and all lower-basin tributaries — exceed what the turbines can absorb.
+- **Upper cascade (Première-Chute, Quinze, Îles):** Flat at 447–469 m³/s. No coordinated step-downs.
+- **Rapide-2, Rapide-7, Bryson:** All flat; intraday headpond rise is inflow-driven, not release-driven.
+- **Paugan −5.1% ⚠:** 398.30→377.98 m³/s. Just crosses the 5% alert threshold. Gatineau step-down in progress; 0% spill.
+- **Rapides-Farmers −9.3% ⚠⚠:** 418.76→379.78 m³/s. Well above 5% threshold. Spill also fell (71.87→33.6 m³/s, 17.2%→8.85%). Gatineau mouth contribution to Ottawa declining sharply.
+- **Carillon ⚠⚠⚠:** Day-over-day (vs June 6 T23:00): total +186.5 (+8.1%); turbined 2,312.76→2,184.17 (−128.6, **−5.6% ⚠**, crosses 5% flag); spill 0→315.12 m³/s (**0%→12.61% ⚠⚠**). Intraday change vs this morning's brief (June 7 T10:00 reading of 2,656.85 m³/s / 5.22% spill): total −157.6 (−5.9%), turbined −333.8 (−13.3%), spilled +176.4 (+127%). The Carillon headpond (amont) fell 9 cm since this morning (41.10→41.01 m); Hull dock fell 8 cm (41.85→41.77 m). The turbine reduction was sharp enough to shift most additional outflow to spill while total release fell vs the morning peak. Cause of turbine reduction unknown (grid dispatch, unit maintenance, deliberate drawdown).
 
 ---
 
 ## Upper basin watch (Témiscaming + mid-valley)
 
-*Sources: proxy `orrpb_river_flows` (station `temiscaming`, PSPC); proxy `reservoir_readings` (`reservoir_id=timiskaming`, PSPC cross-check); proxy `orrpb_river_levels` (`mattawa`, `pembroke`); proxy `dam_releases` Quinze (3-31, T10:00). "7 d ago" = May 31 (nearest clean date, 1,206 m³/s).*
+*Sources: proxy `orrpb_river_flows` (station `temiscaming`, PSPC, updated June 7 value); proxy `reservoir_readings` (`reservoir_id=timiskaming`, PSPC cross-check); proxy `orrpb_river_levels` (`mattawa`, `pembroke`, `lake-coulonge`, `britannia`, `carillon`); proxy `dam_releases` Quinze (3-31, T19:00 UTC). "7 d ago" = May 31.*
 
 | Metric | Today (June 7) | 7 d ago (May 31) | Δ | Milestone |
 |---|---|---|---|---|
-| Témiscaming outflow — PSPC (m³/s) | **780** | 1,206 | −426 | **Day 37 post-peak. Sub-900 Day 3 (June 5–7). Sub-800 Day 3 (June 5–7; all three days 755–782). Plateau — no further decline for 3 days.** |
-| Témiscaming — PSPC cross-check (reservoir_readings midnight) | 179.08 m / **787 m³/s** | — | — | *|787 − 780| = 7 m³/s — within 50 m³/s threshold; no flag* |
-| Quinze release → into Lake Témiscaming (m³/s) | 459.23 (T10:00) | ~553 (est.) | — | Flat — stable at ~459 m³/s |
-| Mattawa level (m) | **152.65** | 153.11 (May 31 peak) | −46 cm from peak | Blip resolved: rose +8 cm June 6, fell −6 cm June 7. Decline streak interrupted June 6; resumed June 7. |
-| Pembroke level (m) | **111.73** | — | +3 cm from June 6 | Direction only — table carries no threshold. Small bounce after yesterday's −7 cm drop. |
+| Témiscaming outflow — PSPC (m³/s) | **790** | 1,206 | −416 | **Day 37 post-peak. Sub-800 Day 3 (755→782→790; maintained). Sub-1,000 Day 5. Sub-900 Day 3. Mild uptick — not yet resumed decline.** |
+| Témiscaming outflow — PSPC cross-check (reservoir_readings midnight) | 179.08 m / **777 m³/s** | — | — | *\|777 − 790\| = 13 m³/s — within 50 m³/s threshold; no flag. (June 7 ORRPB preliminary revised +10 from morning brief's 780; within threshold.)* |
+| Quinze release → into Lake Témiscaming (m³/s) | 459.01 (T19:00) | ~1,206 (est.) | — | Flat at ~459 m³/s |
+| Mattawa level (m) | **152.62** | 153.11 (May 31 peak) | −49 cm from peak | June 6 blip (+8 cm) resolved. **June 7: −9 cm** (152.71→152.62). Resumed decline. |
+| Pembroke level (m) | **111.71 midnight / 111.67 (15:00 ET)** | — | +1 cm midnight | Direction only — table carries no flood threshold. Essentially flat to slightly declining intraday. |
 
 **Main-stem level snapshot (ORRPB midnight series):**
 
 | Station | June 5 | June 6 | June 7 | Δ (June 6→7) |
 |---|---|---|---|---|
-| Mattawa | 152.63 | 152.71 | **152.65** | −6 cm |
-| Pembroke | 111.77 | 111.70 | **111.73** | +3 cm |
-| Lake Coulonge | 106.32 | 106.24 | **106.24** | 0 cm |
-| Britannia | 58.52 | 58.52 | **58.53** | +1 cm |
-| Carillon GS | 41.08 | 41.09 | **41.11** | +2 cm |
+| Mattawa | 152.63 | 152.71 | **152.62** | **−9 cm** |
+| Pembroke | 111.77 | 111.70 | **111.71** | +1 cm |
+| Lake Coulonge | 106.32 | 106.24 | **106.23** | −1 cm |
+| Britannia | 58.52 | 58.52 | **58.50** | −2 cm (midnight); ORRPB page 58.43 m at 15:00 ET |
+| Carillon GS | 41.10 | 41.09 | **41.10** | +1 cm midnight; ORRPB page 41.02 m at 15:00 ET |
 
-*Carillon GS headpond rising +2 cm (41.09→41.11 m) consistent with the reopened spillway and increased release. Britannia (+1 cm) and Lake Coulonge (0 cm) flat — the increased Carillon release is not propagating back upstream to raise the Ottawa above Carillon.*
+*Britannia declining intraday (58.50 midnight → 58.43 m at 15:00 ET, −7 cm). Consistent with reduced Gatineau inflows and Carillon's afternoon drawdown. Carillon GS midnight shows +1 cm but the afternoon real-time reading confirms continued decline — the midnight-to-midnight value reflects a timing artifact, not a net rise.*
 
-**Témiscaming milestone bookkeeping (revision note):** June 5 PSPC now confirmed at 755 m³/s (proxy; yesterday's brief carried 749 m³/s from the preliminary reading — a +6 m³/s upward revision, within the 50 m³/s threshold, no flag). All three days June 5–7 remain below both 800 and 900 m³/s. The June 5 "sub-800 first crossing" milestone stands.
+**Milestone bookkeeping:**
 
-| Milestone | Date first crossed (PSPC) | Day count (June 7) |
+| Milestone | Date first crossed | Day count (June 7) |
 |---|---|---|
-| Freshet peak (~2,741 m³/s at Témiscaming) | ~May 2 | Day 37 |
-| Sub-1,000 | June 3 (973) | **Day 5** (continuous) |
-| Sub-900 | June 5 (755) | **Day 3** (June 5–7) |
-| Sub-800 | June 5 (755) | **Day 3** (June 5–7) |
-| Plateau ≥750 m³/s (stall) | June 5 | **Day 3** — no further decline yet |
-| Mattawa reversal peak | May 31 (153.11 m) | 152.65 m today; blip resolved |
-| Bryson headpond upper breach Day 1 | May 29 T19:00 (104.92 m) | **Day 10** (105.20 m — event peak re-matched) |
-| Carillon spillway re-closed | June 5 | **REVERSED June 7** — spillway reopened at 5.22% |
-| ORRPB weekly cadence transition | May 26 | Confirmed; next update June 9 |
+| Freshet peak (~2,741 m³/s at Témiscaming) | ~May 2 | **Day 37** |
+| Sub-1,000 | June 3 (973 m³/s) | **Day 5** (continuous) |
+| Sub-900 | June 5 (755 m³/s) | **Day 3** (June 5–7) |
+| Sub-800 | June 5 (755 m³/s) | **Day 3** (June 5–7; all ≤790) |
+| Plateau / mild uptick range | June 5 | Range 755–790 over 3 days; mildly upward direction, not resumed decline |
+| Mattawa reversal peak | May 31 (153.11 m) | 152.62 m today; −49 cm from peak; blip resolved |
+| Bryson headpond upper breach Day 1 | May 29 T19:00 (104.92 m) | **Day 10** (105.19 m — event peak) |
+| Carillon spillway re-closed | June 5 | **Reversed June 7: spill 5.22% at morning; 12.61% by evening** |
+| ORRPB weekly cadence transition | ~May 26 | Confirmed; next update June 9 |
 
 **Reservoir balance (June 6 midnight → June 7 midnight, proxy `reservoir_readings`):**
 
@@ -166,89 +168,91 @@ Lac Coulonge **106.23 m live / 106.24 m midnight** (live −2 cm/24h; midnight f
 |---|---|---|---|---|
 | Bark Lake | 313.82 | 313.86 | +4 cm | **Rising** |
 | Baskatong | 221.64 | 221.65 | +1 cm | Steady |
-| Cabonga | 360.44 | 360.45 | +1 cm | Steady |
-| Des Joachims | 152.06 | 152.12 | +6 cm | **Rising** |
+| Cabonga | 360.44 | 360.44 | 0 cm | Steady |
+| Des Joachims | 152.06 | 152.13 | +7 cm | **Rising** |
 | Dozois | 345.35 | 345.32 | −3 cm | **Falling** |
-| Kiamika | 268.07 | 268.09 | +2 cm | Steady (boundary) |
+| Kiamika | 268.07 | 268.09 | +2 cm | Steady |
 | Kipawa | 269.51 | 269.50 | −1 cm | Steady |
 | Lady Evelyn | 289.12 | 289.11 | −1 cm | Steady |
 | Mitchinamecus | 381.22 | 381.27 | +5 cm | **Rising** |
 | Poisson Blanc | 201.13 | 201.12 | −1 cm | Steady |
-| Quinze | 263.02 | 263.02 | 0 cm | Steady |
+| Quinze | 263.02 | 263.03 | +1 cm | Steady |
 | Rapide-7 | 308.98 | 308.99 | +1 cm | Steady |
 | Timiskaming (PSPC) | 179.07 | 179.08 | +1 cm | Steady |
-| Timiskaming Haileybury (WSC) | 179.04 | 179.02 | −2 cm | Steady (boundary) |
+| Timiskaming Haileybury (WSC) | 179.04 | 179.01 | −3 cm | Steady (boundary) |
 
-**Balance (±2 cm = steady, 14 reservoirs): 3 rising · 10 steady · 1 falling.** This is a modest shift from June 5's 0-rising pattern. The three risers — Des Joachims (+6 cm; OPG retaining again after yesterday's release), Bark Lake (+4 cm; near-zero outflow at 18 m³/s), and Mitchinamecus (+5 cm; MELCC, tiny outflow 10 m³/s) — are all consistent with low-outflow retention rather than a new precipitation-driven inflow signal. Active retention flag (2+ reservoirs rising >10 cm/day): **not triggered.** The pattern is modest refill posture in small reservoirs, not anomalous.
+**Balance (±2 cm = steady, 14 reservoirs): 3 rising · 10 steady · 1 falling.** Unchanged from prior June 7 draft. Des Joachims (+7 cm, outflow 933 m³/s) and the two small risers (Bark Lake, Mitchinamecus) are consistent with low-outflow passive accumulation. Active retention flag (2+ reservoirs rising >10 cm/day): **not triggered.**
 
 ---
 
 ## Carillon §15.3.5.1 directive check
 
-*Source: proxy `dam_levels` (station 1-3675 Hull dock T10:00 UTC, station 1-2968 Carillon amont T10:00 UTC, June 7). Guardrail: proxy 200/76b confirmed.*
+*Source: proxy `dam_levels` (station 1-3675 Hull dock T19:00 UTC, station 1-2968 Carillon amont T19:00 UTC, June 7). Guardrail: proxy 200/77b.*
 
 | Metric | Value | Threshold | Status |
 |---|---|---|---|
-| Hull dock (1-3675, June 7 T10:00) | **41.85 m** | 42.61 m servitude | **BELOW — trigger INACTIVE Day 13** (76 cm below; +4 cm from June 6) |
-| Hull dock Δ vs yesterday | +4 cm | — | Small reversal — was declining, ticked up with Carillon's increased release |
-| Carillon amont (1-2968, June 7 T10:00) | **41.10 m** | 40.08 m spring-flood ceiling (when Hull > 42.61) | **Ceiling NOT in effect — trigger inactive** |
-| Carillon amont Δ vs yesterday | +4 cm (41.06→41.10) | — | Rising with increased release |
+| Hull dock (1-3675, June 7 T19:00 UTC / 3 PM ET) | **41.77 m** | 42.61 m servitude | **BELOW — trigger INACTIVE Day 13** (84 cm below; −8 cm intraday from T10:00) |
+| Hull dock Δ vs yesterday EOD | ~−4 cm | — | Declining; rose +4 cm in the morning then fell −8 cm by afternoon — net day decline |
+| Carillon amont (1-2968, June 7 T19:00 UTC) | **41.01 m** | 40.08 m spring-flood ceiling (when Hull > 42.61) | **Ceiling NOT in effect — trigger inactive** |
+| Carillon amont Δ vs morning (T10:00) | −9 cm (41.10→41.01) | — | Falling as Carillon releases exceed headpond inflows |
 
-The §15.3.5.1 trigger has been inactive for 13 consecutive days. Hull dock is 76 cm below the trigger threshold. The +4 cm tick-up at Hull dock and Carillon amont is consistent with the spillway reopening and increased release, but there is no regulatory concern — the trigger threshold (42.61 m) remains far away. No directive issues.
+The §15.3.5.1 trigger has been inactive for 13 consecutive days. Hull dock is 84 cm below the trigger and declining. The −8 cm intraday drop is the most notable single-day movement at Hull dock in several days, consistent with the Carillon afternoon operational shift drawing down the headpond.
 
 ---
 
 ## Reservoir storage (latest_reservoir_readings)
 
-*Source: proxy `latest_reservoir_readings` dated 2026-06-07T00:00:00Z (June 7 midnight). Day-over-day delta = June 6 → June 7 midnight.*
+*Source: proxy `reservoir_readings` dated 2026-06-07T00:00:00Z. Day-over-day delta = June 6 → June 7 midnight.*
 
 | Reservoir | June 6 (m) | June 7 (m) | Δ | Flow (m³/s) | Notes |
 |---|---|---|---|---|---|
 | Baskatong | 221.64 | 221.65 | +1 cm | 282 | Flat; stable outflow |
-| Timiskaming (PSPC) | 179.07 | 179.08 | +1 cm | 787 | Essentially flat; PSPC daily avg 780 |
-| Dozois | 345.35 | 345.32 | −3 cm | 283 | Gently falling; outflow stable |
-| Bark Lake | 313.82 | 313.86 | +4 cm | 18 | **Rising** — very low outflow, passive accumulation |
+| Timiskaming (PSPC) | 179.07 | 179.08 | +1 cm | 777 | Essentially flat; PSPC cross-check 777 m³/s (ORRPB: 790) |
+| Dozois | 345.35 | 345.32 | −3 cm | 282 | Gently falling; stable outflow |
+| Bark Lake | 313.82 | 313.86 | +4 cm | 18 | Rising — very low outflow, passive accumulation |
 
-Active basin-wide retention flag (2+ reservoirs rising >10 cm/day): **not triggered.** Bark Lake's +4 cm rise reflects minimal outflow (18 m³/s), not active management. Baskatong and Timiskaming are essentially flat. Dozois continues gentle recession.
+Active basin-wide retention flag (2+ reservoirs rising >10 cm/day): **not triggered.** Passive refill in small reservoirs only.
 
 ---
 
 ## ORRPB forecast (today vs yesterday)
 
-*Source: ottawariver.ca/conditions/?display=forecast. Guardrail: 200/130,553b confirmed. **Last Update: 2026-06-02 3:33 PM EDT** (2026-06-02T19:33:00Z). **Next Update: 2026-06-09 4:00 PM EDT** (2026-06-09T20:00:00Z). Fetched 22:00 UTC June 7. Cadence: weekly (7-day gap). Mode: weekly-notice.*
+*Source: ottawariver.ca/conditions/?display=forecast. Guardrail: 200/130,634b confirmed. **Last Update: 2026-06-02 3:33 PM EDT** (2026-06-02T19:33:00Z). **Next Update: 2026-06-09 4:00 PM EDT** (2026-06-09T20:00:00Z). Fetched 22:05 UTC June 7. Cadence: weekly (7-day gap). Mode: weekly-notice.*
 
-**Unchanged from prior brief (June 5).** Forecast text (verbatim):
+**Unchanged from prior brief (June 5).** No update since June 2. Forecast text (verbatim):
 
 > *Flows and water levels along the main stem of the Ottawa River are within seasonal values for this time of year, and are expected to remain stable or decrease gradually over the coming week depending on location.*
 
-No "further increases cannot be ruled out" language. No flood-watch or precipitation text. No Lac Coulonge–specific language. No changes since June 2 update.
-
-**Note:** The Carillon spillway reopening and the Bryson headpond re-matching event peak both occurred after the June 2 forecast was issued. Neither event is reflected in the current ORRPB forecast text. The forecast's "stable or decrease gradually" framing is at odds with Carillon's +12.1% release increase — the basin terminal is clearly passing more water, not less. This is not a false alarm (the upstream Témiscaming and Lake Coulonge levels are consistent with "seasonal values"), but the discrepancy between the forecast narrative and the Carillon operational data is worth tracking through the June 9 update.
+No "further increases cannot be ruled out" language. No flood-watch or precipitation text. No Lac Coulonge–specific language. The June 9 update will be the first new ORRPB forecast text since June 2; watch for any revised language on Carillon posture or Bryson headpond.
 
 ---
 
 ## Anomaly flags
 
-1. **⚠⚠⚠ CARILLON SPILLWAY REOPENED (REVERSED FLAG):** After being fully closed on June 5 (flagged as anomaly — "cascade site going from high spill to 0%"), Carillon has reopened spillways at 138.76 m³/s (5.22% spill share). Total release jumped +12.1% (2,371→2,657 m³/s); turbined +6.2% (2,371→2,518 m³/s). The turbines appear near or at capacity; additional inflow to the headpond is being passed via spill. This reversal happened within 48 hours of the "spillway closed" flag. The Carillon headpond (amont) rose +4 cm to 41.10 m, consistent with increased throughput. Hull dock also rose +4 cm (41.81→41.85 m) but remains well below the 42.61 m §15.3.5.1 trigger.
+1. **⚠⚠⚠ CARILLON MAJOR AFTERNOON OPERATIONAL SHIFT:** Between this morning (T10:00 UTC) and this evening (T19:00 UTC): turbined fell 2,518→2,184 m³/s (−13.3%); spilled rose 139→315 m³/s (+127%); total fell 2,657→2,499 m³/s (−5.9%). Day-over-day (vs June 6 T23:00): turbined **−5.6% ⚠** (crosses 5% flag); spill **0%→12.61% ⚠⚠** (site going from 0% to significant spill — template criterion met). Carillon headpond (amont) −9 cm intraday (41.10→41.01 m); Hull dock −8 cm intraday (41.85→41.77 m). Cause unknown; candidates include turbine unit dispatch/maintenance and deliberate headpond drawdown.
 
-2. **⚠⚠⚠ BRYSON HEADPOND DAY 10 — BACK AT EVENT PEAK:** Headpond amont +9 cm (105.11→105.20 m); now 53 cm above the band ceiling (104.67 m) — identical to the June 1 event peak. The partial improvement of Days 5–7 (maximum −17 cm from peak) has been fully erased. Releases fell (total −2.9%, spill −7.1%) but the headpond rose, confirming that inflows exceed outflows. Rapide-7 (upstream feeder) remains flat at 341 m³/s. The upper-cascade step-downs (Première-Chute/Quinze/Îles at ~445–470 m³/s) have not propagated sufficient pressure relief to Bryson.
+2. **⚠⚠⚠ BRYSON HEADPOND DAY 10 — AT EVENT PEAK:** 105.19 m at T19:00; 52 cm above band ceiling (104.67 m). Unchanged from this morning (T10:00: 105.20 m). This is the 10th consecutive day above the operating band's upper limit. Releases flat and stable. Rapide-7 (key upstream feeder) flat at 341.74 m³/s, 0% spill. No relief mechanism visible.
 
-3. **⚠ BRYSON SPILL −7.1% (above 5% flag):** 217.78→202.23 m³/s. Spill share fell from 42.65% to 40.76%. Bryson is marginally reducing the spillway fraction while the headpond rises — suggesting operators may be slightly favouring turbines over spill, but the headpond rise shows this is insufficient to balance inflows.
+3. **⚠⚠ RAPIDES-FARMERS −9.3%:** 418.76→379.78 m³/s. Well above 5% flag threshold. Spill also fell significantly (71.87→33.6 m³/s, 17.2%→8.85%). Gatineau River mouth contribution to Ottawa declining sharply.
 
-4. **Témiscaming plateau — 3-day stall at ~780 m³/s:** June 5 (755), June 6 (782), June 7 (780). The ~100 m³/s/day decline streak that persisted through June 1–5 has stalled. Not anomalous on its own — early-summer base flows often plateau — but worth tracking. The sub-700 crossing anticipated in the June 5 brief has not materialised. Continue monitoring.
+4. **⚠ PAUGAN −5.1%:** 398.30→377.98 m³/s. Just crosses the 5% flag threshold. Gatineau main dam step-down in progress; 0% spill.
 
-5. **ORRPB forecast vs. Carillon operations discrepancy:** Forecast says "stable or decrease gradually"; Carillon release is up +12.1% in 24 hours. Forecast was issued June 2 and is due for update June 9. Not a flag requiring action now — the Lake Coulonge and upstream levels are consistent with the forecast's overall framing — but the June 9 update should be read carefully for any revised language.
+5. **Témiscaming mild uptick (755→782→790):** Sub-800 Day 3 is maintained, but the three-day directional trend is mildly upward (+35 m³/s). The anticipated sub-700 crossing has not materialised. Not yet anomalous, but worth tracking — if June 8 PSPC continues rising toward 800, the sub-800 streak ends.
 
-6. **§15.3.5.1 trigger INACTIVE Day 13:** Hull dock 41.85 m (+4 cm today — small reversal of declining trend). Trigger floor at 42.61 m is 76 cm away. No directive issue.
+6. **§15.3.5.1 trigger INACTIVE Day 13:** Hull dock 41.77 m (−8 cm today), 84 cm below 42.61 m trigger. Carillon amont 41.01 m (−9 cm today). No directive issue; recording for state continuity.
 
 ---
 
 ## Notes
 
-- **Bryson headpond outlook.** Day 10 at the event peak level (105.20 m, 53 cm above ceiling) represents a complete cycle: the headpond rose to peak on June 1, partially recovered June 2–7, and is now back at peak. The recovery failed. The most direct upstream pressure driver is Rapide-7 (341 m³/s, flat for days). If Rapide-7 doesn't step down, the headpond may remain at or above the event peak indefinitely. Watch for any HQ coordinated cut at Rapide-7/Rapide-2 as the key leading indicator of headpond relief.
+- **Carillon turbine/spill shift.** Two plausible explanations: (a) turbine units went offline (dispatch order, maintenance, nameplate constraint) forcing the balance onto spillways; (b) operators deliberately chose to drawdown the Carillon headpond while grid pricing made turbine generation uneconomical. Either way, the headpond is falling (−9 cm in a day), which is consistent with releases exceeding the combined inflows from the upper Ottawa and Gatineau. The June 9 ORRPB update may include any public statement from operators.
 
-- **Carillon capacity note.** At 2,518 m³/s turbined, Carillon appears to be at or near its turbine nameplate capacity (commonly cited ~2,200–2,300 m³/s; the current 2,518 may reflect some overload or updated rating). With 138.76 m³/s going through spill, any further inflow increase would add more spill. The basin's lower reaches (Britannia 1,550, Ottawa below Carillon) will see this increased outflow propagate over the next 24–48 hours.
+- **Paugan and Rapides-Farmers step-downs.** The concurrent decline at both Gatineau River dams (Paugan −5.1%, Rapides-Farmers −9.3%) signals the Gatineau sub-basin transitioning to base-flow conditions. This is expected for early June. The Gatineau contribution at Carillon will continue to ease over the coming days, which may counteract the present Carillon headpond drawdown.
 
-- **Forecast timing note.** The ORRPB forecast is due for update Monday June 9 at 4 PM EDT (20:00 UTC). The June 9 brief will be the first with updated ORRPB language since June 2. Given the Carillon reopening and Bryson headpond situation, watch for any operational commentary or adjusted forecast language.
+- **Bryson headpond outlook.** The pattern over Days 5–10 (105.03–105.20 m; oscillating within 17 cm of the event peak) suggests the inflow-outflow balance at Bryson is roughly in equilibrium near 105.15–105.20 m. For the headpond to start declining, either Rapide-7 inflows must drop or Bryson releases must increase. Neither is currently happening. Watch for any coordinated HQ step-down at Rapide-7 / Rapide-2 as the key leading indicator.
 
-- **June 5 data revision.** Témiscaming June 5 PSPC flow revised from 749 (preliminary, as reported in the June 5 brief) to 755 m³/s (confirmed in today's proxy). +6 m³/s; within threshold; sub-800 milestone unaffected.
+- **Britannia intraday decline.** Britannia fell from 58.50 m (midnight) to 58.43 m (15:00 ET), a 7 cm intraday drop. This is consistent with reduced Gatineau inflows and the Carillon afternoon drawdown. The midnight June 7 vs June 6 comparison (−2 cm) understates the actual daytime decline.
+
+- **June 9 ORRPB update watch.** First new forecast text since June 2. The two major developments to watch for are: (1) any acknowledgment of or commentary on the Carillon turbine/spill posture change; (2) any revised language on Bryson/Lac Coulonge given the sustained headpond breach. The current "stable or decrease gradually" framing does not reflect the Carillon turbine reduction.
+
+- **Revision note.** Témiscaming June 7 PSPC revised from 780 (preliminary, morning brief) to 790 m³/s (+10; within 50 m³/s threshold; no flag). Sub-800 milestone unaffected.
