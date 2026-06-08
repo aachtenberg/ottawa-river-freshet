@@ -1,0 +1,68 @@
+{
+  "asof": "2026-06-07",
+  "season_resolved": false,
+  "actual_peak_m": 108.63,
+  "state": {
+    "doy": 158,
+    "level_m": 106.24,
+    "rate_cm_d": -1.7
+  },
+  "thresholds": [
+    {
+      "threshold_m": 107.5,
+      "label": "minor flood (Vigilance)",
+      "prior": 0.495,
+      "likelihood": 0.51,
+      "posterior": 1.0
+    },
+    {
+      "threshold_m": 108.0,
+      "label": "moderate flood (Vigilance)",
+      "prior": 0.243,
+      "likelihood": 0.14,
+      "posterior": 1.0
+    },
+    {
+      "threshold_m": 108.3,
+      "label": "water approaching property",
+      "prior": 0.122,
+      "likelihood": 0.073,
+      "posterior": 1.0
+    },
+    {
+      "threshold_m": 108.48,
+      "label": "water in backyard",
+      "prior": 0.121,
+      "likelihood": 0.066,
+      "posterior": 1.0
+    },
+    {
+      "threshold_m": 108.5,
+      "label": "super-flood threshold (case-file)",
+      "prior": 0.121,
+      "likelihood": 0.066,
+      "posterior": 1.0
+    },
+    {
+      "threshold_m": 108.75,
+      "label": "cottage bricks",
+      "prior": 0.103,
+      "likelihood": 0.045,
+      "posterior": 0.0
+    },
+    {
+      "threshold_m": 109.01,
+      "label": "water inside cottage",
+      "prior": 0.007,
+      "likelihood": 0.025,
+      "posterior": 0.0
+    },
+    {
+      "threshold_m": 109.17,
+      "label": "2019 record",
+      "prior": 0.007,
+      "likelihood": 0.025,
+      "posterior": 0.0
+    }
+  ]
+}

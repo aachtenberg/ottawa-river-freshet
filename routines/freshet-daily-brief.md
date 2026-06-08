@@ -279,6 +279,17 @@ PY
 
 Stage and commit `freshet-public/data/forecast/latest.json` alongside the brief markdown in the same commit. Mirror sync (CI) propagates both atomically.
 
+## V3 season-end forecast snapshot (regenerate daily)
+
+The dashboard's "Season-end forecast" panel reads `freshet-public/dashboard/freshet-forecast.json` — the V3 Bayesian posterior (V1 seasonal prior continuously updated by V2's daily-trajectory likelihood; see `ingesters/climate-history/FRESHET_PROBABILITY.md`). Regenerate it each run so the panel tracks the latest day on record:
+
+```bash
+cd freshet-public/ingesters/climate-history
+python3 freshet_posterior.py --asof latest --json > ../../dashboard/freshet-forecast.json
+```
+
+`--asof latest` uses the newest day in `data/lac-coulonge-daily-1990-2026.csv`, so this depends on that daily series being current (the ORRPB `coulonge` levels backfill / live ingest). Stdlib-only, deterministic, a few seconds to run. Stage `freshet-public/dashboard/freshet-forecast.json` in the same commit as the brief; the mirror propagates it to the public dashboard.
+
 ## Operating instructions
 
 - You run at 22:00 UTC (~5 PM ET) — *after* the ~4 PM ET ORRPB update, so today's ORRPB data is already published. Write as a late-afternoon snapshot, not a morning summary of yesterday.

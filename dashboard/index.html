@@ -207,6 +207,24 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .status.safe { background: var(--green-light); color: var(--green); }
 .status.close { background: var(--amber-light); color: var(--amber); }
 
+/* V3 Bayesian season-end forecast panel */
+.forecast { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; margin-top: 16px; }
+.forecast h3 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+.forecast .sub { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; }
+.forecast .resolved-badge { display: inline-block; margin-left: 6px; padding: 1px 7px; border-radius: 4px; background: var(--surface-2); color: var(--text-faint); font-size: 10px; font-weight: 600; vertical-align: middle; }
+.fc-row { display: grid; grid-template-columns: 150px 1fr 44px; gap: 12px; align-items: center; padding: 5px 0; font-size: 12px; }
+.fc-label { color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.fc-label .lvl { color: var(--text); font-weight: 600; }
+.fc-track { position: relative; height: 14px; border-radius: 7px; background: var(--surface-2); overflow: hidden; }
+.fc-fill { position: absolute; top: 0; left: 0; height: 100%; border-radius: 7px; transition: width .3s ease; }
+.fc-fill.sev-low { background: var(--green); }
+.fc-fill.sev-mid { background: var(--amber); }
+.fc-fill.sev-high { background: var(--red); }
+.fc-prior { position: absolute; top: -2px; bottom: -2px; width: 2px; background: var(--text-faint); opacity: .8; }
+.fc-pct { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--text); }
+.fc-legend { margin-top: 10px; font-size: 11px; color: var(--text-faint); line-height: 1.5; }
+.fc-legend .prior-key { display: inline-block; width: 2px; height: 10px; background: var(--text-faint); vertical-align: middle; margin: 0 3px; }
+
 .footer { margin-top: 28px; padding-top: 14px; border-top: 1px solid var(--border); font-size: 11px; color: var(--text-faint); line-height: 1.6; }
 .footer a { color: var(--text-muted); }
 .footer strong { color: var(--text-muted); }
@@ -695,6 +713,12 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
   <div id="thresh-list" class="skeleton">Loading…</div>
 </div>
 
+<div class="forecast">
+  <h3 data-i18n="forecast_t">Season-end forecast — chance of crossing each threshold</h3>
+  <div class="sub" id="forecast-sub" data-i18n="forecast_sub">Bayesian posterior (V3): this winter's seasonal prior, continuously updated by the lake's day-to-day trajectory. The bar is today's chance the annual peak crosses each line; the tick marks where the pre-freshet prior started, so the bar visibly tightens as the season resolves.</div>
+  <div id="freshet-forecast" class="skeleton">Loading forecast…</div>
+</div>
+
 <div class="freeze-tracker">
   <h3 data-i18n="freeze_h">Upstream freeze tracker</h3>
   <div class="sub" data-i18n="freeze_sub">Overnight lows across the basin — last night plus 6-day forecast. Three freeze nights signals snowmelt is paused or pausing.</div>
@@ -984,6 +1008,8 @@ const PAGE_STRINGS = {
   regional_sub:   { en: 'Upstream-to-downstream gauges along the Ottawa River. Upstream stations lead Lac Coulonge by hours-to-days and flag incoming pulses. Buckhams Bay (MVCA) and Britannia are separate gauges 15 km apart on Lac Deschênes — Buckhams is upstream and routinely reads higher; the two are commonly confused in local reporting.',
                     fr: 'Stations d\'amont en aval le long de la rivière des Outaouais. Les stations amont précèdent Lac Coulonge de quelques heures à plusieurs jours et signalent les vagues entrantes. Baie Buckhams (MVCA) et Britannia sont deux jauges distinctes séparées de 15 km sur le lac Deschênes — Buckhams est en amont et lit habituellement plus haut; les deux sont souvent confondues dans les médias locaux.' },
   property_t:     { en: 'Property thresholds & surveyed flood lines', fr: 'Seuils de la propriété et cotes de crue relevées' },
+  forecast_t:     { en: 'Season-end forecast — chance of crossing each threshold', fr: 'Prévision de fin de saison — probabilité de franchir chaque seuil' },
+  forecast_sub:   { en: "Bayesian posterior (V3): this winter's seasonal prior, continuously updated by the lake's day-to-day trajectory. The bar is today's chance the annual peak crosses each line; the tick marks where the pre-freshet prior started, so the bar visibly tightens as the season resolves.", fr: "Postérieure bayésienne (V3) : l'a priori saisonnier de l'hiver, mis à jour en continu par la trajectoire quotidienne du lac. La barre indique la probabilité actuelle que le pic annuel franchisse chaque cote; le repère montre l'a priori d'avant-crue, de sorte que la barre se resserre à mesure que la saison se précise." },
   freeze_h:       { en: 'Basin freeze & precipitation outlook', fr: 'Aperçu du gel et précipitations dans le bassin' },
   freeze_sub:     { en: 'Overnight lows + 48 h precipitation across the basin. The freeze-night counter uses upstream stations only (snowmelt signal); downstream rows are local forecast for visitors watching the lower-corridor gauges.',
                     fr: 'Minimums nocturnes + précipitations sur 48 h dans le bassin. Le compteur de nuits de gel n\'utilise que les stations en amont (signal de fonte); les stations en aval sont des prévisions locales pour les visiteurs surveillant les jauges du corridor inférieur.' }
@@ -1962,6 +1988,60 @@ function renderProperty(lcLatest, trendPerHour) {
     const baseRate = `<span class="base-rate" title="Annual peak ≥ this level in ${t.histCount} of ${HISTORICAL_RECORD_YEARS} years on record (1972–2025)">${t.histCount}/${HISTORICAL_RECORD_YEARS} yrs · ${rate}%</span>`;
     return `<div class="thresh-row"><span class="level">${t.level.toFixed(2)} m</span><span class="desc">${t.desc} ${baseRate}</span><span class="status ${cls}">${status}${etaHtml}</span></div>`;
   }).join('');
+}
+
+// ---- V3 Bayesian season-end forecast -------------------------------------
+// Static JSON regenerated daily by ingesters/climate-history/freshet_posterior.py
+// (`--asof latest --json`), served from the dashboard root. Schema:
+//   { asof, season_resolved, actual_peak_m, state:{level_m,...},
+//     thresholds:[ {threshold_m,label,prior,likelihood,posterior}, ... ] }
+let freshetForecastLoaded = false;
+
+async function renderFreshetForecast() {
+  const el = document.getElementById('freshet-forecast');
+  if (!el) return;
+  let d;
+  try {
+    const r = await fetch('/freshet-forecast.json', { cache: 'no-store' });
+    if (!r.ok) throw new Error('http ' + r.status);
+    d = await r.json();
+  } catch (e) {
+    // Don't blank a previously-rendered panel on a transient refresh failure.
+    if (!freshetForecastLoaded) el.innerHTML = '<span class="skeleton">Forecast unavailable.</span>';
+    return;
+  }
+
+  const sev = (p) => p >= 0.66 ? 'sev-high' : p >= 0.33 ? 'sev-mid' : 'sev-low';
+  const rows = (d.thresholds || []).map(t => {
+    const post = Math.round((t.posterior || 0) * 100);
+    const prior = Math.max(0, Math.min(100, Math.round((t.prior || 0) * 100)));
+    return `<div class="fc-row">
+      <span class="fc-label"><span class="lvl">${t.threshold_m.toFixed(2)} m</span> · ${t.label}</span>
+      <div class="fc-track">
+        <div class="fc-fill ${sev(t.posterior || 0)}" style="width:${post}%"></div>
+        <div class="fc-prior" style="left:${prior}%" title="pre-freshet prior: ${prior}%"></div>
+      </div>
+      <span class="fc-pct">${post}%</span>
+    </div>`;
+  }).join('');
+
+  const peak = (d.actual_peak_m != null) ? `${d.actual_peak_m.toFixed(2)} m` : '—';
+  const lvl = (d.state && d.state.level_m != null) ? `${d.state.level_m.toFixed(2)} m` : '—';
+  const crested = d.thresholds && d.thresholds.every(t => t.posterior === 0 || t.posterior === 1);
+  const badge = crested
+    ? '<span class="resolved-badge" title="Lake has crested and receded — the season peak is settled">SEASON CRESTED</span>'
+    : '';
+  const subEl = document.getElementById('forecast-sub');
+  if (subEl) {
+    subEl.innerHTML = `As of <strong>${d.asof}</strong> · level <strong>${lvl}</strong> · `
+      + `peak so far <strong>${peak}</strong>${badge}`;
+  }
+  el.classList.remove('skeleton');
+  el.innerHTML = rows
+    + `<div class="fc-legend"><span class="prior-key"></span> = pre-freshet seasonal prior (V1). `
+    + `Bar = posterior after updating on the lake's trajectory through the freshet (V2). `
+    + `Method: <a href="https://github.com/aachtenberg/ottawa-river-freshet/blob/main/ingesters/climate-history/FRESHET_PROBABILITY.md" target="_blank" rel="noopener noreferrer">FRESHET_PROBABILITY.md</a>.</div>`;
+  freshetForecastLoaded = true;
 }
 
 // ---- ORRPB forecast snapshot ---------------------------------------------
@@ -4340,6 +4420,11 @@ async function fetchData() {
   btn.textContent = 'Refreshing';
 
   try {
+    // The V3 season-end forecast is a static daily JSON, independent of the
+    // live feeds — fire it off (fire-and-forget) so the panel renders even if
+    // the live primaries are slow or fail.
+    renderFreshetForecast();
+
     // Kick off the 9 regional fetches *before* awaiting primaries so their
     // network round-trips overlap. We hold the promises here and attach the
     // per-card render handlers after `lastData` is initialised below — that
