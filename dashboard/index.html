@@ -1992,9 +1992,12 @@ function renderProperty(lcLatest, trendPerHour) {
 
 // ---- V3 Bayesian season-end forecast -------------------------------------
 // Static JSON regenerated daily by ingesters/climate-history/freshet_posterior.py
-// (`--asof latest --json`), served from the dashboard root. Schema:
+// (`--asof latest --json`) and committed to the public mirror. Fetched from the
+// mirror's raw URL (same pattern as FORECAST_URL) so the daily data refresh
+// needs no image rebuild. Schema:
 //   { asof, season_resolved, actual_peak_m, state:{level_m,...},
 //     thresholds:[ {threshold_m,label,prior,likelihood,posterior}, ... ] }
+const FRESHET_FORECAST_URL = 'https://raw.githubusercontent.com/aachtenberg/ottawa-river-freshet/main/dashboard/freshet-forecast.json';
 let freshetForecastLoaded = false;
 
 async function renderFreshetForecast() {
@@ -2002,7 +2005,7 @@ async function renderFreshetForecast() {
   if (!el) return;
   let d;
   try {
-    const r = await fetch('/freshet-forecast.json', { cache: 'no-store' });
+    const r = await fetch(FRESHET_FORECAST_URL, { cache: 'no-store' });
     if (!r.ok) throw new Error('http ' + r.status);
     d = await r.json();
   } catch (e) {
