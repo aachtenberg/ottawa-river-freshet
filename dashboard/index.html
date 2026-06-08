@@ -3137,7 +3137,7 @@ document.getElementById('range-picker-flow').addEventListener('click', (e) => {
 
 // ---- Tab navigation (hash-routed) ----
 function activateTab(name) {
-  if (!['overview', 'stations', 'reservoirs', 'tributaries', 'operations', 'flow'].includes(name)) name = 'overview';
+  if (!['overview', 'forecast', 'stations', 'reservoirs', 'tributaries', 'operations', 'flow'].includes(name)) name = 'overview';
   document.querySelectorAll('.tab-strip button').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.dataset.tab === name));
   if (location.hash !== '#' + name) history.replaceState(null, '', '#' + name);
