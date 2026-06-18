@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "fetched_at_iso": "2026-06-17T22:00:00Z",
+  "fetched_at_iso": "2026-06-18T22:00:00Z",
   "source": {
     "url": "https://www.ottawariver.ca/conditions/?display=forecast",
     "last_update_iso": "2026-06-17T04:11:00Z",
@@ -10,7 +10,7 @@
   "mode": "weekly-notice",
   "freshet_active": false,
   "further_increases_possible": true,
-  "further_increases_reach": "along the main stem of the Ottawa River",
-  "further_increases_includes_lac_coulonge": true,
+  "further_increases_reach": "depending on location",
+  "further_increases_includes_lac_coulonge": null,
   "forecast_text": "Flows and water levels along the main stem of the Ottawa River are within seasonal values for this time of year. With precipitation forecast over the coming days, water levels and flows are expected to increase gradually or remain fairly stable depending on location over the coming week. Rapid increases in water levels are possible if heavy rainfall occurs."
 }
