@@ -33,7 +33,7 @@ flowchart LR
     subgraph dev["Developer workflow"]
         direction TB
         file["routines/*.md<br/><i>prompt-as-code</i>"]
-        commit["git commit + push<br/>→ homelab-infra"]
+        commit["git commit + push<br/>→ freshet-deploy"]
         push["Claude Code:<br/>RemoteTrigger update<br/><i>(file → API)</i>"]
         file --> commit --> push
     end
@@ -57,12 +57,12 @@ flowchart LR
     subgraph artifacts["Output artifacts"]
         direction TB
         brief["data/daily-briefs/<br/>YYYY-MM-DD.md"]
-        homelabrepo["homelab-infra/main"]
+        homelabrepo["freshet-deploy/main"]
         gha["GitHub Actions:<br/>mirror-freshet-public"]
         public["ottawa-river-freshet/main<br/><i>(public mirror)</i>"]
         brief -- "git push" --> homelabrepo
         homelabrepo -- "push event<br/>(freshet-public/**)" --> gha
-        gha -- "git subtree push<br/>(PAT auth)" --> public
+        gha -- "content-sync push<br/>(PAT auth)" --> public
     end
 
     push --> live
@@ -86,7 +86,7 @@ publishes back to the repo, and a GitHub Actions workflow auto-mirrors the
 public-facing subdirectory to `ottawa-river-freshet`). Output artifacts feed
 back into the same git repo whose `routines/` directory holds the prompt —
 closing the loop. Routines themselves never touch the public mirror; they
-only push to `homelab-infra` and let CI handle the rest.
+only push to `freshet-deploy` and let CI handle the rest.
 
 ## Layout
 
@@ -109,7 +109,7 @@ schedule: "0 22 * * *"              # cron in UTC, OR run_once_at: ISO timestamp
 environment: env_015...             # CCR environment ID (anthropic_cloud)
 model: claude-sonnet-4-6            # default for all freshet routines
 sources:                            # git checkouts available to the agent
-  - https://github.com/aachtenberg/homelab-infra
+  - https://github.com/aachtenberg/freshet-deploy
   - https://github.com/aachtenberg/ottawa-river-freshet
 allowed_tools:                      # Claude Code tools the agent may call
   - Bash
