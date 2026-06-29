@@ -331,6 +331,13 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .station-card-mini .badge-row .pctl-chip { font-size: 10px; padding: 2px 7px; border-radius: 4px; background: var(--surface-2); color: var(--text-muted); font-variant-numeric: tabular-nums; }
 .station-card-mini .badge-row .pctl-chip.high { background: var(--red-light); color: var(--red); }
 .station-card-mini .badge-row .orrpb-chip { font-size: 10px; padding: 2px 7px; border-radius: 4px; background: var(--surface-2); color: var(--text-muted); }
+/* Summer low-water / drawdown advisory chips (informational — no official
+   navigation datum exists). watch=below seasonal median, warn=near the bottom
+   of the seasonal band, alert=record-low territory or very fast drop. */
+.lowwater-chip { display: inline-block; font-size: 10px; padding: 2px 7px; border-radius: 4px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.lowwater-chip.watch { background: var(--amber-light);  color: var(--amber); }
+.lowwater-chip.warn  { background: var(--orange-light); color: var(--orange); }
+.lowwater-chip.alert { background: var(--red-light);    color: var(--red); }
 
 .header-actions { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
 .header-prefs, .header-cmds { display: flex; gap: 6px; align-items: center; }
@@ -732,7 +739,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 
 <div class="tab-panel" data-tab="stations">
   <div class="section-title" style="margin-top: 4px;">All stations — corridor view</div>
-  <div class="section-subtitle">Each card has its own time-series chart, daily change, flood-state badge, ORRPB reference label, percentile (where available), and 48 h precipitation forecast at the nearest weather station. Click a card to open the full detail.</div>
+  <div class="section-subtitle">Each card has its own time-series chart, daily change, flood-state badge, ORRPB reference label, percentile (where available), and 48 h precipitation forecast at the nearest weather station. Click a card to open the full detail. <strong>Low-water flags</strong> (↓ fast drop, below seasonal median, near seasonal low) are <em>informational, boater-beware</em> advisories — there is no official minimum-navigable level and conditions vary locally.</div>
   <div class="range-picker" id="range-picker-stations">
     <span class="label" data-i18n="window">Window</span>
     <button class="range-btn" data-hours="1">1h</button>
@@ -3138,6 +3145,63 @@ const GAUGE_TO_WX = {
 let stationMiniCharts = {};
 let lastWeatherCache = null;
 
+// ---- Summer low-water / drawdown advisory ----------------------------------
+// Boater-beware context for the recession season. There is NO authoritative
+// minimum-navigable level on the Ottawa main stem (per the local boating
+// community) — these flags are INFORMATIONAL and conditions vary locally. Two
+// signals: (1) rate of fall, computed from live readings (works on every gauge,
+// no extra data), and (2) position within the seasonal median band, for gauges
+// with a baked climatology. The warning rule: anything getting close to the
+// bottom of the seasonal band is a warning; record-low territory is a red alert.
+//
+// SEASONAL_LOW_BAND[id] = per-calendar-month [seasonalMedian_m, recordLow_m] in
+// the same datum as the displayed level. Lac Coulonge (Vigilance 1195, MASL,
+// datumOffset 0) is derived from data/lac-coulonge-daily-1990-2026.csv: median =
+// median of the per-day medians in that month; recordLow = min of the per-day
+// historic lows (1990–2026). Add other gauges here once their per-day
+// climatology is sourced (WSC HYDAT / ORRPB) — until then they get rate-only.
+const SEASONAL_LOW_BAND = {
+  1195: { 1:[106.50,106.00], 2:[106.51,105.99], 3:[106.50,106.03], 4:[106.48,105.92],
+          5:[106.47,105.73], 6:[106.32,105.73], 7:[106.19,105.65], 8:[106.08,105.14],
+          9:[106.06,105.07], 10:[106.17,105.18], 11:[106.31,105.57], 12:[106.42,105.39] }
+};
+
+// Build 0–2 low-water advisory chips for a station card.
+//   level     — displayed level (MASL), same datum as the band
+//   change24  — cm change over 24 h (negative = falling); may be null
+function lowWaterChips(id, level, change24) {
+  let out = '';
+
+  // (1) Rate of fall — all gauges. Tiers: dropping / fast drop / very fast drop.
+  if (change24 != null && change24 <= -8) {
+    const drop = Math.abs(change24);
+    const cls  = change24 <= -30 ? 'alert' : change24 <= -15 ? 'warn' : 'watch';
+    const word = change24 <= -30 ? 'very fast drop' : change24 <= -15 ? 'fast drop' : 'dropping';
+    out += `<span class="lowwater-chip ${cls}" title="Level fell ${drop.toFixed(0)} cm in the last 24 h — informational drawdown advisory; conditions vary locally, boater beware">↓ ${drop.toFixed(0)} cm/24h · ${word}</span>`;
+  }
+
+  // (2) Seasonal median band — gauges with a baked climatology.
+  const band = SEASONAL_LOW_BAND[id];
+  if (band && level != null) {
+    const mo = new Date().getMonth() + 1;
+    const mb = band[mo];
+    if (mb) {
+      const [med, low] = mb;
+      const nearBottom = low + 0.25 * (med - low);   // bottom quartile of the band
+      const bandTxt = `${med.toFixed(2)}–${low.toFixed(2)} m`;
+      if (level <= low + 0.05) {
+        out += `<span class="lowwater-chip alert" title="At or below the record low for this month (record ${low.toFixed(2)} m across 1990–2026). Informational; conditions vary locally.">⚠ record-low territory</span>`;
+      } else if (level <= nearBottom) {
+        out += `<span class="lowwater-chip warn" title="Near the bottom of the seasonal band (this month: median ${med.toFixed(2)} m down to record low ${low.toFixed(2)} m). Informational low-water advisory.">near seasonal low (band ${bandTxt})</span>`;
+      } else if (level < med) {
+        const cm = Math.round((med - level) * 100);
+        out += `<span class="lowwater-chip watch" title="Below the seasonal median for this month (${med.toFixed(2)} m). Informational.">${cm} cm below seasonal median</span>`;
+      }
+    }
+  }
+  return out;
+}
+
 function buildStationCard(id) {
   const station = lastData?.[id];
   if (!station?.metadata) return `<div class="station-card-mini" data-station-id="${id}"><div class="meta">Loading ${id}…</div></div>`;
@@ -3207,7 +3271,7 @@ function buildStationCard(id) {
     </div>
     <div class="meta">${m.description || ''}</div>
     <div class="chart-wrap"><canvas id="stn-chart-${id}"></canvas></div>
-    <div class="badge-row">${stateBadge}${orrpbChip}${pctlChip}${precipChip}</div>
+    <div class="badge-row">${stateBadge}${lowWaterChips(id, dispCurrent, change)}${orrpbChip}${pctlChip}${precipChip}</div>
   </div>`;
 }
 
