@@ -1795,6 +1795,29 @@ function renderBanner(type, html) {
   b.innerHTML = html;
 }
 
+// "ORRPB down? data here is direct-from-source" banner. ORRPB's public site
+// periodically goes down or stops updating (e.g. the June 2026 weekend outage).
+// This dashboard pulls levels & flows DIRECT from the source agencies
+// (MVCA / WSC / Québec Vigilance / Hydro-Québec), so it stays current
+// regardless — surface that reassurance whenever our mirror of ORRPB's OWN
+// daily series falls behind. Fires only when the latest ORRPB row is >48 h old
+// (ORRPB publishes ~daily, so 48 h clears the normal afternoon-publish lag and
+// avoids false positives). Best-effort; never blocks the dashboard.
+async function checkOrrpbStatus() {
+  try {
+    const r = await fetch('/history/orrpb_river_levels?order=time.desc&limit=1', { cache: 'no-store' });
+    if (!r.ok) return;
+    const rows = await r.json();
+    const t = rows && rows[0] && rows[0].time;
+    if (!t) return;
+    const ageH = (Date.now() - new Date(t).getTime()) / 3600000;
+    if (ageH > 48) {
+      const d = new Date(t).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', timeZone: 'America/Toronto' });
+      renderBanner('', `<strong>ORRPB's data feed looks delayed</strong> — their latest update is ${d}. The levels and flows shown here come <strong>direct from the source agencies</strong> (MVCA, Water Survey of Canada, Québec Vigilance, Hydro-Québec) and stay current regardless of ORRPB's site.`);
+    }
+  } catch (_) { /* best-effort */ }
+}
+
 function renderCards(data, seasonPeaks = {}) {
   const container = document.getElementById('cards');
   const items = [
@@ -4714,6 +4737,7 @@ async function fetchData() {
     lastDataTimestamp = latestLC.date_prise_valeur;
     renderStatus('live', `Live · last reading ${ago(latestLC.date_prise_valeur)} · refreshed ${new Date().toLocaleTimeString('en-CA', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Toronto' })}`);
     renderBanner(null, null);
+    checkOrrpbStatus();   // re-show the "direct-from-source" banner if ORRPB's own feed is stale
   } catch (e) {
     renderStatus('error', `Error: ${e.message}`);
     // Check origin
