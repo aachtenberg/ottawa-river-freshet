@@ -1,7 +1,18 @@
 # Dashboard
 
-Single-file static HTML dashboard. The whole UI is one `index.html` (~165 KB
+Single-file static HTML dashboard. The whole UI is one `index.html` (~300 KB
 including inline CSS and JS) plus a few static assets. No build step.
+
+> **⚠ Editing in the private `freshet-deploy` repo?** This directory is a
+> **generated downstream mirror** — the canonical, cluster-served copy is
+> `apps/files/freshet-dashboard/`. Edit `index.html` (and the JSON assets)
+> *there*, then run `scripts/sync-dashboard-to-public.sh` to update this copy.
+> Changes made directly here are **overwritten by the next sync and never
+> deployed** (the `build-dashboard.yml` image build only fires on
+> `apps/files/freshet-dashboard/**`). See `WORKFLOW.md` for the full flow.
+>
+> *(In the public `ottawa-river-freshet` repo there is no `apps/` tree — this
+> copy is the canonical source you deploy via Docker Compose or your own k8s.)*
 
 ## Files
 
