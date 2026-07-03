@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
-  "fetched_at_iso": "2026-07-02T22:00:00Z",
+  "fetched_at_iso": "2026-07-03T22:00:00Z",
   "source": {
     "url": "https://www.ottawariver.ca/conditions/?display=forecast",
     "last_update_iso": "2026-07-02T16:41:00Z",
     "next_update_expected_iso": "2026-07-07T20:00:00Z",
-    "next_update_cadence": "daily-freshet"
+    "next_update_cadence": "weekly"
   },
-  "mode": "daily-freshet",
-  "freshet_active": true,
+  "mode": "weekly-notice",
+  "freshet_active": false,
   "further_increases_possible": true,
   "further_increases_reach": "main stem of the Ottawa River",
   "further_increases_includes_lac_coulonge": true,
