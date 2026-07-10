@@ -12,6 +12,7 @@ For the visual exhibits (Exhibits 0 through H), see `../../docs/exhibits/`.
 
 | Date | Title | One-line summary |
 |---|---|---|
+| 2026-07-10 | [Summer predictability regime](2026-07-10_summer_predictability_regime.md) | Dave Stinson's "predictable before 2019" adjudicated over 36 Britannia summers: calendar-R² 0.58→0.38 and mid-summer surges +70% from 2017, but day-to-day volatility unchanged; Jul 5–8 flow table verified line-by-line |
 | 2026-05-27 | [Rolphton / Mattawa FB tangent](2026-05-27_rolphton_mattawa_thread.md) | Dan Poole on why Deux Rivières runs dry while Mattawa floods; two-stage refill at Otto Holden matches the Des Joachims pattern, confirming basin-wide OPG operating protocol |
 | 2026-05-26 | [Cascade 2025 vs 2026](2026-05-26_cascade_2025_vs_2026.md) | 2026 freshet 13-39% higher peak flow + 4-14% more May volume than 2025; both years 59-168% above 30-year median |
 | 2026-05-26 | [Bryson no pre-freshet drawdown](2026-05-26_bryson_no_drawdown.md) | 30-year median at the property head pond shows just 7 cm seasonal variation; no flood-management drawdown posture |
