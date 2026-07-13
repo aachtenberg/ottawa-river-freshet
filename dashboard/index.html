@@ -1540,6 +1540,14 @@ function renderRegionalSkeleton() {
 
 function regionalCardHTML({ meta, ok, data, error }) {
   if (!ok) return `<div class="card" data-station-id="${meta.id}"><div class="label">${meta.name}</div><div class="sub">Unavailable: ${error || 'error'}</div></div>`;
+  // Metadata-but-no-readings (e.g. Rigaud 1264 mid-Vigilance-outage): without
+  // this guard `latest` is undefined, regionalCardHTML throws, and the card
+  // is stuck on the "Loading…" skeleton forever. Same bug class as the
+  // All-stations blank-tab fix — render a graceful no-data card instead.
+  if (!data?.readings?.length) {
+    const publicLabel = data?.metadata?.label ? `<span class="station-id">${data.metadata.label}</span>` : '';
+    return `<div class="card" data-station-id="${meta.id}"><div class="label">${meta.name}${publicLabel} — ${meta.subtitle}</div><div class="sub">No recent data published</div></div>`;
+  }
   const latest = data.readings[data.readings.length - 1];
   const pk = classifyPeak(data.readings, latest);
   const t = formatTrend(data.metadata.trend_niv);
