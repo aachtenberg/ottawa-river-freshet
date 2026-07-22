@@ -2234,30 +2234,36 @@ function renderSummary(lcData, seasonPeak) {
   box.className = `summary ${statusCls}`;
 
   // Threshold bar range. During active freshet we zoom in on the flood band
-  // (107.0 m floor, 109.3 m ceiling, gradient hard-coded in the .summary-bar
-  // CSS rule). Once ORRPB has shifted to weekly notices or the basin is off-
-  // season, the lake recedes well below 107.0 m (30-year median at this gauge
-  // is 106.42 m) so the marker would pin at the left edge. In that mode we
-  // drop the floor to 106.0 m and apply a recalculated gradient inline so the
-  // danger-zone colors land at the same elevation thresholds, just with more
-  // green safe-zone on the left for the marker to live in.
-  //
-  // The forecast-mode gate alone isn't sufficient: in July 2026 ORRPB was
-  // still issuing daily-freshet forecasts while the lake had already receded
-  // to 106.58 m, pinning the marker off the bar's left edge. So also widen
-  // whenever the level itself sits at/below the freshet floor.
-  const postFreshet = isDeclined && fcst && (fcst.mode === 'weekly-notice' || fcst.mode === 'off-season');
-  const wideBand = postFreshet || latest.valeur < 107.0 + 0.10;
-  const BAR_MIN = wideBand ? 106.0 : 107.0;
+  // (107.0 m floor, 109.3 m ceiling; default gradient lives in .summary-bar
+  // CSS). Once the lake drops near/below that floor — weekly-notice /
+  // off-season, or the level itself — a fixed 106.0 m floor still pins the
+  // marker at the left edge (e.g. 106.01 m → ~0%). Autoscale the floor so
+  // the current reading sits near ~18% of the bar, keep a little room under
+  // the 30-year median, and never drop below the typical summer absolute
+  // floor (~105.0 m). Danger-zone colors are recomputed from the same
+  // elevation thresholds onto whatever [BAR_MIN, BAR_MAX] we land on.
+  const LC_MEDIAN = 106.42;
+  const FRESHET_MIN = 107.0;
   const BAR_MAX = 109.3;
+  const ABS_FLOOR = 105.0;       // ~Aug/Sep monthly mins at this gauge
+  const MARKER_TARGET = 0.18;    // aim to place current ~18% from the left
+  const postFreshet = isDeclined && fcst && (fcst.mode === 'weekly-notice' || fcst.mode === 'off-season');
+  const wideBand = postFreshet || latest.valeur < FRESHET_MIN + 0.10;
+  let BAR_MIN = FRESHET_MIN;
+  if (wideBand) {
+    // Invert pct(current) ≈ MARKER_TARGET → BAR_MIN = (v - t*max)/(1-t)
+    const autoMin = (latest.valeur - MARKER_TARGET * BAR_MAX) / (1 - MARKER_TARGET);
+    const medianRoom = LC_MEDIAN - 0.35;
+    BAR_MIN = Math.max(ABS_FLOOR, Math.min(autoMin, medianRoom, FRESHET_MIN - 0.01));
+  }
   const pct = v => Math.max(0, Math.min(100, ((v - BAR_MIN) / (BAR_MAX - BAR_MIN)) * 100));
-  // Recalculated gradient stops for the wider post-freshet range. Same zone
-  // thresholds (108.30 yellow / 108.48 orange / 108.75 red / 109.01 dark red)
-  // remapped onto BAR_MIN=106.0, BAR_MAX=109.3 (range 3.3 m).
-  const postFreshetGradient =
-    'linear-gradient(to right, #4d8a7a 0%, #4d8a7a 69.7%, #d4a050 69.7%, #d4a050 75.2%, ' +
-    '#c47a30 75.2%, #c47a30 83.3%, #b03838 83.3%, #b03838 91.2%, #6b1818 91.2%, #6b1818 100%)';
-  const barStyle = wideBand ? `background: ${postFreshetGradient};` : '';
+  // Same zone thresholds as the CSS default, remapped onto the live domain.
+  const gp = v => (((v - BAR_MIN) / (BAR_MAX - BAR_MIN)) * 100).toFixed(1);
+  const barGradient = wideBand
+    ? `linear-gradient(to right, #4d8a7a 0%, #4d8a7a ${gp(108.30)}%, #d4a050 ${gp(108.30)}%, #d4a050 ${gp(108.48)}%, ` +
+      `#c47a30 ${gp(108.48)}%, #c47a30 ${gp(108.75)}%, #b03838 ${gp(108.75)}%, #b03838 ${gp(109.01)}%, #6b1818 ${gp(109.01)}%, #6b1818 100%)`
+    : '';
+  const barStyle = barGradient ? `background: ${barGradient};` : '';
   const markerLeft = pct(latest.valeur);
   const peakLeft = pct(peak.valeur);
   // Labels are translateX(-50%)-centered on their position, so at the bar's
