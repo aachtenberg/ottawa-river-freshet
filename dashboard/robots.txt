@@ -1,0 +1,5 @@
+# https://freshet.xgrunt.com — community freshet dashboard
+User-agent: *
+Allow: /
+
+Sitemap: https://freshet.xgrunt.com/sitemap.xml
