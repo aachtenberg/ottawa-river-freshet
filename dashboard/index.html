@@ -125,10 +125,11 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .summary.warning .summary-headline .status-dot { background: var(--orange); }
 .summary.danger .summary-headline .status-dot { background: var(--red); }
 
-/* Bar gradient color stops are calibrated to BAR_MIN=107.0, BAR_MAX=109.3 (range 2.3 m).
+/* Bar gradient color stops default to BAR_MIN=107.0, BAR_MAX=109.3 (range 2.3 m).
    Stops: green safe < 108.30 (56.5%), yellow approaching 108.30-108.48 (64.3%),
    orange in-backyard 108.48-108.75 (76.1%), red cottage 108.75-109.01 (87.4%),
-   dark red water-inside > 109.01. If BAR_MIN/MAX change in the JS, recompute these. */
+   dark red water-inside > 109.01. renderSummary() overrides this inline when
+   autoscaling the floor for post-freshet / low levels. */
 .summary-bar { position: relative; height: 10px; border-radius: 5px; margin: 26px 4px 28px; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.12); background: linear-gradient(to right, #4d8a7a 0%, #4d8a7a 56.5%, #d4a050 56.5%, #d4a050 64.3%, #c47a30 64.3%, #c47a30 76.1%, #b03838 76.1%, #b03838 87.4%, #6b1818 87.4%, #6b1818 100%); }
 .summary-marker { position: absolute; top: -6px; transform: translateX(-50%); width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 8px solid var(--text); filter: drop-shadow(0 1px 1px rgba(0,0,0,0.3)); }
 .summary-marker-label { position: absolute; top: -26px; transform: translateX(-50%); font-size: 11px; font-weight: 700; white-space: nowrap; color: var(--text); font-variant-numeric: tabular-nums; }
@@ -2236,26 +2237,21 @@ function renderSummary(lcData, seasonPeak) {
   // Threshold bar range. During active freshet we zoom in on the flood band
   // (107.0 m floor, 109.3 m ceiling; default gradient lives in .summary-bar
   // CSS). Once the lake drops near/below that floor — weekly-notice /
-  // off-season, or the level itself — a fixed 106.0 m floor still pins the
-  // marker at the left edge (e.g. 106.01 m → ~0%). Autoscale the floor so
-  // the current reading sits near ~18% of the bar, keep a little room under
-  // the 30-year median, and never drop below the typical summer absolute
-  // floor (~105.0 m). Danger-zone colors are recomputed from the same
-  // elevation thresholds onto whatever [BAR_MIN, BAR_MAX] we land on.
-  const LC_MEDIAN = 106.42;
+  // off-season, or the level itself — widen the domain so the left edge is
+  // the 1990–2026 record low (from SEASONAL_LOW_BAND) minus a small pad,
+  // rather than pinning the marker at 0%. Danger-zone colors are remapped
+  // onto the live [BAR_MIN, BAR_MAX].
+  const LC_MEDIAN = 106.42;      // long-term median at this gauge (also Dec climatology)
   const FRESHET_MIN = 107.0;
   const BAR_MAX = 109.3;
-  const ABS_FLOOR = 105.0;       // ~Aug/Sep monthly mins at this gauge
-  const MARKER_TARGET = 0.18;    // aim to place current ~18% from the left
+  const RECORD_LOW_PAD = 0.15;   // metres below record low so a new low isn't at 0%
+  const lcBand = SEASONAL_LOW_BAND[1195];
+  const recordLow = lcBand
+    ? Math.min(...Object.values(lcBand).map(([, low]) => low))
+    : 105.07;                    // Sep climatology min — fallback if band missing
   const postFreshet = isDeclined && fcst && (fcst.mode === 'weekly-notice' || fcst.mode === 'off-season');
   const wideBand = postFreshet || latest.valeur < FRESHET_MIN + 0.10;
-  let BAR_MIN = FRESHET_MIN;
-  if (wideBand) {
-    // Invert pct(current) ≈ MARKER_TARGET → BAR_MIN = (v - t*max)/(1-t)
-    const autoMin = (latest.valeur - MARKER_TARGET * BAR_MAX) / (1 - MARKER_TARGET);
-    const medianRoom = LC_MEDIAN - 0.35;
-    BAR_MIN = Math.max(ABS_FLOOR, Math.min(autoMin, medianRoom, FRESHET_MIN - 0.01));
-  }
+  const BAR_MIN = wideBand ? (recordLow - RECORD_LOW_PAD) : FRESHET_MIN;
   const pct = v => Math.max(0, Math.min(100, ((v - BAR_MIN) / (BAR_MAX - BAR_MIN)) * 100));
   // Same zone thresholds as the CSS default, remapped onto the live domain.
   const gp = v => (((v - BAR_MIN) / (BAR_MAX - BAR_MIN)) * 100).toFixed(1);
@@ -2281,16 +2277,20 @@ function renderSummary(lcData, seasonPeak) {
   // Suppress zone labels that would visually collide with the peak label.
   // 107.50 = Vigilance minor-flood threshold (recession watch level);
   // 108.30 / 108.75 / 109.17 = property thresholds + 2019 record. In
-  // post-freshet mode we also show the 30-year median (106.42 m at this
-  // gauge) as an additional zone marker, since the lake recedes near it.
+  // post-freshet / low-level mode we also mark the climatology record low
+  // (left anchor) and the long-term median.
   const zoneSpecs = [
     { v: 107.50, t: 'minor 107.50' },
     { v: 108.30, t: '108.30' },
     { v: 108.75, t: 'cottage 108.75' },
     { v: 109.17, t: '2019 rec.' }
   ];
-  if (wideBand) zoneSpecs.unshift({ v: 106.42, t: 'median 106.42' });
+  if (wideBand) {
+    zoneSpecs.unshift({ v: LC_MEDIAN, t: `median ${LC_MEDIAN.toFixed(2)}` });
+    zoneSpecs.unshift({ v: recordLow, t: `record low ${recordLow.toFixed(2)}` });
+  }
   const zoneLabels = zoneSpecs
+    .filter(z => z.v > BAR_MIN && z.v < BAR_MAX)
     .filter(z => !showPeakSeparate || Math.abs(pct(z.v) - peakLeft) > 8)
     .map(z => `<div class="summary-zone-label" style="left:${clampLabel(pct(z.v))}%">${z.t}</div>`).join('');
 
