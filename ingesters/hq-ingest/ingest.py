@@ -386,20 +386,24 @@ def main():
         raise
 
     age_after = age_hours(db_max_ts('dam_releases'))
-    print(f'feed freshness: centrales {cen_age:.1f}h via {cen_src}, '
-          f'stations {sta_age:.1f}h via {sta_src}; '
-          f'dam_releases in DB now {age_after:.1f}h old')
+    # Titles must be latin-1 (HTTP headers); put icons in Tags, not Title.
+    print(f'feed freshness: centrales {cen_age:.1f}h via {cen_src} '
+          f'(healthy<={STALE_HOURS:g}h), '
+          f'stations {sta_age:.1f}h via {sta_src} '
+          f'(healthy<={STALE_HOURS:g}h); '
+          f'dam_releases in DB now {age_after:.1f}h old '
+          f'(alert>{ALERT_HOURS:g}h)')
 
     if age_after > ALERT_HOURS and age_before <= ALERT_HOURS:
         ntfy_alert(
-            '⚠️ HQ Operations feed stale',
+            'HQ Operations feed stale',
             f'Hydro-Québec release feed has not advanced in {age_after:.0f}h.\n'
             f'Tried the relay, a cache-bypass and the GitHub mirror — all '
             f'stale. The dashboard Operations tab will lag until HQ recovers.',
             priority='4', tags='warning')
     elif age_after <= ALERT_HOURS and age_before > ALERT_HOURS and age_before != float('inf'):
         ntfy_alert(
-            '✅ HQ Operations feed recovered',
+            'HQ Operations feed recovered',
             f'Hydro-Québec release feed is fresh again ({age_after:.1f}h old).',
             priority='3', tags='white_check_mark')
 

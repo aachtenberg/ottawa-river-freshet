@@ -47,11 +47,11 @@ for level, desc in THRESHOLDS:
     if not (rising or falling):
         continue
     direction = 'CROSSED ABOVE' if rising else 'dropped below'
-    emoji = '🔺' if rising else '🔻'
-    title = f'{emoji} Lac Coulonge {direction} {level:.2f} m'
+    # Titles must be latin-1 (HTTP headers); put icons in Tags, not Title.
+    title = f'Lac Coulonge {direction} {level:.2f} m'
     body = f'{desc}\nLevel: {curr:.3f} m (was {prev:.3f} m)\nTime: {ts}'
     priority = '5' if rising and level >= 108.75 else '4' if rising else '3'
-    tags = 'warning' if rising else 'information_source'
+    tags = 'arrow_up,warning' if rising else 'arrow_down,information_source'
     req = urllib.request.Request(
         f'{NTFY_URL}/{NTFY_TOPIC}',
         data=body.encode('utf-8'),

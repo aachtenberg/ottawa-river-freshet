@@ -60,6 +60,15 @@ If every path is stale, `hq-ingest` posts a one-shot ntfy alert (on the
 stale-state transition, not every run). Relay and fallback URLs are env vars
 on [`k3s/base/data/hq-ingest.yml`](../../k3s/base/data/hq-ingest.yml).
 
+**Expected lag vs real staleness.** A healthy HQ open-data feed’s newest point
+normally lags wall-clock by ~3 h (HQ publish cadence, not our ingest). Seeing
+`centrales 2.5h via relay` with the same age on relay, `?nocache=1`, and the
+GitHub mirror means the chain is working — that is not a relay outage. Diagnose
+path failure when sources **disagree** on freshness, or when age exceeds the
+ingester thresholds (`HQ_STALE_HOURS` default 6 → try next path; `HQ_ALERT_HOURS`
+default 10 → one-shot ntfy). ntfy alert `Title` headers are ASCII-only (HTTP
+latin-1); icons go in ntfy `Tags`.
+
 Used for: the Operations tab and the live Bryson Δh / spill-share evidence in Exhibit D. Centrale release goes to `dam_releases`, station levels to `dam_levels`.
 
 ## 3. WSC realtime hydrometric
