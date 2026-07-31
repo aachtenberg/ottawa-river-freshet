@@ -86,13 +86,15 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .freeze-group-header { grid-column: 1 / -1; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-muted); padding: 4px 0 2px; border-top: 1px solid var(--border); }
 .freeze-grid > .freeze-group-header:first-child { border-top: none; padding-top: 0; }
 .freeze-nights { display: flex; gap: 4px; flex-wrap: wrap; align-items: stretch; }
-.night-chip { display: flex; flex-direction: column; align-items: center; justify-content: center; box-sizing: border-box; padding: 5px 7px; border-radius: 5px; min-width: 54px; min-height: 38px; font-size: 10px; line-height: 1.2; border: 1px solid transparent; }
+/* Keep chip class names off the global .forecast panel selector — that rule's
+   padding/margin was stretching "Last night" above the forward-day chips. */
+.night-chip { display: flex; flex-direction: column; align-items: center; justify-content: center; box-sizing: border-box; margin: 0; padding: 5px 7px; border-radius: 5px; min-width: 54px; min-height: 38px; font-size: 10px; line-height: 1.2; border: 1px solid transparent; }
 .night-chip .n-date { color: var(--text-faint); font-size: 9px; white-space: nowrap; }
 .night-chip .n-temp { font-weight: 600; font-variant-numeric: tabular-nums; font-size: 12px; }
 .night-chip.freeze { background: var(--blue-light); color: var(--blue); }
 .night-chip.near { background: var(--amber-light); color: var(--amber); }
 .night-chip.warm { background: var(--red-light); color: var(--red); }
-.night-chip.forecast { border-style: dashed; border-color: currentColor; opacity: 0.85; }
+.night-chip.is-forecast { border-style: dashed; border-color: currentColor; opacity: 0.85; }
 .precip-chip { display: inline-block; margin-top: 3px; padding: 2px 7px; border-radius: 4px; font-size: 10px; font-weight: 500; font-variant-numeric: tabular-nums; }
 .precip-chip.rain-light { background: var(--surface-2); color: var(--text-muted); }
 .precip-chip.rain-moderate { background: var(--amber-light); color: var(--amber); }
@@ -1326,7 +1328,7 @@ function renderFreezePanel(weather) {
       const cls = n.temp < 0 ? 'freeze' : n.temp < 3 ? 'near' : 'warm';
       const d = new Date(n.date);
       const label = diff === 0 ? 'Last night' : diff === 1 ? 'Tonight' : diff === 2 ? 'Tomorrow' : `${d.getDate()} ${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()]}`;
-      return `<div class="night-chip ${cls}${isForecast ? ' forecast' : ''}">
+      return `<div class="night-chip ${cls}${isForecast ? ' is-forecast' : ''}">
         <span class="n-date">${label}</span>
         <span class="n-temp">${n.temp > 0 ? '+' : ''}${n.temp.toFixed(0)}°</span>
       </div>`;
