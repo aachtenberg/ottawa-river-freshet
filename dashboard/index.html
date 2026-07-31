@@ -76,16 +76,18 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .freeze-summary.warn { background: var(--amber-light); color: var(--amber); }
 .freeze-summary.bad { background: var(--red-light); color: var(--red); }
 /* Single shared grid so all chip cells line up across rows.
-   display: contents on .freeze-row promotes its children into the parent grid. */
-.freeze-grid { display: grid; grid-template-columns: max-content 1fr; column-gap: 16px; row-gap: 10px; align-items: center; font-size: 12px; }
+   display: contents on .freeze-row promotes its children into the parent grid.
+   Station labels are right-aligned so they sit flush against the chip row. */
+.freeze-grid { display: grid; grid-template-columns: max-content 1fr; column-gap: 12px; row-gap: 10px; align-items: center; font-size: 12px; }
 .freeze-row { display: contents; }
-.freeze-row .station-name { font-weight: 500; white-space: nowrap; }
+.freeze-row .station-meta { text-align: right; }
+.freeze-row .station-name { font-weight: 500; white-space: nowrap; display: block; }
 .freeze-row .station-role { color: var(--text-faint); font-size: 11px; display: block; white-space: nowrap; }
 .freeze-group-header { grid-column: 1 / -1; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-muted); padding: 4px 0 2px; border-top: 1px solid var(--border); }
 .freeze-grid > .freeze-group-header:first-child { border-top: none; padding-top: 0; }
-.freeze-nights { display: flex; gap: 4px; flex-wrap: wrap; }
-.night-chip { display: flex; flex-direction: column; align-items: center; padding: 4px 6px; border-radius: 5px; min-width: 44px; font-size: 10px; line-height: 1.2; border: 1px solid transparent; }
-.night-chip .n-date { color: var(--text-faint); font-size: 9px; }
+.freeze-nights { display: flex; gap: 4px; flex-wrap: wrap; align-items: stretch; }
+.night-chip { display: flex; flex-direction: column; align-items: center; justify-content: center; box-sizing: border-box; padding: 5px 7px; border-radius: 5px; min-width: 54px; min-height: 38px; font-size: 10px; line-height: 1.2; border: 1px solid transparent; }
+.night-chip .n-date { color: var(--text-faint); font-size: 9px; white-space: nowrap; }
 .night-chip .n-temp { font-weight: 600; font-variant-numeric: tabular-nums; font-size: 12px; }
 .night-chip.freeze { background: var(--blue-light); color: var(--blue); }
 .night-chip.near { background: var(--amber-light); color: var(--amber); }
@@ -105,7 +107,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
   .freeze-grid { grid-template-columns: 1fr; row-gap: 14px; }
   .freeze-row { display: block; }
   .freeze-row > div { margin-bottom: 4px; }
-  .night-chip { min-width: 40px; }
+  .freeze-row .station-meta { text-align: left; }
+  .night-chip { min-width: 48px; }
 }
 
 .banner { background: var(--blue-light); color: var(--blue); border-radius: 8px; padding: 10px 14px; margin-bottom: 16px; font-size: 13px; display: none; }
@@ -1332,7 +1335,7 @@ function renderFreezePanel(weather) {
       ? `<span class="station-role" title="${station.note}" style="cursor:help;border-bottom:1px dotted var(--text-faint)">${station.role}</span>`
       : `<span class="station-role">${station.role}</span>`;
     return `${groupHeader}<div class="freeze-row">
-      <div><span class="station-name">${station.name}</span>${roleHtml}${precipLabel}</div>
+      <div class="station-meta"><span class="station-name">${station.name}</span>${roleHtml}${precipLabel}</div>
       <div class="freeze-nights">${chips}</div>
     </div>`;
   }).join('');
