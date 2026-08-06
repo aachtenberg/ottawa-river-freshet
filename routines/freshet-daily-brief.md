@@ -72,7 +72,7 @@ Key IDs: `3-46` Bryson centrale, `1-2964` Bryson amont, `1-2965` Bryson aval. Ca
 
 Reservoir storage: `latest_reservoir_readings` (one row per reservoir) — covers Baskatong, Cabonga, Dozois, Témiscaming, Bark Lake, etc. Use day-over-day level deltas to track the basin's storage refill posture during recession. For the basin-balance count (how many reservoirs are falling/steady vs. rising), use `reservoir_readings` and compare the latest day to the prior day across all `reservoir_id`s.
 
-Upper-basin watch: Témiscaming outflow is `orrpb_river_flows?station=eq.temiscaming` (ORRPB main-stem avg daily discharge); a cross-check outflow with operator levels is `reservoir_readings?reservoir_id=eq.timiskaming` (PSPC). The two agree until ORRPB's most-recent day, which is preliminary and often revised — prefer the PSPC value for "today" and note if they disagree by >50 m³/s. Mid-valley levels (`mattawa`, `pembroke`, `des-joachims`) are in `orrpb_river_levels`. Cascade *inflows* to Lake Temiscaming are the Quinze releases (`dam_releases` site `3-31`).
+Upper-basin watch: Témiscaming outflow is `orrpb_river_flows?station=eq.temiscaming` (ORRPB main-stem avg daily discharge); a cross-check outflow with operator levels is `reservoir_readings?reservoir_id=eq.timiskaming` (PSPC). The two agree until ORRPB's most-recent day, which is preliminary and often revised — prefer the PSPC value for "today" and note if they disagree by >50 m³/s. This preliminary-day caution applies to EVERY station in `orrpb_river_flows`, not just Témiscaming — see the provisional-flow sanity check guardrail below before treating any current-day flow figure as news. Mid-valley levels (`mattawa`, `pembroke`, `des-joachims`) are in `orrpb_river_levels`. Cascade *inflows* to Lake Temiscaming are the Quinze releases (`dam_releases` site `3-31`).
 
 ## Sources to pull (when proxy is missing data)
 
@@ -213,6 +213,7 @@ List anything that warrants attention. Examples:
 - ORRPB forecast text adds a new flood-watch flag
 - ORRPB or operator public statement makes a precipitation/climate claim that is testable (e.g. window-record claim) — flag for follow-up against `seasonal_window_analysis.py` outputs
 - Source unreachable / data gap (only after passing the verify-before-outage guardrail)
+- Large day-over-day flow change resting on a provisional current-day value — ONLY after passing the provisional-flow sanity check guardrail below, with the check results printed alongside the flag
 
 If nothing flagged, say "None."
 
@@ -311,6 +312,24 @@ Before writing ANY of these words/phrases anywhere in the brief — "API down", 
 4. A single failed fetch in your earlier tooling is NOT evidence of an outage. Only after both probes confirm the failure may you write outage language.
 
 This guardrail exists because a prior brief (2026-05-05) falsely claimed three consecutive days of HQ 503 while the API and the cluster ingester were both healthy throughout — the agent had simply mishandled an early fetch error and didn't verify before generalising it. Don't repeat that.
+
+## Provisional-flow sanity check guardrail (MANDATORY)
+
+The most-recent day in `orrpb_river_flows` (and the current-day column of the ORRPB flow table) is NOT a daily average — it is a provisional partial-day running mean, at EVERY station, and it is sometimes corrupted outright. Two documented artifact classes:
+
+- **Placeholder zeros.** Current-day rows sometimes read `0` (e.g. `des-joachims` and `otto-holden` on 2026-08-06 mid-day). A zero is never a real main-stem daily average; treat it as "not yet reported", never as a shutdown.
+- **Inflated partials.** The 2026-08-05 brief headlined "⚠⚠⚠ MID-VALLEY SURGE — Des Joachims 995 m³/s (+164%), Otto Holden 740 m³/s (+113%)" from provisional current-day values, forecast a wave reaching the property reach in 1–3 days, and invented a tributary source for it. Finalization came in at 474 and 356 m³/s (+26% and +2.6%). There was no surge — the headline, the wave-in-transit narrative, and the property-risk forecast were all artifacts of trusting a partial-day figure.
+
+Before writing ANY day-over-day flow change ≥25% (or ≥150 m³/s) that rests on a provisional current-day value into the TL;DR, the plain-language sections, or an anomaly flag at ⚠⚠ or stronger, you MUST run ALL of the checks below, pass all of them, and print the results alongside the claim:
+
+1. **Feasibility back-out.** A running mean P through h hours of the day bounds the possible final: even if the river stopped dead for the remaining hours, the finalized 24-h mean F would still be ≥ (h/24)·P. Compute that floor and ask whether it is remotely consistent with the station's recent finals and its physical setting. (Retrospective form, for checking yesterday's figures against today's finals: implied remaining-hours mean = (24·F − h·P)/(24−h); if that is negative, P was never a valid average — on Aug 5 it works out to −394 m³/s at Des Joachims.)
+2. **Mass balance.** Name where the extra water would have to come from, then READ that gauge — don't hypothesize it. Tributary claims are checkable in `wsc_readings` (e.g. Petawawa: `wsc_readings?station_code=eq.02KB001`). On 2026-08-05 the headline implied ~640 m³/s of new mid-valley inflow attributed to the Petawawa and neighbours; the Petawawa was running ~30 m³/s. Checkable, and false, the same night.
+3. **Level/pool consistency.** A real flow change moves levels. Check the station's own pool (`reservoir_readings`, e.g. `reservoir_id=eq.des_joachims`) and adjacent `orrpb_river_levels` stations. On 2026-08-05 the Des Joachims pool sat flat-to-falling (152.21 → 152.19 m) through the claimed near-tripling — the contradiction was in the brief's own reservoir table and went unreconciled.
+4. **Downstream response.** A surge in transit shows up downstream, or at minimum is not contradicted there. Chenaux and Chats Falls were falling while the claimed wave was supposedly arriving.
+
+If ANY check fails or cannot be run, the claim stays OUT of the TL;DR, the plain-language sections, and the anomaly flags. Report the raw provisional number only in the data tables, marked "provisional — failed sanity check, see Notes", and describe the discrepancy in `## Notes` as a data-quality observation. A data artifact is never a property-risk forecast.
+
+**Next-day retro-check (also mandatory):** while reading yesterday's brief for continuity, compare every flow figure it headlined against today's finalized `orrpb_river_flows` values. If a headlined claim fails finalization, open today's TL;DR with an explicit correction — "CORRECTION: yesterday's X was a provisional artifact; final = Y" — before any new news, and repeat the correction in plain language in the affected `## In plain language` thread.
 
 ## Also write latest.md (MANDATORY)
 

@@ -12,6 +12,7 @@ For the visual exhibits (Exhibits 0 through H), see `../../docs/exhibits/`.
 
 | Date | Title | One-line summary |
 |---|---|---|
+| 2026-08-06 | [Mid-valley surge correction](2026-08-06_mid_valley_surge_correction.md) | Retraction of the Aug 5 brief's ⚠⚠⚠ surge headline: Des Joachims 995 was a provisional partial-day artifact (finalized 474, +26%; Otto Holden +2.6%); back-out arithmetic implies −394 m³/s remainder; sanity-check guardrail added to routine |
 | 2026-07-23 | [Des Joachims summer cycling](2026-07-23_des_joachims_cycling.md) | Dan's "Is the river cycling?" infographic adjudicated with ORRPB hourly export: all three claims confirmed; discharge cycles 0 to ~1,000 m³/s daily, Pembroke swings 7-14 cm, Apr 30 peak 3,393 m³/s hourly |
 | 2026-07-10 | [Summer predictability regime](2026-07-10_summer_predictability_regime.md) | Dave Stinson's "predictable before 2019" adjudicated over 36 Britannia summers: calendar-R² 0.58→0.38 and mid-summer surges +70% from 2017, but day-to-day volatility unchanged; Jul 5–8 flow table verified line-by-line |
 | 2026-05-27 | [Rolphton / Mattawa FB tangent](2026-05-27_rolphton_mattawa_thread.md) | Dan Poole on why Deux Rivières runs dry while Mattawa floods; two-stage refill at Otto Holden matches the Des Joachims pattern, confirming basin-wide OPG operating protocol |
