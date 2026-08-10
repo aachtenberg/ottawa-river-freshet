@@ -94,9 +94,12 @@ Each routine is one self-contained markdown file:
 
 ```
 freshet-public/routines/
-├── README.md                       # this file
-├── freshet-daily-brief.md          # daily 22:00 UTC brief generator (≈5 PM ET, post-ORRPB-update)
-└── ...                             # additional routines as they are added
+├── README.md                            # this file
+├── freshet-daily-brief.md               # daily 22:00 UTC brief generator (≈5 PM ET, post-ORRPB-update)
+├── freshet-weekly-ops-rollup.md         # Mondays 23:00 UTC — claim ledger vs finals, canonical streak table, pipeline health
+├── freshet-monthly-strategy-rollup.md   # 2nd of month 12:00 UTC — exceedance accounting, regime comparison, testable-claims register
+├── freshet-mvca-ingest-health-check.md  # one-shot 2026-06-11 — MVCA ingest health check
+└── ...                                  # additional routines as they are added
 ```
 
 Front-matter at the top of each routine file holds the structured metadata:

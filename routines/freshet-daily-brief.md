@@ -178,9 +178,15 @@ reservoirs in normal refill is expected, not an anomaly).
 
 Milestone bookkeeping: track the freshet peak value/date, the running count
 of consecutive decline days at Témiscaming and Mattawa, and the most recent
-date each crossed a round-number threshold. These carry day-over-day, so
-read yesterday's brief to continue the streak rather than recomputing from
-scratch. Skip the whole section if `orrpb_river_flows` is empty/stale (>48 h).
+date each crossed a round-number threshold. Anchor every streak and
+day-count on the **streak table in the most recent weekly ops rollup**
+(`freshet-public/data/rollups/weekly/`, newest file) — that table is
+recomputed from the database each Monday, so it is the canonical baseline;
+extend it by the days elapsed since, using yesterday's brief only for the
+intervening days. This replaces the old brief-to-brief chain, where one bad
+link propagated indefinitely. If no weekly rollup exists yet, fall back to
+reading yesterday's brief as before. Skip the whole section if
+`orrpb_river_flows` is empty/stale (>48 h).
 
 ## Carillon §15.3.5.1 directive check
 
@@ -300,6 +306,24 @@ python3 freshet_posterior.py --asof latest --json > ../../dashboard/freshet-fore
 - ORRPB pages are HTML; parse with stdlib `html.parser`. Extract Lac Coulonge / Britannia / Carillon and the forecast prose.
 - If one source is genuinely unreachable (post-guardrail), mark that section unreachable and continue. Don't fail the whole job.
 
+## Quiet-day discipline
+
+You are a snapshot, not an essay. When every guardrail-passing check comes
+back steady — no new anomaly, no correction owed, flood state etat 0,
+forecast unchanged — the correct output is a SHORT brief: 1–2 short
+paragraphs per plain-language thread, a TL;DR of at most 3 sentences, and
+the standard tables. Do not pad a flat day with restated history; the
+weekly ops rollup carries the multi-day narrative now.
+
+⚠ markers are reserved for guardrail-passing anomalies and genuine state
+CHANGES. An ongoing condition being another day older (day-N headpond
+breach, day-N trigger inactive, day-N sub-400) is status, not a warning —
+carry it in the tables and streak lines without ⚠. Calibration check: the
+August 2026 steady-state briefs ran 4× longer than the freshet-peak briefs
+and carried 5× the ⚠ density. That is signal inversion — a reader skimming
+for danger must be able to trust that a long, marker-heavy brief means
+something is actually happening.
+
 ## Verify-before-declaring-outage guardrail (MANDATORY)
 
 Before writing ANY of these words/phrases anywhere in the brief — "API down", "503", "unavailable", "unreachable", "data gap", "outage", "can't reach", "failed", "N/A — HQ" — you MUST:
@@ -329,7 +353,7 @@ Before writing ANY day-over-day flow change ≥25% (or ≥150 m³/s) that rests 
 
 If ANY check fails or cannot be run, the claim stays OUT of the TL;DR, the plain-language sections, and the anomaly flags. Report the raw provisional number only in the data tables, marked "provisional — failed sanity check, see Notes", and describe the discrepancy in `## Notes` as a data-quality observation. A data artifact is never a property-risk forecast.
 
-**Next-day retro-check (also mandatory):** while reading yesterday's brief for continuity, compare every flow figure it headlined against today's finalized `orrpb_river_flows` values. If a headlined claim fails finalization, open today's TL;DR with an explicit correction — "CORRECTION: yesterday's X was a provisional artifact; final = Y" — before any new news, and repeat the correction in plain language in the affected `## In plain language` thread.
+**Next-day retro-check (also mandatory):** while reading yesterday's brief for continuity, compare every flow figure it headlined against today's finalized `orrpb_river_flows` values. If a headlined claim fails finalization, open today's TL;DR with an explicit correction — "CORRECTION: yesterday's X was a provisional artifact; final = Y" — before any new news, and repeat the correction in plain language in the affected `## In plain language` thread. Note: the weekly ops rollup (`data/rollups/weekly/`) re-audits every headlined figure from the whole week against finals each Monday — your next-day retro-check is the first line of defence, not the only one, but a claim you fail to correct will be caught there and logged as an uncorrected failure.
 
 ## Also write latest.md (MANDATORY)
 
