@@ -81,8 +81,9 @@ Upper-basin watch: Témiscaming outflow is `orrpb_river_flows?station=eq.temisca
    - `https://www.hydroquebec.com/data/documents-donnees/donnees-ouvertes/json/Donnees_VUE_STATIONS_ET_TARAGES.json`
    - The CDN refuses Python's default Alpine TLS handshake; if you hit this fallback you MUST set `ctx.set_ciphers('DEFAULT:@SECLEVEL=1')` and a non-empty User-Agent.
 2. **Quebec Vigilance** (Lac Coulonge station 1195) — use only if `river_readings` lacks the row:
-   - `https://inedit-ro.geo.msp.gouv.qc.ca/station_details_metadata_api?id=eq.1195` — current level + flood thresholds
-   - `https://inedit-ro.geo.msp.gouv.qc.ca/station_details_readings_api?id=eq.1195` — ~72 h reading buffer
+   - `https://inedit.geo.msp.gouv.qc.ca/station_details_metadata_api?id=eq.1195` — current level + flood thresholds
+   - `https://inedit.geo.msp.gouv.qc.ca/station_details_readings_api?id=eq.1195` — ~72 h reading buffer
+   - (Host renamed from `inedit-ro.geo.msp.gouv.qc.ca` when MSP migrated 2026-08-10.) NOTE: this domain is egress-blocked from the routine sandbox (see the outage guardrail's sandbox-blocked list) — from this session the fallback will always fail; it is documented for local/manual use. From the sandbox, the proxy's `river_readings` is the only Vigilance path.
 3. **ORRPB conditions + forecast** — scrape both (HTML, not in DB):
    - `https://www.ottawariver.ca/conditions/?display=reservoir`
    - `https://www.ottawariver.ca/conditions/?display=river`
@@ -334,8 +335,9 @@ Before writing ANY of these words/phrases anywhere in the brief — "API down", 
 2. Include the actual observed HTTP codes from BOTH probes in the brief alongside the outage claim. Format: "(probed: proxy 200/2.8MB, upstream 503/0b)".
 3. If EITHER probe returns 2xx with non-trivial payload, the source is NOT down. Re-attempt the fetch using that path and use that data. Do NOT use outage language in the brief.
 4. A single failed fetch in your earlier tooling is NOT evidence of an outage. Only after both probes confirm the failure may you write outage language.
+5. **Sandbox-blocked domains — your probe is blind there.** This session's egress gateway answers 502 ("CONNECT denied") for Québec and federal government domains — `*.gouv.qc.ca` (Vigilance/MSP) and `*.gc.ca` (e.g. ottawa.gc.ca, vigilance.ec.gc.ca). A failed probe of those hosts from this session proves NOTHING about the upstream: it fails every run, forever, regardless of the upstream's health, so it can never satisfy step 4. NEVER write outage/502/unreachable language about these sources on the basis of a probe from this session. The honest check is the proxy's ingest freshness for the corresponding table (Vigilance → `river_readings?station_id=eq.1195&order=time.desc&limit=1`): if the ingest is fresh, the upstream is demonstrably healthy — say nothing about it; if it is stale >3 h, write "Vigilance ingest stale since <timestamp> (upstream unverifiable from this sandbox — egress-blocked)" — a statement about our pipeline, never an upstream-outage claim.
 
-This guardrail exists because a prior brief (2026-05-05) falsely claimed three consecutive days of HQ 503 while the API and the cluster ingester were both healthy throughout — the agent had simply mishandled an early fetch error and didn't verify before generalising it. Don't repeat that.
+This guardrail exists because a prior brief (2026-05-05) falsely claimed three consecutive days of HQ 503 while the API and the cluster ingester were both healthy throughout — the agent had simply mishandled an early fetch error and didn't verify before generalising it. The same failure shape recurred 2026-08-06→10: five consecutive briefs reported "Vigilance tunnel 502 (Day N)" from the sandbox blind spot in rule 5, while the upstream API and the cluster ingest were both healthy the entire time. Don't repeat either.
 
 ## Provisional-flow sanity check guardrail (MANDATORY)
 
