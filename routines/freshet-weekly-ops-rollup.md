@@ -53,11 +53,17 @@ seven briefs launders artifacts like that into consensus. Instead:
 
 ## The window
 
-The rollup covers the ISO week that ended yesterday: Monday through Sunday,
-UTC dates. Name the output file by ISO week number:
+The rollup covers the most recently COMPLETED ISO week: Monday through the
+most recent Sunday, UTC dates. Name the output file by ISO week number:
 `freshet-public/data/rollups/weekly/YYYY-Www.md` (e.g. `2026-W32.md` for
 the week of Aug 3–9, 2026). Compute the ISO week with
-`date -u -d "yesterday" +%G-W%V`.
+`date -u -d "last sunday" +%G-W%V` and the window bounds with
+`date -u -d "last sunday - 6 days" +%F` / `date -u -d "last sunday" +%F`.
+On your scheduled Monday run this is the week that ended yesterday; the
+"last sunday" form (never "yesterday") also keeps a mid-week manual re-run
+pointed at the completed week instead of the current partial one. Never
+include days after that Sunday in the window, even though the DB already
+has them.
 
 By your Monday 23:00 UTC run, ORRPB finals for Sunday normally landed with
 the ~4 PM ET afternoon update and were ingested within the hour. Sanity-check
