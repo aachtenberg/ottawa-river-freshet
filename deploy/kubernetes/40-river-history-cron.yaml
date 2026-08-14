@@ -14,7 +14,7 @@ data:
     import os, json, sys, urllib.request
     from datetime import datetime, timezone, timedelta
 
-    VIGILANCE = 'https://inedit.geo.msp.gouv.qc.ca'  # inedit-ro host removed from DNS 2026-08-10; same API on this host
+    VIGILANCE = 'https://inedit.geo.msp.gouv.qc.ca'  # inedit-ro removed from DNS 2026-08-10; same API on this host
     OPEN_METEO = 'https://api.open-meteo.com/v1/forecast'
     KIWIS = 'https://waterdata.quinteconservation.ca/KiWIS/KiWIS'
     POSTGREST = os.environ.get('POSTGREST_URL', 'http://postgrest:3000')
