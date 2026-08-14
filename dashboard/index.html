@@ -1764,6 +1764,17 @@ const FALLBACK_SOURCES = {
   951:  { path: 'wsc_readings', key: 'station_code', value: '02JE025', note: 'WSC Témiscaming' },
   548:  { path: 'wsc_readings', key: 'station_code', value: '02KF005', note: 'WSC Britannia / Ottawa' },
   550:  { path: 'wsc_readings', key: 'station_code', value: '02LA015', note: 'WSC Hull marina — Carillon directive trigger' },
+  // Vigilance-native gauges with no independent same-gauge source: fall back to
+  // the cluster's own Vigilance mirror (river_readings). Same upstream data, so
+  // it only helps when the public Vigilance API itself breaks — e.g. the
+  // 2026-08-10 MSP platform migration, which nulled valeurs_niv platform-wide
+  // and blanked these cards (null-crashing the whole page pre-guards). The
+  // mirror keeps last-known readings on the card, honestly timestamped.
+  // `mirror: true` — fetchStationHistory keeps using the hourly aggregate.
+  // `lookbackH: 240` — an outage can outlast the default 72 h window; keep the
+  // last-known reading on the card (honestly timestamped) for up to 10 days.
+  1004: { path: 'river_readings', key: 'station_id', value: '1004', note: 'cluster Vigilance mirror — Coulonge R.', onStall: true, mirror: true, lookbackH: 240 },
+  1279: { path: 'river_readings', key: 'station_id', value: '1279', note: 'cluster Vigilance mirror — Waltham', onStall: true, mirror: true, lookbackH: 240 },
 };
 const FALLBACK_LOOKBACK_H = 72;
 // A Vigilance series is "stale" if its most recent point is older than this.
@@ -1778,7 +1789,11 @@ async function fetchStation(id) {
   ]);
   if (!mdR.ok || !rdR.ok) throw new Error(`HTTP ${mdR.status}/${rdR.status}`);
   const [md, rd] = await Promise.all([mdR.json(), rdR.json()]);
-  let readings = rd[0].valeurs_niv || [];
+  // 200-with-[] (station delisted) and per-entry null valeur are both real
+  // outage shapes from the 2026-08 MSP migration — never assume rd[0] or a
+  // reading's valeur exists. Null-valeur entries would defeat the downstream
+  // !latest guards while carrying fresh timestamps that suppress the splice.
+  let readings = (rd[0]?.valeurs_niv || []).filter(v => v && v.valeur != null);
 
   // Same-gauge cluster source (HQ open-data or WSC). Behaviour depends on the
   // entry's `onStall` flag (see FALLBACK_SOURCES). Datum verified ±0.02 m at
@@ -1793,7 +1808,7 @@ async function fetchStation(id) {
     const vigStale = (Date.now() - latestVigMs) > FALLBACK_STALE_H * 3600 * 1000;
     if (!fb.onStall || vigStale) {
       try {
-        const since = new Date(Date.now() - FALLBACK_LOOKBACK_H * 3600 * 1000).toISOString();
+        const since = new Date(Date.now() - (fb.lookbackH || FALLBACK_LOOKBACK_H) * 3600 * 1000).toISOString();
         const r = await fetch(`/history/${fb.path}?${fb.key}=eq.${fb.value}&time=gte.${since}&order=time.asc&select=time,level_m`, { cache: 'no-store' });
         if (r.ok) {
           const rows = await r.json();
@@ -1829,7 +1844,7 @@ async function fetchStation(id) {
     }
   }
 
-  return { metadata: md[0], readings };
+  return { metadata: md[0] || null, readings };
 }
 
 function renderStatus(type, message) {
@@ -1882,6 +1897,20 @@ function renderCards(data, seasonPeaks = {}) {
     const d = data[item.id];
     const m = d.metadata;
     const latest = d.readings[d.readings.length - 1];
+    // No readings (the 2026-08 MSP outage nulled valeurs_niv and no fallback
+    // source had rows) or no metadata (200-with-[] delisting; the card body
+    // needs m for trend/etat/label): render a graceful no-data card. Without
+    // this, the null derefs below throw, which aborts fetchData and
+    // error-banners the whole page.
+    if (!latest || !m) {
+      const publicLabel = m?.label ? `<span class="station-id">${m.label}</span>` : '';
+      return `
+      <div class="card ${item.cls}" data-station-id="${item.id}">
+        <div class="label">${item.name}${publicLabel} — ${item.subtitle}</div>
+        <div class="sub">No recent data published — source feed outage</div>
+      </div>
+      `;
+    }
     const windowPk = classifyPeak(d.readings, latest);
     // Prefer the season-to-date peak from history if it's higher than the live
     // buffer's max. A higher season peak is by definition a true past peak
@@ -1928,12 +1957,21 @@ function renderChart(stationId, d) {
   const cfg = STATIONS[stationId];
   const vals = d.readings.slice(-windowHours);
   const m = d.metadata;
+  const latest = vals[vals.length - 1];
+  // Guard BEFORE touching metadata — a 200-with-[] metadata row makes m null.
+  // Clear the legend too: nothing else ever rewrites it, so a stale threshold
+  // legend would otherwise persist beside the blanked chart.
+  if (!latest || !m) {
+    document.getElementById(cfg.infoId).innerHTML = 'No recent data published — source feed outage';
+    document.getElementById(cfg.legendId).innerHTML = '';
+    if (charts[stationId]) { charts[stationId].destroy(); delete charts[stationId]; }
+    return;
+  }
   const thresholds = (m.seuils_niv || []).map(s => ({
     val: s.valeur,
     label: THRESHOLD_COLORS[s.type]?.label || s.type,
     color: THRESHOLD_COLORS[s.type]?.color || '#888'
   }));
-  const latest = vals[vals.length - 1];
   const pk = classifyPeak(vals, latest);
   const peak = pk.peak;
   const peakLbl = pk.isPeaked ? 'Peak' : 'High so far';
@@ -2193,6 +2231,14 @@ function renderSummary(lcData, seasonPeak) {
   const box = document.getElementById('summary-box');
   box.classList.remove('skeleton');
   const latest = lcData.readings[lcData.readings.length - 1];
+  if (!latest) {
+    // Reset the class — the normal path sets `summary ${statusCls}` at the
+    // end, so without this the outage notice inherits the previous refresh's
+    // danger/good severity framing.
+    box.className = 'summary';
+    box.innerHTML = '<div style="padding:12px 0;color:var(--text-muted)">No recent Lac Coulonge readings — the Vigilance and Hydro-Québec feeds are both unavailable right now. Retrying automatically.</div>';
+    return;
+  }
   const windowPk = classifyPeak(lcData.readings, latest);
   // Prefer the season-to-date max from history (covers freshet crests older
   // than the live buffer). A higher season peak is by definition a true past
@@ -3112,7 +3158,7 @@ async function fetchStationHistory(stationId, hours) {
   // live independent of the Vigilance river_readings table. Fall back to the
   // Vigilance hourly continuous-aggregate only when the cluster source is empty.
   const fb = FALLBACK_SOURCES[stationId];
-  if (fb) {
+  if (fb && !fb.mirror) {
     try {
       const cu = `/history/${fb.path}?${fb.key}=eq.${fb.value}&time=gte.${since}&order=time.asc&select=time,level_m`;
       const cr = await fetch(cu, { cache: 'no-store' });
@@ -4723,10 +4769,16 @@ async function fetchData() {
     // best-effort — fall back to null on failure so the cards still render.
     const peakOrNull = id => fetchSeasonPeak(id).catch(e => { console.warn(`season peak ${id}: ${e.message}`); return null; });
     const stationOrNull = id => fetchStation(id).catch(e => { console.warn(`station ${id}: ${e.message}`); return null; });
-    const [lc, cr, wa, mt, lcPeak, crPeak, waPeak, mtPeak] = await Promise.all([
-      fetchStation(1195), fetchStation(1004), fetchStation(1279), stationOrNull(545),
+    let [lc, cr, wa, mt, lcPeak, crPeak, waPeak, mtPeak] = await Promise.all([
+      stationOrNull(1195), stationOrNull(1004), stationOrNull(1279), stationOrNull(545),
       peakOrNull(1195), peakOrNull(1004), peakOrNull(1279), peakOrNull(545)
     ]);
+    // One failed primary (HTTP 503, network error) degrades to a no-data card;
+    // only a total wipeout of all three is a page-level error worth the banner.
+    if (!lc && !cr && !wa) throw new Error('all primary station feeds unreachable');
+    lc = lc || { metadata: null, readings: [] };
+    cr = cr || { metadata: null, readings: [] };
+    wa = wa || { metadata: null, readings: [] };
     const data = { 1195: lc, 1004: cr, 1279: wa };
     if (mt) data[545] = mt;
     const seasonPeaks = { 1195: lcPeak, 1004: crPeak, 1279: waPeak, 545: mtPeak };
@@ -4760,7 +4812,16 @@ async function fetchData() {
     renderWindow(1279);
     renderWindow(1195);
     renderWindow(1004);
-    renderProperty(lc.readings[lc.readings.length - 1].valeur, lc.metadata.trend_niv);
+    if (lc.readings.length) {
+      renderProperty(lc.readings[lc.readings.length - 1].valeur, lc.metadata?.trend_niv);
+    } else {
+      // renderProperty is the only writer of #thresh-list — without this the
+      // panel stays a "Loading…" skeleton (fresh load) or silently freezes
+      // pre-outage distances (mid-session) with no stale indicator.
+      const tl = document.getElementById('thresh-list');
+      tl.classList.remove('skeleton');
+      tl.innerHTML = '<div class="thresh-row"><span class="desc" style="color:var(--text-muted)">No recent readings — threshold distances unavailable during the source feed outage.</span></div>';
+    }
     updateChartTitles();
 
     // Freeze + precipitation tracker (non-blocking). Cache the result so the
@@ -4799,8 +4860,15 @@ async function fetchData() {
     });
     
     const latestLC = lc.readings[lc.readings.length - 1];
-    lastDataTimestamp = latestLC.date_prise_valeur;
-    renderStatus('live', `Live · last reading ${ago(latestLC.date_prise_valeur)} · refreshed ${new Date().toLocaleTimeString('en-CA', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Toronto' })}`);
+    if (latestLC) {
+      lastDataTimestamp = latestLC.date_prise_valeur;
+      renderStatus('live', `Live · last reading ${ago(latestLC.date_prise_valeur)} · refreshed ${new Date().toLocaleTimeString('en-CA', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Toronto' })}`);
+    } else {
+      // Clear the timestamp too — the minute ticker repaints a green "Live"
+      // pill from lastDataTimestamp and would overwrite this within 60 s.
+      lastDataTimestamp = null;
+      renderStatus('stale', 'No recent Lac Coulonge readings — source feeds unavailable');
+    }
     renderBanner(null, null);
     checkOrrpbStatus();   // re-show the "direct-from-source" banner if ORRPB's own feed is stale
   } catch (e) {
@@ -5052,7 +5120,7 @@ async function renderMapMarkers() {
         lastData[id] = station;
       } catch (e) { console.warn(`map fetch ${id}: ${e.message}`); continue; }
     }
-    if (!station.metadata?.geom_p) continue;
+    if (!station.metadata?.geom_p || !station.readings?.length) continue;
     const [lat, lon] = wmToLatLon(station.metadata.geom_p.coordinates);
     const stationLatLng = L.latLng(lat, lon);
     const latest = station.readings[station.readings.length - 1];
