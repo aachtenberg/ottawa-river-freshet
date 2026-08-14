@@ -34,7 +34,8 @@ data:
     STATION_ID = int(os.environ.get('STATION_ID', '1195'))
     # MSP removed the `inedit-ro` read-only replica from DNS on 2026-08-10 during
     # a platform migration; the same PostgREST API now lives on `inedit`.
-    API = f'https://inedit.geo.msp.gouv.qc.ca/station_details_readings_api?id=eq.{STATION_ID}'
+    VIGILANCE_BASE = os.environ.get('VIGILANCE_API_BASE', 'https://inedit.geo.msp.gouv.qc.ca')
+    API = f'{VIGILANCE_BASE}/station_details_readings_api?id=eq.{STATION_ID}'
 
     # Same-gauge fallback in your own database. MSP's 2026-08-10 migration served
     # HTTP 200 with valeurs_niv=null for every station, which crashed this script
