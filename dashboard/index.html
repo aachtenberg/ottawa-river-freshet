@@ -1770,18 +1770,16 @@ const FALLBACK_SOURCES = {
   951:  { path: 'wsc_readings', key: 'station_code', value: '02JE025', note: 'WSC Témiscaming' },
   548:  { path: 'wsc_readings', key: 'station_code', value: '02KF005', note: 'WSC Britannia / Ottawa' },
   550:  { path: 'wsc_readings', key: 'station_code', value: '02LA015', note: 'WSC Hull marina — Carillon directive trigger' },
-  // Vigilance-native gauges with no independent same-gauge source: fall back to
-  // the cluster's own Vigilance mirror (river_readings). Same upstream data, so
-  // it only helps when the public Vigilance API itself breaks — e.g. the
-  // 2026-08-10 MSP platform migration, which nulled valeurs_niv platform-wide
-  // and blanked these cards (null-crashing the whole page pre-guards). The
-  // mirror keeps last-known readings on the card, honestly timestamped.
-  // `mirror: true` — fetchStationHistory keeps using the hourly aggregate.
-  // `lookbackH: 240` — an outage can outlast the default 72 h window; keep the
-  // last-known reading on the card (honestly timestamped) for up to 10 days.
-  1004: { path: 'river_readings', key: 'station_id', value: '1004', note: 'cluster Vigilance mirror — Coulonge R.', onStall: true, mirror: true, lookbackH: 240 },
-  1279: { path: 'river_readings', key: 'station_id', value: '1279', note: 'cluster Vigilance mirror — Waltham', onStall: true, mirror: true, lookbackH: 240 },
 };
+// Last-resort tier for EVERY Vigilance station (see fetchStation): when the
+// live feed and any explicit fallback above both come up empty, splice
+// last-known rows from the cluster's own Vigilance mirror (river_readings).
+// Same upstream data, so it only matters when the public Vigilance API itself
+// breaks — e.g. the 2026-08-10 MSP platform migration, which nulled
+// valeurs_niv platform-wide and blanked every Vigilance-native card.
+// 240 h bound: a gauge dark longer than that (Rigaud 1264 since Jul 31)
+// honestly stays "No recent data" instead of resurrecting ancient readings.
+const MIRROR_LOOKBACK_H = 240;
 const FALLBACK_LOOKBACK_H = 72;
 // A Vigilance series is "stale" if its most recent point is older than this.
 // Vigilance/HQ both publish ~hourly, so 6 h tolerates a few missed cycles
@@ -1814,7 +1812,7 @@ async function fetchStation(id) {
     const vigStale = (Date.now() - latestVigMs) > FALLBACK_STALE_H * 3600 * 1000;
     if (!fb.onStall || vigStale) {
       try {
-        const since = new Date(Date.now() - (fb.lookbackH || FALLBACK_LOOKBACK_H) * 3600 * 1000).toISOString();
+        const since = new Date(Date.now() - FALLBACK_LOOKBACK_H * 3600 * 1000).toISOString();
         const r = await fetch(`/history/${fb.path}?${fb.key}=eq.${fb.value}&time=gte.${since}&order=time.asc&select=time,level_m`, { cache: 'no-store' });
         if (r.ok) {
           const rows = await r.json();
@@ -1847,6 +1845,25 @@ async function fetchStation(id) {
         // Best-effort; never break on the cluster source.
         console.warn(`Cluster source for ${id} (${fb.note}) failed:`, e);
       }
+    }
+  }
+
+  // Last-resort mirror tier (see MIRROR_LOOKBACK_H): live feed empty and the
+  // explicit fallback either absent or dry (Temiscaming's WSC code had no
+  // ingested rows; Aylmer/Masson have no same-gauge source at all).
+  if (!readings.length) {
+    try {
+      const since = new Date(Date.now() - MIRROR_LOOKBACK_H * 3600 * 1000).toISOString();
+      const r = await fetch(`/history/river_readings?station_id=eq.${id}&time=gte.${since}&order=time.asc&select=time,level_m`, { cache: 'no-store' });
+      if (r.ok) {
+        const rows = (await r.json()).filter(row => row.level_m != null && row.level_m > 0);
+        if (rows.length) {
+          readings = rows.map(row => ({ valeur: row.level_m, date_prise_valeur: row.time, _source: 'river_readings' }));
+          console.info(`No live/fallback readings for ${id}; using ${readings.length} last-known rows from the cluster Vigilance mirror`);
+        }
+      }
+    } catch (e) {
+      console.warn(`Mirror tier for ${id} failed:`, e);
     }
   }
 
@@ -3171,7 +3188,7 @@ async function fetchStationHistory(stationId, hours) {
   // live independent of the Vigilance river_readings table. Fall back to the
   // Vigilance hourly continuous-aggregate only when the cluster source is empty.
   const fb = FALLBACK_SOURCES[stationId];
-  if (fb && !fb.mirror) {
+  if (fb) {
     try {
       const cu = `/history/${fb.path}?${fb.key}=eq.${fb.value}&time=gte.${since}&order=time.asc&select=time,level_m`;
       const cr = await fetch(cu, { cache: 'no-store' });

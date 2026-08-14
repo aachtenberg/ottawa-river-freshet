@@ -27,6 +27,7 @@ DEFAULT_STATIONS = (
     '02LB008,'  # RIDEAU RIVER AT OTTAWA
     '02JE013,'  # OTTAWA RIVER AT MATTAWA — combined Ottawa+Mattawa flow at confluence
     '02JE020,'  # MATTAWA RIVER BELOW BOUILLON LAKE — Mattawa-only signal upstream of confluence
+    '02JE025,'  # LAKE TIMISKAMING AT TEMISCAMING — dashboard fallback for Vigilance 951 (level only)
     '02LH004,'  # GATINEAU RIVER AT FARMERS RAPIDS
     '02LE024,'  # LIEVRE (RIVIERE DU) AU PONT-ROUTE 311
     '02KA004,'  # PETAWAWA RIVER NEAR PETAWAWA
