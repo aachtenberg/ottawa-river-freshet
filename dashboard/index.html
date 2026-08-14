@@ -543,6 +543,12 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .river-dot.trend-rising    { --pulse-color: 224,75,74; }
 .river-dot.trend-falling   { --pulse-color: 90,180,120; }
 .river-dot.trend-stable    { --pulse-color: 160,160,160; }
+/* Outage presentation: stale keeps the status colour but stops the "live"
+   pulse; nodata is a grey inert dot for a gauge with no readings at all. */
+.river-dot.stale  { animation: none; box-shadow: 0 0 4px rgba(var(--dot-color), 0.5); opacity: 0.75; }
+.river-dot.nodata { --dot-color: 150,150,150; animation: none; opacity: 0.65; }
+.river-marker-card.nodata { opacity: 0.85; }
+.river-marker-card .trend.stale-note { color: var(--text-faint); font-style: italic; }
 
 .home-pin { width: 22px; height: 22px; border-radius: 50%; background: var(--surface); border: 2px solid var(--text); display: flex; align-items: center; justify-content: center; font-size: 13px; box-shadow: 0 2px 8px rgba(0,0,0,0.4); cursor: pointer; transition: transform 0.15s; }
 .home-pin:hover { transform: scale(1.15); }
@@ -1975,8 +1981,15 @@ function renderChart(stationId, d) {
   const pk = classifyPeak(vals, latest);
   const peak = pk.peak;
   const peakLbl = pk.isPeaked ? 'Peak' : 'High so far';
+  // Mirror-spliced rows can be days old (lookbackH); never present a stale
+  // reading as "Currently" — label it with its age instead.
+  const latestMs = parseVigilance(latest.date_prise_valeur)?.getTime() || 0;
+  const chartStale = Date.now() - latestMs > FALLBACK_STALE_H * 3600 * 1000;
+  const nowLbl = chartStale
+    ? `Last known <strong>${latest.valeur.toFixed(3)} m</strong> (reading ${ago(latest.date_prise_valeur)})`
+    : `Currently <strong>${latest.valeur.toFixed(3)} m</strong>`;
   document.getElementById(cfg.infoId).innerHTML =
-    `Currently <strong>${latest.valeur.toFixed(3)} m</strong> · ${peakLbl} <strong>${peak.valeur.toFixed(3)} m</strong> at ${timeLabel(peak.date_prise_valeur)} · Quebec status ${m.etat_niv}/6`;
+    `${nowLbl} · ${peakLbl} <strong>${peak.valeur.toFixed(3)} m</strong> at ${timeLabel(peak.date_prise_valeur)} · Quebec status ${m.etat_niv}/6`;
   
   const isDark = isDarkMode();
   const grid = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
@@ -5120,16 +5133,27 @@ async function renderMapMarkers() {
         lastData[id] = station;
       } catch (e) { console.warn(`map fetch ${id}: ${e.message}`); continue; }
     }
-    if (!station.metadata?.geom_p || !station.readings?.length) continue;
+    if (!station.metadata?.geom_p) continue;
     const [lat, lon] = wmToLatLon(station.metadata.geom_p.coordinates);
     const stationLatLng = L.latLng(lat, lon);
-    const latest = station.readings[station.readings.length - 1];
+    // Outage presentation: a gauge can have no readings at all (grey inert
+    // "nodata" marker — removing it entirely made "feed outage" look like
+    // "station removed"), or only stale mirror-spliced rows (keep the status
+    // colour, stop the live pulse, show reading age instead of a trend).
+    const latest = station.readings?.length ? station.readings[station.readings.length - 1] : null;
+    const latestMs = latest ? (parseVigilance(latest.date_prise_valeur)?.getTime() || 0) : 0;
+    const isStale = !latest || (Date.now() - latestMs > FALLBACK_STALE_H * 3600 * 1000);
     const trendMmH = (station.metadata.trend_niv || 0) * 1000;
     const trendCmH = trendMmH / 10;
     const arrow = trendCmH > 0.05 ? '↑' : trendCmH < -0.05 ? '↓' : '→';
-    const trendTxt = `${arrow} ${Math.abs(trendCmH).toFixed(1)} cm/h`;
-    const trendCls = trendMmH > 1 ? 'trend-rising' : trendMmH < -1 ? 'trend-falling' : 'trend-stable';
-    const statusCls = statusClass(getEffectiveEtat(station.metadata));
+    const trendTxt = !latest ? 'No recent data'
+      : isStale ? `reading ${ago(latest.date_prise_valeur)}`
+      : `${arrow} ${Math.abs(trendCmH).toFixed(1)} cm/h`;
+    const trendCls = (latest && !isStale)
+      ? (trendMmH > 1 ? 'trend-rising' : trendMmH < -1 ? 'trend-falling' : 'trend-stable') : '';
+    const statusCls = latest
+      ? statusClass(getEffectiveEtat(station.metadata)) + (isStale ? ' stale' : '')
+      : 'nodata';
     const name = (STATION_NAMES[id] && STATION_NAMES[id][mapLang]) || station.metadata.label || `Station ${id}`;
     const delay = (dotIndex * 220) % 2400;
 
@@ -5143,7 +5167,7 @@ async function renderMapMarkers() {
 
     // Percentile line — only Lac Coulonge has the historical depth (54-yr CSV).
     let percentileLine = '';
-    if (id === 1195) {
+    if (id === 1195 && latest) {
       const seasonPk = lastSeasonPeaks[1195];
       const peakLevel = (seasonPk && seasonPk.valeur > latest.valeur) ? seasonPk.valeur : latest.valeur;
       const rank = rankPeak(peakLevel);
@@ -5152,11 +5176,13 @@ async function renderMapMarkers() {
       percentileLine = `<div class="${cls}" title="Season peak ${peakLevel.toFixed(2)} m ranks ${ordinal(rank)} of ${HISTORICAL_RECORD_YEARS} on record (1972–2025)"><strong>${pctl}th %ile</strong> · 1972–2025</div>`;
     }
     // Card divIcon — placed at an offset latLng we recompute on zoom/pan.
-    const dispCurrent = displayLevel(station.metadata, latest.valeur);
+    const levelLine = latest
+      ? `<div class="level">${displayLevel(station.metadata, latest.valeur).toFixed(2)}<span class="unit"> m</span></div>`
+      : '';
     const cardHtml = `<div class="river-marker-card ${statusCls}" data-jump-id="${id}">
       <div class="name">${name}</div>
-      <div class="level">${dispCurrent.toFixed(2)}<span class="unit"> m</span></div>
-      <div class="trend">${trendTxt}</div>
+      ${levelLine}
+      <div class="trend${isStale ? ' stale-note' : ''}">${trendTxt}</div>
       ${percentileLine}
     </div>`;
     const cardIcon = L.divIcon({ className: 'river-marker-icon', html: cardHtml, iconSize: null, iconAnchor: [70, 18] });
