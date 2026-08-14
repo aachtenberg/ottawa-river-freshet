@@ -3,18 +3,40 @@
 Compares the latest reading against the previous one and pushes an ntfy
 notification on each property-threshold crossing (rising or falling).
 
+When the Vigilance feed is down or serving nulls, falls back to the same
+gauge in your own database (via PostgREST) so alerting keeps working.
+
 Configure via env vars:
-  NTFY_URL    base URL of an ntfy server (e.g. https://ntfy.sh, or your own)
-  NTFY_TOPIC  ntfy topic to post to
-  STATION_ID  Vigilance station id (default: 1195 = Lac Coulonge / Fort-Coulonge)
+  NTFY_URL       base URL of an ntfy server (e.g. https://ntfy.sh, or your own)
+  NTFY_TOPIC     ntfy topic to post to
+  STATION_ID     Vigilance station id (default: 1195 = Lac Coulonge / Fort-Coulonge)
+  POSTGREST_URL  PostgREST base URL for the fallback (default: compose service)
 """
 
 import os, json, sys, urllib.request
+from datetime import datetime, timedelta, timezone
 
 NTFY_URL = os.environ.get('NTFY_URL', 'https://ntfy.sh')
 NTFY_TOPIC = os.environ.get('NTFY_TOPIC', 'change-me-freshet-alerts')
 STATION_ID = int(os.environ.get('STATION_ID', '1195'))
-API = f'https://inedit-ro.geo.msp.gouv.qc.ca/station_details_readings_api?id=eq.{STATION_ID}'
+# MSP removed the `inedit-ro` read-only replica from DNS on 2026-08-10 during
+# a platform migration; the same PostgREST API now lives on `inedit`.
+API = f'https://inedit.geo.msp.gouv.qc.ca/station_details_readings_api?id=eq.{STATION_ID}'
+
+# Same-gauge fallback in your own database. MSP's 2026-08-10 migration served
+# HTTP 200 with valeurs_niv=null for every station, which crashed this script
+# on every run and silently stopped all alerting. Point FALLBACKS at an
+# independent source where you have one (for 1195 the Hydro-Québec open-data
+# gauge 1-2983 kept publishing throughout); otherwise it reads back your own
+# ingested Vigilance mirror.
+POSTGREST = os.environ.get('POSTGREST_URL', 'http://postgrest:3000')
+FALLBACK_LOOKBACK_H = float(os.environ.get('FALLBACK_LOOKBACK_HOURS', '72'))
+FALLBACKS = {
+    1195: ('dam_levels', 'station_id', '1-2983'),   # HQ Fort-Coulonge
+}
+
+# Default urllib UA is blocked by some CDNs (Cloudflare 403s Python-urllib).
+UA = {'User-Agent': 'freshet-alerter/1.0'}
 
 # Each tuple: (level in metres, short description)
 # Edit these to match a different property.
@@ -26,15 +48,54 @@ THRESHOLDS = [
     (109.01, 'Water INSIDE cottage, garage, RV area'),
 ]
 
+def get_json(url):
+    with urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=20) as r:
+        return json.load(r)
+
+
+def fetch_vigilance():
+    """Live readings, or [] when the feed is empty/null — 200-with-[] and
+    valeurs_niv=null are both real outage shapes, not crashes."""
+    rows = get_json(API)
+    vals = (rows[0].get('valeurs_niv') if rows else None) or []
+    return [v for v in vals if v and v.get('valeur') is not None]
+
+
+def fetch_fallback():
+    """Same-gauge rows from your own database, in the Vigilance reading shape."""
+    fb = FALLBACKS.get(STATION_ID)
+    path, key, value = fb if fb else ('river_readings', 'station_id', str(STATION_ID))
+    since = datetime.now(timezone.utc) - timedelta(hours=FALLBACK_LOOKBACK_H)
+    url = (f'{POSTGREST}/{path}?{key}=eq.{value}'
+           f'&time=gte.{since.strftime("%Y-%m-%dT%H:%M:%SZ")}'
+           f'&order=time.asc&select=time,level_m')
+    rows = get_json(url)
+    # level_m > 0 drops upstream glitch rows; these gauges sit far above 0 m.
+    return [{'valeur': x['level_m'], 'date_prise_valeur': x['time']}
+            for x in rows if x.get('level_m') is not None and x['level_m'] > 0]
+
+
 try:
-    with urllib.request.urlopen(API, timeout=20) as r:
-        readings = json.load(r)[0]['valeurs_niv']
+    readings = fetch_vigilance()
 except Exception as e:
     print(f'FETCH_FAIL: {e}', file=sys.stderr)
-    sys.exit(1)
+    readings = []
 
 if len(readings) < 2:
-    print('Not enough readings to compare')
+    try:
+        fallback = fetch_fallback()
+        if len(fallback) >= 2:
+            print(f'FALLBACK: Vigilance empty for {STATION_ID}; '
+                  f'using {len(fallback)} rows from PostgREST', file=sys.stderr)
+            readings = fallback
+    except Exception as e:
+        print(f'FALLBACK_FAIL: {e}', file=sys.stderr)
+
+if len(readings) < 2:
+    # Exit 0: a dry upstream is not a job failure, and retrying it into
+    # BackoffLimitExceeded helps nobody.
+    print(f'NODATA station_id={STATION_ID} (live feed and fallback both empty)',
+          file=sys.stderr)
     sys.exit(0)
 
 prev_r, curr_r = readings[-2], readings[-1]
