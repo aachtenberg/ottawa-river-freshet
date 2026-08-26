@@ -68,7 +68,7 @@ Example queries (substitute IDs as needed):
 - 24 h ago for delta: append `&time=lt.<ISO-24h-ago>` to the same query.
 - Lac Coulonge: `https://freshet.xgrunt.com/history/river_readings?station_id=eq.1195&order=time.desc&limit=2` (Vigilance station 1195).
 
-Key IDs: `3-46` Bryson centrale, `1-2964` Bryson amont, `1-2965` Bryson aval. Cascade: `3-33` Première-Chute, `3-31` Quinze, `3-32` Îles, `3-29` Rapide-2, `3-28` Rapide-7, `3-60` Carillon, `3-65` Paugan, `3-67` Rapides-Farmers. Directive-monitoring stations: `1-2968` Carillon amont (headpond level), `1-3675` Quai-de-Hull (Hull dock; trigger gauge for the Carillon spring-flood envelope).
+Key IDs: `3-46` Bryson centrale, `1-2964` Bryson amont, `1-2965` Bryson aval. Cascade: `3-33` Première-Chute, `3-31` Quinze, `3-32` Îles, `3-29` Rapide-2, `3-28` Rapide-7, `3-60` Carillon, `3-65` Paugan, `3-67` Rapides-Farmers. Directive-monitoring stations: `1-2968` Carillon amont (headpond level), `1-3675` Quai-de-Hull (Hull dock; trigger gauge for the Carillon spring-flood envelope). Cabonga diversion pair: `3-24` Barrière (Cabonga → Dozois/Upper Ottawa; 0 when closed) and `3-62` Cabonga (→ Gatineau).
 
 Reservoir storage: `latest_reservoir_readings` (one row per reservoir) — covers Baskatong, Cabonga, Dozois, Témiscaming, Bark Lake, etc. Use day-over-day level deltas to track the basin's storage refill posture during recession. For the basin-balance count (how many reservoirs are falling/steady vs. rising), use `reservoir_readings` and compare the latest day to the prior day across all `reservoir_id`s.
 
@@ -168,6 +168,7 @@ The technical backing for the "Upstream" plain-language thread. Pull
 | Témiscaming outflow (m³/s) | | | | *e.g. "N days past May 2 peak (2,741); first sub-2,000 since Apr 24"* |
 | Témiscaming outflow — PSPC cross-check (m³/s) | | | | *flag if it disagrees with ORRPB by >50 m³/s* |
 | Quinze release → into the lake (m³/s) | | | | |
+| Barrière diversion 3-24 / Cabonga 3-62 (m³/s) | | | | *diversion state: closed / open since DATE at ~N m³/s* |
 | Mattawa level (m) | | | | *e.g. "Nth straight day of decline"* |
 | Pembroke level (m) | | | | *direction only — orrpb_river_levels carries no flood threshold* |
 
@@ -216,6 +217,7 @@ List anything that warrants attention. Examples:
 - **Carillon §15.3.5.1 directive overshoot** when Hull dock > 42.61 m and Carillon amont > 40.08 m (report magnitude in cm). Conversely, if the trigger transitions from active to inactive (Hull falls below 42.61 m), note that explicitly — it changes which ceiling applies.
 - Lake deviates from ORRPB forecast by >3 cm
 - Any cascade site showing 0% spill suddenly going to high spill (or vice versa)
+- Barrière (`3-24`) transitions between zero and nonzero, or the 3-24/3-62 split shifts >20% — the Cabonga diversion changing state (missed for 3 days in Aug 2026; see `data/community-notes/2026-08-21_barriere_diversion_restart.md`)
 - 2+ headwater reservoirs rising > 10 cm/day (active retention posture)
 - ORRPB forecast text adds a new flood-watch flag
 - ORRPB or operator public statement makes a precipitation/climate claim that is testable (e.g. window-record claim) — flag for follow-up against `seasonal_window_analysis.py` outputs

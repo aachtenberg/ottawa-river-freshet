@@ -71,8 +71,9 @@ on `:00`.
 
 ## Cadence + idempotency
 
-Each pull re-uploads the full ~10-day buffer. Upserts use
-`Prefer: resolution=ignore-duplicates` for the hypertable rows (against the
-`(site_id, time)` and `(station_id, time)` PKs) and
-`Prefer: resolution=merge-duplicates` for site metadata so name/coordinate
-corrections propagate.
+Each pull re-uploads the full ~10-day buffer with
+`Prefer: resolution=merge-duplicates` (against the `(site_id, time)` /
+`(station_id, time)` PKs, and the `dam_sites` PK for metadata), so every run
+also picks up HQ's revisions to hours already stored. This used to be
+`ignore-duplicates` for the hypertables, which silently dropped back-fills —
+the Aug 18 2026 Barrière restart sat as zeros for 17 h because of it.

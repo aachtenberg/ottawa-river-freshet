@@ -81,6 +81,10 @@ def fetch_json(url):
 
 
 def post_rows(path, rows):
+    # merge-duplicates (upsert), not ignore-duplicates: HQ back-fills hours it
+    # first published as 0 (e.g. the 2026-08-18 Barrière diversion restart sat
+    # as zeros in dam_releases for 17 h). The feed re-serves its full ~10-day
+    # window every run, so upserting makes each run pick up revisions.
     if not rows:
         return 0
     sent = 0
@@ -93,7 +97,7 @@ def post_rows(path, rows):
             method='POST',
             headers={
                 'Content-Type': 'application/json',
-                'Prefer': 'resolution=ignore-duplicates',
+                'Prefer': 'resolution=merge-duplicates',
             },
         )
         with urllib.request.urlopen(req, timeout=60) as r:
