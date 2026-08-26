@@ -286,6 +286,12 @@ data:
 
         release_rows = []   # one row per (site_id, time), columns total/turbined/spilled
         inflow_rows = []    # one row per (site_id, day)
+        # HQ publishes the 'Apport filtre' series twice for some sites (3-28
+        # Rapide-7 carries two, with differing values). Duplicate (site_id, time)
+        # rows inside one merge-duplicates batch are a cardinality violation
+        # ("cannot affect row a second time") and 500 the whole POST. Keep the
+        # first series per key -- the value ignore-duplicates used to store.
+        seen_inflow = set()
 
         for s in sites:
             site_id = s['identifiant']
@@ -306,6 +312,10 @@ data:
                             v = float(val)
                         except (TypeError, ValueError):
                             continue
+                        key = (site_id, normalize_ts(ts))
+                        if key in seen_inflow:
+                            continue
+                        seen_inflow.add(key)
                         inflow_rows.append({
                             'time': normalize_ts(ts),
                             'site_id': site_id,
