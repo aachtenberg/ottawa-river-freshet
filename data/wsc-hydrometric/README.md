@@ -21,6 +21,19 @@ The script reads from `/tmp/hydat/Hydat.sqlite3` and writes
 `<slug>/daily.csv` for each station plus a `manifest.csv`. Bump the
 `HYDAT_SOURCE_URL` constant in the script when a newer HYDAT is published.
 
+## Basin-wide station counts (`ottawa-basin-station-counts.csv`)
+
+Year-by-year count (1950 to 2023) of Ottawa-basin stations with published
+daily flow or level in HYDAT, split by province, operator class and main
+stem, for all 289 stations with prefixes `02J`, `02K` and `02L`. Generated
+by `ingesters/climate-history/wsc_station_count_history.py` from
+`Hydat_sqlite3_20260717.zip`. Backs the community note
+[`2026-08-25_wsc_station_count_1994.md`](../community-notes/2026-08-25_wsc_station_count_1994.md):
+140 stations at the 1977 peak, 127 to 96 across 1994/95, 89 in 2023; main
+stem 16 flow stations in 1994, 2 since. Note this scan includes `02J`
+(upper Ottawa) whereas `ottawa-basin-stations.csv` below covers `02K` and
+`02L` only.
+
 ## Layout
 
 ```

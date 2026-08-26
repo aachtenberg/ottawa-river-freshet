@@ -322,8 +322,10 @@ Three operational implications for case-file material:
   finding. A clean published treatment would require a full HYDAT
   end-of-record scan limited to drainage areas 02J/02K/02L. The
   pattern is consistent with Pilon et al. 1996's national finding for
-  the same period; tighter local replication is a worthwhile
-  follow-up.
+  the same period. That replication has since been done: see
+  [`2026-08-25_wsc_station_count_1994.md`](../../data/community-notes/2026-08-25_wsc_station_count_1994.md)
+  (all 289 stations in 02J/02K/02L; 127 → 96 stations across 1994/95,
+  25 of the 31 stations ending in 1994 were operator-measured dam sites).
 - **The "no statute requires disclosure" claim** is defensible at the
   federal level for hydroelectric flow data. Provincial water-quality
   reporting statutes (e.g., Ontario Safe Drinking Water Act, Québec
