@@ -5762,6 +5762,30 @@ document.addEventListener('click', e => {
   if (mapInstance) renderMapMarkers(); // re-render with new strings
 });
 
+// Basemap tile layers, returned as an array because dark mode needs two of
+// them. CARTO's dark_all now stamps "API KEY REQUIRED" diagonally across
+// anonymous tiles — it still answers 200 OK, so nothing errors and nothing
+// logs, the tiles just arrive defaced. Esri's World Dark Gray Canvas needs no
+// key, at the cost of two quirks: labels live in a separate Reference layer,
+// and tiles only exist to native zoom 16 (past that it serves a light-grey
+// "Map data not yet available" placeholder, which on a dark map is worse than
+// the watermark). maxNativeZoom pins the fetch at 16 and lets Leaflet upscale
+// to the map's max of 18.
+const OSM_ATTRIB  = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+const ESRI_ATTRIB = 'Tiles &copy; <a href="https://www.esri.com/">Esri</a>, HERE, Garmin, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, GIS user community';
+const ESRI_DARK   = 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_';
+
+function basemapLayers(isDark, opts) {
+  if (!isDark) {
+    return [L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { ...opts, attribution: OSM_ATTRIB })];
+  }
+  // Note the {z}/{y}/{x} order — ArcGIS REST serves row before column.
+  return [
+    L.tileLayer(`${ESRI_DARK}Base/MapServer/tile/{z}/{y}/{x}`,      { ...opts, maxNativeZoom: 16, zIndex: 1, attribution: ESRI_ATTRIB }),
+    L.tileLayer(`${ESRI_DARK}Reference/MapServer/tile/{z}/{y}/{x}`, { ...opts, maxNativeZoom: 16, zIndex: 2 })
+  ];
+}
+
 async function toggleMap() {
   const drawer = document.getElementById('map-drawer');
   const backdrop = document.getElementById('map-backdrop');
@@ -5781,16 +5805,15 @@ async function toggleMap() {
   }
   if (!mapInstance) {
     const isDark = isDarkMode();
-    const tileUrl = isDark
-      ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-      : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
     mapInstance = L.map('river-map', { center: [46.4, -76.5], zoom: 7, attributionControl: true, zoomControl: false });
     L.control.zoom({ position: 'topright' }).addTo(mapInstance);
-    L.tileLayer(tileUrl, { maxZoom: 18, attribution: '© OpenStreetMap contributors' }).addTo(mapInstance);
+    basemapLayers(isDark, { maxZoom: 18 }).forEach(layer => layer.addTo(mapInstance));
     // Mini-map for orientation. Needs its own tile layer instance because Leaflet
-    // can't reuse a tile layer across multiple maps.
+    // can't reuse a tile layer across multiple maps. Dark mode takes the base
+    // layer only — Esri keeps labels in a second layer, and at 130px with
+    // zoomLevelOffset -3 they're unreadable anyway.
     if (L.Control && L.Control.MiniMap) {
-      const miniLayer = L.tileLayer(tileUrl, { minZoom: 4, maxZoom: 12 });
+      const miniLayer = basemapLayers(isDark, { minZoom: 4, maxZoom: 12 })[0];
       new L.Control.MiniMap(miniLayer, {
         toggleDisplay: true, position: 'bottomright',
         width: 130, height: 130, zoomLevelOffset: -3,
