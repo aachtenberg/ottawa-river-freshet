@@ -162,7 +162,7 @@ data:
     .summary-peak-label { position: absolute; top: 14px; transform: translateX(-50%); font-size: 9px; text-transform: uppercase; letter-spacing: 0.3px; opacity: 0.65; white-space: nowrap; font-variant-numeric: tabular-nums; font-weight: 500; }
     .summary-zone-label { position: absolute; top: 14px; transform: translateX(-50%); font-size: 9px; text-transform: uppercase; letter-spacing: 0.4px; opacity: 0.65; white-space: nowrap; font-variant-numeric: tabular-nums; }
 
-    .summary-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 6px; }
+    .summary-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 6px; }
     .summary-stat { background: rgba(255,255,255,0.45); border-radius: 6px; padding: 8px 8px; text-align: center; }
     @media (prefers-color-scheme: dark) { .summary-stat { background: rgba(0,0,0,0.28); } }
     .summary-stat .stat-value { font-size: 18px; font-weight: 600; line-height: 1.1; font-variant-numeric: tabular-nums; }
@@ -170,7 +170,9 @@ data:
 
     .summary-note { font-size: 11px; opacity: 0.8; margin-top: 10px; line-height: 1.5; }
     .summary-note a { color: inherit; text-decoration: underline; }
-    @media (max-width: 420px) { .summary-stats { grid-template-columns: 1fr 1fr; } .summary-stat:nth-child(3) { grid-column: 1 / -1; } }
+    /* Four tiles divide evenly into a 2x2 on narrow screens, so no odd-one-out
+       full-width rule is needed (there was one when the count was 3). */
+    @media (max-width: 420px) { .summary-stats { grid-template-columns: 1fr 1fr; } }
 
     .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin-bottom: 20px; }
     .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; }
@@ -1062,7 +1064,7 @@ data:
     const charts = {};
     let lastDataTimestamp = null;
     let lastData = null;
-    let lastSeasonPeaks = {};
+    let lastYearRanges = {};
     let forecastData = null;     // ORRPB forecast snapshot — see loadForecast()
     let forecastLoading = null;
     let forecastFetchedAt = 0;   // perf clock of the last *successful* forecast load
@@ -1956,7 +1958,7 @@ data:
       } catch (_) { /* best-effort */ }
     }
 
-    function renderCards(data, seasonPeaks = {}) {
+    function renderCards(data, yearRanges = {}) {
       const container = document.getElementById('cards');
       const items = [
         // Featured — sits on top, full-width, large numbers. Property gauge.
@@ -1988,11 +1990,14 @@ data:
         // Prefer the season-to-date peak from history if it's higher than the live
         // buffer's max. A higher season peak is by definition a true past peak
         // (older than the 72h live buffer), so it always counts as "peaked."
-        const seasonPeak = seasonPeaks[item.id];
-        const seasonWins = seasonPeak && seasonPeak.valeur > windowPk.peak.valeur;
-        const peak = seasonWins ? seasonPeak : windowPk.peak;
-        const isDeclining = seasonWins || windowPk.isPeaked;
-        const peakSource = seasonWins ? 'Season peak' : (isDeclining ? 'Peak' : 'High so far');
+        const yearRange = yearRanges[item.id];
+        const yearMax = yearRange && yearRange.max;
+        const yearWins = yearMax && yearMax.valeur > windowPk.peak.valeur;
+        const peak = yearWins ? yearMax : windowPk.peak;
+        const isDeclining = yearWins || windowPk.isPeaked;
+        const yearScope = yearRange && yearRange.wholeYear
+          ? `${new Date().getUTCFullYear()}` : `since ${LIVE_TIER_START_LABEL}`;
+        const peakSource = yearWins ? `${yearScope} high` : (isDeclining ? 'Peak' : 'High so far');
         const peakDrop = ((peak.valeur - latest.valeur) * 100).toFixed(1);
         const t = formatTrend(m.trend_niv);
         const eff = getEffectiveEtat(m);
@@ -2055,8 +2060,16 @@ data:
       const nowLbl = chartStale
         ? `Last known <strong>${latest.valeur.toFixed(3)} m</strong> (reading ${ago(latest.date_prise_valeur)})`
         : `Currently <strong>${latest.valeur.toFixed(3)} m</strong>`;
+      // Year-to-date range. The chart already shows the window's shape, so the
+      // range is the part a reader can't see — how today sits against the year.
+      const yr = lastYearRanges[stationId];
+      const yrScope = yr && yr.wholeYear
+        ? `${new Date().getUTCFullYear()}` : `since ${LIVE_TIER_START_LABEL}`;
+      const yrLbl = (yr && yr.max && yr.min)
+        ? ` · ${yrScope} range <strong>${yr.max.valeur.toFixed(2)}</strong>–<strong>${yr.min.valeur.toFixed(2)} m</strong>`
+        : '';
       document.getElementById(cfg.infoId).innerHTML =
-        `${nowLbl} · ${peakLbl} <strong>${peak.valeur.toFixed(3)} m</strong> at ${timeLabel(peak.date_prise_valeur)} · Quebec status ${m.etat_niv}/6`;
+        `${nowLbl} · ${peakLbl} <strong>${peak.valeur.toFixed(3)} m</strong> at ${timeLabel(peak.date_prise_valeur)}${yrLbl} · Quebec status ${m.etat_niv}/6`;
       
       const isDark = isDarkMode();
       const grid = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
@@ -2307,7 +2320,7 @@ data:
       }
     }
 
-    function renderSummary(lcData, seasonPeak) {
+    function renderSummary(lcData, yearRange) {
       const box = document.getElementById('summary-box');
       box.classList.remove('skeleton');
       const latest = lcData.readings[lcData.readings.length - 1];
@@ -2320,14 +2333,22 @@ data:
         return;
       }
       const windowPk = classifyPeak(lcData.readings, latest);
-      // Prefer the season-to-date max from history (covers freshet crests older
-      // than the live buffer). A higher season peak is by definition a true past
-      // peak (it predates the live 72h buffer) so it always counts as declined.
-      const seasonWins = seasonPeak && seasonPeak.valeur > windowPk.peak.valeur;
-      const peak = seasonWins ? seasonPeak : windowPk.peak;
-      const isDeclined = seasonWins || windowPk.isPeaked;
-      const peakLabel = seasonWins ? 'Season peak' : (isDeclined ? 'Recent peak' : 'High so far');
+      // Prefer the year-to-date max from history (covers freshet crests older than
+      // the live buffer). A higher year max is by definition a true past peak (it
+      // predates the live 72h buffer) so it always counts as declined.
+      const yearMax = yearRange && yearRange.max;
+      const yearLow = yearRange && yearRange.min;
+      const yearWins = yearMax && yearMax.valeur > windowPk.peak.valeur;
+      const peak = yearWins ? yearMax : windowPk.peak;
+      const isDeclined = yearWins || windowPk.isPeaked;
+      const rangeYear = new Date().getUTCFullYear();
+      // Only claim the year when the range actually spans it (see YEAR_SEED).
+      const rangeScope = yearRange && yearRange.wholeYear
+        ? `${rangeYear}` : `since ${LIVE_TIER_START_LABEL}`;
+      const peakLabel = yearWins ? `${rangeScope} high` : (isDeclined ? 'Recent peak' : 'High so far');
       const cottageMargin = (108.75 - latest.valeur) * 100;
+      // Ranks against 54 years of ANNUAL maxima, so it is only meaningful against
+      // the year's own crest — which is exactly what yearMax now is.
       const rank = rankPeak(peak.valeur);
 
       // Forecast-aware post-peak messaging. forecastData is loaded by the data
@@ -2405,6 +2426,17 @@ data:
         ? `<div class="summary-peak-tick" style="left:${peakLeft}%" title="${peakLabel} ${peak.valeur.toFixed(2)} m"></div>
            <div class="summary-peak-label" style="left:${clampLabel(peakLeft)}%">${tickLabel} ${peak.valeur.toFixed(2)}</div>`
         : '';
+      // Year's low, mirroring the peak tick. Suppressed when it sits below the bar
+      // domain — in freshet mode the bar floors at 107.0 m and a summer low would
+      // otherwise clamp to 0% and read as if the lake were at the left edge.
+      const lowLeft = yearLow ? pct(yearLow.valeur) : 0;
+      const showLowSeparate = yearLow
+        && yearLow.valeur > BAR_MIN
+        && (latest.valeur - yearLow.valeur) * 100 >= 1;
+      const lowTick = showLowSeparate
+        ? `<div class="summary-peak-tick" style="left:${lowLeft}%" title="${rangeScope} low ${yearLow.valeur.toFixed(2)} m"></div>
+           <div class="summary-peak-label" style="left:${clampLabel(lowLeft)}%">low ${yearLow.valeur.toFixed(2)}</div>`
+        : '';
       // Suppress zone labels that would visually collide with the peak label.
       // 107.50 = Vigilance minor-flood threshold (recession watch level);
       // 108.30 / 108.75 / 109.17 = property thresholds + 2019 record. In
@@ -2423,6 +2455,7 @@ data:
       const zoneLabels = zoneSpecs
         .filter(z => z.v > BAR_MIN && z.v < BAR_MAX)
         .filter(z => !showPeakSeparate || Math.abs(pct(z.v) - peakLeft) > 8)
+        .filter(z => !showLowSeparate || Math.abs(pct(z.v) - lowLeft) > 8)
         .map(z => `<div class="summary-zone-label" style="left:${clampLabel(pct(z.v))}%">${z.t}</div>`).join('');
 
       const marginValue = cottageMargin > 0 ? `${cottageMargin.toFixed(0)} cm` : 'breached';
@@ -2454,6 +2487,7 @@ data:
         <div class="summary-bar" style="${barStyle}">
           ${zoneLabels}
           ${peakTick}
+          ${lowTick}
           <div class="summary-marker" style="left:${markerLeft}%"></div>
           <div class="summary-marker-label" style="left:${clampLabel(markerLeft)}%">${latest.valeur.toFixed(2)} m</div>
         </div>
@@ -2461,6 +2495,10 @@ data:
           <div class="summary-stat">
             <div class="stat-value">${peak.valeur.toFixed(2)} m</div>
             <div class="stat-label">${peakLabel}</div>
+          </div>
+          <div class="summary-stat">
+            <div class="stat-value">${yearLow ? `${yearLow.valeur.toFixed(2)} m` : '—'}</div>
+            <div class="stat-label">${rangeScope} low</div>
           </div>
           <div class="summary-stat">
             <div class="stat-value">${marginValue}</div>
@@ -3261,13 +3299,44 @@ data:
 
     // Fetch the single highest reading for a station within a lookback window.
     // Used to find the season's true peak even when older than the live buffer.
-    async function fetchSeasonPeak(stationId, lookbackDays = 90) {
-      const since = new Date(Date.now() - lookbackDays * 86400 * 1000).toISOString();
-      const url = `/history/river_readings?station_id=eq.${stationId}&time=gte.${since}&order=level_m.desc&limit=1&select=time,level_m`;
-      const r = await fetch(url, { cache: 'no-store' });
-      if (!r.ok) throw new Error(`season-peak HTTP ${r.status}`);
-      const rows = await r.json();
-      return rows.length ? { valeur: rows[0].level_m, date_prise_valeur: rows[0].time } : null;
+    // Highest and lowest reading at a station since 1 January, in its own datum.
+    //
+    // This replaced a rolling 90-day "season peak" (2026-09-08). A rolling window
+    // silently stops meaning "this year": Lac Coulonge's freshet crest (108.63 m on
+    // 20 Apr) aged out of it on 2026-08-28, after which the card labelled the 6 Jul
+    // summer crest of 106.60 m "Season peak" — and fed that to rankPeak, which
+    // ranks against 54 years of ANNUAL maxima. The result was the dashboard calling
+    // 2026 a 2nd-percentile year when its freshet was actually 94th. A calendar
+    // anchor can't decay that way.
+    //
+    // `level_m > 0` is load-bearing, not cosmetic: the minimum is far more fragile
+    // than the maximum. Britannia (548) carries a literal 0 at 2026-08-10 16:00
+    // from the MSP migration, which would otherwise publish as the year's low.
+    async function fetchYearRange(stationId) {
+      const since = new Date(Date.UTC(new Date().getUTCFullYear(), 0, 1)).toISOString();
+      const q = dir => `/history/river_readings?station_id=eq.${stationId}&time=gte.${since}`
+        + `&level_m=gt.0&order=level_m.${dir}&limit=1&select=time,level_m`;
+      const [hiR, loR] = await Promise.all([
+        fetch(q('desc'), { cache: 'no-store' }),
+        fetch(q('asc'), { cache: 'no-store' }),
+      ]);
+      if (!hiR.ok || !loR.ok) throw new Error(`year-range HTTP ${hiR.status}/${loR.status}`);
+      const [hi, lo] = await Promise.all([hiR.json(), loR.json()]);
+      const row = rows => rows.length
+        ? { valeur: rows[0].level_m, date_prise_valeur: rows[0].time } : null;
+      let max = row(hi), min = row(lo);
+
+      // Fold in the pre-ingest seed where we have one, so the range covers the
+      // whole calendar year rather than only the part we happened to record.
+      const seed = (YEAR_SEED[new Date().getUTCFullYear()] || {})[stationId];
+      if (seed) {
+        if (seed.max && (!max || seed.max.valeur > max.valeur)) max = seed.max;
+        if (seed.min && (!min || seed.min.valeur < min.valeur)) min = seed.min;
+      }
+      if (!max || !min) return null;
+      // `wholeYear` drives the label: without a seed the range starts when our
+      // ingest did, and calling that "2026" would overstate what we know.
+      return { max, min, wholeYear: !!seed };
     }
 
     // Merge server history with the latest in-memory Vigilance readings.
@@ -3417,6 +3486,31 @@ data:
               9:[106.06,105.07], 10:[106.17,105.18], 11:[106.31,105.57], 12:[106.42,105.39] }
     };
 
+    // Pre-ingest seed for the calendar-year range (see fetchYearRange). Our own
+    // river_readings history begins 2026-04-19 for every station, so for 2026 the
+    // live tier alone cannot see January–April. Lac Coulonge is seeded from the
+    // daily observed levels in the same CSV SEASONAL_LOW_BAND is baked from
+    // (data/lac-coulonge-daily-1990-2026.csv), covering 2026-01-01 .. 2026-04-18 —
+    // the exact window the live tier misses. Datum agrees: the CSV and the live
+    // tier both put the freshet crest at 108.63 m on 20 Apr.
+    //
+    // Baked rather than fetched: the CSV is 644 KB and is already a build-time
+    // source, not a runtime one. Self-retiring — from 2027 the live tier covers
+    // 1 January on its own and this whole map can be deleted.
+    //
+    // Stations absent here have no pre-ingest data, so their range is labelled by
+    // real coverage instead of being passed off as the full year.
+    const YEAR_SEED = {
+      2026: {
+        1195: {
+          max: { valeur: 108.34, date_prise_valeur: '2026-04-18T00:00:00Z' },
+          min: { valeur: 106.35, date_prise_valeur: '2026-01-01T00:00:00Z' },
+        },
+      },
+    };
+    // When a station has no seed, its range starts here rather than 1 January.
+    const LIVE_TIER_START_LABEL = '19 Apr';
+
     // Build 0–2 low-water advisory chips for a station card.
     //   level     — displayed level (MASL), same datum as the band
     //   change24  — cm change over 24 h (negative = falling); may be null
@@ -3489,11 +3583,11 @@ data:
       // Percentile chip (Lac Coulonge against 54-yr ORRPB record; others against ECCC peaks if available).
       let pctlChip = '';
       if (id === 1195) {
-        const seasonPk = lastSeasonPeaks[1195];
-        const peakLevel = (seasonPk && seasonPk.valeur > latest.valeur) ? seasonPk.valeur : latest.valeur;
+        const yrMax = lastYearRanges[1195] && lastYearRanges[1195].max;
+        const peakLevel = (yrMax && yrMax.valeur > latest.valeur) ? yrMax.valeur : latest.valeur;
         const rank = rankPeak(peakLevel);
         const pctl = Math.round(((HISTORICAL_RECORD_YEARS - rank + 1) / HISTORICAL_RECORD_YEARS) * 100);
-        pctlChip = `<span class="pctl-chip ${pctl >= 90 ? 'high' : ''}" title="Season peak ranks ${ordinal(rank)} of ${HISTORICAL_RECORD_YEARS} on record (1972–2025)">${pctl}th %ile (1972–2025)</span>`;
+        pctlChip = `<span class="pctl-chip ${pctl >= 90 ? 'high' : ''}" title="Year's peak ${peakLevel.toFixed(2)} m ranks ${ordinal(rank)} of ${HISTORICAL_RECORD_YEARS} on record (1972–2025)">${ordinal(pctl)} %ile (1972–2025)</span>`;
       } else if (m.label && WSC_ID_PATTERN.test(m.label) && eccPeakCache[m.label]) {
         const peaks = eccPeakCache[m.label];
         const above = peaks.filter(p => latest.valeur >= p).length;
@@ -4845,13 +4939,13 @@ data:
         // the slow MVCA/KiWIS tail to just Buckhams Bay.
         const regionalPromises = regionalFetchPromises();
 
-        // Pull live readings + season-to-date peaks in parallel. Season peaks are
+        // Pull live readings + year-to-date ranges in parallel. The ranges are
         // best-effort — fall back to null on failure so the cards still render.
-        const peakOrNull = id => fetchSeasonPeak(id).catch(e => { console.warn(`season peak ${id}: ${e.message}`); return null; });
+        const rangeOrNull = id => fetchYearRange(id).catch(e => { console.warn(`year range ${id}: ${e.message}`); return null; });
         const stationOrNull = id => fetchStation(id).catch(e => { console.warn(`station ${id}: ${e.message}`); return null; });
-        let [lc, cr, wa, mt, lcPeak, crPeak, waPeak, mtPeak] = await Promise.all([
+        let [lc, cr, wa, mt, lcRange, crRange, waRange, mtRange] = await Promise.all([
           stationOrNull(1195), stationOrNull(1004), stationOrNull(1279), stationOrNull(545),
-          peakOrNull(1195), peakOrNull(1004), peakOrNull(1279), peakOrNull(545)
+          rangeOrNull(1195), rangeOrNull(1004), rangeOrNull(1279), rangeOrNull(545)
         ]);
         // One failed primary (HTTP 503, network error) degrades to a no-data card;
         // only a total wipeout of all three is a page-level error worth the banner.
@@ -4861,9 +4955,9 @@ data:
         wa = wa || { metadata: null, readings: [] };
         const data = { 1195: lc, 1004: cr, 1279: wa };
         if (mt) data[545] = mt;
-        const seasonPeaks = { 1195: lcPeak, 1004: crPeak, 1279: waPeak, 545: mtPeak };
+        const yearRanges = { 1195: lcRange, 1004: crRange, 1279: waRange, 545: mtRange };
         lastData = data;
-        lastSeasonPeaks = seasonPeaks;
+        lastYearRanges = yearRanges;
         // Pull ECCC annual peaks for any station Vigilance can't classify (etat_niv=0).
         // Cached after first call, so subsequent refreshes are free.
         // Also kick off the ORRPB forecast snapshot fetch in parallel — it's a
@@ -4876,8 +4970,8 @@ data:
         // Fresh fetch — blow away cached history so the next >72h render re-pulls.
         Object.keys(historyCache).forEach(k => delete historyCache[k]);
 
-        renderSummary(lc, lcPeak);
-        renderCards(data, seasonPeaks);
+        renderSummary(lc, lcRange);
+        renderCards(data, yearRanges);
         renderCorridorBar();
         renderORRPBDailyBar();
         if (document.querySelector('.tab-panel[data-tab="stations"].active')) renderStationsTab();
@@ -5235,12 +5329,12 @@ data:
         // Percentile line — only Lac Coulonge has the historical depth (54-yr CSV).
         let percentileLine = '';
         if (id === 1195 && latest) {
-          const seasonPk = lastSeasonPeaks[1195];
-          const peakLevel = (seasonPk && seasonPk.valeur > latest.valeur) ? seasonPk.valeur : latest.valeur;
+          const yrMax = lastYearRanges[1195] && lastYearRanges[1195].max;
+          const peakLevel = (yrMax && yrMax.valeur > latest.valeur) ? yrMax.valeur : latest.valeur;
           const rank = rankPeak(peakLevel);
           const pctl = Math.round(((HISTORICAL_RECORD_YEARS - rank + 1) / HISTORICAL_RECORD_YEARS) * 100);
           const cls = pctl >= 90 ? 'percentile high' : 'percentile';
-          percentileLine = `<div class="${cls}" title="Season peak ${peakLevel.toFixed(2)} m ranks ${ordinal(rank)} of ${HISTORICAL_RECORD_YEARS} on record (1972–2025)"><strong>${pctl}th %ile</strong> · 1972–2025</div>`;
+          percentileLine = `<div class="${cls}" title="Year's peak ${peakLevel.toFixed(2)} m ranks ${ordinal(rank)} of ${HISTORICAL_RECORD_YEARS} on record (1972–2025)"><strong>${ordinal(pctl)} %ile</strong> · 1972–2025</div>`;
         }
         // Card divIcon — placed at an offset latLng we recompute on zoom/pan.
         const levelLine = latest
