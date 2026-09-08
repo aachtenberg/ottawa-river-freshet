@@ -1800,6 +1800,11 @@ data:
     // 240 h bound: a gauge dark longer than that (Rigaud 1264 since Jul 31)
     // honestly stays "No recent data" instead of resurrecting ancient readings.
     const MIRROR_LOOKBACK_H = 240;
+    // A live series shorter than this can't draw a usable trace — `showPoints`
+    // already treats <=12 values as too sparse to line up, and a single point is
+    // just a dot. Below this the mirror tier fills in the surrounding history
+    // rather than standing aside (see fetchStation).
+    const MIRROR_MIN_POINTS = 12;
     const FALLBACK_LOOKBACK_H = 72;
     // A Vigilance series is "stale" if its most recent point is older than this.
     // Vigilance/HQ both publish ~hourly, so 6 h tolerates a few missed cycles
@@ -1868,18 +1873,43 @@ data:
         }
       }
 
-      // Last-resort mirror tier (see MIRROR_LOOKBACK_H): live feed empty and the
-      // explicit fallback either absent or dry (Temiscaming's WSC code had no
-      // ingested rows; Aylmer/Masson have no same-gauge source at all).
-      if (!readings.length) {
+      // Last-resort mirror tier (see MIRROR_LOOKBACK_H): the live feed can't carry
+      // the card on its own — empty, or too short to plot — and the explicit
+      // fallback is either absent or dry (Temiscaming's WSC code had no ingested
+      // rows; Aylmer/Masson have no same-gauge source at all).
+      //
+      // Gating this on `!readings.length` alone was a bug (found 2026-09-08): a
+      // provider returning from a multi-day outage republishes ONE point, which is
+      // non-empty and so suppressed the splice entirely. The card went from a full
+      // mirror-served trace to a bare dot at the moment upstream *recovered* —
+      // Hydro Météo's eight stations (Waltham, Coulonge River, Aylmer, Masson,
+      // Rigaud, 982, 983, 1007), dark Sep 1-8, all did this in the same tick. So
+      // treat "degenerate" like "empty", and MERGE rather than replace so the fresh
+      // live tip survives the splice instead of being overwritten by mirror rows.
+      if (readings.length < MIRROR_MIN_POINTS) {
         try {
           const since = new Date(Date.now() - MIRROR_LOOKBACK_H * 3600 * 1000).toISOString();
           const r = await fetch(`/history/river_readings?station_id=eq.${id}&time=gte.${since}&order=time.asc&select=time,level_m`, { cache: 'no-store' });
           if (r.ok) {
             const rows = (await r.json()).filter(row => row.level_m != null && row.level_m > 0);
             if (rows.length) {
-              readings = rows.map(row => ({ valeur: row.level_m, date_prise_valeur: row.time, _source: 'river_readings' }));
-              console.info(`No live/fallback readings for ${id}; using ${readings.length} last-known rows from the cluster Vigilance mirror`);
+              // Union by timestamp. The mirror is our own ingest of this same
+              // Vigilance series, so the two agree on the hours they share; live
+              // wins a collision as the authoritative publisher (it can carry a
+              // correction to a value we ingested earlier). Sorted ascending —
+              // every consumer downstream reads the tail as the newest reading.
+              const byMs = new Map();
+              for (const row of rows) {
+                const ms = parseVigilance(row.time)?.getTime();
+                if (ms) byMs.set(ms, { valeur: row.level_m, date_prise_valeur: row.time, _source: 'river_readings' });
+              }
+              for (const v of readings) {
+                const ms = parseVigilance(v.date_prise_valeur)?.getTime();
+                if (ms) byMs.set(ms, v);
+              }
+              const merged = [...byMs.keys()].sort((a, b) => a - b).map(ms => byMs.get(ms));
+              console.info(`Live feed for ${id} had ${readings.length} point(s); merged with the cluster Vigilance mirror to ${merged.length} rows`);
+              readings = merged;
             }
           }
         } catch (e) {

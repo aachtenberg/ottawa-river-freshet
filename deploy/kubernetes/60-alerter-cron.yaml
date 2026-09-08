@@ -49,6 +49,20 @@ data:
         1195: ('dam_levels', 'station_id', '1-2983'),   # HQ Fort-Coulonge
     }
 
+    # Per-station freshness sweep over everything you ingest, not just STATION_ID.
+    # The gauges behind Québec's Vigilance API come from several agencies, and they
+    # fail per-agency: Hydro Météo's eight stations went dark 2026-09-01 -> 09-08
+    # while the Hydro-Québec and Environnement Canada gauges published normally. A
+    # check that only watches your own property gauge cannot see that.
+    #
+    # Reports the stalled set grouped by `provider`, because a stall that lines up
+    # exactly with one provider is an upstream outage, not a problem with your
+    # ingest — that distinction is the whole diagnosis.
+    STATION_STALE_HOURS = float(os.environ.get('STATION_STALE_HOURS', '12'))
+    # Past this a gauge is retired or long-dark rather than newly broken. Counting
+    # those means an alert that fires forever and gets muted.
+    STATION_DARK_HOURS = float(os.environ.get('STATION_DARK_HOURS', '336'))  # 14d
+
     # Default urllib UA is blocked by some CDNs (Cloudflare 403s Python-urllib).
     UA = {'User-Agent': 'freshet-alerter/1.0'}
 
@@ -88,6 +102,63 @@ data:
         return [{'valeur': x['level_m'], 'date_prise_valeur': x['time']}
                 for x in rows if x.get('level_m') is not None and x['level_m'] > 0]
 
+
+    def parse_ts(ts):
+        """Vigilance emits naked UTC ("...T17:00:00"); rows read back from
+        PostgREST carry a real offset ("...+00:00"). Parse both, treating a naive
+        value as UTC."""
+        dt = datetime.fromisoformat(str(ts).replace('Z', '+00:00'))
+        return dt.replace(tzinfo=timezone.utc) if dt.tzinfo is None else dt
+
+
+    def sweep_station_freshness():
+        """Freshness of every ingested gauge, grouped by upstream provider.
+
+        Best-effort and side-effect free apart from logging: this runs before the
+        threshold logic and must never be able to stop a property alert going out.
+        Emits one STALE_STATION line per stale gauge plus a single STALE_SWEEP
+        summary per run — point your log alerting at the summary, so that a single
+        run can't satisfy a "seen twice" threshold on its own.
+        """
+        now = datetime.now(timezone.utc)
+        stations = get_json(f'{POSTGREST}/river_stations?select=station_id,label,provider')
+        stale, dark = [], 0
+        for st in stations:
+            sid = st.get('station_id')
+            if sid is None:
+                continue
+            rows = get_json(f'{POSTGREST}/river_readings?station_id=eq.{sid}'
+                            f'&order=time.desc&limit=1&select=time')
+            age = None
+            if rows:
+                age = (now - parse_ts(rows[0]['time'])).total_seconds() / 3600
+            if age is None or age >= STATION_DARK_HOURS:
+                dark += 1
+                continue
+            if age >= STATION_STALE_HOURS:
+                stale.append((sid, st.get('label'), st.get('provider') or 'unknown', age))
+
+        for sid, label, provider, age in stale:
+            print(f'STALE_STATION vigilance_station station_id={sid} label={label} '
+                  f'provider="{provider}" age_hours={age:.1f}', file=sys.stderr)
+
+        if stale:
+            providers = sorted({p for _, _, p, _ in stale})
+            scope = providers[0] if len(providers) == 1 else f'{len(providers)} providers'
+            print(f'STALE_SWEEP vigilance_stations stale={len(stale)} '
+                  f'of={len(stations) - dark} dark={dark} scope="{scope}" '
+                  f'oldest_age_hours={max(a for *_, a in stale):.1f}', file=sys.stderr)
+        else:
+            print(f'SWEEP_OK {len(stations) - dark} station(s) fresh '
+                  f'(<{STATION_STALE_HOURS:.0f}h), {dark} long-dark')
+
+
+    # Runs before the early exit below: your property gauge being dry is exactly
+    # when the wider picture matters, so don't gate the sweep on it.
+    try:
+        sweep_station_freshness()
+    except Exception as e:
+        print(f'SWEEP_FAIL: {e}', file=sys.stderr)
 
     try:
         readings = fetch_vigilance()
