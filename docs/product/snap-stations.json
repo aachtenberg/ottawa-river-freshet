@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "hydrated": "2026-07-22",
+  "notes": "Corridor snap catalog for home-gauge proposal. Vigilance coords from station_details_metadata_api geom_p (Web Mercator → WGS84). Buckhams from MVCA KiWIS getStationList (MVCA50). Order matches CORRIDOR_BAR_STATIONS.",
+  "deschenesBbox": {
+    "latMin": 45.35,
+    "latMax": 45.53,
+    "lonMin": -76.15,
+    "lonMax": -75.72
+  },
+  "deschenesZones": [
+    { "id": "nw", "lonMax": -75.95, "homeGaugeId": 99001, "label": "Constance Bay / Buckhams NW arm" },
+    { "id": "mid", "lonMin": -75.95, "lonMax": -75.83, "homeGaugeId": 984, "label": "Mid-lake / Aylmer" },
+    { "id": "se", "lonMin": -75.83, "lonMax": -75.75, "homeGaugeId": 548, "label": "SE lake / Britannia" },
+    { "id": "below", "lonMin": -75.75, "homeGaugeId": 550, "label": "Below lake / Hull" }
+  ],
+  "stations": [
+    { "id": 951, "name": "Temiscaming", "lat": 46.71833, "lon": -79.105, "source": "vigilance", "corridorIndex": 0 },
+    { "id": 545, "name": "Mattawa", "lat": 46.32028, "lon": -78.71056, "source": "vigilance", "corridorIndex": 1 },
+    { "id": 1279, "name": "Waltham", "lat": 45.90687, "lon": -76.93449, "source": "vigilance", "corridorIndex": 2 },
+    { "id": 1195, "name": "Lac Coulonge", "lat": 45.83944, "lon": -76.74333, "source": "vigilance", "corridorIndex": 3 },
+    { "id": 99001, "name": "Buckhams Bay", "lat": 45.49972, "lon": -76.10475, "source": "mvca", "kiwisStationNo": "MVCA50", "tsId": 48242042, "corridorIndex": 4 },
+    { "id": 984, "name": "Aylmer", "lat": 45.39424, "lon": -75.85846, "source": "vigilance", "corridorIndex": 5 },
+    { "id": 548, "name": "Britannia", "lat": 45.36444, "lon": -75.80556, "source": "vigilance", "corridorIndex": 6 },
+    { "id": 550, "name": "Hull", "lat": 45.43152, "lon": -75.70587, "source": "vigilance", "corridorIndex": 7 },
+    { "id": 981, "name": "Masson", "lat": 45.52658, "lon": -75.41105, "source": "vigilance", "corridorIndex": 8 },
+    { "id": 1264, "name": "Rigaud", "lat": 45.49663, "lon": -74.32517, "source": "vigilance", "corridorIndex": 9 }
+  ]
+}

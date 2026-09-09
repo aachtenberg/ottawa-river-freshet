@@ -12,6 +12,18 @@ seasons.
 
 ---
 
+## Product / UX (mobile personalization)
+
+Scoped 2026-07-22. Specs live under [`docs/product/`](./product/):
+
+- **Cottage-setup marks** — [cottage-wizard.md](./product/cottage-wizard.md) (validated against Mansfield lived observations)
+- **Snap-to-gauge + Lac Deschênes overrides** — [gauge-snap.md](./product/gauge-snap.md) + [snap-stations.json](./product/snap-stations.json)
+- **MVP PWA Home** — [mvp-pwa.md](./product/mvp-pwa.md) (green panel + my gauge + up/down + marks editor)
+
+Does not replace case-file work below; tracks the “monitoring for *your* reach” product slice.
+
+---
+
 ## 1. The ecological regime change at Lac Coulonge / Mansfield reach
 
 **Status:** Scoped 2026-05-07. Tracked on the public repo as

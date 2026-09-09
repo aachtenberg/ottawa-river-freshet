@@ -24,6 +24,12 @@ including inline CSS and JS) plus a few static assets. No build step.
 | `orw-dams.json` | Hydroelectric stations + major dams + principal reservoirs from the ArcGIS layer (~24 KB) |
 | `reservoir-limits.json` | Operating limits + capacities for the % full computation |
 
+## Product / personalized mobile (next)
+
+Specs for a PWA that turns the constants below into a per-user profile (home
+gauge, cottage marks, up/down neighbors): see
+[`docs/product/`](../docs/product/).
+
 ## Customizing for your watershed
 
 The dashboard's "shape" comes from a handful of constants near the top of the
