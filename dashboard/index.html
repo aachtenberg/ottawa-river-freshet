@@ -156,6 +156,14 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 
 .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin-bottom: 20px; }
 .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; }
+.card.stale { opacity: 0.78; border-left: 3px solid var(--amber); }
+.station-card-mini.stale { opacity: 0.78; }
+.river-row.stale { opacity: 0.78; }
+.deactivated-strip { background: var(--amber-light); border: 1px solid var(--border); border-left: 3px solid var(--amber); border-radius: 10px; padding: 10px 14px; margin: 16px 0 8px; font-size: 12px; color: var(--text-muted); line-height: 1.55; }
+.deactivated-strip[hidden] { display: none; }
+.deactivated-strip .strip-title { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--amber); margin-bottom: 6px; }
+.deactivated-strip .strip-row { display: flex; flex-wrap: wrap; gap: 6px 16px; font-variant-numeric: tabular-nums; }
+.deactivated-strip a { color: var(--amber); }
 .card.primary { border-left: 3px solid var(--blue); }
 .card.tributary { border-left: 3px solid var(--orange); }
 .card.upstream { border-left: 3px solid #7A5ED8; }
@@ -738,7 +746,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
   <button class="range-btn" data-hours="720">30d</button>
 </div>
 
-<div class="section-title" id="wa-title">Waltham (Ottawa River — upstream)</div>
+<div class="section-title" id="wa-title">Upstream</div>
 <div class="section-subtitle" id="wa-info">—</div>
 <div class="chart-wrap"><div class="chart-container"><canvas id="waChart"></canvas></div></div>
 <div class="thresholds" id="wa-legend"></div>
@@ -748,10 +756,12 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 <div class="chart-wrap"><div class="chart-container"><canvas id="lcChart"></canvas></div></div>
 <div class="thresholds" id="lc-legend"></div>
 
-<div class="section-title" style="margin-top: 24px;" id="cr-title">Coulonge River tributary at Route 148</div>
+<div class="section-title" style="margin-top: 24px;" id="cr-title">Downstream</div>
 <div class="section-subtitle" id="cr-info">—</div>
 <div class="chart-wrap"><div class="chart-container"><canvas id="crChart"></canvas></div></div>
 <div class="thresholds" id="cr-legend"></div>
+
+<div id="local-gauge-strip" class="deactivated-strip" hidden></div>
 
 <div class="section-title" style="margin-top: 28px;" data-i18n="regional">Regional context — Ottawa River corridor</div>
 <div class="section-subtitle" data-i18n="regional_sub">Upstream-to-downstream gauges along the Ottawa River. Upstream stations lead Lac Coulonge by hours-to-days and flag incoming pulses.</div>
@@ -936,10 +946,25 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 // while this primary host the official Vigilance site uses stays live.
 // Switched 2026-05-29.
 const API_BASE = 'https://inedit.geo.msp.gouv.qc.ca';
-const STATIONS = {
-  1279: { chartId: 'waChart', infoId: 'wa-info', legendId: 'wa-legend', color: '#7A5ED8' },
-  1195: { chartId: 'lcChart', infoId: 'lc-info', legendId: 'lc-legend', color: '#378ADD' },
-  1004: { chartId: 'crChart', infoId: 'cr-info', legendId: 'cr-legend', color: '#D85A30' }
+// Hydro-Québec Bryson headpond (amont). Distinct from Lac Coulonge 1195 —
+// the dam pond sits well downstream of the Mansfield/Fort-Coulonge reach.
+const BRYSON_AMONT_ID = '1-2964';
+const BRYSON_CEILING_M = 104.67;
+const BRYSON_BAND_LOW_M = 104.20;
+// Hydro Météo gauges that sit on the Overview as local heroes when transmitting.
+const LOCAL_HYDRO_METEO_IDS = [1279, 1004];
+const HERO_SLOTS = {
+  upstream: { chartId: 'waChart', infoId: 'wa-info', legendId: 'wa-legend', titleId: 'wa-title', color: '#7A5ED8' },
+  lake:     { chartId: 'lcChart', infoId: 'lc-info', legendId: 'lc-legend', titleId: 'lc-title', color: '#378ADD' },
+  third:    { chartId: 'crChart', infoId: 'cr-info', legendId: 'cr-legend', titleId: 'cr-title', color: '#D85A30' }
+};
+// Bound to the three Overview canvases. Default is the live-substitute
+// layout (Mattawa / Lac Coulonge / Bryson headpond); bindHeroCharts() swaps
+// back to Waltham + Coulonge River when Hydro Météo is transmitting again.
+let STATIONS = {
+  545: { ...HERO_SLOTS.upstream },
+  1195: { ...HERO_SLOTS.lake },
+  [BRYSON_AMONT_ID]: { ...HERO_SLOTS.third }
 };
 
 // Property thresholds. `histCount` = number of years out of HISTORICAL_RECORD_YEARS
@@ -1125,7 +1150,7 @@ function toggleTheme() {
   if (lastData) {
     if (typeof renderCorridorBar === 'function') renderCorridorBar();
     if (typeof renderORRPBDailyBar === 'function') renderORRPBDailyBar();
-    if (typeof renderWindow === 'function') { renderWindow(1279); renderWindow(1195); renderWindow(1004); }
+    if (typeof renderHeroCharts === 'function') renderHeroCharts();
   }
 }
 // Apply persisted theme on load (must happen before paint to avoid flash).
@@ -1560,9 +1585,10 @@ function regionalCardHTML({ meta, ok, data, error }) {
   // All-stations blank-tab fix — render a graceful no-data card instead.
   if (!data?.readings?.length) {
     const publicLabel = data?.metadata?.label ? `<span class="station-id">${data.metadata.label}</span>` : '';
-    return `<div class="card" data-station-id="${meta.id}"><div class="label">${meta.name}${publicLabel} — ${meta.subtitle}</div><div class="sub">No recent data published</div></div>`;
+    return `<div class="card stale" data-station-id="${meta.id}"><div class="label">${meta.name}${publicLabel} — ${meta.subtitle}</div><div class="sub">No recent data published</div></div>`;
   }
   const latest = data.readings[data.readings.length - 1];
+  const stale = isSeriesStale(data);
   const pk = classifyPeak(data.readings, latest);
   const t = formatTrend(data.metadata.trend_niv);
   const eff = getEffectiveEtat(data.metadata);
@@ -1577,18 +1603,20 @@ function regionalCardHTML({ meta, ok, data, error }) {
   const publicLabel = data.metadata.label ? `<span class="station-id">${data.metadata.label}</span>` : '';
   const dispCurrent = displayLevel(data.metadata, latest.valeur);
   const dispPeak = displayLevel(data.metadata, pk.peak.valeur);
+  const deactivated = hydroMeteoDeactivatedChip(meta.id);
+  const readingLbl = stale ? `Last known ${ago(latest.date_prise_valeur)}` : `Reading ${ago(latest.date_prise_valeur)}`;
   return `
-    <div class="card" data-station-id="${meta.id}">
+    <div class="card${stale ? ' stale' : ''}" data-station-id="${meta.id}">
       <div class="label">${meta.name}${publicLabel} — ${meta.subtitle}</div>
       <div class="value">
         <span>${dispCurrent.toFixed(3)}</span>
         <span class="unit">m</span>
-        <span class="trend ${t.cls}">${t.text}</span>
+        <span class="trend ${stale ? 'flat' : t.cls}">${stale ? '—' : t.text}</span>
       </div>
       ${flowRow(data.metadata)}
       <div class="sub">
-        Reading ${ago(latest.date_prise_valeur)} · ${peakLabel}: <strong>${dispPeak.toFixed(3)} m</strong>
-        <br>${badge}${peakBadge}${orrpbLine}
+        ${readingLbl} · ${peakLabel}: <strong>${dispPeak.toFixed(3)} m</strong>
+        <br>${deactivated}${badge}${peakBadge}${orrpbLine}
       </div>
     </div>
   `;
@@ -1772,6 +1800,7 @@ const FALLBACK_SOURCES = {
   951:  { path: 'wsc_readings', key: 'station_code', value: '02JE025', note: 'WSC Témiscaming' },
   548:  { path: 'wsc_readings', key: 'station_code', value: '02KF005', note: 'WSC Britannia / Ottawa' },
   550:  { path: 'wsc_readings', key: 'station_code', value: '02LA015', note: 'WSC Hull marina — Carillon directive trigger' },
+  [BRYSON_AMONT_ID]: { path: 'dam_levels', key: 'station_id', value: '1-2964', note: 'HQ Bryson headpond / amont' },
 };
 // Last-resort tier for EVERY Vigilance station (see fetchStation): when the
 // live feed and any explicit fallback above both come up empty, splice
@@ -1792,6 +1821,121 @@ const FALLBACK_LOOKBACK_H = 72;
 // Vigilance/HQ both publish ~hourly, so 6 h tolerates a few missed cycles
 // before the onStall fallback reaches for the cluster source.
 const FALLBACK_STALE_H = 6;
+
+function latestReadingMs(d) {
+  const latest = d?.readings?.length ? d.readings[d.readings.length - 1] : null;
+  return latest ? (parseVigilance(latest.date_prise_valeur)?.getTime() || 0) : 0;
+}
+function isSeriesStale(d) {
+  if (!d?.readings?.length) return true;
+  return (Date.now() - latestReadingMs(d)) > FALLBACK_STALE_H * 3600 * 1000;
+}
+// Hydro Météo local heroes are "live" only when the hourly series is fresh
+// AND Vigilance is publishing a flood state (null etat_niv = deactivated).
+function isLocalHeroLive(id) {
+  const d = lastData?.[id];
+  if (isSeriesStale(d)) return false;
+  return d.metadata?.etat_niv != null;
+}
+function localHeroesLive() {
+  return LOCAL_HYDRO_METEO_IDS.every(isLocalHeroLive);
+}
+function heroStationIds() {
+  return localHeroesLive() ? [1279, 1195, 1004] : [545, 1195, BRYSON_AMONT_ID];
+}
+function destroyHeroCharts() {
+  for (const id of Object.keys(charts)) {
+    try { charts[id].destroy(); } catch (_) {}
+    delete charts[id];
+  }
+}
+function bindHeroCharts() {
+  const live = localHeroesLive();
+  const next = live
+    ? { 1279: { ...HERO_SLOTS.upstream }, 1195: { ...HERO_SLOTS.lake }, 1004: { ...HERO_SLOTS.third } }
+    : { 545: { ...HERO_SLOTS.upstream }, 1195: { ...HERO_SLOTS.lake }, [BRYSON_AMONT_ID]: { ...HERO_SLOTS.third } };
+  const prevKeys = Object.keys(STATIONS).join(',');
+  const nextKeys = Object.keys(next).join(',');
+  if (prevKeys !== nextKeys) destroyHeroCharts();
+  STATIONS = next;
+}
+function renderHeroCharts() {
+  bindHeroCharts();
+  updateChartTitles();
+  for (const id of heroStationIds()) renderWindow(id);
+  renderLocalGaugeStrip();
+}
+
+function trendFromReadings(readings) {
+  if (!readings || readings.length < 2) return null;
+  const last = readings[readings.length - 1];
+  const lastMs = parseVigilance(last.date_prise_valeur)?.getTime() || 0;
+  const target = lastMs - 3 * 3600 * 1000;
+  let best = readings[0], bestDiff = Infinity;
+  for (const r of readings) {
+    const t = parseVigilance(r.date_prise_valeur)?.getTime() || 0;
+    const d = Math.abs(t - target);
+    if (d < bestDiff) { best = r; bestDiff = d; }
+  }
+  const dtH = (lastMs - (parseVigilance(best.date_prise_valeur)?.getTime() || 0)) / 3600000;
+  if (dtH < 0.5) return null;
+  return (last.valeur - best.valeur) / dtH;
+}
+
+async function fetchBrysonAmont(hours = FALLBACK_LOOKBACK_H) {
+  const since = new Date(Date.now() - hours * 3600 * 1000).toISOString();
+  const r = await fetch(`/history/dam_levels?station_id=eq.${BRYSON_AMONT_ID}&time=gte.${since}&order=time.asc&select=time,level_m`, { cache: 'no-store' });
+  if (!r.ok) throw new Error(`Bryson amont HTTP ${r.status}`);
+  const rows = (await r.json()).filter(row => row.level_m != null && row.level_m > 0);
+  const readings = rows.map(row => ({ valeur: row.level_m, date_prise_valeur: row.time, _source: 'dam_levels' }));
+  const last = readings[readings.length - 1];
+  return {
+    metadata: {
+      id: BRYSON_AMONT_ID,
+      label: '1-2964',
+      description: 'Bryson generating-station headpond (amont) — dam pond, not Lac Coulonge',
+      dern_valeur_niv: last ? last.valeur : null,
+      date_prise_valeur: last ? last.date_prise_valeur : null,
+      etat_niv: null,
+      trend_niv: trendFromReadings(readings),
+      seuils_niv: [],
+      fournisseur_nom: 'Hydro-Québec',
+    },
+    readings
+  };
+}
+
+async function fetchYearRangeDamLevel(stationId) {
+  const since = new Date(Date.UTC(new Date().getUTCFullYear(), 0, 1)).toISOString();
+  const q = dir => `/history/dam_levels?station_id=eq.${stationId}&time=gte.${since}`
+    + `&level_m=gt.0&order=level_m.${dir}&limit=1&select=time,level_m`;
+  const [hiR, loR] = await Promise.all([
+    fetch(q('desc'), { cache: 'no-store' }),
+    fetch(q('asc'), { cache: 'no-store' }),
+  ]);
+  if (!hiR.ok || !loR.ok) throw new Error(`year-range dam_levels HTTP ${hiR.status}/${loR.status}`);
+  const [hi, lo] = await Promise.all([hiR.json(), loR.json()]);
+  const row = rows => rows.length
+    ? { valeur: rows[0].level_m, date_prise_valeur: rows[0].time } : null;
+  const max = row(hi), min = row(lo);
+  if (!max || !min) return null;
+  return { max, min, wholeYear: true };
+}
+
+function hydroMeteoDeactivatedChip(id) {
+  if (!LOCAL_HYDRO_METEO_IDS.includes(Number(id)) && !LOCAL_HYDRO_METEO_IDS.includes(id)) return '';
+  // Same deactivated signal as isLocalHeroLive / the last-known strip:
+  // stale series OR Vigilance publishing null etat_niv.
+  if (isLocalHeroLive(id)) return '';
+  return `<span class="badge" style="background:var(--amber-light);color:var(--amber)">Hydro Météo deactivated</span>`;
+}
+
+function readingsInWindow(readings, hours) {
+  if (!readings?.length) return [];
+  const sinceMs = Date.now() - hours * 3600 * 1000;
+  const inWin = readings.filter(v => (parseVigilance(v.date_prise_valeur)?.getTime() || 0) >= sinceMs);
+  return inWin.length ? inWin : readings.slice(-Math.max(1, hours));
+}
 
 async function fetchStation(id) {
   const [mdR, rdR] = await Promise.all([
@@ -1943,11 +2087,15 @@ function renderCards(data, yearRanges = {}) {
   const items = [
     // Featured — sits on top, full-width, large numbers. Property gauge.
     { id: 1195, name: 'Lac Coulonge',  subtitle: 'Ottawa River · Vigilance (MSP) · property gauge', cls: 'primary feature' },
-    // Supporting context row below.
     { id: 545,  name: 'Mattawa',       subtitle: 'Otto Holden tailwater · earliest upstream pulse', cls: 'headwater' },
-    { id: 1279, name: 'Waltham',       subtitle: 'Ottawa River · upstream (Route 148)',  cls: 'upstream' },
-    { id: 1004, name: 'Coulonge River', subtitle: 'Route 148 bridge · unregulated',       cls: 'tributary' }
   ];
+  // When Hydro Météo is transmitting, put the local pair back on the number row.
+  if (localHeroesLive()) {
+    items.push(
+      { id: 1279, name: 'Waltham',       subtitle: 'Ottawa River · upstream (Route 148)',  cls: 'upstream' },
+      { id: 1004, name: 'Coulonge River', subtitle: 'Route 148 bridge · unregulated',       cls: 'tributary' }
+    );
+  }
   container.innerHTML = items.filter(item => data[item.id]).map(item => {
     const d = data[item.id];
     const m = d.metadata;
@@ -2013,8 +2161,9 @@ function renderCards(data, yearRanges = {}) {
 
 function renderChart(stationId, d) {
   const cfg = STATIONS[stationId];
-  const vals = d.readings.slice(-windowHours);
+  if (!cfg) return;
   const m = d.metadata;
+  const vals = readingsInWindow(d.readings, windowHours);
   const latest = vals[vals.length - 1];
   // Guard BEFORE touching metadata — a 200-with-[] metadata row makes m null.
   // Clear the legend too: nothing else ever rewrites it, so a stale threshold
@@ -2025,35 +2174,53 @@ function renderChart(stationId, d) {
     if (charts[stationId]) { charts[stationId].destroy(); delete charts[stationId]; }
     return;
   }
-  const thresholds = (m.seuils_niv || []).map(s => ({
-    val: s.valeur,
-    label: THRESHOLD_COLORS[s.type]?.label || s.type,
-    color: THRESHOLD_COLORS[s.type]?.color || '#888'
-  }));
+  const isBryson = stationId === BRYSON_AMONT_ID;
+  const thresholds = isBryson
+    ? [
+        { val: BRYSON_CEILING_M, label: 'Operating ceiling', color: '#E24B4A' },
+        { val: BRYSON_BAND_LOW_M, label: 'Band floor', color: '#888' },
+      ]
+    : (m.seuils_niv || []).map(s => ({
+        val: s.valeur,
+        label: THRESHOLD_COLORS[s.type]?.label || s.type,
+        color: THRESHOLD_COLORS[s.type]?.color || '#888'
+      }));
   const pk = classifyPeak(vals, latest);
   const peak = pk.peak;
   const peakLbl = pk.isPeaked ? 'Peak' : 'High so far';
+  const dispLatest = displayLevel(m, latest.valeur);
+  const dispPeak = displayLevel(m, peak.valeur);
   // Mirror-spliced rows can be days old (lookbackH); never present a stale
   // reading as "Currently" — label it with its age instead.
   const latestMs = parseVigilance(latest.date_prise_valeur)?.getTime() || 0;
   const chartStale = Date.now() - latestMs > FALLBACK_STALE_H * 3600 * 1000;
   const nowLbl = chartStale
-    ? `Last known <strong>${latest.valeur.toFixed(3)} m</strong> (reading ${ago(latest.date_prise_valeur)})`
-    : `Currently <strong>${latest.valeur.toFixed(3)} m</strong>`;
+    ? `Last known <strong>${dispLatest.toFixed(3)} m</strong> (reading ${ago(latest.date_prise_valeur)})`
+    : `Currently <strong>${dispLatest.toFixed(3)} m</strong>`;
   // Year-to-date range. The chart already shows the window's shape, so the
   // range is the part a reader can't see — how today sits against the year.
   const yr = lastYearRanges[stationId];
   const yrScope = yr && yr.wholeYear
     ? `${new Date().getUTCFullYear()}` : `since ${LIVE_TIER_START_LABEL}`;
   const yrLbl = (yr && yr.max && yr.min)
-    ? ` · ${yrScope} range <strong>${yr.max.valeur.toFixed(2)}</strong>–<strong>${yr.min.valeur.toFixed(2)} m</strong>`
+    ? ` · ${yrScope} range <strong>${displayLevel(m, yr.max.valeur).toFixed(2)}</strong>–<strong>${displayLevel(m, yr.min.valeur).toFixed(2)} m</strong>`
     : '';
+  let statusLbl;
+  if (isBryson) {
+    const aboveCm = Math.round((latest.valeur - BRYSON_CEILING_M) * 100);
+    statusLbl = aboveCm >= 0
+      ? `${aboveCm} cm above ${BRYSON_CEILING_M.toFixed(2)} m operating ceiling`
+      : `${-aboveCm} cm below ${BRYSON_CEILING_M.toFixed(2)} m operating ceiling`;
+  } else {
+    statusLbl = `Quebec status ${m.etat_niv}/6`;
+  }
   document.getElementById(cfg.infoId).innerHTML =
-    `${nowLbl} · ${peakLbl} <strong>${peak.valeur.toFixed(3)} m</strong> at ${timeLabel(peak.date_prise_valeur)}${yrLbl} · Quebec status ${m.etat_niv}/6`;
+    `${nowLbl} · ${peakLbl} <strong>${dispPeak.toFixed(3)} m</strong> at ${timeLabel(peak.date_prise_valeur)}${yrLbl} · ${statusLbl}`;
   
   const isDark = isDarkMode();
   const grid = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
   const txt = isDark ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.55)';
+  const plotted = vals.map(v => displayLevel(m, v.valeur));
   
   if (charts[stationId]) charts[stationId].destroy();
   const showPoints = vals.length <= 12;
@@ -2062,7 +2229,7 @@ function renderChart(stationId, d) {
     data: {
       labels: vals.map(v => timeLabel(v.date_prise_valeur)),
       datasets: [{
-        data: vals.map(v => v.valeur),
+        data: plotted,
         borderColor: cfg.color,
         backgroundColor: cfg.color + '15',
         borderWidth: 2,
@@ -2102,15 +2269,18 @@ function renderChart(stationId, d) {
         x: { grid: { display: false }, ticks: { color: txt, font: { size: 10 }, maxTicksLimit: 7, maxRotation: 0 } },
         y: (() => {
           const cfgY = { grid: { color: grid }, ticks: { color: txt, font: { size: 11 }, callback: v => v.toFixed(2) } };
+          const dataMin = Math.min(...plotted);
+          const dataMax = Math.max(...plotted);
           if (stationId === 1195) {
-            const dataMin = Math.min(...vals.map(v => v.valeur));
-            const dataMax = Math.max(...vals.map(v => v.valeur));
-            // include historical peaks within 0.5m of the data range
             const nearby = HISTORICAL_PEAKS.filter(p => p.level >= dataMin - 0.5 && p.level <= dataMax + 0.5);
             if (nearby.length) {
               cfgY.suggestedMin = Math.min(dataMin, ...nearby.map(p => p.level)) - 0.03;
               cfgY.suggestedMax = Math.max(dataMax, ...nearby.map(p => p.level)) + 0.03;
             }
+          }
+          if (isBryson) {
+            cfgY.suggestedMin = Math.min(dataMin, BRYSON_BAND_LOW_M) - 0.05;
+            cfgY.suggestedMax = Math.max(dataMax, BRYSON_CEILING_M) + 0.05;
           }
           return cfgY;
         })()
@@ -2581,16 +2751,19 @@ function renderCorridorBar() {
   const items = [];
   for (const id of CORRIDOR_BAR_STATIONS) {
     const s = lastData[id];
-    if (!s?.metadata?.dern_valeur_niv) continue;
+    if (!s?.metadata?.dern_valeur_niv && !s?.readings?.length) continue;
     const offset = ORRPB_HISTORIC_PEAKS[id]?.datumOffset || 0;
-    const masl = s.metadata.dern_valeur_niv + offset;
+    const raw = s.metadata.dern_valeur_niv ?? s.readings?.[s.readings.length - 1]?.valeur;
+    if (raw == null) continue;
+    const masl = raw + offset;
+    const stale = isSeriesStale(s);
     const eff = getEffectiveEtat(s.metadata);
-    const change = dailyChangeCm(s.readings);
-    const change72 = changeCm(s.readings, 72);
+    const change = stale ? null : dailyChangeCm(s.readings);
+    const change72 = stale ? null : changeCm(s.readings, 72);
     const name = (STATION_NAMES[id] && STATION_NAMES[id][mapLang]) || s.metadata.label || `${id}`;
     const refPeaks = ORRPB_HISTORIC_PEAKS[id]?.peaks;
     const peak2019 = refPeaks?.[2019] ?? null;     // already in MASL
-    items.push({ id, name, masl, eff, change, change72, peak2019 });
+    items.push({ id, name, masl, eff, change, change72, peak2019, stale });
   }
   if (!items.length) return;
   // Y-axis must include the 2019 record where present, plus a small headroom.
@@ -2605,8 +2778,12 @@ function renderCorridorBar() {
       labels: items.map(i => i.name),
       datasets: [{
         data: items.map(i => i.masl),
-        backgroundColor: items.map(i => STATUS_BAR_COLORS[i.eff ?? 0] || STATUS_BAR_COLORS[0]),
-        borderColor: items.map(i => (STATUS_BAR_COLORS[i.eff ?? 0] || STATUS_BAR_COLORS[0]).replace('0.85', '1')),
+        backgroundColor: items.map(i => i.stale
+          ? 'rgba(128,128,128,0.45)'
+          : (STATUS_BAR_COLORS[i.eff ?? 0] || STATUS_BAR_COLORS[0])),
+        borderColor: items.map(i => i.stale
+          ? 'rgba(128,128,128,0.8)'
+          : (STATUS_BAR_COLORS[i.eff ?? 0] || STATUS_BAR_COLORS[0]).replace('0.85', '1')),
         borderWidth: 1,
         borderRadius: 3
       }]
@@ -2627,6 +2804,9 @@ function renderCorridorBar() {
             label: (ctx) => {
               const it = items[ctx.dataIndex];
               const lines = [`${it.masl.toFixed(2)} m`];
+              if (it.stale) lines.push(LOCAL_HYDRO_METEO_IDS.includes(it.id)
+                ? 'Last known — Hydro Météo deactivated'
+                : 'Last known — feed stale');
               if (it.change != null) {
                 const sign = it.change > 0 ? '+' : '';
                 lines.push(`24 h: ${sign}${it.change.toFixed(1)} cm`);
@@ -3269,16 +3449,45 @@ function openOpDetail(siteId) {
 }
 
 function updateChartTitles() {
-  const waLbl = lastData?.[1279]?.metadata?.label;
-  const lcLbl = lastData?.[1195]?.metadata?.label;
-  const crLbl = lastData?.[1004]?.metadata?.label;
-  const waSub = waLbl ? ` <span class="station-id">${waLbl}</span>` : '';
-  const lcSub = lcLbl ? ` <span class="station-id">${lcLbl}</span>` : '';
-  const crSub = crLbl ? ` <span class="station-id">${crLbl}</span>` : '';
   const w = windowLabel(windowHours);
-  document.getElementById('wa-title').innerHTML = `Waltham (Ottawa River — upstream)${waSub} — last ${w}`;
-  document.getElementById('lc-title').innerHTML = `Lac Coulonge (Ottawa River)${lcSub} — last ${w}`;
-  document.getElementById('cr-title').innerHTML = `Coulonge River tributary at Route 148${crSub} — last ${w}`;
+  const live = lastData && localHeroesLive();
+  const waLbl = live
+    ? lastData?.[1279]?.metadata?.label
+    : (lastData?.[545]?.metadata?.label || '02JE013');
+  const lcLbl = lastData?.[1195]?.metadata?.label;
+  const crLbl = live
+    ? lastData?.[1004]?.metadata?.label
+    : '1-2964';
+  const waName = live
+    ? 'Waltham (Ottawa River — upstream)'
+    : 'Mattawa (Otto Holden tailwater)';
+  const crName = live
+    ? 'Coulonge River tributary at Route 148'
+    : 'Bryson headpond (dam pond — not the lake)';
+  const waEl = document.getElementById('wa-title');
+  const lcEl = document.getElementById('lc-title');
+  const crEl = document.getElementById('cr-title');
+  if (waEl) waEl.innerHTML = `${waName}${waLbl ? ` <span class="station-id">${waLbl}</span>` : ''} — last ${w}`;
+  if (lcEl) lcEl.innerHTML = `Lac Coulonge (Ottawa River)${lcLbl ? ` <span class="station-id">${lcLbl}</span>` : ''} — last ${w}`;
+  if (crEl) crEl.innerHTML = `${crName}${crLbl ? ` <span class="station-id">${crLbl}</span>` : ''} — last ${w}`;
+}
+
+function renderLocalGaugeStrip() {
+  const el = document.getElementById('local-gauge-strip');
+  if (!el) return;
+  const rows = LOCAL_HYDRO_METEO_IDS.map(id => {
+    const d = lastData?.[id];
+    if (isLocalHeroLive(id)) return null;
+    const name = id === 1279 ? 'Waltham' : 'Coulonge River at Route 148';
+    const label = d?.metadata?.label || id;
+    const latest = d?.readings?.length ? d.readings[d.readings.length - 1] : null;
+    const level = latest ? `${displayLevel(d.metadata, latest.valeur).toFixed(3)} m` : '—';
+    const when = latest ? ago(latest.date_prise_valeur) : 'no reading';
+    return `<div class="strip-row"><strong>${name}</strong> <span class="station-id">${label}</span> · last known ${level} · ${when} · <a href="https://vigilance.geo.msp.gouv.qc.ca/stations/${id}" target="_blank">Hydro Météo deactivated</a></div>`;
+  }).filter(Boolean);
+  if (!rows.length) { el.hidden = true; el.innerHTML = ''; return; }
+  el.hidden = false;
+  el.innerHTML = `<div class="strip-title">Local Hydro Météo gauges — last known</div>${rows.join('')}`;
 }
 
 async function fetchStationHistory(stationId, hours) {
@@ -3299,6 +3508,9 @@ async function fetchStationHistory(stationId, hours) {
     } catch (e) {
       console.warn(`cluster history for ${stationId} failed: ${e.message}`);
     }
+    // HQ dam_levels ids are not Vigilance integers — don't fall through to
+    // river_readings_hourly?station_id=eq.1-2964.
+    if (stationId === BRYSON_AMONT_ID) return [];
   }
   // Vigilance hourly continuous-aggregate — querying through the view gives
   // postgrest a uniformly-sized response and decimates higher-cadence sources.
@@ -3325,6 +3537,7 @@ async function fetchStationHistory(stationId, hours) {
 // than the maximum. Britannia (548) carries a literal 0 at 2026-08-10 16:00
 // from the MSP migration, which would otherwise publish as the year's low.
 async function fetchYearRange(stationId) {
+  if (stationId === BRYSON_AMONT_ID) return fetchYearRangeDamLevel(stationId);
   const since = new Date(Date.UTC(new Date().getUTCFullYear(), 0, 1)).toISOString();
   const q = dir => `/history/river_readings?station_id=eq.${stationId}&time=gte.${since}`
     + `&level_m=gt.0&order=level_m.${dir}&limit=1&select=time,level_m`;
@@ -3389,9 +3602,7 @@ function setWindow(hours) {
     b.classList.toggle('active', Number(b.dataset.hours) === hours);
   });
   updateChartTitles();
-  renderWindow(1279);
-  renderWindow(1195);
-  renderWindow(1004);
+  renderHeroCharts();
   // Stations / Tributaries tabs redraw too — their mini-charts share windowHours with Overview.
   if (document.querySelector('.tab-panel[data-tab="stations"].active')) {
     renderStationsTab();
@@ -3577,8 +3788,9 @@ function buildStationCard(id) {
       <div class="meta" style="opacity:0.7;">No recent data</div>
     </div>`;
   }
+  const stale = isSeriesStale(station);
   const dispCurrent = displayLevel(m, latest.valeur);
-  const change = dailyChangeCm(station.readings);
+  const change = stale ? null : dailyChangeCm(station.readings);
   const changeArrow = change == null ? '' : (change > 0.5 ? '↑' : change < -0.5 ? '↓' : '→');
   const changeCls = change == null ? '' : (change > 0.5 ? 'up' : change < -0.5 ? 'down' : 'flat');
   const changeText = change == null ? '' : `<span class="change ${changeCls}">${changeArrow} ${change > 0 ? '+' : ''}${change.toFixed(1)} cm/24h</span>`;
@@ -3621,14 +3833,16 @@ function buildStationCard(id) {
 
   const labelChip = m.label ? `<span class="station-id">${m.label}</span>` : '';
   const stationName = (STATION_NAMES[id] && STATION_NAMES[id][mapLang]) || m.label || `${id}`;
-  return `<div class="station-card-mini" data-station-id="${id}" onclick="openBarDetail(${id})">
+  const lastKnown = stale ? `<span class="meta" style="font-style:italic;opacity:0.8">Last known ${ago(latest.date_prise_valeur)}</span>` : '';
+  return `<div class="station-card-mini${stale ? ' stale' : ''}" data-station-id="${id}" onclick="openBarDetail(${id})">
     <div class="header-row">
       <div class="name">${stationName}${labelChip}</div>
       <div class="level">${dispCurrent.toFixed(2)}<span class="unit">m</span>${changeText}</div>
     </div>
     <div class="meta">${m.description || ''}</div>
+    ${lastKnown}
     <div class="chart-wrap"><canvas id="stn-chart-${id}"></canvas></div>
-    <div class="badge-row">${stateBadge}${lowWaterChips(id, dispCurrent, change)}${orrpbChip}${pctlChip}${precipChip}</div>
+    <div class="badge-row">${hydroMeteoDeactivatedChip(id)}${stateBadge}${lowWaterChips(id, dispCurrent, change)}${orrpbChip}${pctlChip}${precipChip}</div>
   </div>`;
 }
 
@@ -3750,20 +3964,25 @@ function buildRiverRow(id) {
   if (!station?.metadata || !station.readings?.length) {
     return `<div class="river-row nodata" data-station-id="${id}"><span class="river-dot normal"></span><span class="river-name">${name}${idChip}</span><span class="river-spark-wrap"></span><span class="river-level">—</span><span class="river-change"></span><span class="river-status">No recent data</span></div>`;
   }
+  const stale = isSeriesStale(station);
   const m = station.metadata;
   const latest = station.readings[station.readings.length - 1];
   const level = displayLevel(m, latest.valeur);
-  const change = dailyChangeCm(station.readings);
-  const st = lowWaterStatus(id, m, level, change);
+  const change = stale ? null : dailyChangeCm(station.readings);
+  const st = stale
+    ? { tier: 'watch', label: LOCAL_HYDRO_METEO_IDS.includes(id)
+        ? 'Last known · Hydro Météo deactivated'
+        : `Last known ${ago(latest.date_prise_valeur)}` }
+    : lowWaterStatus(id, m, level, change);
   const arrow = change == null ? '' : (change > 0.5 ? '↑' : change < -0.5 ? '↓' : '→');
   const chCls = change == null ? '' : (change > 0.5 ? 'up' : change < -0.5 ? 'down' : 'flat');
-  const chTxt = change == null ? '' : `${arrow} ${change > 0 ? '+' : ''}${change.toFixed(1)}`;
-  return `<div class="river-row" data-station-id="${id}" onclick="openBarDetail(${id})">
+  const chTxt = change == null ? (stale ? ago(latest.date_prise_valeur) : '') : `${arrow} ${change > 0 ? '+' : ''}${change.toFixed(1)}`;
+  return `<div class="river-row${stale ? ' stale' : ''}" data-station-id="${id}" onclick="openBarDetail(${id})">
     <span class="river-dot ${st.tier}"></span>
     <span class="river-name">${name}${idChip}</span>
     <span class="river-spark-wrap">${sparklineSVG(station.readings, RIVER_TIER_COLOR[st.tier])}</span>
     <span class="river-level">${level.toFixed(2)}<span class="unit">m</span></span>
-    <span class="river-change ${chCls}">${chTxt}<span class="rate-unit"> cm/24h</span></span>
+    <span class="river-change ${chCls}">${chTxt}${change != null ? '<span class="rate-unit"> cm/24h</span>' : ''}</span>
     <span class="river-status ${st.tier}">${st.label}</span>
   </div>`;
 }
@@ -4164,8 +4383,9 @@ function buildTributaryCard(meta) {
       <div class="meta" style="color:var(--text-faint);font-style:italic">No live readings published.</div>
     </div>`;
   }
+  const stale = isSeriesStale(station);
   const dispCurrent = displayLevel(m, latest.valeur);
-  const change = dailyChangeCm(station.readings);
+  const change = stale ? null : dailyChangeCm(station.readings);
   const changeArrow = change == null ? '' : (change > 0.5 ? '↑' : change < -0.5 ? '↓' : '→');
   const changeCls = change == null ? '' : (change > 0.5 ? 'up' : change < -0.5 ? 'down' : 'flat');
   const changeText = change == null ? '' : `<span class="change ${changeCls}">${changeArrow} ${change > 0 ? '+' : ''}${change.toFixed(1)} cm/24h</span>`;
@@ -4177,15 +4397,17 @@ function buildTributaryCard(meta) {
   // Discharge row when published.
   const flow = m.dern_valeur_deb;
   const flowLine = (flow != null) ? `<div class="meta" style="font-variant-numeric:tabular-nums"><strong>Q: ${Math.round(flow).toLocaleString()} m³/s</strong></div>` : '';
-  return `<div class="station-card-mini" data-station-id="${id}" onclick="openBarDetail(${id})">
+  const lastKnown = stale ? `<div class="meta" style="font-style:italic;opacity:0.8">Last known ${ago(latest.date_prise_valeur)}</div>` : '';
+  return `<div class="station-card-mini${stale ? ' stale' : ''}" data-station-id="${id}" onclick="openBarDetail(${id})">
     <div class="header-row">
       <div class="name">${meta.name}${m.label ? ` <span class="station-id">${m.label}</span>` : ''}</div>
       <div class="level">${dispCurrent.toFixed(2)}<span class="unit">m</span>${changeText}</div>
     </div>
     <div class="meta">${meta.subtitle}</div>
     ${flowLine}
+    ${lastKnown}
     <div class="chart-wrap"><canvas id="trib-chart-${id}"></canvas></div>
-    <div class="badge-row">${stateBadge}</div>
+    <div class="badge-row">${hydroMeteoDeactivatedChip(id)}${stateBadge}</div>
   </div>`;
 }
 
@@ -4955,9 +5177,11 @@ async function fetchData() {
     // best-effort — fall back to null on failure so the cards still render.
     const rangeOrNull = id => fetchYearRange(id).catch(e => { console.warn(`year range ${id}: ${e.message}`); return null; });
     const stationOrNull = id => fetchStation(id).catch(e => { console.warn(`station ${id}: ${e.message}`); return null; });
-    let [lc, cr, wa, mt, lcRange, crRange, waRange, mtRange] = await Promise.all([
+    let [lc, cr, wa, mt, br, lcRange, crRange, waRange, mtRange, brRange] = await Promise.all([
       stationOrNull(1195), stationOrNull(1004), stationOrNull(1279), stationOrNull(545),
-      rangeOrNull(1195), rangeOrNull(1004), rangeOrNull(1279), rangeOrNull(545)
+      fetchBrysonAmont(FALLBACK_LOOKBACK_H).catch(e => { console.warn(`Bryson amont: ${e.message}`); return null; }),
+      rangeOrNull(1195), rangeOrNull(1004), rangeOrNull(1279), rangeOrNull(545),
+      rangeOrNull(BRYSON_AMONT_ID)
     ]);
     // One failed primary (HTTP 503, network error) degrades to a no-data card;
     // only a total wipeout of all three is a page-level error worth the banner.
@@ -4967,7 +5191,8 @@ async function fetchData() {
     wa = wa || { metadata: null, readings: [] };
     const data = { 1195: lc, 1004: cr, 1279: wa };
     if (mt) data[545] = mt;
-    const yearRanges = { 1195: lcRange, 1004: crRange, 1279: waRange, 545: mtRange };
+    if (br) data[BRYSON_AMONT_ID] = br;
+    const yearRanges = { 1195: lcRange, 1004: crRange, 1279: waRange, 545: mtRange, [BRYSON_AMONT_ID]: brRange };
     lastData = data;
     lastYearRanges = yearRanges;
     // Pull ECCC annual peaks for any station Vigilance can't classify (etat_niv=0).
@@ -4995,9 +5220,7 @@ async function fetchData() {
     if (document.querySelector('.tab-panel[data-tab="tributaries"].active')) renderTributariesTab();
     if (document.querySelector('.tab-panel[data-tab="operations"].active')) renderOperationsTab();
     if (document.querySelector('.tab-panel[data-tab="flow"].active')) renderFlowTab();
-    renderWindow(1279);
-    renderWindow(1195);
-    renderWindow(1004);
+    renderHeroCharts();
     if (lc.readings.length) {
       renderProperty(lc.readings[lc.readings.length - 1].valeur, lc.metadata?.trend_niv);
     } else {
