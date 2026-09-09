@@ -2300,6 +2300,80 @@ function formatForecastUpdate(iso) {
   }
 }
 
+// ---- Summary-card copy ----------------------------------------------------
+// Every string the top card can show lives in this table, keyed by the state
+// summaryState() resolves below. Headline and footnote come from the same
+// entry, so the two can't drift apart, and a wording change is one edit here
+// instead of a hunt through two parallel if/else ladders inside renderSummary.
+//
+// `note` is a string, a function of the (fresh) forecast snapshot, or absent
+// when that state carries no footnote.
+const ORRPB_FORECAST_URL = 'https://www.ottawariver.ca/conditions/?display=forecast';
+const PAST_PEAK_GENERIC = 'Past first peak — second peak still possible';
+
+// ORRPB is publishing daily through the freshet — quote the notice itself,
+// with the time it was issued and its second-peak verdict.
+function orrpbDailyNote(fcst) {
+  const upd = formatForecastUpdate(fcst.source && fcst.source.last_update_iso);
+  const reach = fcst.further_increases_reach || 'the basin';
+  const verdict = fcst.further_increases_possible === true
+    ? `further rise possible from ${reach}`
+    : (fcst.further_increases_possible === false
+      ? 'continued decline forecast'
+      : 'no second-peak signal stated');
+  return `<div class="summary-note">ORRPB${upd ? ` (${upd})` : ''}: ${verdict}. <a href="${ORRPB_FORECAST_URL}" target="_blank" rel="noopener noreferrer">Full forecast →</a></div>`;
+}
+
+const SUMMARY_COPY = {
+  'above-cottage':  { cls: 'danger',  headline: 'At or above cottage threshold — take action' },
+  'property-flood': { cls: 'warning', headline: 'Property flooding — water in backyard / driveway' },
+
+  // Past the first peak with a fresh daily ORRPB forecast to quote.
+  'rise-here':     { cls: 'good', headline: 'Past first peak — ORRPB flags possible further rise in this reach', note: orrpbDailyNote },
+  'rise-upstream': { cls: 'good', headline: 'Past first peak — ORRPB flags possible upstream rise',              note: orrpbDailyNote },
+  'decline':       { cls: 'good', headline: 'Past first peak — ORRPB forecasts continued decline',               note: orrpbDailyNote },
+  // Daily forecast published but stating no second-peak signal either way:
+  // generic headline, footnote still relays the notice and its timestamp.
+  'no-signal':     { cls: 'good', headline: PAST_PEAK_GENERIC,                                                   note: orrpbDailyNote },
+
+  // ORRPB stays on weekly notices from the end of the freshet right through
+  // the fall, so nothing here may be peak-relative — it would read months
+  // stale by September. State the level instead.
+  'weekly-notice': {
+    cls: 'good',
+    headline: 'Below property thresholds — ORRPB on weekly notices',
+    note: `<div class="summary-note">ORRPB is on weekly notices for the post-freshet season. <a href="${ORRPB_FORECAST_URL}" target="_blank" rel="noopener noreferrer">Latest notice →</a></div>`,
+  },
+
+  // No fresh forecast snapshot — fall back to the generic boilerplate.
+  'no-forecast': {
+    cls: 'good',
+    headline: PAST_PEAK_GENERIC,
+    note: `<div class="summary-note">Reservoir drawdown upstream can drive a secondary crest weeks after the first — watch <a href="${ORRPB_FORECAST_URL}" target="_blank" rel="noopener noreferrer">ORRPB forecasts</a>. Season's true peak may still be ahead.</div>`,
+  },
+
+  'below-thresholds': { cls: 'good', headline: 'Below property thresholds' },
+};
+
+// Which SUMMARY_COPY entry the card is in. Flood thresholds win over any
+// forecast; below them the post-peak narrative only runs while ORRPB is still
+// publishing for the season — off-season suppresses it entirely, matching
+// what ORRPB itself is saying.
+function summaryState(level, isDeclined, fcst) {
+  if (level >= 108.75) return 'above-cottage';
+  if (level >= 108.48) return 'property-flood';
+  if (!isDeclined || (fcst && fcst.mode === 'off-season')) return 'below-thresholds';
+  if (fcst && fcst.mode === 'daily-freshet') {
+    if (fcst.further_increases_possible === true) {
+      return fcst.further_increases_includes_lac_coulonge ? 'rise-here' : 'rise-upstream';
+    }
+    if (fcst.further_increases_possible === false) return 'decline';
+    return 'no-signal';
+  }
+  if (fcst && fcst.mode === 'weekly-notice') return 'weekly-notice';
+  return 'no-forecast';
+}
+
 function renderSummary(lcData, yearRange) {
   const box = document.getElementById('summary-box');
   box.classList.remove('skeleton');
@@ -2331,39 +2405,14 @@ function renderSummary(lcData, yearRange) {
   // the year's own crest — which is exactly what yearMax now is.
   const rank = rankPeak(peak.valeur);
 
-  // Forecast-aware post-peak messaging. forecastData is loaded by the data
-  // pipeline before renderSummary runs (see refreshAll); when fresh, the
-  // status text and footnote relay ORRPB's actual forecast. Outside the
-  // freshet (mode === 'off-season' / 'weekly-notice') we suppress the
-  // post-peak narrative to match what ORRPB itself is publishing.
+  // Forecast-aware messaging. forecastData is loaded by the data pipeline
+  // before renderSummary runs (see refreshAll); when fresh, the headline and
+  // footnote relay ORRPB's actual forecast. One state key drives both — every
+  // string it can produce is in SUMMARY_COPY above.
   const fcst = forecastIsFresh(forecastData) ? forecastData : null;
-  const fcstSaysOffseason = fcst && fcst.mode === 'off-season';
-
-  let statusCls, statusText;
-  if (latest.valeur >= 108.75) {
-    statusCls = 'danger';
-    statusText = 'At or above cottage threshold — take action';
-  } else if (latest.valeur >= 108.48) {
-    statusCls = 'warning';
-    statusText = 'Property flooding — water in backyard / driveway';
-  } else if (isDeclined && !fcstSaysOffseason) {
-    statusCls = 'good';
-    if (fcst && fcst.mode === 'daily-freshet' && fcst.further_increases_possible === true) {
-      statusText = fcst.further_increases_includes_lac_coulonge
-        ? 'Past first peak — ORRPB flags possible further rise in this reach'
-        : 'Past first peak — ORRPB flags possible upstream rise';
-    } else if (fcst && fcst.mode === 'daily-freshet' && fcst.further_increases_possible === false) {
-      statusText = 'Past first peak — ORRPB forecasts continued decline';
-    } else if (fcst && fcst.mode === 'weekly-notice') {
-      statusText = 'Past first peak — freshet winding down (ORRPB on weekly notices)';
-    } else {
-      // No fresh forecast snapshot — fall back to the generic boilerplate.
-      statusText = 'Past first peak — second peak still possible';
-    }
-  } else {
-    statusCls = 'good';
-    statusText = 'Below property thresholds';
-  }
+  const copy = SUMMARY_COPY[summaryState(latest.valeur, isDeclined, fcst)];
+  const statusCls = copy.cls;
+  const statusText = copy.headline;
   box.className = `summary ${statusCls}`;
 
   // Threshold bar range. During active freshet we zoom in on the flood band
@@ -2439,25 +2488,8 @@ function renderSummary(lcData, yearRange) {
     .map(z => `<div class="summary-zone-label" style="left:${clampLabel(pct(z.v))}%">${z.t}</div>`).join('');
 
   const marginValue = cottageMargin > 0 ? `${cottageMargin.toFixed(0)} cm` : 'breached';
-  // Footnote — relays ORRPB's actual published forecast when fresh; falls
-  // back to the generic boilerplate if forecastData is unavailable.
-  let note = '';
-  if (statusCls === 'good' && isDeclined && !fcstSaysOffseason) {
-    if (fcst && fcst.mode === 'daily-freshet') {
-      const upd = formatForecastUpdate(fcst.source && fcst.source.last_update_iso);
-      const reach = fcst.further_increases_reach || 'the basin';
-      const verdict = fcst.further_increases_possible === true
-        ? `further rise possible from ${reach}`
-        : (fcst.further_increases_possible === false
-          ? 'continued decline forecast'
-          : 'no second-peak signal stated');
-      note = `<div class="summary-note">ORRPB${upd ? ` (${upd})` : ''}: ${verdict}. <a href="https://www.ottawariver.ca/conditions/?display=forecast" target="_blank">Full forecast →</a></div>`;
-    } else if (fcst && fcst.mode === 'weekly-notice') {
-      note = `<div class="summary-note">ORRPB has shifted to weekly notices for the post-freshet period. <a href="https://www.ottawariver.ca/conditions/?display=forecast" target="_blank">Latest notice →</a></div>`;
-    } else {
-      note = `<div class="summary-note">Reservoir drawdown upstream can drive a secondary crest weeks after the first — watch <a href="https://www.ottawariver.ca/conditions/?display=forecast" target="_blank">ORRPB forecasts</a>. Season's true peak may still be ahead.</div>`;
-    }
-  }
+  // Footnote — same state key as the headline, so the two can't drift apart.
+  const note = typeof copy.note === 'function' ? copy.note(fcst) : (copy.note || '');
 
   box.innerHTML = `
     <div class="summary-headline">
