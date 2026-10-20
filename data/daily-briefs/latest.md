@@ -1,10 +1,10 @@
-# Daily brief — 2026-10-19
+# Daily brief — 2026-10-20
 
 *Generated automatically at 22:00 UTC. See `freshet-public/docs/analysis/Freshet_2026_Complete_Summary.md` for project context.*
 
-*Data sources: cluster proxy (`freshet.xgrunt.com/history/`) HTTP 200 ✓ (112 b probe; curl used — Python urllib returns 403 for table queries, likely Accept-header mismatch; curl with `-H 'Accept: application/json'` returns 200 ✓). ORRPB conditions + forecast HTTP 200 ✓ (128 KB; forecast unchanged since Oct 13 21:02 UTC — next update Oct 20). Vigilance 1195: INGEST RESTORED — latest proxy record T20 UTC Oct 19 (fresh; was stale at T13 Oct 13 ~129h in Oct 18 brief). V3 posterior: timed out (exit 124, Day 46 consecutive); `freshet-forecast.json` restored from git HEAD unchanged (asof 2026-06-07).*
+*Data sources: cluster proxy (`freshet.xgrunt.com/history/`) HTTP 200 ✓ (119 b probe). ORRPB forecast HTTP 200 ✓ (128 KB) — **updated today Oct 20 3:46 PM EDT**, next update Oct 27. Vigilance 1195: ingest fresh at T20 UTC Oct 20 (105.951 m). V3 posterior: exit 143, Day 47 consecutive timeout; `freshet-forecast.json` restored from prior commit (Oct 19), updated with today's ORRPB forecast text.*
 
-*Oct 18 retro-checks: Mid-valley exclusions confirmed ✓ — Des Joachims Oct 18 final = **374 m³/s** (provisional 253 excluded ✓); Otto Holden Oct 18 final = **328 m³/s** (provisional 220 excluded ✓). Oct 16 OPG data today reads Des Joachims = **409**, Otto Holden = **334** — back to pre-revision values (yesterday's brief noted revisions to 479/381; appear rolled back; weekly rollup to reconcile). Témiscaming Oct 18 = **295 m³/s** — D31 sub-400 confirmed ✓.*
+*Oct 19 retro-checks: Oct 19 mid-valley exclusions confirmed ✓ — Des Joachims Oct 19 final = **350 m³/s** (provisional 578 excluded ✓); Otto Holden Oct 19 final = **324 m³/s** (provisional 490 excluded ✓). OPG also revised Oct 18 values after yesterday's brief ran: Des Joachims 374→**491 m³/s** (+31%), Otto Holden 328→**433 m³/s** (+32%) — both sub-400, Témiscaming sub-400 streak D31 unaffected; weekly rollup to reconcile these post-brief OPG revisions.*
 
 ---
 
@@ -12,76 +12,74 @@
 
 ### Upstream — the upper basin
 
-The upper basin is quiet. Lake Timiskaming's outflow finalized at 295 cubic metres per second for October 18 — the thirty-first consecutive day below 400 m³/s, a streak that started September 18. The midnight reading for October 19 came in at 270 m³/s, pointing toward a thirty-second day. That is 170 days past the May 2 freshet peak, and the river is simply running at its normal late-autumn low.
+The upper Ottawa River basin remains in quiet late-autumn recession. Lake Timiskaming's outflow finalized at 299 cubic metres per second for October 19 — thirty-second consecutive day below 400 m³/s, a streak that started September 18. That count is 171 days past the May 2 seasonal peak. Today's outflow reading carries a corrupted data value (negative, clearly impossible) so no same-day number is available, but the reservoir at Timiskaming rose slightly overnight — consistent with inflows in the same 270–310 m³/s range as recent days.
 
-Mattawa fell 6 centimetres to 152.26 metres and Pembroke edged up 1 centimetre to 111.02 metres — both fluctuating within the small range they have held since mid-October. Fourteen tracked reservoirs moved less than 3 centimetres overnight; most are steady, consistent with routine autumn dispatch.
+Mattawa dipped 1 centimetre to 152.29 metres and Pembroke fell 2 centimetres to 111.01 metres. Both have been oscillating within a few centimetres of their current values all month. Fourteen tracked reservoirs moved 2 centimetres or less overnight; the pattern is steady, with no sign of unusual inflow or drawdown anywhere in the upper basin.
 
 ### At the property — Lac Coulonge / Mansfield
 
-The lake at Fort-Coulonge held flat at 105.95 metres — unchanged from yesterday, 105 centimetres below the 107.00-metre pre-alert level, and fully normal for the season.
+The water level at Fort-Coulonge rose 1 centimetre to 105.96 metres — fully normal, 104 centimetres below the 107.00-metre pre-alert level. There is nothing to watch at the property level.
 
-One operational note: the Vigilance water-level gauge on the lake (the data feed our cluster reads to stay current) came back online after roughly six days of silence — readings are fresh again as of this afternoon. The data value is the same as what ORRPB has been reporting through the gap.
+Two operational shifts at the downstream dams are worth noting, though neither affects the lake. At the Bryson Generating Station — the dam pond at the downstream end of Lac Coulonge's winding southern reach — Hydro-Québec reversed its recent dispatch mode: turbines went from 128 to 297 cubic metres per second (more than doubling), while spillway flow dropped from 225 to 46 cubic metres per second. Total flow barely changed. This is the inverse of the October 16 near-turbine-shutdown that the past week documented; operators appear to be cycling back to a turbine-preferred mode now that the mid-October precipitation pulse has passed through. At Carillon, the basin's terminal dam near Hawkesbury, releases stepped down 17 percent from 1,159 to 958 cubic metres per second.
 
-At the Bryson Generating Station — downstream of Lac Coulonge at the end of the lake's winding southern reach — total releases edged up 2.6 percent to 353 cubic metres per second, a small day-to-day adjustment well within normal variation. The dam pond (headpond) was essentially unchanged at 105.56 metres. Carillon, the basin's terminal dam near Hawkesbury, ran at 1,159 cubic metres per second at the latest hourly read — up slightly, all through turbines with no spillway use.
-
-The ORRPB forecast remains unchanged from its October 13 update and calls for gradual or stable levels given forecast precipitation. The next scheduled update is tomorrow.
+ORRPB updated its forecast today (first update since October 13) and dropped the precipitation/possible-rise language. It now calls for levels to "remain fairly stable or slightly decrease" over the coming week — consistent with the basin's current quiet trajectory. The next update is October 27.
 
 ---
 
 ## TL;DR
 
-Retro ✓: Oct 18 mid-valley finals Des Joachims 374/Otto Holden 328 (exclusions correct ✓); Oct 16 OPG revisions (noted yesterday as DJ 479/OH 381) appear rolled back to 409/334 — weekly rollup to reconcile. Témiscaming Oct 18 D31 = 295 ✓. **Today:** Lac Coulonge **0 cm** to **105.95 m (etat 0; 105 cm below pre-alert)** — flat. Bryson +2.6% to 353 m³/s; headpond +1 cm to 105.56 m (Day 144 above band). Carillon +2.2% to 1,159 m³/s (T19); Hull dock −4 cm to 41.26 m (trigger inactive Day 147). Témiscaming D31 = 295 confirmed; D32 in progress (PSPC T00 = 270). Vigilance ingest restored (T20 Oct 19). Day **170** since May 2 peak. Mid-valley Oct 19 provisionals (Des Joachims 578, Otto Holden 490) excluded — downstream check failed; data tables only.
+Retro ✓: Oct 19 mid-valley finals DJ=350/OH=324 (exclusions correct ✓); Oct 18 OPG post-brief revision DJ 374→491 (+31%), OH 328→433 (+32%) — sub-400 unaffected; rollup to reconcile. **Today:** Lac Coulonge **+1 cm** to **105.96 m (etat 0; 104 cm below pre-alert)**. Bryson posture shift: turbines +132% (128→297 m³/s), spill −79% (225→46 m³/s), spill% 63.7%→13.5%; headpond −8 cm to 105.48 m (Day 145 above band). Carillon −17.4% (1,159→958 m³/s). Hull dock +3 cm to 41.29 m — trigger inactive Day 148. Témiscaming D32 confirmed (Oct 19 final=299); D33 in progress, PSPC today corrupted (−105 m³/s — invalid). ORRPB forecast updated Oct 20: drops precipitation/increase scenario — now "stable or slightly decrease." Day **171** since May 2 peak.
 
 ---
 
 ## Lac Coulonge (the property gauge, Vigilance 1195)
 
-*Source: Vigilance 1195 via proxy `river_readings` T20 UTC Oct 19 (PRIMARY — ingest restored); ORRPB `orrpb_river_levels?station=eq.lake-coulonge` Oct 19 daily (cross-check; agree).*
+*Source: Vigilance 1195 via proxy `river_readings` T20 UTC Oct 20 (PRIMARY); ORRPB `orrpb_river_levels?station=eq.lake-coulonge` Oct 20 daily (cross-check).*
 
 | Metric | Value |
 |---|---|
-| Current level (Vigilance T20 UTC Oct 19) | **105.95 m** |
-| ORRPB daily Oct 18 | 105.95 m |
-| 24h delta (Oct 18 → Oct 19 ORRPB daily) | **0 cm** |
+| Current level (Vigilance T20 UTC Oct 20) | **105.951 m** |
+| ORRPB daily Oct 20 | 105.96 m |
+| 24h delta (ORRPB daily Oct 19→20) | **+1 cm** |
 | Flood state | **etat 0 — fully normal** |
-| Distance to pre-alert (107.00 m) | 105 cm below |
-| Distance to minor flood (107.50 m) | 155 cm below |
+| Distance to pre-alert (107.00 m) | 104 cm below |
+| Distance to minor flood (107.50 m) | 154 cm below |
 
 ---
 
 ## Bryson operating posture (HQ open-data)
 
-*Source: `dam_releases?site_id=eq.3-46` + `dam_levels?station_id=in.(1-2964,1-2965)`. Today: T19 UTC Oct 19. Yesterday: T19 UTC Oct 18.*
+*Source: `dam_releases?site_id=eq.3-46` + `dam_levels?station_id=in.(1-2964,1-2965)`. Today: T19 UTC Oct 20. Yesterday: T19 UTC Oct 19 (from Oct 19 brief).*
 
-| Metric | Today (T19 Oct 19) | Yesterday (T19 Oct 18) | Δ |
+| Metric | Today (T19 Oct 20) | Yesterday (T19 Oct 19) | Δ |
 |---|---|---|---|
-| Total release (m³/s) | **352.80** | 343.77 | +9.03 (+2.6%) |
-| Turbined (m³/s) | **127.97** | 128.14 | −0.17 (−0.1%) |
-| Spilled (m³/s) | **224.82** | 215.63 | +9.19 (+4.3%) |
-| Spill share (%) | **63.7%** | 62.7% | +1.0 pp |
-| Headpond / amont (m) | **105.56** | 105.55 | +1 cm |
-| Tailwater / aval (m) | **86.94** | 86.94 | 0 |
-| Δh (head differential, m) | **18.62** | 18.61 | +1 cm |
+| Total release (m³/s) | **343.17** | 352.80 | −9.63 (−2.7%) |
+| Turbined (m³/s) | **296.94** | 127.97 | +168.97 (**+132%**) ⚠ |
+| Spilled (m³/s) | **46.23** | 224.82 | −178.59 (**−79.4%**) ⚠ |
+| Spill share (%) | **13.5%** | 63.7% | **−50.2 pp** ⚠ |
+| Headpond / amont (m) | **105.48** | 105.56 | −8 cm |
+| Tailwater / aval (m) | **86.95** | 86.94 | +1 cm |
+| Δh (head differential, m) | **18.53** | 18.62 | −9 cm |
 
-No parameter exceeds the >5% flag threshold. **Headpond band status:** 105.56 m is 89 cm above the 104.67 m band ceiling — **Day 144** above band.
+Turbined and spilled both exceed the >5% flag threshold. Total release is within 5% (−2.7%). **Headpond band status:** 105.48 m is 81 cm above the 104.67 m band ceiling — **Day 145** above band. Note: mid-day T18 reading was total 371.30 / turbined 211.51 / spilled 159.80 — the spill-to-turbine shift occurred in the T18→T19 window (~2–3 PM EDT Oct 20).
 
 ---
 
 ## Main-stem cascade (HQ centrales, m³/s total release)
 
-*Source: `latest_dam_releases` — T19 UTC Oct 19.*
+*Source: `latest_dam_releases` — T18–T19 UTC Oct 20.*
 
 | Site | Total (m³/s) | Spill % |
 |---|---|---|
-| Première-Chute (3-33) | 204.06 | 0% |
-| Quinze (3-31) | 200.02 | 0.5% |
-| Îles (3-32) | 209.55 | 0% |
-| Rapide-2 (3-29) | 156.86 | 0% |
-| Rapide-7 (3-28) | 156.60 | 0% |
-| Bryson (3-46) | **352.80** | **63.7%** |
-| Paugan — Gatineau R. (3-65) | 162.57 | 0% |
-| Rapides-Farmers — Gatineau mouth (3-67) | 171.03 | 0% |
-| Carillon — basin terminal (3-60) | **1,159.07** | 0% |
+| Première-Chute (3-33) | 202.43 | 0% |
+| Quinze (3-31) | 201.82 | 0.5% |
+| Îles (3-32) | 206.39 | 0% |
+| Rapide-2 (3-29) | 156.71 | 0% |
+| Rapide-7 (3-28) | 156.36 | 0% |
+| Bryson (3-46) | **343.17** | **13.5%** |
+| Paugan — Gatineau R. (3-65) | 162.35 | 0% |
+| Rapides-Farmers — Gatineau mouth (3-67) | ~179 (turbined only) | — |
+| Carillon — basin terminal (3-60) | **957.59** | 0.6% |
 
 ---
 
@@ -89,86 +87,88 @@ No parameter exceeds the >5% flag threshold. **Headpond band status:** 105.56 m 
 
 *Sources: `orrpb_river_flows?station=eq.temiscaming`; `reservoir_readings?reservoir_id=eq.timiskaming` (PSPC cross-check); `orrpb_river_levels` (mattawa, pembroke). All cluster proxy HTTP 200 ✓.*
 
-| Metric | Today / Latest | 7 d ago (Oct 12) | Δ | Milestone |
+| Metric | Today / Latest | 7 d ago (Oct 13) | Δ | Milestone |
 |---|---|---|---|---|
-| Témiscaming Oct 18 ORRPB final (m³/s) | **295** | 304 (Oct 12) | −9 | **D31 sub-400 confirmed** |
-| Témiscaming Oct 19 PSPC T00 (m³/s) | **270** | — | — | D32 in progress |
-| PSPC cross-check vs ORRPB | Oct 18: 295 PSPC / 295 ORRPB | — | — | Agree ✓ |
-| Quinze release → into the lake (m³/s) | **200.02** (T19) | ~204 (Oct 12) | — | Autumn dispatch; steady |
-| Mattawa level (m) | **152.26** (Oct 19 daily) | 152.12 (Oct 12) | +14 cm since Oct 12 | −6 cm from Oct 18 (152.32); direction slightly down |
-| Pembroke level (m) | **111.02** (Oct 19 daily) | 110.99 (Oct 12) | +3 cm since Oct 12 | +1 cm from Oct 18 (111.01); direction flat |
+| Témiscaming Oct 19 ORRPB final (m³/s) | **299** | 309 (Oct 13) | −10 | **D32 sub-400 confirmed** |
+| Témiscaming Oct 20 PSPC (m³/s) | **−105 (corrupted — invalid)** | — | — | D33 in progress; value unavailable |
+| PSPC cross-check Oct 19 vs ORRPB | 295 PSPC / 299 ORRPB | — | — | Agree within 4 ✓ |
+| Quinze release → into the lake (m³/s) | **201.82** (T19) | ~200 (Oct 13) | — | Autumn dispatch; steady |
+| Mattawa level (m) | **152.29** (Oct 20 daily) | 152.27 (Oct 13) | +2 cm over 7 d | −1 cm from Oct 19 (152.30); direction flat |
+| Pembroke level (m) | **111.01** (Oct 20 daily) | 110.98 (Oct 13) | +3 cm over 7 d | −2 cm from Oct 19 (111.03); direction flat |
 
-**Reservoir balance (T00 Oct 18 → T00 Oct 19):**
-Dozois −3 cm · Des Joachims −3 cm · Mitchinamecus −2 cm = 3 **falling** · Rapide-7 +1 · Quinze +1 · Bark Lake +1 · Lady Evelyn −1 · Kipawa −1 · Timiskaming-Haileybury +1 · Cabonga 0 · Baskatong −1 · Kiamika −1 = 9 **steady** · Timiskaming +2 cm · Poisson Blanc +2 cm = 2 **rising**. **3 falling · 9 steady · 2 rising.** Normal low-volatility autumn pattern.
+**Reservoir balance (T00 Oct 19 → T00 Oct 20):**
+Kipawa −4 cm · Lady Evelyn −3 cm = 2 **falling** · Rapide-7 +1 · Bark Lake +1 · Poisson Blanc +1 · Quinze 0 · Timiskaming-Haileybury −1 · Baskatong −2 · Mitchinamecus −1 · Kiamika 0 · Dozois −1 = 10 **steady** · Timiskaming +2 · Des Joachims +2 = 2 **rising**. **2 falling · 10 steady · 2 rising.** Normal quiet autumn dispatch pattern.
 
-**Milestone bookkeeping (W41 anchor Oct 11 + Oct 12–19 extension):**
+**Milestone bookkeeping (W42 anchor Oct 18 + Oct 19–20 extension):**
 
-| Milestone | W41 close (Oct 11) | Oct 12 | Oct 13 | Oct 14 | Oct 15 | Oct 16 | Oct 17 | Oct 18 | **Oct 19** |
-|---|---|---|---|---|---|---|---|---|---|
-| Days since May 2 peak (2,741 m³/s) | 162 | 163 | 164 | 165 | 166 | 167 | 168 | 169 | **170** |
-| Bryson amont above band (104.67 m) | 136 | 137 | 138 | 139 | 140 | 141 | 142 | 143 | **144** |
-| §15.3.5.1 trigger INACTIVE | 139 | 140 | 141 | 142 | 143 | 144 | 145 | 146 | **147** |
-| Temiscaming sub-400 | D24 (308) | D25 (304) | D26 (309) | D27 (306) | D28 (302 rev.) | D29 (318 rev.) | D30 (307) | **D31 (295)** | D32 in progress |
+| Milestone | W42 close (Oct 18) | Oct 19 | **Oct 20** |
+|---|---|---|---|
+| Days since May 2 peak (2,741 m³/s) | 169 | 170 | **171** |
+| Bryson amont above band (104.67 m) | 143 | 144 | **145** |
+| §15.3.5.1 trigger INACTIVE | 146 | 147 | **148** |
+| Temiscaming sub-400 | D31 (295) | D32 (299) | D33 in progress |
 
-*Oct 16 Témiscaming ORRPB shows 334 today (yesterday's brief noted 318 revised; current DB shows 334 — weekly rollup to reconcile). All values remain sub-400.*
+*Oct 18 OPG values revised post-brief: Des Joachims 374→491 m³/s, Otto Holden 328→433 m³/s (both sub-400; streak D31 unaffected). Weekly rollup to reconcile.*
 
 ---
 
 ## Carillon §15.3.5.1 directive check
 
-*Source: `dam_levels?station_id=in.(1-2968,1-3675)` — cluster proxy HTTP 200 ✓, T19 UTC Oct 19.*
+*Source: `dam_levels?station_id=in.(1-2968,1-3675)` — cluster proxy HTTP 200 ✓, T19 UTC Oct 20.*
 
 | Metric | Value | Threshold | Status |
 |---|---|---|---|
-| Hull dock (Gatineau, 1-3675) | **41.26 m** | 42.61 m servitude | **BELOW — trigger INACTIVE Day 147** (135 cm below trigger; −4 cm from Oct 18) |
+| Hull dock (Gatineau, 1-3675) | **41.29 m** | 42.61 m servitude | **BELOW — trigger INACTIVE Day 148** (132 cm below trigger; +3 cm from Oct 19) |
 | Carillon amont (1-2968) | **41.12 m** | 40.08 m spring-flood ceiling (when Hull > 42.61) | Ceiling NOT in effect — trigger inactive |
 
-§15.3.5.1 continuously inactive. Hull dock fell 4 cm from Oct 18 T19.
+§15.3.5.1 continuously inactive. Carillon amont unchanged at 41.12 m.
 
 ---
 
 ## Reservoir storage (latest_reservoir_readings)
 
-*Source: cluster proxy HTTP 200 ✓ — T00 UTC Oct 19.*
+*Source: cluster proxy HTTP 200 ✓ — T00 UTC Oct 20.*
 
-| Reservoir | Oct 18 (T00) | Oct 19 (T00) | Δ | Note |
+| Reservoir | Oct 19 (T00) | Oct 20 (T00) | Δ | Note |
 |---|---|---|---|---|
-| Baskatong | 219.49 m | **219.48 m** | −1 cm | Steady |
-| Témiscaming | 178.73 m | **178.75 m** | +2 cm | Steady; Oct 18 outflow confirmed 295 m³/s |
-| Dozois | 342.43 m | **342.40 m** | −3 cm | Falling (within normal range) |
-| Bark Lake (OPG) | 313.80 m | **313.81 m** | +1 cm | Steady |
+| Baskatong | 219.48 m | **219.46 m** | −2 cm | Steady |
+| Témiscaming | 178.76 m | **178.78 m** | +2 cm | Steady; rising pool consistent with continued ~299 m³/s inflow range |
+| Dozois | 342.39 m | **342.38 m** | −1 cm | Steady |
+| Bark Lake (OPG) | 313.81 m | **313.82 m** | +1 cm | Steady |
 
 ---
 
 ## ORRPB forecast (today vs yesterday)
 
-*Source: `ottawariver.ca/conditions/?display=forecast`, HTTP 200 ✓, 128 KB. **Last Update: 2026-10-13 5:02 PM EDT** (2026-10-13T21:02:00Z UTC). **Next Update: 2026-10-20 4:00 PM EDT** (2026-10-20T20:00:00Z UTC). Cadence: weekly.*
+*Source: `ottawariver.ca/conditions/?display=forecast`, HTTP 200 ✓, 128 KB. **Last Update: 2026-10-20 3:46 PM EDT** (2026-10-20T19:46:00Z UTC). **Next Update: 2026-10-27 4:00 PM EDT** (2026-10-27T20:00:00Z UTC). Cadence: weekly.*
 
-**Unchanged from prior brief.** Forecast text (verbatim):
+**Updated today** — forecast text changed from the Oct 13 version. Previous: "With precipitation forecast over the coming days, water levels and flows are expected to increase gradually or remain fairly stable depending on location over the coming week." New (verbatim):
 
-> *Water levels and flows along the main stem of the Ottawa River are below average at most locations for this time of year. With precipitation forecast over the coming days, water levels and flows are expected to increase gradually or remain fairly stable depending on location over the coming week. At some locations, water levels are below navigational chart datums. See the SPECIAL FEATURE section on our Home Page for our summertime message.*
+> *Flows and water levels along the main stem of the Ottawa River are close to seasonal values for this time of year. Flows and levels are expected to remain fairly stable or slightly decrease over the coming week, depending on locations. At some locations, water levels are below navigational chart datums. See the SPECIAL FEATURE section on our Home Page for our summertime message.*
 
-`further_increases_possible`: true (precipitation language present). Mode: `weekly-notice`.
+Key change: precipitation/increase scenario removed. "Stable or slightly decrease" replaces "increase gradually or remain fairly stable." `further_increases_possible`: false. Mode: `weekly-notice`.
 
 ---
 
 ## Anomaly flags
 
-1. **Mid-valley Oct 19 provisionals excluded (data quality).** Des Joachims Oct 19 partial-day provisional mean = 578 m³/s (+54% vs Oct 18 final 374); Otto Holden = 490 m³/s (+49% vs Oct 18 final 328). Both exceed 25%/150 m³/s thresholds. Sanity checks: (1) feasibility floor at ~22h = (22/24)×578 = 530 m³/s — above Oct 18 final by 156; (2) upstream Témiscaming Oct 18 = 295, Quinze = 200 — no obvious contributing surge; (3) Des Joachims pool T00 = 152.13 vs 152.16 yesterday (−3 cm), inconsistent with a sustained 204 m³/s outflow increase; (4) downstream Chenaux = 523 (+26 vs Oct 18), Chats Falls = 562 (+6 vs Oct 18) — much smaller changes than a 204 m³/s upstream surge would produce. **Check 4 fails.** Excluded from TL;DR, plain language, and anomaly flags. Reported in data tables only as "provisional — failed sanity check, see Notes."
+1. **Bryson posture shift — turbines +132%, spill −79%** (T19 Oct 20 vs T19 Oct 19). Turbined 128→297 m³/s, spilled 225→46 m³/s; total barely changed (−2.7%). Spill share 63.7%→13.5%. Intraday shift visible: T18 was 372/212/160 (43% spill); by T19 had shifted to 343/297/46 (13.5% spill). Reverses the Oct 16 near-turbine-shutdown that initiated the spill-dominant phase. Physical interpretation: mid-October precipitation runoff has passed through; turbines resume preferred dispatch mode. Headpond −8 cm (105.56→105.48 m) — still Day 145 above band.
 
-2. **Vigilance ingest restored.** Station 1195 proxy records now show T19 and T20 UTC Oct 19 (value = 105.951 m). Was stale at T13 UTC Oct 13 (~129h before Oct 18 brief). Not an upstream outage claim; ingest pipeline issue resolved.
+2. **Carillon −17.4%** (1,159→958 m³/s). Exceeds >5% flag threshold. Coordinated with Bryson turbine-dominant shift in afternoon EDT. Spill remains negligible (0.6%).
 
-None further.
+3. **Témiscaming Oct 20 PSPC value corrupted**: −105 m³/s in `orrpb_river_flows` and `reservoir_readings`. A negative value is impossible for main-stem daily flow — this is a data artifact. Timiskaming reservoir level +2 cm T00→T00 confirms continued positive inflow; D33 in progress. Do not report this value as a headline figure.
+
+4. **ORRPB forecast update (Oct 20)**: drops precipitation/rise scenario; now "stable or slightly decrease." `further_increases_possible` flipped to false in `forecast/latest.json`. This is the first forecast change since Oct 13.
+
+5. **OPG Oct 18 post-brief revision**: Des Joachims 374→491 (+31%), Otto Holden 328→433 (+32%). Occurred after yesterday's Oct 19 brief confirmed these as finals. Both remain sub-400 (Témiscaming D31 streak unaffected). Same pattern as the Oct 16 revisions documented in W42 rollup. Weekly rollup (Mon Oct 26) to reconcile.
 
 ---
 
 ## Notes
 
-- **Mid-valley provisional check (Oct 19):** Des Joachims provisional 578 m³/s, Otto Holden 490 m³/s — similar failure pattern to the Aug 5 event documented in the routine guardrail. Finals expected Oct 20. ORRPB daily row for Oct 19 also shows these provisional values (Des Joachims 578, Otto Holden 490) alongside Chenaux 523 and Chats Falls 562. The downstream stations' much smaller increases are the decisive check failure.
-- **Oct 18 retro confirmation:** Oct 18 finals (DJ 374, OH 328) confirmed the Oct 18 provisional exclusion (253/220) was correct. No correction required.
-- **Oct 16 OPG data inconsistency:** Current DB shows Oct 16 Des Joachims = 409, Otto Holden = 334. Yesterday's brief (written T22 Oct 18) noted these as revised to 479/381. The revisions appear rolled back as of today. Weekly rollup (Monday Oct 20) will reconcile.
-- **Oct 16 Témiscaming flow:** Current DB shows 334 m³/s; yesterday's brief noted ORRPB revised Oct 16 = 318 m³/s. Today DB shows 334. Same reconciliation needed at rollup. Sub-400 status unaffected in either case.
-- **V3 posterior:** Day 46 consecutive timeout (exit 124, 60-second limit). `freshet-forecast.json` restored from git HEAD (asof 2026-06-07, season_resolved=false, unchanged). Dashboard continues to serve the Jun 7 posterior.
-- **Carillon afternoon ramp:** Hourly Carillon releases: T17=1,044 → T18=1,099 → T19=1,159 m³/s — a 115 m³/s ramp over the late afternoon. Within normal HQ dispatch variation; all turbined, 0% spill.
-- **Vigilance ingest:** Confirmed fresh. Value 105.951 m matches ORRPB daily 105.95 m for Oct 19.
-- **ORRPB flows Oct 1–19 (Témiscaming):** Oct 1=314, Oct 2=336, Oct 3=325, Oct 4=316, Oct 5=315, Oct 6=306, Oct 7=315, Oct 8=296, Oct 9=311, Oct 10=286, Oct 11=308, Oct 12=304, Oct 13=309, Oct 14=306, Oct 15=308, Oct 16=334 (DB; revision status unclear), Oct 17=307, Oct 18=295. Oct 19 not yet finalized (PSPC T00 = 270).
+- **Oct 19 retro confirmed:** DJ final 350 (provisional 578 excluded ✓), OH final 324 (provisional 490 excluded ✓). No correction required.
+- **Oct 20 mid-valley provisionals (DJ 284, OH 258):** changes of −19% and −20% vs Oct 19 finals (350, 324) — below the ≥25%/≥150 m³/s mandatory-check threshold. Reported in data tables only (provisional partial-day). Des Joachims pool +2 cm T00 (rising pool with lower outflow consistent with normal OPG autumn dispatch).
+- **Bryson shift context:** Sequence since Oct 14 — Oct 14–15: precipitation pulse, spill rising; Oct 16: turbine near-shutdown (spill 91.5%); Oct 17: partial turbine recovery (spill 63%); Oct 18–19: spill remained 63–64%; Oct 20: turbines fully restored (spill 13.5%). Full reversal cycle in 4 days.
+- **Carillon trend:** HQ real-time Oct 20 T19 = 958 m³/s, down from 1,159 T19 Oct 19. ORRPB Oct 20 daily provisional = 975 m³/s (partial-day). Consistent direction.
+- **V3 posterior:** Day 47 consecutive timeout (exit 143). `freshet-forecast.json` updated with new ORRPB forecast text and updated timestamps; all other V3 posterior fields restored from prior commit (asof 2026-06-07, season_resolved=false). Dashboard `further_increases_possible` now correctly reflects false.
+- **ORRPB Oct 20 mid-valley provisionals (from ORRPB flow table):** Chenaux 542 m³/s, Chats Falls 571 m³/s — these match the declining pattern from Oct 19 finals (499, 539 respectively → up slightly today, but these are partial-day means).
