@@ -65,5 +65,7 @@
       "posterior": 0.0
     }
   ],
-  "last_brief_run_iso": "2026-10-22T22:00:00Z"
+  "last_brief_run_iso": "2026-10-22T22:00:00Z",
+  "run_timestamp": "2026-10-23T22:00:00Z",
+  "run_note": "V3 posterior timeout (Day 50); forecast content unchanged from prior run"
 }
