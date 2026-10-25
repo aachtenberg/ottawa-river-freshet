@@ -1196,6 +1196,45 @@ data:
     })();
     const historyCache = {}; // { "1195:168": [{valeur, date_prise_valeur}, ...] }
     let windowHours = 72;
+    // Minimum y-axis span (m) for the hero station charts; see heroYBounds().
+    const HERO_MIN_SPAN_M = 0.12;
+    // Hero stations fed by a Hydro-Québec gauge at 1 cm resolution: the caption
+    // and tooltip show cm for these. The others (WSC, Hydro Météo) publish mm.
+    const HERO_CM_STATIONS = new Set([1195, BRYSON_AMONT_ID]);
+    function heroLevelDecimals(stationId) { return HERO_CM_STATIONS.has(stationId) ? 2 : 3; }
+
+    // Y-axis bounds for a hero chart, or null to let Chart.js fit the data.
+    // Overlays widen the range first (Lac Coulonge historical peaks within
+    // 0.5 m, the Bryson operating band), then the span is floored: the gauges
+    // report in 1 cm steps, and on a quiet week the lake moves ~4 cm in three
+    // days — an axis fitted to that turned each step into a quarter-height riser
+    // (2026-10-24). The floor runs LAST so an overlay can't shrink the axis back
+    // under it. Pure; covered by tests/test_dashboard_heroaxis.mjs.
+    function heroYBounds(plotted, stationId) {
+      const dataMin = Math.min(...plotted);
+      const dataMax = Math.max(...plotted);
+      let lo = dataMin, hi = dataMax, bounded = false;
+      if (stationId === 1195) {
+        const nearby = HISTORICAL_PEAKS.filter(p => p.level >= dataMin - 0.5 && p.level <= dataMax + 0.5);
+        if (nearby.length) {
+          lo = Math.min(dataMin, ...nearby.map(p => p.level)) - 0.03;
+          hi = Math.max(dataMax, ...nearby.map(p => p.level)) + 0.03;
+          bounded = true;
+        }
+      }
+      if (stationId === BRYSON_AMONT_ID) {
+        lo = Math.min(dataMin, BRYSON_BAND_LOW_M) - 0.05;
+        hi = Math.max(dataMax, BRYSON_CEILING_M) + 0.05;
+        bounded = true;
+      }
+      if (hi - lo < HERO_MIN_SPAN_M) {
+        const mid = (hi + lo) / 2;
+        lo = mid - HERO_MIN_SPAN_M / 2;
+        hi = mid + HERO_MIN_SPAN_M / 2;
+        bounded = true;
+      }
+      return bounded ? { suggestedMin: lo, suggestedMax: hi } : null;
+    }
 
     // Vigilance emits UTC in naked ISO form (e.g. "2026-04-21T17:00:00" = 17:00 UTC = 13:00 EDT).
     function parseVigilance(iso) {
@@ -2231,6 +2270,7 @@ data:
         return;
       }
       const isBryson = stationId === BRYSON_AMONT_ID;
+      const dp = heroLevelDecimals(stationId);
       const thresholds = isBryson
         ? [
             { val: BRYSON_CEILING_M, label: 'Operating ceiling', color: '#E24B4A' },
@@ -2251,8 +2291,8 @@ data:
       const latestMs = parseVigilance(latest.date_prise_valeur)?.getTime() || 0;
       const chartStale = Date.now() - latestMs > FALLBACK_STALE_H * 3600 * 1000;
       const nowLbl = chartStale
-        ? `Last known <strong>${dispLatest.toFixed(3)} m</strong> (reading ${ago(latest.date_prise_valeur)})`
-        : `Currently <strong>${dispLatest.toFixed(3)} m</strong>`;
+        ? `Last known <strong>${dispLatest.toFixed(dp)} m</strong> (reading ${ago(latest.date_prise_valeur)})`
+        : `Currently <strong>${dispLatest.toFixed(dp)} m</strong>`;
       // Year-to-date range. The chart already shows the window's shape, so the
       // range is the part a reader can't see — how today sits against the year.
       const yr = lastYearRanges[stationId];
@@ -2265,7 +2305,7 @@ data:
         ? brysonCeilingDelta(latest.valeur).text
         : `Quebec status ${m.etat_niv}/6`;
       document.getElementById(cfg.infoId).innerHTML =
-        `${nowLbl} · ${peakLbl} <strong>${dispPeak.toFixed(3)} m</strong> at ${timeLabel(peak.date_prise_valeur)}${yrLbl} · ${statusLbl}`;
+        `${nowLbl} · ${peakLbl} <strong>${dispPeak.toFixed(dp)} m</strong> at ${timeLabel(peak.date_prise_valeur)}${yrLbl} · ${statusLbl}`;
       
       const isDark = isDarkMode();
       const grid = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
@@ -2289,7 +2329,9 @@ data:
             pointHoverBorderColor: isDark ? '#1e1e1e' : '#fff',
             pointHoverBorderWidth: 2,
             pointBackgroundColor: cfg.color,
-            tension: 0.2,
+            // Monotone, not bezier tension: the gauge reports in 1 cm steps, and
+            // tension overshoots each riser so flat plateaus read as waves.
+            cubicInterpolationMode: 'monotone',
             fill: true
           }]
         },
@@ -2311,7 +2353,7 @@ data:
               displayColors: false,
               callbacks: {
                 title: (items) => items.length ? items[0].label : '',
-                label: (c) => `${c.parsed.y.toFixed(3)} m`
+                label: (c) => `${c.parsed.y.toFixed(dp)} m`
               }
             }
           },
@@ -2319,19 +2361,8 @@ data:
             x: { grid: { display: false }, ticks: { color: txt, font: { size: 10 }, maxTicksLimit: 7, maxRotation: 0 } },
             y: (() => {
               const cfgY = { grid: { color: grid }, ticks: { color: txt, font: { size: 11 }, callback: v => v.toFixed(2) } };
-              const dataMin = Math.min(...plotted);
-              const dataMax = Math.max(...plotted);
-              if (stationId === 1195) {
-                const nearby = HISTORICAL_PEAKS.filter(p => p.level >= dataMin - 0.5 && p.level <= dataMax + 0.5);
-                if (nearby.length) {
-                  cfgY.suggestedMin = Math.min(dataMin, ...nearby.map(p => p.level)) - 0.03;
-                  cfgY.suggestedMax = Math.max(dataMax, ...nearby.map(p => p.level)) + 0.03;
-                }
-              }
-              if (isBryson) {
-                cfgY.suggestedMin = Math.min(dataMin, BRYSON_BAND_LOW_M) - 0.05;
-                cfgY.suggestedMax = Math.max(dataMax, BRYSON_CEILING_M) + 0.05;
-              }
+              const bounds = heroYBounds(plotted, stationId);
+              if (bounds) Object.assign(cfgY, bounds);
               return cfgY;
             })()
           }
