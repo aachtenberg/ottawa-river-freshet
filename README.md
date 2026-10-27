@@ -137,7 +137,7 @@ your own watershed/property:
 
 | Source | License / terms | Used for |
 |---|---|---|
-| [Quebec MSP Vigilance](https://vigilance.geo.msp.gouv.qc.ca/) | Public data, no auth | Live river levels for Quebec gauges |
+| [Quebec MSP Vigilance](https://vigilance.geo.securite.gouv.qc.ca/) | Public data, no auth | Live river levels for Quebec gauges |
 | [Hydro-Québec open-data](https://www.hydroquebec.com/data/documents-donnees/donnees-ouvertes/) | Open Data Licence | Live centrales releases (turbined / spilled / total) and station headpond / tailwater levels |
 | [ECCC HYDAT real-time](https://api.weather.gc.ca/) | Open Government Licence — Canada | Live levels for Ontario stations |
 | [WSC HYDAT bulk archive](https://collaboration.cmc.ec.gc.ca/cmc/hydrometrics/www/) | Open Government Licence — Canada | Daily flow / level historical record (1915–) at 9 Ottawa-basin stations |

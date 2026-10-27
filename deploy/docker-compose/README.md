@@ -57,7 +57,7 @@ freshet-#   FROM latest_reservoir_readings ORDER BY reservoir_id;
 The default `STATION_IDS` in `.env.example` is the full Ottawa River corridor
 ingested by the upstream maintainer. To monitor a different river:
 
-1. Find Vigilance station IDs via [vigilance.geo.msp.gouv.qc.ca](https://vigilance.geo.msp.gouv.qc.ca/).
+1. Find Vigilance station IDs via [vigilance.geo.securite.gouv.qc.ca](https://vigilance.geo.securite.gouv.qc.ca/).
    Ontario / non-Quebec gauges via ECCC HYDAT (`https://api.weather.gc.ca/`)
    are also supported but require small adaptations to the dashboard's
    `MAP_STATIONS` / `REGIONAL_STATIONS` arrays.

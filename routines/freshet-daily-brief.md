@@ -81,9 +81,9 @@ Upper-basin watch: Témiscaming outflow is `orrpb_river_flows?station=eq.temisca
    - `https://www.hydroquebec.com/data/documents-donnees/donnees-ouvertes/json/Donnees_VUE_STATIONS_ET_TARAGES.json`
    - The CDN refuses Python's default Alpine TLS handshake; if you hit this fallback you MUST set `ctx.set_ciphers('DEFAULT:@SECLEVEL=1')` and a non-empty User-Agent.
 2. **Quebec Vigilance** (Lac Coulonge station 1195) — use only if `river_readings` lacks the row:
-   - `https://inedit.geo.msp.gouv.qc.ca/station_details_metadata_api?id=eq.1195` — current level + flood thresholds
-   - `https://inedit.geo.msp.gouv.qc.ca/station_details_readings_api?id=eq.1195` — ~72 h reading buffer
-   - (Host renamed from `inedit-ro.geo.msp.gouv.qc.ca` when MSP migrated 2026-08-10.) NOTE: this domain is egress-blocked from the routine sandbox (see the outage guardrail's sandbox-blocked list) — from this session the fallback will always fail; it is documented for local/manual use. From the sandbox, the proxy's `river_readings` is the only Vigilance path.
+   - `https://inedit.geo.securite.gouv.qc.ca/station_details_metadata_api?id=eq.1195` — current level + flood thresholds
+   - `https://inedit.geo.securite.gouv.qc.ca/station_details_readings_api?id=eq.1195` — ~72 h reading buffer
+   - (Host renamed from `inedit-ro.geo.msp.gouv.qc.ca` when MSP migrated 2026-08-10, then to `geo.securite.gouv.qc.ca` 2026-10-27.) NOTE: this domain is egress-blocked from the routine sandbox (see the outage guardrail's sandbox-blocked list) — from this session the fallback will always fail; it is documented for local/manual use. From the sandbox, the proxy's `river_readings` is the only Vigilance path.
 3. **ORRPB conditions + forecast** — scrape both (HTML, not in DB):
    - `https://www.ottawariver.ca/conditions/?display=reservoir`
    - `https://www.ottawariver.ca/conditions/?display=river`

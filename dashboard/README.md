@@ -70,7 +70,7 @@ language by extending each dictionary.
 
 ## Backend dependencies
 
-- **Vigilance API** at `https://inedit-ro.geo.msp.gouv.qc.ca/` — fetched
+- **Vigilance API** at `https://inedit.geo.securite.gouv.qc.ca/` — fetched
   directly from the browser. No proxy needed.
 - **open-meteo** at `https://api.open-meteo.com/` — direct from the browser.
 - **ECCC HYDAT OGC API** at `https://api.weather.gc.ca/` — direct from the

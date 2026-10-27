@@ -5,7 +5,7 @@ licensing, and notes on stability.
 
 ## 1. Quebec MSP Vigilance
 
-- **Base URL**: `https://inedit-ro.geo.msp.gouv.qc.ca`
+- **Base URL**: `https://inedit.geo.securite.gouv.qc.ca`
 - **Endpoints**:
   - `/station_details_metadata_api?id=eq.<vigilance_id>` — station metadata
   - `/station_details_readings_api?id=eq.<vigilance_id>` — ~72 h reading buffer
