@@ -840,10 +840,16 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
       <p style="margin-bottom:6px;">Reservoir level data is captured as a point-in-time measurement, while official daily values are typically finalized using 24-hour averaged data. As a result, the percent full displayed on cards reflects current conditions, but the reported daily percent-full value may lag slightly.</p>
       <p style="margin-bottom:6px;">Official calculation methods used by reservoir operators may differ and may incorporate additional operational or hydrological factors. For authoritative information, consult the respective reservoir operators. Methodology adapted from Contributor B's community-published reservoir gauge.</p>
       <p style="margin:0;"><strong>Storage volumes</strong> shown on each card (e.g. "1,687 / 1,863 M m³") use the usable-storage capacity from Table 1 of the ORRPB / ICOLD-Canada case study (2020) — the single authoritative cascade-regulator source for all 13 principal reservoirs. Click the "[source]" link in any card's detail view to open the citation. Rapide-7 is a small run-of-river headpond fed by the upstream Decelles reservoir (not in the ORRPB cascade table) and has no published usable-storage volume of its own.</p>
+      <p style="margin:6px 0 0;"><strong>Cascade storage (proxy chart)</strong> is a different calculation from the cards. ORRPB publishes total water stored in the 13 principal reservoirs only as a picture (p.4 of its annual Spring Freshet Review). The chart estimates that total from the same ORRPB daily levels and operating bands, but applies a <em>convex</em> fill curve — a reservoir's surface shrinks as it empties, so a linear percent-full overstates volume at low levels by about 1 billion m³ across the cascade. The curve's exponent and scale were fitted to ORRPB's 2026 chart; the calibration shown under the chart is stored with the data so the provenance travels with the number. It is an estimate of their chart, not a reproduction, and ORRPB's 10th–90th percentile band is not available to us. Method and cross-check: <a href="https://github.com/aachtenberg/ottawa-river-freshet/blob/main/data/community-notes/2026-11-03_orrpb_freshet_review_crosscheck.md" target="_blank" rel="noopener">community note, 2026-11-03</a>.</p>
     </div>
     <span id="reservoir-status-line" style="display:block; margin-top:6px; font-size:11px; color:var(--text-faint);"></span>
     <span id="reservoir-calibration-warning" style="display:none; margin-top:4px; font-size:11px; color:var(--orange);">⚠ Operating limits are starting estimates from operator documentation — not yet calibrated. Percent-full numbers may drift ± a few points until limits are finalized.</span>
   </div>
+  <div class="section-title" style="margin-top: 14px; font-size: 13px;">Cascade storage — proxy <span style="font-weight:400;color:var(--text-muted);font-size:11px;">· 13 principal reservoirs · billion m³ · the counterpart of ORRPB's "water stored in principal reservoirs" chart</span></div>
+  <div class="section-subtitle" id="storage-proxy-sub">Loading storage proxy…</div>
+  <div class="chart-wrap"><div class="chart-container" style="height: 240px;"><canvas id="storageProxyChart"></canvas></div></div>
+  <div id="storage-proxy-note" style="font-size:11px; color:var(--text-faint); margin: 6px 0 2px; line-height:1.5;"></div>
+  <div class="section-title" style="margin-top: 16px; font-size: 13px;">Per-reservoir percent-full <span style="font-weight:400;color:var(--text-muted);font-size:11px;">· upstream → downstream · linear on level, see methodology</span></div>
   <div class="reservoirs-grid" id="reservoirs-grid">
     <div class="skeleton">Loading reservoir data…</div>
   </div>
@@ -1168,6 +1174,8 @@ function toggleTheme() {
     if (typeof renderORRPBDailyBar === 'function') renderORRPBDailyBar();
     if (typeof renderHeroCharts === 'function') renderHeroCharts();
   }
+  // The Reservoirs-tab storage chart keeps its own cache (not part of lastData).
+  if (typeof renderStorageProxyChart === 'function' && typeof storageProxyCache !== 'undefined' && storageProxyCache) renderStorageProxyChart();
 }
 // Apply persisted theme on load (must happen before paint to avoid flash).
 (function bootTheme() {
@@ -4241,6 +4249,9 @@ async function renderReservoirsTab() {
   const status = document.getElementById('reservoir-status-line');
   const calibWarn = document.getElementById('reservoir-calibration-warning');
   if (!grid) return;
+  // The cascade storage chart has its own data path (derived views) and its
+  // own failure message, so a missing view never blanks the cards or vice versa.
+  renderStorageProxy();
   const limitsCfg = await ensureReservoirLimits();
   if (calibWarn) calibWarn.style.display = limitsCfg._calibrated ? 'none' : 'block';
   let snapshot, releases;
@@ -4294,6 +4305,172 @@ async function renderReservoirsTab() {
   if (status && snapshot.length) {
     const newest = snapshot.reduce((acc, s) => new Date(s.time) > new Date(acc.time) ? s : acc, snapshot[0]);
     status.textContent = `${snapshot.length} reservoirs · most recent reading ${ago(newest.time)}`;
+  }
+}
+
+// ---- Cascade storage proxy (Reservoirs tab chart) ----
+// reservoir_storage_proxy_total is a derived view in the data tier:
+//   scale × Σ ICOLD usable capacity × clamp((level − lower) / (upper − lower), 0, 1) ^ exponent
+// over the 13 principal reservoirs, from ORRPB's daily levels + 1991–2020
+// medians and the Operation band on each ORRPB location page. The single
+// calibration row (exponent / scale, fitted to ORRPB's own "water stored in
+// principal reservoirs" chart, 2026 Spring Freshet Review p.4) is read from
+// reservoir_storage_proxy_calibration and shown under the chart. The view
+// withholds the total on any day not all 13 reported, which the chart draws
+// as a gap rather than a drawdown. Label it a proxy wherever it is shown.
+// (OTTAW-28 / OTTAW-29)
+const STORAGE_PROXY_DAYS = 365;
+// Two series, validated for both themes with the dataviz palette checker
+// (CVD ΔE 23, normal 24). The median is also dashed, so identity is never
+// colour alone.
+const STORAGE_PROXY_COLORS = { proxy: '#2a78d6', median: '#1baf7a' };
+let storageProxyChart = null;
+let storageProxyCache = null;   // { rows, cal } from the last successful fetch
+
+// Headline numbers for the subtitle, from the latest COMPLETE day (a trailing
+// partial day must not become "today's" storage). Pure — no DOM — so
+// tests/test_dashboard_storageproxy.mjs can pin the contract.
+function storageProxyHeadline(rows) {
+  const complete = (rows || []).filter(r => r.storage_mcm != null);
+  if (!complete.length) return null;
+  const last = complete[complete.length - 1];
+  const bcm = last.storage_mcm / 1000;
+  const median = last.median_storage_mcm != null ? last.median_storage_mcm / 1000 : null;
+  const year = last.time.slice(0, 4);
+  const thisYear = complete.filter(r => r.time.slice(0, 4) === year);
+  const low  = thisYear.reduce((a, r) => (r.storage_mcm < a.storage_mcm ? r : a), thisYear[0]);
+  const high = thisYear.reduce((a, r) => (r.storage_mcm > a.storage_mcm ? r : a), thisYear[0]);
+  return {
+    date: last.time,
+    bcm,
+    median_bcm: median,
+    delta_bcm: median != null ? bcm - median : null,
+    pct_of_median: median ? (bcm / median) * 100 : null,
+    year,
+    year_low:  { date: low.time,  bcm: low.storage_mcm / 1000 },
+    year_high: { date: high.time, bcm: high.storage_mcm / 1000 },
+    incomplete_days: (rows || []).length - complete.length,
+  };
+}
+
+async function fetchStorageProxy() {
+  const since = new Date(Date.now() - STORAGE_PROXY_DAYS * 24 * 3600 * 1000).toISOString().slice(0, 10);
+  const [rowsR, calR] = await Promise.all([
+    fetch(`/history/reservoir_storage_proxy_total?time=gte.${since}&order=time.asc&select=time,n_observed,n_reservoirs,storage_mcm,median_storage_mcm`, { cache: 'no-store' }),
+    fetch('/history/reservoir_storage_proxy_calibration?select=exponent,scale,fitted_on,rmse_median_bcm,rmse_current_bcm', { cache: 'no-store' })
+      .catch(() => null),
+  ]);
+  if (!rowsR.ok) throw new Error(`HTTP ${rowsR.status}`);
+  const rows = await rowsR.json();
+  const cal = calR && calR.ok ? ((await calR.json())[0] || null) : null;
+  return { rows, cal };
+}
+
+async function renderStorageProxy() {
+  const canvas = document.getElementById('storageProxyChart');
+  if (!canvas) return;
+  try {
+    storageProxyCache = await fetchStorageProxy();
+  } catch (e) {
+    const sub = document.getElementById('storage-proxy-sub');
+    const note = document.getElementById('storage-proxy-note');
+    if (sub) sub.textContent = `Storage proxy unavailable (${e.message}).`;
+    if (note) note.textContent = 'Needs the reservoir_storage_proxy views in the data tier (river-history bootstrap.sql). Served on freshet.xgrunt.com; optional on self-hosted copies.';
+    return;
+  }
+  renderStorageProxyChart();
+}
+
+const STORAGE_PROXY_MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+function renderStorageProxyChart() {
+  const canvas = document.getElementById('storageProxyChart');
+  if (!canvas || !storageProxyCache) return;
+  const { rows, cal } = storageProxyCache;
+  const isDark = isDarkMode();
+  const grid = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
+  const txt  = isDark ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.55)';
+  const labels = rows.map(r => r.time);
+  const toBcm = v => (v == null ? null : v / 1000);
+  // Phone width: 13 month labels collide, so label every other month there.
+  const narrow = (canvas.parentElement?.clientWidth || 800) < 560;
+  if (storageProxyChart) storageProxyChart.destroy();
+  storageProxyChart = new Chart(canvas, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        { label: 'Stored (proxy)', data: rows.map(r => toBcm(r.storage_mcm)),
+          borderColor: STORAGE_PROXY_COLORS.proxy, backgroundColor: STORAGE_PROXY_COLORS.proxy + '22',
+          borderWidth: 2, pointRadius: 0, pointHoverRadius: 4, tension: 0.2, spanGaps: false },
+        { label: 'Median 1991–2020 (proxy)', data: rows.map(r => toBcm(r.median_storage_mcm)),
+          borderColor: STORAGE_PROXY_COLORS.median, backgroundColor: STORAGE_PROXY_COLORS.median + '22',
+          borderDash: [6, 4], borderWidth: 2, pointRadius: 0, pointHoverRadius: 4, tension: 0.2, spanGaps: true },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, animation: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { position: 'top', align: 'end',
+          labels: { color: txt, boxWidth: 18, boxHeight: 2, font: { size: 11 }, padding: 10 } },
+        tooltip: {
+          backgroundColor: isDark ? 'rgba(30,30,30,0.95)' : 'rgba(255,255,255,0.98)',
+          titleColor: isDark ? '#f0f0f0' : '#1a1a1a',
+          bodyColor:  isDark ? '#f0f0f0' : '#1a1a1a',
+          borderColor: isDark ? '#444' : '#ddd', borderWidth: 1,
+          callbacks: {
+            label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y == null ? '—' : ctx.parsed.y.toFixed(2)} bn m³`,
+            afterBody: items => {
+              const r = rows[items[0]?.dataIndex];
+              if (!r) return [];
+              const out = [];
+              if (r.storage_mcm != null && r.median_storage_mcm) out.push(`${Math.round((r.storage_mcm / r.median_storage_mcm) * 100)} % of median`);
+              if (r.storage_mcm == null) out.push(`${r.n_observed}/${r.n_reservoirs} reservoirs reported — total withheld`);
+              return out;
+            }
+          }
+        }
+      },
+      scales: {
+        x: { grid: { color: grid },
+             ticks: { color: txt, font: { size: 10 }, autoSkip: false, maxRotation: 0,
+               // One tick per month on the 1st; null hides the tick and its gridline.
+               callback: (v, i) => {
+                 const d = labels[i];
+                 if (!d || d.slice(8, 10) !== '01') return null;
+                 const mo = Number(d.slice(5, 7));
+                 if (narrow && mo % 2 === 0) return null;
+                 const m = STORAGE_PROXY_MONTHS[mo - 1];
+                 return mo === 1 ? (narrow ? `${m} '${d.slice(2, 4)}` : `${m} ${d.slice(0, 4)}`) : m;
+               } } },
+        y: { beginAtZero: true, suggestedMax: 12, grid: { color: grid },
+             ticks: { color: txt, font: { size: 10 }, stepSize: 2, callback: v => v.toFixed(0) },
+             title: { display: true, text: 'billion m³ (proxy)', color: txt, font: { size: 10 } } }
+      }
+    }
+  });
+
+  const h = storageProxyHeadline(rows);
+  const sub = document.getElementById('storage-proxy-sub');
+  if (sub) {
+    if (!h) {
+      sub.textContent = 'No complete day in the last 12 months (all 13 reservoirs must report).';
+    } else {
+      const sign = h.delta_bcm == null ? '' : (h.delta_bcm >= 0 ? '+' : '−');
+      const vsMedian = h.median_bcm == null ? ''
+        : ` · median ${h.median_bcm.toFixed(2)} · <strong>${Math.round(h.pct_of_median)} % of normal</strong> (${sign}${Math.abs(h.delta_bcm).toFixed(2)} bn m³)`;
+      sub.innerHTML = `<strong>${h.bcm.toFixed(2)} bn m³</strong> stored on ${h.date}${vsMedian}`
+        + ` · ${h.year} low ${h.year_low.bcm.toFixed(2)} (${h.year_low.date.slice(5)}) · high ${h.year_high.bcm.toFixed(2)} (${h.year_high.date.slice(5)})`
+        + (h.incomplete_days ? ` · ${h.incomplete_days} day${h.incomplete_days === 1 ? '' : 's'} withheld (incomplete)` : '');
+    }
+  }
+  const note = document.getElementById('storage-proxy-note');
+  if (note) {
+    note.innerHTML = cal
+      ? `Proxy = ${cal.scale} × Σ ICOLD usable capacity × (position in ORRPB operating band)<sup>${cal.exponent}</sup>, fitted ${cal.fitted_on} to ORRPB's 2026 Spring Freshet Review storage chart`
+        + ` (RMSE ${cal.rmse_median_bcm} bn m³ against their median curve, ${cal.rmse_current_bcm} against their 2026 curve). Gaps are days when not all 13 reservoirs reported. ORRPB's 10th–90th percentile band is not reproducible from our data.`
+      : 'Proxy of ORRPB\'s storage chart; the calibration row is unavailable, so treat the scale as approximate.';
   }
 }
 
