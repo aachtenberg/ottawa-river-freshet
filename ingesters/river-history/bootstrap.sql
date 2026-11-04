@@ -340,4 +340,185 @@ SELECT DISTINCT ON (station)
 FROM orrpb_river_levels
 ORDER BY station, time DESC;
 
+-- ORRPB per-station historical-record table. Each (station, metric, date)
+-- row carries the four series ORRPB publishes on its /location/<slug>/
+-- pages: current-year observed, 1991-2020 daily median (P50), per-day
+-- historic high with year tag, per-day historic low with year tag.
+-- Window is ~13 months rolling. Populated by the orrpb-station-history
+-- scraper which POSTs to /location/<slug>/ with table-view form params.
+-- Source: k3s/base/data/files/orrpb-station-history/scrape.py
+-- Note: the per-station "discharges" series can mean turbined-only flow
+-- at some dam sites (e.g. chenaux) and total main-stem flow at others
+-- (e.g. chats-falls, des-joachims). Cross-check against orrpb_river_flows
+-- when total flow is what you need.
+CREATE TABLE IF NOT EXISTS orrpb_station_history (
+  time                  date NOT NULL,
+  station               text NOT NULL,
+  metric                text NOT NULL,   -- 'level_m' or 'flow_cms'
+  observed              double precision,
+  median                double precision,
+  historic_high_value   double precision,
+  historic_high_year    smallint,
+  historic_low_value    double precision,
+  historic_low_year     smallint,
+  PRIMARY KEY (station, metric, time)
+);
+
+SELECT create_hypertable('orrpb_station_history', 'time', if_not_exists => TRUE,
+  chunk_time_interval => INTERVAL '1 year');
+
+CREATE INDEX IF NOT EXISTS orrpb_station_history_station_metric_time_idx
+  ON orrpb_station_history (station, metric, time DESC);
+
+CREATE OR REPLACE VIEW latest_orrpb_station_history AS
+SELECT DISTINCT ON (station, metric)
+  station, metric, time, observed, median,
+  historic_high_value, historic_high_year,
+  historic_low_value, historic_low_year
+FROM orrpb_station_history
+ORDER BY station, metric, time DESC;
+
+-- Operating-limit rows from the "System Constraints" table on ORRPB's
+-- /location/<slug>/ pages (principal reservoirs publish one; most river
+-- stations do not). category is 'Operation' (all-year lower/upper limit),
+-- 'Navigation' or 'Recreation' (seasonal, often lower-only). footnoted
+-- means ORRPB printed a '*' beside a value. Refreshed every scrape
+-- (OTTAW-28). Source: k3s/base/data/files/orrpb-station-history/scrape.py
+CREATE TABLE IF NOT EXISTS orrpb_station_limits (
+  station     text NOT NULL,
+  category    text NOT NULL,
+  period      text,
+  lower_m     double precision,
+  upper_m     double precision,
+  footnoted   boolean NOT NULL DEFAULT false,
+  scraped_at  timestamptz NOT NULL,
+  PRIMARY KEY (station, category)
+);
+
+-- Usable storage of the 13 principal reservoirs, keyed by ORRPB /location/
+-- slug. Source: ORRPB / ICOLD-Canada case study (2020), Table 1 -- the same
+-- figures the dashboard's reservoir-limits.json carries. rapide-7 is the
+-- gauge on Reservoir Decelles (impounded by the Rapide-7 dam), so Decelles'
+-- 371 Mm3 sits under that slug. Total 12,515 Mm3. Rolled forward with
+-- ON CONFLICT DO UPDATE so a corrected figure propagates. (OTTAW-28)
+CREATE TABLE IF NOT EXISTS reservoir_capacity (
+  station     text PRIMARY KEY,
+  name        text NOT NULL,
+  usable_mcm  double precision NOT NULL,
+  source      text NOT NULL
+);
+
+INSERT INTO reservoir_capacity (station, name, usable_mcm, source) VALUES
+  ('dozois',        'Dozois',                 1863, 'ICOLD-Canada 2020 Table 1'),
+  ('rapide-7',      'Rapide-7 (Decelles)',     371, 'ICOLD-Canada 2020 Table 1 (Decelles)'),
+  ('quinze',        'Quinze',                 1308, 'ICOLD-Canada 2020 Table 1'),
+  ('lady-evelyn',   'Lady Evelyn',             308, 'ICOLD-Canada 2020 Table 1'),
+  ('kipawa',        'Kipawa',                  673, 'ICOLD-Canada 2020 Table 1'),
+  ('timiskaming',   'Timiskaming',            1217, 'ICOLD-Canada 2020 Table 1'),
+  ('des-joachims',  'Des Joachims',            229, 'ICOLD-Canada 2020 Table 1'),
+  ('bark-lake',     'Bark Lake',               374, 'ICOLD-Canada 2020 Table 1'),
+  ('cabonga',       'Cabonga',                1565, 'ICOLD-Canada 2020 Table 1'),
+  ('baskatong',     'Baskatong',              3049, 'ICOLD-Canada 2020 Table 1'),
+  ('mitchinamecus', 'Mitchinamecus',           554, 'ICOLD-Canada 2020 Table 1'),
+  ('kiamika',       'Kiamika',                 379, 'ICOLD-Canada 2020 Table 1'),
+  ('poisson-blanc', 'Poisson Blanc',           625, 'ICOLD-Canada 2020 Table 1')
+ON CONFLICT (station) DO UPDATE
+  SET name = EXCLUDED.name, usable_mcm = EXCLUDED.usable_mcm, source = EXCLUDED.source;
+
+-- Stage-storage shape for the proxy below. ORRPB does not publish per-
+-- reservoir stage-storage curves, only an annual chart of total storage
+-- (Spring Freshet Review, p.4). A reservoir's surface shrinks as it empties,
+-- so volume is convex in level: fill_frac ** exponent, with one exponent
+-- for the whole cascade, fitted to that chart by
+-- scripts/orrpb-storage-proxy-calibrate.py. Single-row table so the
+-- dashboard can show the provenance next to the number. (OTTAW-28)
+CREATE TABLE IF NOT EXISTS reservoir_storage_proxy_calibration (
+  id                smallint PRIMARY KEY DEFAULT 1 CHECK (id = 1),
+  exponent          double precision NOT NULL,
+  scale             double precision NOT NULL,
+  fitted_on         date NOT NULL,
+  reference         text NOT NULL,
+  rmse_median_bcm   double precision,
+  rmse_current_bcm  double precision
+);
+
+INSERT INTO reservoir_storage_proxy_calibration
+  (id, exponent, scale, fitted_on, reference, rmse_median_bcm, rmse_current_bcm) VALUES
+  (1, 1.3, 0.97, DATE '2026-11-04',
+   'ORRPB 2026 Spring Freshet Review p.4 "Water stored in principal reservoirs", digitized; 1991-2020 median curve (275 d) and 2026 curve (108 d)',
+   0.14, 0.16)
+ON CONFLICT (id) DO UPDATE
+  SET exponent = EXCLUDED.exponent, scale = EXCLUDED.scale, fitted_on = EXCLUDED.fitted_on,
+      reference = EXCLUDED.reference, rmse_median_bcm = EXCLUDED.rmse_median_bcm,
+      rmse_current_bcm = EXCLUDED.rmse_current_bcm;
+
+-- Per-reservoir, per-day storage PROXY. fill_frac is the level's position in
+-- the Operation band from orrpb_station_limits (clamped 0..1; fill_frac_raw
+-- is unclamped so an overshoot stays visible). storage_mcm applies the
+-- calibrated exponent and scale to the ICOLD usable capacity. median_* uses
+-- ORRPB's 1991-2020 daily median level, giving a "normal" storage curve to
+-- plot against. This is an estimate of ORRPB's chart, not a reproduction:
+-- label it a proxy wherever it is shown. (OTTAW-28)
+CREATE OR REPLACE VIEW reservoir_storage_proxy AS
+WITH lim AS (
+  SELECT station, lower_m, upper_m
+  FROM orrpb_station_limits
+  WHERE category = 'Operation' AND lower_m IS NOT NULL AND upper_m IS NOT NULL
+    AND upper_m > lower_m
+), cal AS (
+  SELECT exponent, scale FROM reservoir_storage_proxy_calibration WHERE id = 1
+), f AS (
+  SELECT h.time, h.station, c.name, c.usable_mcm, l.lower_m, l.upper_m,
+         h.observed AS level_m, h.median AS median_level_m,
+         (h.observed - l.lower_m) / (l.upper_m - l.lower_m) AS fill_frac_raw,
+         (h.median   - l.lower_m) / (l.upper_m - l.lower_m) AS median_fill_frac_raw
+  FROM orrpb_station_history h
+  JOIN reservoir_capacity c USING (station)
+  JOIN lim l USING (station)
+  WHERE h.metric = 'level_m'
+), g AS (
+  -- GREATEST/LEAST skip NULLs in PostgreSQL, so a NULL level would clamp to
+  -- 0 (an "empty" reservoir) instead of staying unknown. Keep NULL as NULL so
+  -- the total view's completeness gate sees it.
+  SELECT f.*,
+         CASE WHEN f.fill_frac_raw IS NULL THEN NULL
+              ELSE LEAST(GREATEST(f.fill_frac_raw, 0), 1) END        AS fill_frac,
+         CASE WHEN f.median_fill_frac_raw IS NULL THEN NULL
+              ELSE LEAST(GREATEST(f.median_fill_frac_raw, 0), 1) END AS median_fill_frac
+  FROM f
+)
+SELECT g.time, g.station, g.name, g.usable_mcm, g.lower_m, g.upper_m,
+       g.level_m, g.median_level_m, g.fill_frac_raw, g.fill_frac, g.median_fill_frac,
+       cal.scale * g.usable_mcm * power(g.fill_frac, cal.exponent)        AS storage_mcm,
+       cal.scale * g.usable_mcm * power(g.median_fill_frac, cal.exponent) AS median_storage_mcm
+FROM g CROSS JOIN cal;
+
+-- Cascade total per day: the counterpart of ORRPB's chart. storage_mcm is
+-- NULL unless every reservoir in reservoir_capacity has a level that day
+-- (a partial sum would read as a drawdown). n_observed / n_reservoirs says
+-- how complete the day is; n_with_limits < n_reservoirs means a reservoir
+-- has no usable Operation band in orrpb_station_limits, which is why the
+-- total is NULL every day (fix the limits scrape rather than the gate).
+CREATE OR REPLACE VIEW reservoir_storage_proxy_total AS
+WITH n AS (
+  SELECT count(*)::int AS n_reservoirs,
+         count(*) FILTER (WHERE EXISTS (
+           SELECT 1 FROM orrpb_station_limits l
+           WHERE l.station = c.station AND l.category = 'Operation'
+             AND l.lower_m IS NOT NULL AND l.upper_m IS NOT NULL
+             AND l.upper_m > l.lower_m))::int AS n_with_limits
+  FROM reservoir_capacity c
+)
+SELECT p.time,
+       count(p.storage_mcm)::int        AS n_observed,
+       count(p.median_storage_mcm)::int AS n_median,
+       n.n_with_limits,
+       n.n_reservoirs,
+       CASE WHEN count(p.storage_mcm) = n.n_reservoirs
+            THEN sum(p.storage_mcm) END AS storage_mcm,
+       CASE WHEN count(p.median_storage_mcm) = n.n_reservoirs
+            THEN sum(p.median_storage_mcm) END AS median_storage_mcm
+FROM reservoir_storage_proxy p CROSS JOIN n
+GROUP BY p.time, n.n_with_limits, n.n_reservoirs;
+
 NOTIFY pgrst, 'reload schema';

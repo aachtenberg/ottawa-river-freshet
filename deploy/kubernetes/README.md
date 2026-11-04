@@ -26,6 +26,7 @@ scripts are inlined into the manifests, so a fresh cluster is one
 | `50-reservoir-ingest-cron.yaml` | Daily ORRPB scraper CronJob + script ConfigMap |
 | `55-hq-ingest-cron.yaml` | Hourly Hydro-Québec open-data ingester (centrale + station telemetry) |
 | `56-orrpb-river-ingest-cron.yaml` | Daily ORRPB "Average Daily Flows" scrape → `orrpb_river_flows` (Temiscaming · Otto Holden · Des Joachims · Chenaux · Chats Falls · Britannia · Carillon — incl. the OPG dams not in the HQ feed) |
+| `57-orrpb-station-history-cron.yaml` | Daily (21:50 UTC) ORRPB per-location scrape → `orrpb_station_history` (observed / 1991–2020 median / historic high & low, 13 stations + 12 principal reservoirs) and `orrpb_station_limits` (reservoir operating bands). Its init container re-applies the bootstrap SQL, so new tables and the `reservoir_storage_proxy` views (the Reservoirs tab's cascade storage chart) land on an existing database too |
 | `60-alerter-cron.yaml` | Hourly threshold-crossing alerter CronJob + script ConfigMap |
 | `70-wsc-ingest-cron.yaml` | Hourly WSC realtime CSV ingester (level + discharge) |
 | `80-eccc-ingest-cron.yaml` | Six-hourly ECCC daily-climate bulk-CSV ingester |
@@ -64,6 +65,7 @@ kubectl apply -f 40-river-history-cron.yaml
 kubectl apply -f 50-reservoir-ingest-cron.yaml
 kubectl apply -f 55-hq-ingest-cron.yaml
 kubectl apply -f 56-orrpb-river-ingest-cron.yaml
+kubectl apply -f 57-orrpb-station-history-cron.yaml
 kubectl apply -f 60-alerter-cron.yaml
 kubectl apply -f 70-wsc-ingest-cron.yaml
 kubectl apply -f 80-eccc-ingest-cron.yaml
@@ -75,6 +77,7 @@ kubectl create job -n freshet --from=cronjob/river-history-ingest river-init
 kubectl create job -n freshet --from=cronjob/reservoir-ingest reservoir-init
 kubectl create job -n freshet --from=cronjob/hq-ingest hq-init
 kubectl create job -n freshet --from=cronjob/orrpb-river-ingest orrpb-river-init
+kubectl create job -n freshet --from=cronjob/orrpb-station-history orrpb-station-history-init
 kubectl create job -n freshet --from=cronjob/wsc-ingest wsc-init
 kubectl create job -n freshet --from=cronjob/eccc-ingest eccc-init
 kubectl create job -n freshet --from=cronjob/swe-caldas-ingest swe-caldas-init
@@ -114,12 +117,32 @@ kubectl create configmap reservoir-ingest-script \
 kubectl create configmap freshet-alerter-script \
   --from-file=alerter.py=../../alerter/alerter.py \
   -n freshet --dry-run=client -o yaml | kubectl apply -f -
+
+# ORRPB station-history script (+ its HTTP helper)
+kubectl create configmap orrpb-station-history-script \
+  --from-file=scrape.py=../../ingesters/orrpb-station-history/scrape.py \
+  --from-file=orrpb_http.py=../../ingesters/orrpb-station-history/orrpb_http.py \
+  -n freshet --dry-run=client -o yaml | kubectl apply -f -
+
+# Bootstrap SQL (schema)
+kubectl create configmap timescaledb-bootstrap \
+  --from-file=bootstrap.sql=../../ingesters/river-history/bootstrap.sql \
+  -n freshet --dry-run=client -o yaml | kubectl apply -f -
 ```
 
-The bootstrap SQL ConfigMap (`timescaledb-bootstrap`) only takes effect on
-the very first boot of an empty PVC — once the database is initialized,
-schema changes need to be applied with `kubectl exec` + `psql`, not by
-re-applying the ConfigMap.
+The bootstrap SQL ConfigMap (`timescaledb-bootstrap`) is run by TimescaleDB
+itself only on the very first boot of an empty PVC. After that it is applied
+again, idempotently, by the `ensure-schema` init container of
+`57-orrpb-station-history-cron.yaml` before each scrape — so to pick up new
+tables or views on an existing database, regenerate the ConfigMap (last
+command above) and run that CronJob once:
+
+```bash
+kubectl create job -n freshet --from=cronjob/orrpb-station-history schema-upgrade
+```
+
+The alternative is `kubectl exec` into the TimescaleDB pod and feed the file to
+`psql`; either way, re-applying the ConfigMap alone changes nothing.
 
 For the upstream maintainer's homelab this whole flow is automated via
 Kustomize `configMapGenerator` (which hashes file content into the

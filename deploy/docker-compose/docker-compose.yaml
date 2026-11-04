@@ -156,6 +156,26 @@ services:
     volumes:
       - ../../ingesters/eccc-ingest:/app:ro
 
+  # ORRPB per-station history (observed / median / historic high & low) for
+  # the 13 main-stem stations and 12 principal reservoirs, plus the
+  # reservoirs' operating limits. Feeds the Reservoirs tab's cascade storage
+  # chart (reservoir_storage_proxy_total). Tables are in bootstrap.sql; an
+  # existing volume needs it re-applied once (see README, "Upgrading").
+  cron-orrpb-station-history:
+    <<: *cron-base
+    command:
+      - sh
+      - -c
+      - |
+        set -e
+        echo "ORRPB station-history scraper starting; will run every 24h"
+        while true; do
+          python /app/scrape.py || echo "orrpb-station-history failed: $$?"
+          sleep 86400
+        done
+    volumes:
+      - ../../ingesters/orrpb-station-history:/app:ro
+
   cron-alerter:
     image: python:3.12-alpine
     restart: unless-stopped

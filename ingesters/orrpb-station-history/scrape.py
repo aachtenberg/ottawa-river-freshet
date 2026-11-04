@@ -16,12 +16,20 @@ only publish levels (Mattawa, Pembroke, Lake Coulonge, Chats Lake,
 Gatineau, Thurso, Grenville) return an empty or unchanged response on
 discharge requests and are skipped.
 
+The 12 principal-reservoir pages (dozois … poisson-blanc) use the same
+template and are scraped the same way (OTTAW-28). Their pages also carry a
+"System Constraints" table (operating / navigation / recreation level
+limits), which is upserted into orrpb_station_limits, one row per
+(station, category).
+
 Stdlib-only (urllib + html.parser) to match the reservoir-ingest /
 orrpb-river-ingest pattern.
 
 Env vars: POSTGREST_URL, SCRAPE_USER_AGENT, ORRPB_BASE,
           ORRPB_STATIONS (override CSV of slug:metric pairs),
-          ORRPB_SLEEP_S (sleep between requests, default 1.5s).
+          ORRPB_SLEEP_S (sleep between requests, default 1.5s),
+          ORRPB_DATE_START / ORRPB_DATE_END (YYYY-MM-DD; optional explicit
+          window for a one-off backfill, e.g. 2025-01-01 / 2025-12-31).
 """
 from __future__ import annotations
 
@@ -34,6 +42,8 @@ import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
 from html.parser import HTMLParser
+
+from orrpb_http import fetch_text
 
 ORRPB_BASE = os.environ.get("ORRPB_BASE", "https://www.ottawariver.ca/location")
 POSTGREST = os.environ.get("POSTGREST_URL", "http://postgrest:3000")
@@ -61,7 +71,30 @@ DEFAULT_STATIONS: list[tuple[str, tuple[str, ...]]] = [
     ("thurso",        ("levels",)),
     ("grenville",     ("levels",)),
     ("carillon",      ("levels", "discharges")),
+    # Principal reservoirs (OTTAW-28). Same page template, same 4-row table,
+    # plus a "System Constraints" operating-limits table (see parse_limits).
+    # Slugs are the /location/ segments from the reservoir page's dropdown.
+    # des-joachims is shared with the main-stem list above (same page) and
+    # timiskaming-haileybury has no history form at all, so neither is here.
+    ("dozois",        ("levels", "discharges")),
+    ("rapide-7",      ("levels", "discharges")),
+    ("quinze",        ("levels", "discharges")),
+    ("lady-evelyn",   ("levels", "discharges")),
+    ("kipawa",        ("levels", "discharges")),
+    ("timiskaming",   ("levels", "discharges")),
+    ("bark-lake",     ("levels", "discharges")),
+    ("cabonga",       ("levels", "discharges")),
+    ("baskatong",     ("levels", "discharges")),
+    ("mitchinamecus", ("levels", "discharges")),
+    ("kiamika",       ("levels", "discharges")),
+    ("poisson-blanc", ("levels", "discharges")),
 ]
+
+# Optional explicit window for one-off backfills (the form accepts any range;
+# the default is ORRPB's own ~13-month window ending next month). Leave unset
+# for the cron.
+DATE_START = os.environ.get("ORRPB_DATE_START", "").strip()
+DATE_END = os.environ.get("ORRPB_DATE_END", "").strip()
 
 
 def stations_from_env() -> list[tuple[str, tuple[str, ...]]]:
@@ -223,11 +256,16 @@ def parse_table(
 
 def fetch_table_html(slug: str, reading_type: str) -> str:
     url = f"{ORRPB_BASE}/{slug}/"
-    body = urllib.parse.urlencode({
+    form = {
         "reading-type": reading_type,    # levels | discharges
         "data-display": "table",
         "data-type":    "daily",
-    }).encode("utf-8")
+    }
+    if DATE_START:
+        form["date-start"] = DATE_START
+    if DATE_END:
+        form["date-end"] = DATE_END
+    body = urllib.parse.urlencode(form).encode("utf-8")
     req = urllib.request.Request(
         url,
         data=body,
@@ -238,8 +276,7 @@ def fetch_table_html(slug: str, reading_type: str) -> str:
             "Content-Type": "application/x-www-form-urlencoded",
         },
     )
-    with urllib.request.urlopen(req, timeout=30) as r:
-        return r.read().decode("utf-8", errors="replace")
+    return fetch_text(req, timeout=30)
 
 
 def post_rows(table: str, rows: list[dict]) -> int:
@@ -259,28 +296,89 @@ def post_rows(table: str, rows: list[dict]) -> int:
         return len(rows)
 
 
-def scrape_station(slug: str, reading_type: str) -> list[dict]:
+LIMIT_NUM_RE = re.compile(r"-?\d+(?:\.\d+)?")
+
+
+def find_limits_table(tables: list[list[list[list[str]]]]) -> list[list[list[str]]] | None:
+    """Return the 'System Constraints' table (header has Lower/Upper Limit columns).
+
+    Reservoir pages carry it; most river-station pages do not, in which case
+    None is returned and nothing is posted.
+    """
+    for tbl in tables:
+        for row in tbl[:3]:
+            texts = [cell_text(c) for c in row]
+            if any(t.startswith("Lower Limit") for t in texts) and \
+               any(t.startswith("Upper Limit") for t in texts):
+                return tbl
+    return None
+
+
+def parse_limits(tbl: list[list[list[str]]], station: str) -> list[dict]:
+    """Rows look like ['Operation', 'All Year', '207.60', '223.14'] or
+    ['Navigation', '15 May - 15 Oct', '178.65', ''] with an occasional '*'
+    footnote marker on a number. One record per (station, category)."""
+    out: list[dict] = []
+    for row in tbl:
+        cells = [cell_text(c) for c in row]
+        if len(cells) < 4 or not cells[0] or cells[0] in ("Category", "System Constraints"):
+            continue
+        if cells[0].startswith("Lower Limit") or cells[1].startswith("Lower Limit"):
+            continue
+        vals = []
+        flagged = False
+        for raw in cells[2:4]:
+            m = LIMIT_NUM_RE.search(raw)
+            vals.append(float(m.group(0)) if m else None)
+            flagged = flagged or ("*" in raw)
+        if vals[0] is None and vals[1] is None:
+            continue
+        out.append({
+            "station": station,
+            "category": cells[0],
+            "period": cells[1] or None,
+            "lower_m": vals[0],
+            "upper_m": vals[1],
+            "footnoted": flagged,
+            "scraped_at": datetime.now(timezone.utc).isoformat(),
+        })
+    return out
+
+
+def scrape_station(slug: str, reading_type: str) -> tuple[list[dict], list[dict]]:
+    """Return (history rows, operating-limit rows) parsed from one page fetch."""
     metric_col = "level_m" if reading_type == "levels" else "flow_cms"
     html = fetch_table_html(slug, reading_type)
     parser = TableExtractor()
     parser.feed(html)
     tbl = find_data_table(parser.tables)
-    if tbl is None:
-        return []
-    return parse_table(tbl, slug, metric_col)
+    rows = parse_table(tbl, slug, metric_col) if tbl is not None else []
+    limits: list[dict] = []
+    if reading_type == "levels":  # the limits table is identical on both views
+        try:
+            ltbl = find_limits_table(parser.tables)
+            if ltbl is not None:
+                limits = parse_limits(ltbl, slug)
+        except Exception as exc:  # never let a reshaped limits table cost us the history rows
+            print(f"  [WARN] {slug}/limits: parse failed: {type(exc).__name__}: {exc}",
+                  file=sys.stderr)
+    return rows, limits
 
 
 def main() -> int:
     stations = stations_from_env()
     print(f"Scraping {len(stations)} stations from {ORRPB_BASE} "
-          f"(sleep {SLEEP_S:.1f}s between requests)")
+          f"(sleep {SLEEP_S:.1f}s between requests"
+          + (f", window {DATE_START or '…'}..{DATE_END or '…'}" if DATE_START or DATE_END else "")
+          + ")")
     total_rows = 0
+    total_limits = 0
     failures: list[str] = []
     for slug, metrics in stations:
         for reading_type in metrics:
             label = f"{slug}/{reading_type}"
             try:
-                rows = scrape_station(slug, reading_type)
+                rows, limits = scrape_station(slug, reading_type)
             except Exception as exc:
                 failures.append(label)
                 print(f"  [FAIL] {label}: {type(exc).__name__}: {exc}", file=sys.stderr)
@@ -293,10 +391,17 @@ def main() -> int:
                 total_rows += posted
                 print(f"  [OK]   {label}: {posted} rows upserted "
                       f"(dates {rows[0]['time']} -> {rows[-1]['time']})")
+            if limits:
+                try:
+                    total_limits += post_rows("orrpb_station_limits", limits)
+                    print(f"  [OK]   {slug}/limits: {len(limits)} operating-limit rows upserted")
+                except Exception as exc:  # limits are a bonus; never fail the history scrape
+                    print(f"  [WARN] {slug}/limits: {type(exc).__name__}: {exc}", file=sys.stderr)
             time.sleep(SLEEP_S)
 
     print(f"\nTotal upserted: {total_rows} rows across "
-          f"{sum(len(m) for _, m in stations)} (station, metric) pairs")
+          f"{sum(len(m) for _, m in stations)} (station, metric) pairs, "
+          f"{total_limits} operating-limit rows")
     if failures:
         print(f"Failures: {len(failures)} -> {', '.join(failures)}", file=sys.stderr)
         # Don't exit nonzero on partial failure; ORRPB occasionally returns

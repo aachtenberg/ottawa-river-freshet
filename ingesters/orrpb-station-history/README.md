@@ -15,7 +15,16 @@ record looked gated; it is not.
 
 Stdlib-only (urllib + html.parser). Same pattern as the
 `reservoir-ingest` and `orrpb-river-ingest` scrapers; the differences
-are documented under "How it works" below.
+are documented under "How it works" below. HTTP goes through
+`orrpb_http.py` (shipped next to the script): ottawariver.ca sits behind
+a CDN that sometimes hands out a dead edge node, so 5xx and network
+errors are retried a few times, spaced past the DNS cache.
+
+Since 2026-11 the same scrape also covers the **12 principal reservoirs**
+(their `/location/` pages share the template) and reads the "System
+Constraints" table those pages carry into `orrpb_station_limits`. That
+is what makes the cascade storage proxy possible — see "Reservoirs and
+the storage proxy" below.
 
 ## What ORRPB exposes per station
 
@@ -91,16 +100,57 @@ temiscaming, otto-holden, mattawa, des-joachims, pembroke, coulonge,
 chenaux, chats-falls, britannia, hull, thurso, grenville, carillon
 ```
 
+plus the 12 principal reservoirs (same table layout, both metrics):
+
+```
+dozois, rapide-7, quinze, lady-evelyn, kipawa, timiskaming, bark-lake,
+cabonga, baskatong, mitchinamecus, kiamika, poisson-blanc
+```
+
+(`des-joachims` is already in the main-stem list and shares its page;
+`timiskaming-haileybury` has no history form.)
+
 The `ORRPB_STATIONS` env var overrides this with a CSV of
 `slug[:metric1+metric2]` tokens, e.g. `chenaux:levels,pembroke:levels`.
+`ORRPB_DATE_START` / `ORRPB_DATE_END` (YYYY-MM-DD) replace ORRPB's default
+~13-month window for a one-off backfill, e.g. `2025-01-01` / `2025-12-31`
+to get a full previous year; leave them unset for the cron.
+
+## Reservoirs and the storage proxy
+
+Each reservoir page carries a "System Constraints" table (Category /
+Date / Lower Limit / Upper Limit — Operation all year, sometimes
+Navigation or Recreation for part of the year). It is upserted into
+`orrpb_station_limits`, one row per `(station, category)`, on every run.
+
+`bootstrap.sql` combines those limits with the daily levels and the
+usable-storage capacities in `reservoir_capacity` (ICOLD-Canada 2020,
+Table 1) into two views:
+
+- `reservoir_storage_proxy` — per reservoir and day: position in the
+  Operation band (`fill_frac`) and estimated storage in Mm³, for the
+  observed level and for the 1991–2020 median level.
+- `reservoir_storage_proxy_total` — the cascade sum per day, NULL on any
+  day not all 13 reservoirs reported (a partial sum would read as a
+  drawdown), with `n_observed` / `n_with_limits` / `n_reservoirs` so a
+  gap is diagnosable.
+
+The storage estimate is `scale × capacity × fill_frac ^ exponent`; the
+single `(exponent, scale)` pair lives in
+`reservoir_storage_proxy_calibration` and was fitted to ORRPB's own
+"water stored in principal reservoirs" chart (2026 Spring Freshet Review,
+p.4) — it reproduces that chart to about 0.15 billion m³. It is an
+estimate of ORRPB's figure, not a reproduction: the dashboard labels it a
+proxy and shows the calibration next to the chart.
 
 ## Schedule
 
 ORRPB updates the per-location data shortly after the conditions page
-refresh (mid-afternoon Eastern). The window is 13 months rolling so
-daily updates only add the latest day-or-two of new data. Running
-once per day at 21:50 UTC (just after the conditions-page scrapers at
-21:30 / 21:40) is plenty.
+refresh (mid-afternoon Eastern). The window is 13 months rolling so each
+run only adds the latest day-or-two of new data. The deploy manifests run
+it once a day at 21:50 UTC, last of the ORRPB trio (reservoir-ingest 21:30,
+orrpb-river-ingest 21:40), which is plenty; the upstream maintainer's
+cluster runs it 6-hourly for faster partial-day pickup.
 
 Multiple runs per day are safe; the upsert merges on
 `(station, metric, time)` so re-running is idempotent.
@@ -122,9 +172,13 @@ CREATE TABLE orrpb_station_history (
 );
 ```
 
-Table definition lives in
-`k3s/base/data/files/river-history/bootstrap.sql` alongside the rest
-of the freshet schema.
+Table definitions (this one, `orrpb_station_limits`, `reservoir_capacity`,
+the calibration row and the two proxy views) live in
+[`ingesters/river-history/bootstrap.sql`](../river-history/bootstrap.sql)
+alongside the rest of the freshet schema. On an existing database the file
+has to be re-applied once to create them — the Kubernetes CronJob does that
+in an init container; for docker-compose see "Upgrading the schema" in
+[`deploy/docker-compose/README.md`](../../deploy/docker-compose/README.md).
 
 ## Adding a station
 

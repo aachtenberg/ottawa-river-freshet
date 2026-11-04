@@ -1,10 +1,10 @@
 # Docker Compose deploy
 
 Single-host deployment of the freshet stack. Brings up TimescaleDB, PostgREST,
-nginx serving the dashboard, plus six cron-style sidecars: river ingester
+nginx serving the dashboard, plus seven cron-style sidecars: river ingester
 (Vigilance + KiWIS + open-meteo), reservoir scraper, Hydro-Québec open-data
-ingester, WSC realtime ingester, ECCC daily-climate ingester, and the
-threshold-crossing alerter.
+ingester, WSC realtime ingester, ECCC daily-climate ingester, ORRPB
+per-station history scraper, and the threshold-crossing alerter.
 
 ## Prerequisites
 
@@ -30,6 +30,7 @@ schedules:
 | `cron-hq` | hourly | Hydro-Québec open-data JSON feeds |
 | `cron-wsc` | hourly | WSC realtime CSV inline endpoint |
 | `cron-eccc` | every 6h | ECCC daily-climate bulk CSV |
+| `cron-orrpb-station-history` | daily | ORRPB per-location pages: observed / median / historic envelope for 13 stations + 12 reservoirs, reservoir operating limits → cascade storage proxy |
 | `cron-alerter` | hourly | Vigilance + ntfy POST on threshold crossing |
 
 Each runs the script immediately on startup, then on its cadence.
@@ -37,12 +38,29 @@ Each runs the script immediately on startup, then on its cadence.
 ## Triggering an immediate ingest
 
 ```bash
-docker compose exec cron-river     python /app/ingest.py
-docker compose exec cron-reservoir python /app/scrape.py
-docker compose exec cron-hq        python /app/ingest.py
-docker compose exec cron-wsc       python /app/ingest.py
-docker compose exec cron-eccc      python /app/ingest.py
+docker compose exec cron-river                 python /app/ingest.py
+docker compose exec cron-reservoir             python /app/scrape.py
+docker compose exec cron-hq                    python /app/ingest.py
+docker compose exec cron-wsc                   python /app/ingest.py
+docker compose exec cron-eccc                  python /app/ingest.py
+docker compose exec cron-orrpb-station-history python /app/scrape.py
 ```
+
+## Upgrading the schema on an existing volume
+
+`bootstrap.sql` only runs on the first start of an empty `tsdb-data` volume.
+When a newer checkout adds tables or views (2026-11: `orrpb_station_history`,
+`orrpb_station_limits`, `reservoir_capacity`, the `reservoir_storage_proxy`
+views), re-apply it once — the file is idempotent, so this is safe to repeat:
+
+```bash
+docker compose exec -T timescaledb psql -U freshet -d freshet -v ON_ERROR_STOP=1 \
+  < ../../ingesters/river-history/bootstrap.sql
+```
+
+Until that is done the dashboard's Reservoirs tab shows "Storage proxy
+unavailable" in place of the cascade storage chart; the rest of the page is
+unaffected.
 
 ## Inspecting the database
 
