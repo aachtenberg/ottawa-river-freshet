@@ -1,10 +1,10 @@
-# Daily brief — 2026-11-04
+# Daily brief — 2026-11-05
 
 *Generated automatically at 22:00 UTC. See `freshet-public/docs/analysis/Freshet_2026_Complete_Summary.md` for project context.*
 
-*Data sources: cluster proxy (`freshet.xgrunt.com/history/`) HTTP 200 ✓ (probed: HTTP 200 / 117 b). ORRPB forecast HTTP 200 ✓ — last update Nov 3 2:09 PM EST; next update Nov 10 4:00 PM EST (weekly cadence, unchanged from prior brief). Vigilance 1195: proxy ingest fresh T21 UTC Nov 4 (105.869 m). V3 posterior: ran successfully (exit 0) — `freshet-forecast.json` content unchanged (anchors on asof 2026-06-07; unchanged until `lac-coulonge-daily-1990-2026.csv` is extended).*
+*Data sources: cluster proxy (`freshet.xgrunt.com/history/`) HTTP 200 ✓ (probed: HTTP 200 / 2495b). ORRPB forecast HTTP 200 ✓ (probed: HTTP 200 / 128722b) — last update Nov 3 2:09 PM EST; next update Nov 10 4:00 PM EST (weekly cadence, unchanged from prior brief). Vigilance 1195: proxy ingest fresh T21 UTC Nov 5 (105.919 m). V3 posterior: ran successfully (exit 0) — `freshet-forecast.json` content unchanged (anchors on asof 2026-06-07; unchanged until `lac-coulonge-daily-1990-2026.csv` is extended).*
 
-*Nov 3 retro-checks: **Nov 3 Témiscaming D47 final 352 m³/s** — wait, `orrpb_river_flows` row for Nov 3 now shows **351 m³/s** (yesterday's provisional 358 m³/s → −2.0%, well within 50 m³/s, **CONFIRMED**). D47 sub-400 confirmed. **Nov 3 Mattawa daily:** yesterday's TL;DR reported live T17 reading of 152.49 m (+18 cm); ORRPB daily Nov 3 finalized at **152.35 m** (+11 cm from Nov 2 daily 152.24 m) — direction (rising) correct, level differs by 14 cm (recurring live-vs-daily convention). No flood-state claim affected. **Nov 3 Lac Coulonge ORRPB daily** finalized at **105.85 m** (yesterday provisional 105.86 m, −1 cm, negligible).*
+*Nov 4 retro-checks: **Nov 4 Témiscaming PSPC provisional 398 → final 358 m³/s** (−40 m³/s, −10.1%, within 50 m³/s tolerance — **CONFIRMED sub-400 D48**). **Nov 4 Mattawa ORRPB daily: claimed 152.27 m in yesterday's brief → finalized 152.36 m (+9 cm revision).** Yesterday's "daily rise streak ends" claim was **INCORRECT** — Nov 4 revised value (152.36 m) exceeds Nov 3 (152.35 m), and the rise continued. **CORRECTION: the Mattawa rise streak did not end on Nov 4; it continued (Nov 3: 152.35 → Nov 4 revised: 152.36 → Nov 5: 152.42 m).** Direction in Nov 4 brief was correct (rising), level was 9 cm off due to data revision before finalization. No flood-state claim affected.*
 
 ---
 
@@ -12,79 +12,77 @@
 
 ### Upstream — the upper basin
 
-The basin is in quiet late-autumn recession, now 186 days past the May 2 seasonal peak. The outflow from Lake Timiskaming — the large reservoir at the head of the main stem — was measured by federal monitors at 398 cubic metres per second at midnight going into today. That is a modest uptick from the 351 cubic metres per second finalized for November 3, and the 48th straight day the outflow has stayed below 400 cubic metres per second. Note that the Ottawa River Regulation Planning Board's own provisional figure for today reads an unusually low 202 cubic metres per second — far from the federal figure and inconsistent with any physically plausible single-day change — this appears to be a corrupted provisional value, not a real reading. The federal measurement is the reliable one.
+The basin is 187 days past the May 2 seasonal peak and continues in late-autumn recession, with one development worth watching: the outflow from Lake Timiskaming — the large reservoir at the head of the main stem — was measured at 441 cubic metres per second for today (the latest preliminary reading, agreed between the federal monitoring agency and the river planning board). That is 83 cubic metres per second more than yesterday's finalized figure of 358, and it is above the 400 m³/s mark that the system has stayed under for the past 48 days. Because today's reading is based on a full day's data (we are near the end of the calendar day), this is very likely the final tally — the 48-day sub-400 streak almost certainly ends today. The uptick is consistent with the precipitation the ORRPB forecast mentioned; it is not alarming at this scale (normal autumn variability), but worth tracking day-to-day.
 
-The Mattawa level, an upstream indicator at a town roughly 200 kilometres above Lac Coulonge, edged down to 152.27 metres on today's early-morning snapshot — 8 centimetres lower than yesterday's daily reading — ending the brief three-day rise that the late-October rainfall produced. The slide is gentle and there is no new precipitation loading visible at the head of the system. Pembroke, further downstream, held essentially flat at 111.00 metres. All 14 tracked reservoirs are essentially stable; two (at the Rapide-7 pond and the Des Joachims pool) each rose 3–4 centimetres overnight, a minor fluctuation consistent with normal operations.
+Meanwhile, the Mattawa level — an upstream indicator gauge roughly 200 kilometres above Lac Coulonge — edged up to 152.42 metres on today's daily reading, 6 centimetres above yesterday's finalized 152.36 metres. Pembroke, further downstream, dipped slightly to 110.99 metres (down 4 cm from yesterday). All 14 tracked reservoirs are essentially stable; three (Des Joachims, Quinze, and Lady Evelyn) each rose 3–5 centimetres overnight, a minor fluctuation consistent with normal operations.
 
 ### At the property — Lac Coulonge / Mansfield
 
-The water at Fort-Coulonge stood at 105.869 metres at 9 PM UTC — slightly higher than the 105.851 it showed at the same hour yesterday — essentially flat, up about 2 centimetres. The ORRPB daily series for today, based on the midnight reading, shows 105.86 metres, 1 centimetre above yesterday's finalized daily of 105.85 metres. The lake is fully in normal conditions — 115 centimetres below the 107.00-metre pre-alert threshold — with no flood risk.
+The water at Fort-Coulonge stood at 105.919 metres at 9 PM UTC — up 5 centimetres from the same hour yesterday (105.869 m). The ORRPB daily series puts it at 105.90 metres, up 3 centimetres from yesterday's finalized daily of 105.87 metres. The lake is fully in normal conditions — 108 centimetres below the 107.00-metre pre-alert threshold — with no flood risk. The gentle rise matches the precipitation the weekly forecast anticipated, and nothing in the data suggests a sharp change is coming.
 
-Well downstream, at the Bryson Generating Station (reached by a long winding channel well below Lac Coulonge's south end, not visible from the Mansfield properties), partial spillway operation entered its third consecutive day unchanged: about 114 cubic metres per second continued through the spillway alongside 204 cubic metres per second through the turbines, for a total of 317 cubic metres per second — practically identical to the past two days. The dam pond held at 105.57 metres. Carillon, the basin's terminal dam near Hawkesbury, was releasing around 781 cubic metres per second at 8 PM UTC, down from about 970 cubic metres per second earlier in the afternoon — an intraday dispatch reduction rather than a day-over-day trend change. The ORRPB forecast from November 3 (unchanged; next update November 10) calls for levels to "slightly increase or remain fairly stable depending on location" in the coming week, citing forecast precipitation, but does not name Lac Coulonge specifically.
+Well downstream, at the Bryson Generating Station (reached via a long, winding channel well below the southern tip of Lac Coulonge and not visible from the Mansfield properties), the spillway volume continued to grow for a fourth consecutive day. Today approximately 145 cubic metres per second is running through the spillway — 41.6% of the total 349 m³/s release — compared to 114 m³/s (35.8%) yesterday. The dam pond held essentially flat at 105.58 metres. Carillon, the basin's terminal dam near Hawkesbury, was releasing around 954 cubic metres per second by 7 PM UTC, having ramped steadily through the afternoon from a morning baseline of about 850 m³/s. This is routine power-dispatch scheduling, not a flood response. The ORRPB forecast (unchanged since November 3; next update November 10) calls for levels to "slightly increase or remain fairly stable depending on location" over the coming week.
 
 ---
 
 ## TL;DR
 
-**RETRO ✓:** Nov 3 D47 final **351 m³/s** (prov 358 → −2.0%, CONFIRMED). **Today (Day 186):** Lac Coulonge T21 **105.869 m** (+2 cm vs T20 yesterday; etat 0, 115 cm below pre-alert). Bryson Day 3 partial spill: **35.8%** (113.6 m³/s, flat). Carillon T20 **781 m³/s** (intraday: 970 → 781, −19.5% from T16–T20; dispatch drawdown). R7 intraday ramp T17→T19: 158 → 213 m³/s. Témiscaming D48: PSPC T00 **398 m³/s** (barely sub-400; ORRPB provisional **202 corrupted** — PSPC/ORRPB discrepancy 196 m³/s). Mattawa ORRPB daily **152.27 m** (−8 cm from Nov 3 finalized 152.35 m; daily rise streak ends). Pembroke 111.00 m (flat). Hull dock T20 41.24 m — trigger INACTIVE **Day 163**. Reservoir balance: **0 falling · 12 steady · 2 rising** (rapide_7 +3 cm, des_joachims +4 cm). ORRPB forecast unchanged (Nov 3; next Nov 10).
+**CORRECTION (Mattawa Nov 4):** ORRPB daily Nov 4 revised 152.27 → **152.36 m**; rise streak did not end (Nov 3: 152.35 → Nov 4 revised: 152.36 → Nov 5: 152.42 m — 3rd consecutive rise). **Today (Day 187):** Lac Coulonge T21 **105.919 m** (+5 cm vs T21 yesterday; etat 0, 108 cm below pre-alert). Bryson Day 4 partial spill: **41.6%** (144.94 m³/s, +31.35 / +27.6% vs yesterday — ⚠ exceeds 5% flag). Carillon T19 **954 m³/s** (+173, intraday ramp; dispatch). Témiscaming **D49: ORRPB + PSPC both 441 m³/s** (above 400; floor at 22h ≈ 404 m³/s — sub-400 D48 streak almost certainly ends today; provisional, finalization expected). **RETRO ✓:** Nov 4 Témiscaming PSPC provisional 398 → final **358 m³/s** (−40, within 50 m³/s — CONFIRMED sub-400 D48). Mattawa ORRPB daily **152.42 m** (+6 cm from revised Nov 4 152.36 m). Pembroke **110.99 m** (−4 cm). Hull dock T20 41.24 m — trigger INACTIVE **Day 164**. Reservoir balance: **0 falling · 11 steady · 3 rising** (des_joachims +5 cm, quinze +4 cm, lady_evelyn +3 cm). ORRPB forecast unchanged (Nov 3; next Nov 10).
 
 ---
 
 ## Lac Coulonge (the property gauge, Vigilance 1195)
 
-*Source: proxy `river_readings` station 1195 T21 UTC Nov 4 (PRIMARY); `orrpb_river_levels lake-coulonge` Nov 4 (cross-check).*
+*Source: proxy `river_readings` station 1195 T21 UTC Nov 5 (PRIMARY); `orrpb_river_levels lake-coulonge` Nov 5 (cross-check).*
 
 | Metric | Value |
 |---|---|
-| Current level (Vigilance T21 UTC Nov 4) | **105.869 m** |
-| ORRPB daily Nov 4 | 105.86 m (provisional from T00) |
-| 24h delta (Vigilance T21 Nov 4 vs T20 Nov 3) | **+2 cm** |
-| ORRPB daily delta (Nov 3 finalized 105.85 → Nov 4 provisional 105.86) | +1 cm |
+| Current level (Vigilance T21 UTC Nov 5) | **105.919 m** |
+| ORRPB daily Nov 5 | 105.90 m (provisional from T00) |
+| 24h delta (Vigilance T21 Nov 5 vs T21 Nov 4) | **+5 cm** |
+| ORRPB daily delta (Nov 4 finalized 105.87 → Nov 5 provisional 105.90) | +3 cm |
 | Flood state | **etat 0 — fully normal** |
-| Distance to pre-alert (107.00 m) | 115 cm below |
-| Distance to minor flood (107.50 m) | 165 cm below |
+| Distance to pre-alert (107.00 m) | 108 cm below |
+| Distance to minor flood (107.50 m) | 158 cm below |
 
 ---
 
 ## Bryson operating posture (HQ open-data)
 
-*Source: `dam_releases?site_id=eq.3-46` + `dam_levels?station_id=in.(1-2964,1-2965)`. Today: T20 UTC Nov 4 (releases + levels). Yesterday: T16 UTC Nov 3 (releases, from yesterday's brief); T17 UTC Nov 3 (levels, from yesterday's brief).*
+*Source: `dam_releases?site_id=eq.3-46` + `dam_levels?station_id=in.(1-2964,1-2965)`. Today: T20 UTC Nov 5. Yesterday: T20 UTC Nov 4.*
 
-| Metric | Today (T20 Nov 4) | Yesterday (T16/T17 Nov 3) | Δ |
+| Metric | Today (T20 Nov 5) | Yesterday (T20 Nov 4) | Δ |
 |---|---|---|---|
-| Total release (m³/s) | **317.36** | 317.54 | −0.18 (−0.1%) |
-| Turbined (m³/s) | **203.77** | 204.09 | −0.32 (−0.2%) |
-| Spilled (m³/s) | **113.59** | 113.44 | +0.15 (+0.1%) |
-| Spill share (%) | **35.8%** | 35.7% | +0.1 pp |
-| Headpond / amont (m) | **105.57** (T20) | 105.56 (T17 Nov 3) | +1 cm |
-| Tailwater / aval (m) | **86.73** (T20) | 86.70 (T17 Nov 3) | +3 cm |
-| Δh (head differential, m) | **18.84** | 18.86 | −0.02 |
+| Total release (m³/s) | **348.64** | 317.36 | **+31.28 (+9.9%)** ⚠ |
+| Turbined (m³/s) | **203.70** | 203.77 | −0.07 (0.0%) |
+| Spilled (m³/s) | **144.94** | 113.59 | **+31.35 (+27.6%)** ⚠ |
+| Spill share (%) | **41.6%** | 35.8% | **+5.8 pp** ⚠ |
+| Headpond / amont (m) | **105.58** (T20) | 105.57 (T20 Nov 4) | +1 cm |
+| Tailwater / aval (m) | **86.80** (T20) | 86.73 (T20 Nov 4) | +7 cm |
+| Δh (head differential, m) | **18.78** | 18.84 | −6 cm |
 
-No change exceeds the 5% flag threshold. Bryson Day 3 of partial spill — essentially flat across all metrics. Headpond 105.57 m = **90 cm above** the 104.67 m band ceiling — **Day 160** above band.
+Spill in m³/s and total release exceed the 5% flag threshold. Bryson Day 4 of partial spill — spill share growing while headpond holds flat. Headpond 105.58 m = **91 cm above** the 104.67 m band ceiling — **Day 161** above band.
 
 ---
 
 ## Main-stem cascade (HQ centrales, m³/s total release)
 
-*Source: `latest_dam_releases` T19–T20 UTC Nov 4. Yesterday comparison: Nov 3 brief T16–T17 snapshot values.*
+*Source: `latest_dam_releases` T19–T20 UTC Nov 5. Yesterday comparison: Nov 4 brief T19–T20 snapshot values.*
 
 | Site | Total (m³/s) | Spill % | vs Yesterday |
 |---|---|---|---|
-| Première-Chute (3-33) | **225.61** T20 | 0% | +7.00 (+3.2%) |
-| Quinze (3-31) | **209.41** T20 | 0.4% | +0.76 (flat) |
-| Îles (3-32) | **211.92** T20 | 0% | −3.68 (−1.7%) |
-| Rapide-2 (3-29) | **242.71** T20 | 0% | **+85.37 vs yesterday snapshot (+54.3%)** † |
-| Rapide-7 (3-28) | **213.47** T19 | 0% | **+54.84 vs yesterday snapshot (+34.6%)** ‡ |
-| Bryson (3-46) | **317.36** T20 | **35.8%** | −0.18 (flat); spill Day 3 unchanged |
-| Paugan — Gatineau R. (3-65) | **141.02** T19 | 0% | −9.66 (−6.4%) |
-| Rapides-Farmers — Gatineau mouth (3-67) | **162.48** T19 | 0% | +0.46 (flat) |
-| Carillon — basin terminal (3-60) | **780.80** T20 | 0% | −126.03 (−13.9%) vs yesterday T17 ‡‡ |
+| Première-Chute (3-33) | **235.71** T19 | 0% | +10.10 (+4.5%) |
+| Quinze (3-31) | **212.02** T19 | 0.4% | +2.61 (flat) |
+| Îles (3-32) | **218.41** T19 | 0% | +6.49 (+3.1%) |
+| Rapide-2 (3-29) | **241.22** T19 | 0% | −1.49 (flat) |
+| Rapide-7 (3-28) | **165.60** T19 | 0% | −47.87 (−22.4%) vs T19 yesterday † |
+| Bryson (3-46) | **348.64** T20 | **41.6%** | +31.28 (+9.9%); spill Day 4, growing |
+| Paugan — Gatineau R. (3-65) | **140.54** T20 | 0% | −0.48 (flat) |
+| Rapides-Farmers — Gatineau mouth (3-67) | **154.93** T19 | 0% | −7.55 (−4.6%) |
+| Carillon — basin terminal (3-60) | **953.99** T19 | 0% | +173.19 (+22.2%) vs T20 yesterday ‡ |
 
-† Rapide-2 (3-29) has been running 241–252 m³/s throughout today (all hourly records T15–T20); the transition from yesterday's ~157 m³/s occurred sometime between T16 Nov 3 and T15 Nov 4. These are HQ real-time telemetry values (not provisional daily means); no sanity check required, but the shift is noted as a dispatch change of unknown timing.
+† Rapide-7 intraday: T12–T16 ~156 m³/s (steady), T17 147, T18 106 (dispatch dip), T19 165 m³/s. The T19-to-T19 comparison catches the dip from yesterday's ramped value (213 m³/s). Bryson headpond flat (105.58 m); no downstream effect.
 
-‡ Rapide-7 (3-28) ran ~158 m³/s through T17 today, then ramped: T18 182, T19 213 m³/s. Intraday dispatch increase. Bryson headpond flat (105.57 m); no downstream propagation yet.
-
-‡‡ Carillon was at ~960–970 m³/s at T16–T17 today before an active intraday drawdown: T18 956, T19 871, T20 781 m³/s (−189 m³/s over 4 hours). The snapshot-to-snapshot comparison to yesterday's T17 (907) overstates the decline; Carillon was actually *higher* than yesterday's snapshot level earlier today. This is routine dispatch variability for Carillon.
+‡ Carillon intraday ramp: T12 829 → T13 852 → T14–T17 ~852–856 → T18 904 → T19 954 m³/s. Building steadily throughout the day; this is routine power-dispatch scheduling. No spill.
 
 ---
 
@@ -92,38 +90,40 @@ No change exceeds the 5% flag threshold. Bryson Day 3 of partial spill — essen
 
 *Sources: `orrpb_river_flows` (temiscaming); `reservoir_readings` (timiskaming, PSPC cross-check); `orrpb_river_levels` (mattawa, pembroke). All cluster proxy HTTP 200 ✓.*
 
-| Metric | Today / Latest | 7 d ago (Oct 28) | Δ | Milestone |
+| Metric | Today / Latest | 7 d ago (Oct 29) | Δ | Milestone |
 |---|---|---|---|---|
-| Témiscaming Nov 4 provisional — ORRPB (m³/s) | **202** *(corrupted — do not headline; see PSPC)* | 322 (Oct 28) | — | *See PSPC cross-check below* |
-| Témiscaming Nov 4 — PSPC T00 (m³/s) | **398** *(preferred; D48 in progress, barely sub-400)* | 322 (Oct 28) | +76 | **D48 provisional — 48th straight day sub-400 (barely)** |
-| Quinze release → into lake (m³/s) | **209.41** (T20) | ~322 (Oct 28) | — | Baseload; slightly lower week-over-week |
-| Mattawa level (m) | **152.27** (Nov 4 ORRPB daily, T00) | ~152.08 (Nov 1) | — | **Daily rise streak ends (3 days Nov 1→3); −8 cm from Nov 3 daily** |
-| Pembroke level (m) | **111.00** (Nov 4 ORRPB daily) | ~110.99 (Nov 3) | +1 cm | Essentially flat |
+| Témiscaming Nov 5 provisional — ORRPB (m³/s) | **441** | 324 (Oct 29) | +117 | *Likely ends sub-400 D48 streak — see note* |
+| Témiscaming Nov 5 — PSPC T00 cross-check (m³/s) | **441** | 324 (Oct 29) | +117 | *Both sources agree — no discrepancy* |
+| Quinze release → into lake (m³/s) | **212.02** (T19) | ~325 (Oct 29) | — | Baseload; slightly lower week-over-week |
+| Mattawa level (m) | **152.42** (Nov 5 ORRPB daily) | 152.05 (Oct 29) | +37 cm | **3rd consecutive daily rise (Nov 3: 152.35 → Nov 4 rev: 152.36 → Nov 5: 152.42)** — see CORRECTION above |
+| Pembroke level (m) | **110.99** (Nov 5 ORRPB daily) | 111.06 (Oct 29) | −7 cm | Slight dip; essentially flat |
 
-**Provisional sanity check — Témiscaming ORRPB Nov 4 = 202 m³/s:** This triggers the sanity check (−149 m³/s vs Nov 3 final 351 = −42.5%). PSPC T00 cross-check = 398 m³/s. Discrepancy 196 m³/s (well above 50 m³/s threshold). The PSPC T00 reading is the physically consistent value (398 vs 351 = +47, +13.4% — moderate, within range). Floor feasibility at ~22 h into day: (22/24)×202 = 185 m³/s minimum final — inconsistent with the PSPC T00 reading of 398. Conclusion: ORRPB provisional 202 is a data artifact (possibly a corrupted or stale entry). Sanity check FAILED for the ORRPB provisional. Preferred value: **PSPC T00 398 m³/s**. This provisional figure is excluded from TL;DR, plain-language sections, and anomaly flags; reported only in this table.
+**Sub-400 streak note — Témiscaming Nov 5 = 441 m³/s:** Both ORRPB `orrpb_river_flows` and PSPC `reservoir_readings` T00 agree at 441 m³/s. Change vs Nov 4 final (358 m³/s): +83 m³/s = +23.2%. Below the ≥25% formal sanity-check trigger, but: at ~22h into the calendar day, the feasibility floor = (22/24)×441 = 404 m³/s — still above 400 even under the most pessimistic assumption. The two-source agreement and the level-consistent rise at Lake Timiskaming (178.60 → 178.62 m, +2 cm T00 Nov 4→5, consistent with inflows slightly exceeding outflows at ~440 m³/s) confirm this is a genuine reading. The D48 sub-400 streak very likely ends today; provisional until ORRPB finalizes.
 
-**Reservoir balance (T00 Nov 3 → T00 Nov 4):**
-0 falling · 12 steady · 2 rising (rapide_7 +3 cm, des_joachims +4 cm). Baskatong −2 cm is at the ±2 cm boundary; counted steady. No active retention signal.
+**RETRO — Nov 4 Témiscaming PSPC:** Yesterday's brief reported PSPC T00 = 398 m³/s. Final (now in DB for Nov 4): **358 m³/s** (−40 m³/s, within 50 m³/s tolerance — **CONFIRMED**). D48 sub-400 confirmed at 358 m³/s.
+
+**Reservoir balance (T00 Nov 4 → T00 Nov 5):**
+0 falling · 11 steady · 3 rising (des_joachims +5 cm, quinze +4 cm, lady_evelyn +3 cm). No active retention signal (all well below 10 cm/day threshold). Normal late-season operations.
 
 **Milestone bookkeeping (W44 rollup anchor Nov 1 + daily extension):**
 
-| Milestone | W44 close (Nov 1) | Nov 2 | Nov 3 | **Nov 4** |
-|---|---|---|---|---|
-| Days since May 2 peak (2,741 m³/s) | 183 | 184 | 185 | **186** |
-| Bryson amont above band (104.67 m) | 157 | 158 | 159 | **160** |
-| §15.3.5.1 trigger INACTIVE | 160 | 161 | 162 | **163** |
-| Témiscaming sub-400 | D45 | D46 ✓ (352) | D47 ✓ (351) | D48? (PSPC 398) |
+| Milestone | W44 close (Nov 1) | Nov 2 | Nov 3 | Nov 4 | **Nov 5** |
+|---|---|---|---|---|---|
+| Days since May 2 peak (2,741 m³/s) | 183 | 184 | 185 | 186 | **187** |
+| Bryson amont above band (104.67 m) | 157 | 158 | 159 | 160 | **161** |
+| §15.3.5.1 trigger INACTIVE | 160 | 161 | 162 | 163 | **164** |
+| Témiscaming sub-400 | D45 | D46 ✓ (352) | D47 ✓ (351) | D48 ✓ (358, rev from PSPC prov 398) | D49 provisional 441 m³/s — **above 400; streak likely ends at D48** |
 
 ---
 
 ## Carillon §15.3.5.1 directive check
 
-*Source: `dam_levels?station_id=in.(1-2968,1-3675)` — cluster proxy HTTP 200 ✓, T20 UTC Nov 4.*
+*Source: `dam_levels?station_id=in.(1-2968,1-3675)` — cluster proxy HTTP 200 ✓, T20 UTC Nov 5.*
 
 | Metric | Value | Threshold | Status |
 |---|---|---|---|
-| Hull dock (Gatineau, 1-3675) | **41.24 m** | 42.61 m servitude | **BELOW — trigger INACTIVE Day 163** (137 cm below trigger; −4 cm vs yesterday T17) |
-| Carillon amont (1-2968) | **41.11 m** | 40.08 m spring-flood ceiling (when Hull > 42.61) | Ceiling NOT in effect — trigger inactive |
+| Hull dock (Gatineau, 1-3675) | **41.24 m** | 42.61 m servitude | **BELOW — trigger INACTIVE Day 164** (137 cm below trigger; unchanged) |
+| Carillon amont (1-2968) | **41.13 m** | 40.08 m spring-flood ceiling (when Hull > 42.61) | Ceiling NOT in effect — trigger inactive |
 
 §15.3.5.1 continuously inactive.
 
@@ -131,16 +131,16 @@ No change exceeds the 5% flag threshold. Bryson Day 3 of partial spill — essen
 
 ## Reservoir storage (latest_reservoir_readings)
 
-*Source: cluster proxy HTTP 200 ✓ — T00 UTC Nov 4.*
+*Source: cluster proxy HTTP 200 ✓ — T00 UTC Nov 5.*
 
-| Reservoir | Nov 3 (T00) | Nov 4 (T00) | Δ | Note |
+| Reservoir | Nov 4 (T00) | Nov 5 (T00) | Δ | Note |
 |---|---|---|---|---|
-| Baskatong | 219.14 m | **219.12 m** | −2 cm | Steady (at ±2 cm boundary) |
-| Témiscaming | 178.59 m | **178.59 m** | 0 cm | Steady |
+| Baskatong | 219.12 m | **219.12 m** | 0 cm | Steady |
+| Témiscaming | 178.60 m | **178.62 m** | +2 cm | Steady (at ±2 cm boundary); level-consistent with 441 m³/s outflow |
 | Dozois | 342.01 m | **342.01 m** | 0 cm | Steady |
-| Bark Lake (OPG) | 313.58 m | **313.58 m** | 0 cm | Steady |
+| Bark Lake (OPG) | 313.57 m | **313.57 m** | 0 cm | Steady |
 
-All 14 tracked reservoirs: 0 falling · 12 steady · 2 rising (rapide_7 +3 cm, des_joachims +4 cm). No active retention signal.
+All 14 tracked reservoirs: 0 falling · 11 steady · 3 rising (des_joachims +5 cm, quinze +4 cm, lady_evelyn +3 cm). No active retention signal.
 
 ---
 
@@ -156,17 +156,18 @@ All 14 tracked reservoirs: 0 falling · 12 steady · 2 rising (rapide_7 +3 cm, d
 
 ## Anomaly flags
 
-1. **Témiscaming ORRPB provisional data artifact (Nov 4):** ORRPB `orrpb_river_flows` shows 202 m³/s for Nov 4; PSPC T00 `reservoir_readings` shows 398 m³/s — discrepancy 196 m³/s. Provisional sanity check failed (202 is inconsistent with PSPC T00 and physically implausible as a 22-hour running mean). PSPC preferred at 398. D48 barely sub-400.
-2. **Mid-cascade HQ dispatch activity:** Rapide-2 (3-29) running ~242 m³/s all day today (up from ~157 at yesterday's T16 snapshot — shift timing unknown). Rapide-7 (3-28) intraday ramp: 158 → 213 m³/s over T17–T19 today. Neither affects property reach; Bryson headpond flat. Noted for dispatch-pattern record.
-3. **Carillon intraday drawdown:** 970 m³/s at T16 → 781 m³/s at T20 (−189 m³/s, −19.5% over 4 hours). Routine dispatch variability; within normal Carillon operating range.
+1. **Bryson spill increase ≥5% threshold:** Spilled m³/s: 113.59 → 144.94 (+31.35, +27.6%); spill share 35.8% → 41.6% (+5.8 pp); total release +9.9%. Day 4 of partial spill with spill share growing. Headpond flat at 105.58 m. No property-reach implication.
+2. **Témiscaming Nov 5 provisional = 441 m³/s — sub-400 streak likely ends at D48:** Both ORRPB and PSPC agree at 441; two-source agreement and level consistency confirm genuine reading. Floor at 22h ≈ 404 m³/s. D48 sub-400 streak almost certainly ends today (see upper basin section for full check). Provisional.
+3. **Mattawa data-revision correction from yesterday's brief:** Nov 4 ORRPB daily revised from 152.27 → 152.36 m (+9 cm). Yesterday's "daily rise streak ends" claim was incorrect — streak continued through Nov 4 and Nov 5 (3 consecutive rises). No flood-state implication; noted for record accuracy.
 
-No flood-risk implications. Lac Coulonge etat 0, 115 cm below pre-alert.
+No flood-risk implications. Lac Coulonge etat 0, 108 cm below pre-alert.
 
 ---
 
 ## Notes
 
-- **Nov 3 D47 Témiscaming retro: final 351 m³/s.** Yesterday's provisional was 358 m³/s (revision −2.0%, well within 50 m³/s tolerance, CONFIRMED). Sub-400 streak extends to D47; D48 provisional via PSPC T00 = 398 m³/s.
-- **Mattawa convention note (recurring):** Yesterday's TL;DR reported live T17 reading of 152.49 m (+18 cm), framed as "4th consecutive rise." ORRPB daily Nov 3 finalized at 152.35 m (+11 cm from Nov 2 daily 152.24 m). Direction was correct; the 14 cm discrepancy reflects live-reading vs daily-average convention. Today's ORRPB daily (152.27 m) is based on the T00 midnight snapshot. The brief now consistently uses ORRPB daily series values to avoid this.
+- **Nov 4 Témiscaming retro: final 358 m³/s.** Yesterday's PSPC provisional was 398 m³/s (revision −40 m³/s, within 50 m³/s tolerance, CONFIRMED). D48 sub-400 confirmed.
+- **Mattawa ORRPB daily convention note:** The Nov 4 value used in yesterday's brief was 152.27 m (from T00 provisional at run time). It finalized at 152.36 m — a +9 cm revision that changed the streak conclusion. This is a recurring source of same-day discrepancy; the ORRPB provisional T00 value used at run time can be revised by the following afternoon's data refresh.
+- **Rapide-7 intraday dispatch (3-28):** T18 dipped to 106 m³/s (dispatch reduction), T19 recovered to 165 m³/s, while Carillon simultaneously ramped T18-T19. This appears to be coordinated inter-dam dispatch scheduling. No effect on property reach.
 - **V3 posterior:** Script ran successfully (exit 0). `freshet-forecast.json` content unchanged from prior commit (asof 2026-06-07). Will update once `lac-coulonge-daily-1990-2026.csv` is extended past the freshet season.
-- **Des Joachims reservoir +4 cm overnight** (152.14 → 152.18 m). OPG run-of-river facility, outflow likely underreported (placeholder 205 m³/s vs yesterday 407 m³/s — large OPG flow discrepancy). No anomaly at the river level.
+- **Des Joachims reservoir +5 cm overnight** (152.14 → 152.19 m). Largest single-reservoir rise today; still modest, well below the 10 cm/day active-retention threshold.
