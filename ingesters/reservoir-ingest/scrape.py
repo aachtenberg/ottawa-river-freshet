@@ -16,12 +16,15 @@ import urllib.request
 from datetime import datetime, timezone, timedelta
 from html.parser import HTMLParser
 
+from orrpb_http import fetch_text
+
 ORRPB_URL = 'https://www.ottawariver.ca/conditions/?display=reservoir'
+# SCRAPE_USER_AGENT lets another deployment of this script identify itself
+# (same knob as orrpb-river-ingest and orrpb-station-history).
 USER_AGENT = os.environ.get(
     'SCRAPE_USER_AGENT',
-    'freshet/1.0 (+https://github.com/aachtenberg/ottawa-river-freshet; community flood monitoring)',
-)
-POSTGREST = os.environ.get('POSTGREST_URL', 'http://postgrest:3000')
+    'freshet-xgrunt-com/1.0 (+https://freshet.xgrunt.com; community flood monitoring)')
+POSTGREST = os.environ.get('POSTGREST_URL', 'http://postgrest.data.svc.cluster.local:3000')
 
 # ORRPB table-label → our reservoir_id slug. The ORRPB-published name is
 # whatever shows up in the first column of the reservoir levels table.
@@ -220,8 +223,7 @@ def fetch_html():
         'User-Agent': USER_AGENT,
         'Accept': 'text/html,application/xhtml+xml',
     })
-    with urllib.request.urlopen(req, timeout=30) as r:
-        return r.read().decode('utf-8', errors='replace')
+    return fetch_text(req, timeout=30)
 
 
 def post_rows(table, rows):

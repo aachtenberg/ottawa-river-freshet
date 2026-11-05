@@ -51,9 +51,12 @@ the historical baseline, ECCC is authoritative.
 
 | Variable | Default | Notes |
 |---|---|---|
-| `POSTGREST_URL` | `http://postgrest:3000` | PostgREST endpoint |
+| `POSTGREST_URL` | `http://postgrest:3000` | PostgREST endpoint: set by the compose file and the k8s manifests; the script's own default is the upstream cluster's `postgrest.data.svc.cluster.local:3000` |
 | `ECCC_YEARS_BACK` | `1` | Pull current + N prior years (covers prior-year tail of provisional data) |
 | `ECCC_POST_BATCH` | `500` | Rows per PostgREST POST |
+| `ECCC_FETCH_ATTEMPTS` | `4` | climate.weather.gc.ca resets a few connections per run; resets, timeouts and 5xx are retried this many times (a 4xx raises at once) |
+| `ECCC_FETCH_BACKOFF_S` | `5` | First retry wait; doubles each attempt (5 s, 10 s, 20 s) |
+| `SCRAPE_USER_AGENT` | `freshet-eccc-ingest/1.0 (…)` | Identify your deployment to ECCC |
 
 ## Schedule
 

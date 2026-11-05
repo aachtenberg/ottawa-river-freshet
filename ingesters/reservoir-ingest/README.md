@@ -5,7 +5,13 @@ Daily Python script that scrapes the ORRPB conditions page
 8-day rolling reservoir-levels-and-flows table, and upserts into TimescaleDB
 via PostgREST.
 
-Stdlib-only (urllib + html.parser) — no `pip install` needed.
+Stdlib-only (urllib + html.parser) — no `pip install` needed. HTTP goes
+through `orrpb_http.py` (shipped next to the script, same copy as the
+other two ORRPB scrapers): ottawariver.ca sits behind a CDN that sometimes
+hands out a dead edge node, so 5xx and network errors are retried a few
+times, spaced past the DNS cache (`ORRPB_FETCH_ATTEMPTS`,
+`ORRPB_FETCH_RETRY_WAIT_S`). Set `SCRAPE_USER_AGENT` to identify your
+deployment.
 
 ## How it works
 

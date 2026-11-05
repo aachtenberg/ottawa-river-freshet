@@ -54,7 +54,7 @@ Don't remove either if you refactor.
 
 | Variable | Default | Notes |
 |---|---|---|
-| `POSTGREST_URL` | `http://postgrest:3000` | Your PostgREST endpoint |
+| `POSTGREST_URL` | `http://postgrest:3000` | Your PostgREST endpoint: set by the compose file and the k8s manifests; the script's own default is the upstream cluster's `postgrest.data.svc.cluster.local:3000` |
 | `HQ_CENTRALES_URL` | (HQ canonical URL) | Override for testing against a local file |
 | `HQ_STATIONS_URL`  | (HQ canonical URL) | Same — both URLs accept `file://` paths |
 | `HQ_LAT_MIN` / `HQ_LAT_MAX` | `45.0` / `48.0` | Bounding box (degrees) |
@@ -77,3 +77,9 @@ Each pull re-uploads the full ~10-day buffer with
 also picks up HQ's revisions to hours already stored. This used to be
 `ignore-duplicates` for the hypertables, which silently dropped back-fills —
 the Aug 18 2026 Barrière restart sat as zeros for 17 h because of it.
+
+Two guards drop feed glitches rather than store them: a release hour where
+almost every station reads exactly 0 at once (2026-07-06 15:00Z zeroed 19
+of 21 sites) is skipped whole, since 0 is a real value for one site but
+never for the whole cascade; and a level reading of 0 or below is dropped,
+since every basin level station is an elevation far above 0 m.

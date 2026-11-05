@@ -5,7 +5,7 @@
 # Override defaults via .env (see .env.example).
 #
 # After `docker compose up -d`, the schema is bootstrapped on first start of
-# timescaledb. The `cron-river` and `cron-reservoir` services are simple
+# timescaledb. The `cron-*` services are simple
 # loops that run the ingester scripts on a wall-clock cadence — for a more
 # robust setup, swap them for systemd timers, host cron, or a real scheduler.
 
@@ -155,6 +155,24 @@ services:
       ECCC_YEARS_BACK: ${ECCC_YEARS_BACK:-1}
     volumes:
       - ../../ingesters/eccc-ingest:/app:ro
+
+  # ORRPB main-stem daily flows and levels (Temiscaming … Carillon, the OPG
+  # dams the HQ feed lacks) → orrpb_river_flows / orrpb_river_levels. Feeds
+  # the Flow tab. Same 8-day rolling window as the reservoir scrape.
+  cron-orrpb-river:
+    <<: *cron-base
+    command:
+      - sh
+      - -c
+      - |
+        set -e
+        echo "ORRPB river-flows scraper starting; will run every 24h"
+        while true; do
+          python /app/ingest.py || echo "orrpb-river-ingest failed: $$?"
+          sleep 86400
+        done
+    volumes:
+      - ../../ingesters/orrpb-river-ingest:/app:ro
 
   # ORRPB per-station history (observed / median / historic high & low) for
   # the 13 main-stem stations and 12 principal reservoirs, plus the

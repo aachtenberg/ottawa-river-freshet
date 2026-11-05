@@ -1,10 +1,17 @@
 import os, json, sys, urllib.request
 from datetime import datetime, timezone, timedelta
 
-VIGILANCE = 'https://inedit.geo.securite.gouv.qc.ca'  # inedit-ro removed 2026-08-10, geo.msp.gouv.qc.ca 2026-10-27; same API on this host
+# NOTE: use the primary `inedit` host, NOT the `inedit-ro` read-only replica.
+# The `-ro` mirror's replication breaks post-freshet and serves stale rows for
+# days with no error (looks like a "freeze"); the primary host the official
+# Vigilance site itself queries stays live. Switched 2026-05-29 after the -ro
+# mirror froze at May 27 while `inedit` was current to the hour.
+# MSP moved to the securite.gouv.qc.ca domain and deleted the
+# geo.msp.gouv.qc.ca records on 2026-10-27; same API, new host.
+VIGILANCE = 'https://inedit.geo.securite.gouv.qc.ca'
 OPEN_METEO = 'https://api.open-meteo.com/v1/forecast'
 KIWIS = 'https://waterdata.quinteconservation.ca/KiWIS/KiWIS'
-POSTGREST = os.environ.get('POSTGREST_URL', 'http://postgrest:3000')
+POSTGREST = os.environ.get('POSTGREST_URL', 'http://postgrest.data.svc.cluster.local:3000')
 STATIONS = [int(x) for x in os.environ.get('STATION_IDS', '1195,1004,951,545,1279,984,548,550,981,1264').split(',') if x.strip()]
 
 # MVCA / Kisters KiWIS stations (Mississippi Valley Conservation Authority).

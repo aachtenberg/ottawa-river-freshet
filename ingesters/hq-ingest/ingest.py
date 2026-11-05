@@ -81,12 +81,12 @@ def fetch_json(url):
 
 
 def post_rows(path, rows):
-    # merge-duplicates (upsert), not ignore-duplicates: HQ back-fills hours it
-    # first published as 0 (e.g. the 2026-08-18 Barrière diversion restart sat
-    # as zeros in dam_releases for 17 h). The feed re-serves its full ~10-day
-    # window every run, so upserting makes each run pick up revisions.
     if not rows:
         return 0
+    # merge-duplicates (upsert), not ignore-duplicates: HQ back-fills hours it
+    # first published as 0 (e.g. the 2026-08-18 Barriere diversion restart sat
+    # as zeros in dam_releases for 17 h). The feed re-serves its full ~10-day
+    # window every run, so upserting makes each run pick up revisions.
     sent = 0
     for i in range(0, len(rows), POST_BATCH):
         chunk = rows[i:i + POST_BATCH]
@@ -342,6 +342,27 @@ def ingest_centrales(payload):
                 'spilled_cms':  vals['spilled']  if vals['has_spill'] else None,
             })
 
+    # Feed-wide zero-glitch guard. HQ's feed occasionally publishes an hour
+    # where virtually every station reads exactly 0 (2026-07-06 15:00Z zeroed
+    # 19 of 21 basin sites' releases and the level series in the same hour).
+    # A per-row filter can't work here — 0 is a legitimate release value for
+    # a single site (turbines off, no spill) — but the whole cascade at
+    # literal 0 simultaneously only happens when the feed hour is corrupt.
+    # Drop such timestamps entirely; a missing hour beats bogus zeros that
+    # persist for the feed's ~10-day window and corrupt daily means.
+    by_time = defaultdict(lambda: [0, 0])  # ts -> [n_with_total, n_zero]
+    for r in release_rows:
+        if r['total_cms'] is not None:
+            by_time[r['time']][0] += 1
+            if r['total_cms'] == 0:
+                by_time[r['time']][1] += 1
+    glitch_ts = {ts for ts, (n, z) in by_time.items() if n >= 5 and z / n >= 0.8}
+    if glitch_ts:
+        before = len(release_rows)
+        release_rows = [r for r in release_rows if r['time'] not in glitch_ts]
+        print(f'  glitch guard: dropped {before - len(release_rows)} release rows '
+              f'at feed-wide-zero hours: {sorted(glitch_ts)}')
+
     print(f'  releases: {len(release_rows)} rows; inflows: {len(inflow_rows)} rows')
     upsert_sites(site_rows)
     post_rows('dam_releases', release_rows)
@@ -364,6 +385,12 @@ def ingest_stations(payload):
                 try:
                     v = float(val)
                 except (TypeError, ValueError):
+                    continue
+                # HQ occasionally publishes a literal "0.00" glitch reading
+                # (seen 2026-07-06 on 1-2983 Fort Coulonge). Every basin level
+                # station is an elevation far above 0 m, so 0/negative is
+                # never a real value — drop it rather than store it.
+                if v <= 0:
                     continue
                 level_rows.append({
                     'time': normalize_ts(ts),

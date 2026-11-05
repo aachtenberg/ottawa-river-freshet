@@ -1,10 +1,11 @@
 # Docker Compose deploy
 
 Single-host deployment of the freshet stack. Brings up TimescaleDB, PostgREST,
-nginx serving the dashboard, plus seven cron-style sidecars: river ingester
+nginx serving the dashboard, plus eight cron-style sidecars: river ingester
 (Vigilance + KiWIS + open-meteo), reservoir scraper, Hydro-Québec open-data
 ingester, WSC realtime ingester, ECCC daily-climate ingester, ORRPB
-per-station history scraper, and the threshold-crossing alerter.
+main-stem flows scraper, ORRPB per-station history scraper, and the
+threshold-crossing alerter.
 
 ## Prerequisites
 
@@ -30,6 +31,7 @@ schedules:
 | `cron-hq` | hourly | Hydro-Québec open-data JSON feeds |
 | `cron-wsc` | hourly | WSC realtime CSV inline endpoint |
 | `cron-eccc` | every 6h | ECCC daily-climate bulk CSV |
+| `cron-orrpb-river` | daily | ORRPB conditions page, main-stem average daily flows + levels (Temiscaming … Carillon) → Flow tab |
 | `cron-orrpb-station-history` | daily | ORRPB per-location pages: observed / median / historic envelope for 13 stations + 12 reservoirs, reservoir operating limits → cascade storage proxy |
 | `cron-alerter` | hourly | Vigilance + ntfy POST on threshold crossing |
 
@@ -43,6 +45,7 @@ docker compose exec cron-reservoir             python /app/scrape.py
 docker compose exec cron-hq                    python /app/ingest.py
 docker compose exec cron-wsc                   python /app/ingest.py
 docker compose exec cron-eccc                  python /app/ingest.py
+docker compose exec cron-orrpb-river           python /app/ingest.py
 docker compose exec cron-orrpb-station-history python /app/scrape.py
 ```
 

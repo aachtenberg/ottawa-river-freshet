@@ -27,27 +27,41 @@ complementary, not duplicative.
 
 ## Default stations
 
-Active Ottawa basin gauges with discharge data:
+Active Ottawa basin gauges (names as WSC publishes them). Main stem first,
+then the tributaries the dashboard's Tributaries tab reads from
+`wsc_readings`, then two downstream proxies:
 
-| Code | River |
-|---|---|
-| 02KF005 | Ottawa River at Britannia |
-| 02KF019 | Ottawa River at Masson-Angers |
-| 02LA015 | Mississippi River near Appleton |
-| 02LB008 | Rideau River at Ottawa |
-| 02JE013 | Ottawa River at Mattawa |
-| 02LH004 | Gatineau River at Farmers Rapids |
-| 02LE024 | Lièvre River at Pont 311 |
-| 02KA004 | Petawawa River near Petawawa |
+| Code | Station | Why |
+|---|---|---|
+| 02KF005 | Ottawa River at Britannia | main stem at Ottawa, flow record since 1960 |
+| 02KF019 | Ottawa River (north shore) at Masson-Angers | main stem below Gatineau |
+| 02LA015 | Outaouais (rivière des) à Hull | main-stem level at Hull, the Carillon directive trigger |
+| 02LB008 | Bear Brook near Bourget | legacy |
+| 02JE013 | Ottawa River at Mattawa | Otto Holden tailwater |
+| 02JE020 | Mattawa River below Bouillon Lake | Mattawa tributary, above the confluence |
+| 02JE025 | Témiscamingue (lac) à Témiscaming | the dashboard's WSC fallback for Vigilance 951 (level only) |
+| 02LH004 | Gatineau River at Farmers Rapids | Gatineau |
+| 02LE024 | Lièvre (rivière du) au pont-route 311 | Lièvre |
+| 02KB001 | Petawawa River near Petawawa | Petawawa |
+| 02KC009 | Bonnechere River near Castleford | Bonnechere |
+| 02KD004 | Madawaska River at Palmer Rapids | Madawaska |
+| 02KF001 | Mississippi River at Fergusons Falls | Mississippi (ON), upper |
+| 02KF006 | Mississippi River at Appleton | Mississippi (ON), lower |
+| 02LA004 | Rideau River at Ottawa | Rideau |
+| 02LB005 | South Nation River near Plantagenet Springs | South Nation |
+| 02OA105 | Deux Montagnes (lac des) à Pointe-Calumet | Carillon tailwater proxy |
+| 02OA039 | Lac Saint-Louis at Pointe-Claire | downstream St. Lawrence proxy |
 
-Override via `WSC_STATIONS=<comma-separated codes>`.
+Override via `WSC_STATIONS=<comma-separated codes>`. (Earlier versions of
+this list named 02KA004 for the Petawawa; that code is a discontinued Perch
+Lake gauge near Chalk River. 02KB001 is the active Petawawa station.)
 
 ## Configuration
 
 | Variable | Default | Notes |
 |---|---|---|
-| `POSTGREST_URL` | `http://postgrest:3000` | PostgREST endpoint |
-| `WSC_STATIONS`  | (8 default codes above) | Override station list |
+| `POSTGREST_URL` | `http://postgrest:3000` | PostgREST endpoint: set by the compose file and the k8s manifests; the script's own default is the upstream cluster's `postgrest.data.svc.cluster.local:3000` |
+| `WSC_STATIONS`  | (18 default codes above) | Override station list |
 | `WSC_LOOKBACK_HOURS` | `24` | Window per pull |
 | `WSC_POST_BATCH` | `2000` | Rows per PostgREST POST |
 

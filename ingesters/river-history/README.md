@@ -25,7 +25,7 @@ does).
 
 | Variable | Default | Notes |
 |---|---|---|
-| `POSTGREST_URL` | `http://postgrest:3000` | Your PostgREST endpoint (docker-compose service name by default; in K8s use `http://postgrest.<namespace>.svc.cluster.local:3000`) |
+| `POSTGREST_URL` | `http://postgrest:3000` | Your PostgREST endpoint: set by the compose file (service name) and the k8s manifests (`http://postgrest.freshet.svc.cluster.local:3000`); the script's own default is the upstream cluster's `postgrest.data.svc.cluster.local:3000`, so set it for a bare run |
 | `STATION_IDS` | `1195,1004,951,545,1279,984,548,550,981,1264,442,994,982,983,522,196,211,300` | Comma-separated Vigilance numeric IDs (Ottawa main stem + Gatineau cascade 442/994/982/983 + Lièvre cascade 522/196/211/300) |
 | `MVCA_STATIONS` | `99001:48242042:Buckhams Bay` | `stationId:kiwisTsId:Label`, comma-separated. Empty disables MVCA ingest. |
 | `MVCA_LOOKBACK_HOURS` | `24` | Override for one-shot historical backfill |

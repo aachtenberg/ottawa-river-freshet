@@ -23,16 +23,22 @@ POSTGREST = os.environ.get('POSTGREST_URL', 'http://postgrest.data.svc.cluster.l
 DEFAULT_STATIONS = (
     '02KF005,'  # OTTAWA RIVER AT BRITANNIA — main-stem at Ottawa, ~91,260 km² drainage
     '02KF019,'  # OTTAWA RIVER (NORTH SHORE) AT MASSON-ANGERS
-    '02LA015,'  # MISSISSIPPI RIVER NEAR APPLETON
-    '02LB008,'  # RIDEAU RIVER AT OTTAWA
+    '02LA015,'  # OUTAOUAIS A HULL — main-stem level at Hull
+    '02LB008,'  # BEAR BROOK NEAR BOURGET (legacy)
     '02JE013,'  # OTTAWA RIVER AT MATTAWA — combined Ottawa+Mattawa flow at confluence
-    '02JE020,'  # MATTAWA RIVER BELOW BOUILLON LAKE — Mattawa-only signal upstream of confluence
-    '02JE025,'  # LAKE TIMISKAMING AT TEMISCAMING — dashboard fallback for Vigilance 951 (level only)
+    '02JE020,'  # MATTAWA RIVER BELOW BOUILLON LAKE — Mattawa-tributary signal
+    '02JE025,'  # TEMISCAMINGUE (LAC) A TEMISCAMING — the dashboard's WSC fallback for Vigilance 951 (level only)
     '02LH004,'  # GATINEAU RIVER AT FARMERS RAPIDS
     '02LE024,'  # LIEVRE (RIVIERE DU) AU PONT-ROUTE 311
-    '02KA004,'  # PETAWAWA RIVER NEAR PETAWAWA
-    '02OA105,'  # LAKE OF TWO MOUNTAINS AT POINTE-CALUMET — Carillon tailwater proxy (level 1986-)
-    '02OA039'   # LAC SAINT-LOUIS AT POINTE-CLAIRE — downstream proxy via St-Lawrence (level 1915-)
+    '02KB001,'  # PETAWAWA RIVER NEAR PETAWAWA — Petawawa tributary
+    '02KC009,'  # BONNECHERE RIVER NEAR CASTLEFORD — Bonnechere tributary
+    '02KD004,'  # MADAWASKA RIVER AT PALMER RAPIDS — Madawaska tributary
+    '02KF001,'  # MISSISSIPPI RIVER AT FERGUSONS FALLS — Mississippi (ON) upper
+    '02KF006,'  # MISSISSIPPI RIVER AT APPLETON — Mississippi (ON) lower
+    '02LA004,'  # RIDEAU RIVER AT OTTAWA — Rideau tributary
+    '02LB005,'  # SOUTH NATION RIVER NEAR PLANTAGENET SPRINGS — South Nation
+    '02OA105,'  # LAKE OF TWO MOUNTAINS AT POINTE-CALUMET — Carillon tailwater proxy
+    '02OA039'   # LAC SAINT-LOUIS AT POINTE-CLAIRE — downstream St-Lawrence proxy
 )
 
 STATIONS = [s.strip() for s in os.environ.get('WSC_STATIONS', DEFAULT_STATIONS).split(',') if s.strip()]

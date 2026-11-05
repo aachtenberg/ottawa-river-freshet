@@ -31,6 +31,8 @@ import urllib.request
 from datetime import datetime, timezone, timedelta
 from html.parser import HTMLParser
 
+from orrpb_http import fetch_text
+
 ORRPB_FLOWS_URL  = os.environ.get("ORRPB_RIVER_URL",
                                   "https://www.ottawariver.ca/conditions/?display=river")
 ORRPB_LEVELS_URL = os.environ.get("ORRPB_LEVELS_URL",
@@ -104,8 +106,7 @@ def cell_text(cell):
 def fetch_html(url):
     req = urllib.request.Request(url, headers={
         "User-Agent": USER_AGENT, "Accept": "text/html,application/xhtml+xml"})
-    with urllib.request.urlopen(req, timeout=30) as r:
-        return r.read().decode("utf-8", "replace")
+    return fetch_text(req, timeout=30)
 
 
 def find_table(tables, needles):

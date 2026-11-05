@@ -108,10 +108,22 @@ kubectl create configmap river-history-script \
   --from-file=ingest.py=../../ingesters/river-history/ingest.py \
   -n freshet --dry-run=client -o yaml | kubectl apply -f -
 
-# Reservoir-ingest script
+# Reservoir-ingest script (+ its HTTP helper)
 kubectl create configmap reservoir-ingest-script \
   --from-file=scrape.py=../../ingesters/reservoir-ingest/scrape.py \
+  --from-file=orrpb_http.py=../../ingesters/reservoir-ingest/orrpb_http.py \
   -n freshet --dry-run=client -o yaml | kubectl apply -f -
+
+# ORRPB river-flows script (+ its HTTP helper)
+kubectl create configmap orrpb-river-ingest-script \
+  --from-file=ingest.py=../../ingesters/orrpb-river-ingest/ingest.py \
+  --from-file=orrpb_http.py=../../ingesters/orrpb-river-ingest/orrpb_http.py \
+  -n freshet --dry-run=client -o yaml | kubectl apply -f -
+
+# HQ / WSC / ECCC scripts follow the same shape:
+#   hq-ingest-script   ingest.py=../../ingesters/hq-ingest/ingest.py
+#   wsc-ingest-script  ingest.py=../../ingesters/wsc-ingest/ingest.py
+#   eccc-ingest-script ingest.py=../../ingesters/eccc-ingest/ingest.py
 
 # Alerter script
 kubectl create configmap freshet-alerter-script \
