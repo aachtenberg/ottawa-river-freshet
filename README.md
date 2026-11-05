@@ -105,6 +105,7 @@ plain-Kubernetes deployment example.
 | [`ingesters/eccc-ingest/`](ingesters/eccc-ingest/) | ECCC daily climate ingest (precipitation, temperature). |
 | [`ingesters/orrpb-river-ingest/`](ingesters/orrpb-river-ingest/) | Daily ORRPB main-stem average daily flows + levels, Temiscaming to Carillon (the OPG dams the HQ feed lacks). Feeds the Flow tab. |
 | [`ingesters/orrpb-station-history/`](ingesters/orrpb-station-history/) | Daily ORRPB per-location history: observed / 1991–2020 median / historic envelope for 13 stations and 12 reservoirs, plus reservoir operating limits. Feeds the cascade storage proxy. |
+| [`ingesters/swe-ingest/`](ingesters/swe-ingest/) | Snow-water-equivalent → `swe_daily`: CaLDAS-NSRPS daily analysis (ECCC GeoMet, no auth), ERA5-Land back to 1950 (Copernicus CDS, k8s only), and a one-shot CanSWE in-situ loader. |
 | **Historical / analytical ingesters** | |
 | [`ingesters/climate-history/`](ingesters/climate-history/) | One-shot loaders and analytical scripts: `wsc_hydat_load.py` (178k rows from 9 Ottawa-basin stations 1915–2025), `stepchange_analysis.py` (Test A), `lc_brit_regression.py` (per-event amplification), `annual_volume_test.py` (Test C), `seasonal_window_analysis.py` (Test C addendum), `lac_coulonge_climate_regression.py`. |
 | [`ingesters/orrpb-historical-summaries/`](ingesters/orrpb-historical-summaries/) | One-shot loader for ORRPB published monthly summaries 1972–2025. |

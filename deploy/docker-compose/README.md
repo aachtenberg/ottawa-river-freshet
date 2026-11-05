@@ -1,11 +1,11 @@
 # Docker Compose deploy
 
 Single-host deployment of the freshet stack. Brings up TimescaleDB, PostgREST,
-nginx serving the dashboard, plus eight cron-style sidecars: river ingester
+nginx serving the dashboard, plus nine cron-style sidecars: river ingester
 (Vigilance + KiWIS + open-meteo), reservoir scraper, Hydro-Québec open-data
 ingester, WSC realtime ingester, ECCC daily-climate ingester, ORRPB
-main-stem flows scraper, ORRPB per-station history scraper, and the
-threshold-crossing alerter.
+main-stem flows scraper, ORRPB per-station history scraper, CaLDAS
+snow-water-equivalent ingester, and the threshold-crossing alerter.
 
 ## Prerequisites
 
@@ -33,7 +33,13 @@ schedules:
 | `cron-eccc` | every 6h | ECCC daily-climate bulk CSV |
 | `cron-orrpb-river` | daily | ORRPB conditions page, main-stem average daily flows + levels (Temiscaming … Carillon) → Flow tab |
 | `cron-orrpb-station-history` | daily | ORRPB per-location pages: observed / median / historic envelope for 13 stations + 12 reservoirs, reservoir operating limits → cascade storage proxy |
+| `cron-swe-caldas` | daily | ECCC GeoMet CaLDAS-NSRPS snow-water-equivalent at 16 basin points → `swe_daily` |
 | `cron-alerter` | hourly | Vigilance + ntfy POST on threshold crossing |
+
+Not in compose: the ERA5-Land SWE history feed. It needs a Copernicus CDS
+account, a licence click and an hours-long first backfill, so in this tier
+it runs on Kubernetes only (`85-swe-ingest-cron.yaml`); see
+[`ingesters/swe-ingest/README.md`](../../ingesters/swe-ingest/README.md).
 
 Each runs the script immediately on startup, then on its cadence.
 
@@ -47,14 +53,19 @@ docker compose exec cron-wsc                   python /app/ingest.py
 docker compose exec cron-eccc                  python /app/ingest.py
 docker compose exec cron-orrpb-river           python /app/ingest.py
 docker compose exec cron-orrpb-station-history python /app/scrape.py
+docker compose exec cron-swe-caldas            python /app/caldas_ingest.py
 ```
 
 ## Upgrading the schema on an existing volume
 
 `bootstrap.sql` only runs on the first start of an empty `tsdb-data` volume.
-When a newer checkout adds tables or views (2026-11: `orrpb_station_history`,
-`orrpb_station_limits`, `reservoir_capacity`, the `reservoir_storage_proxy`
-views), re-apply it once — the file is idempotent, so this is safe to repeat:
+When a newer checkout adds tables or views, re-apply it once — the file is
+idempotent, so this is safe to repeat. Tables added since the first public
+release that a sidecar will 404 against until you do: `swe_daily`,
+`swe_locations` and `latest_swe_daily` (for `cron-swe-caldas`), and
+`orrpb_station_history`, `orrpb_station_limits`, `reservoir_capacity` and the
+`reservoir_storage_proxy` views (for `cron-orrpb-station-history` and the
+Reservoirs tab's storage chart).
 
 ```bash
 docker compose exec -T timescaledb psql -U freshet -d freshet -v ON_ERROR_STOP=1 \

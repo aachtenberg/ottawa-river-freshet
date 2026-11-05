@@ -194,6 +194,25 @@ services:
     volumes:
       - ../../ingesters/orrpb-station-history:/app:ro
 
+  # CaLDAS-NSRPS snow-water-equivalent, 16 basin points sampled from ECCC
+  # GeoMet (no auth) → swe_daily. The ERA5-Land companion (CDS account,
+  # licence, multi-decade backfill) is Kubernetes-only in this tier; see
+  # ingesters/swe-ingest/README.md.
+  cron-swe-caldas:
+    <<: *cron-base
+    command:
+      - sh
+      - -c
+      - |
+        set -e
+        echo "CaLDAS SWE ingester starting; will run every 24h"
+        while true; do
+          python /app/caldas_ingest.py || echo "swe-caldas failed: $$?"
+          sleep 86400
+        done
+    volumes:
+      - ../../ingesters/swe-ingest:/app:ro
+
   cron-alerter:
     image: python:3.12-alpine
     restart: unless-stopped
