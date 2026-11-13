@@ -3716,8 +3716,12 @@ async function fetchStationHistory(stationId, hours) {
   // Vigilance hourly continuous-aggregate only when the cluster source is empty.
   const fb = FALLBACK_SOURCES[stationId];
   if (fb) {
+    // Raw WSC rows arrive every 5 minutes: a 60-day Mattawa chart was ~17,000
+    // points against ~1,400 for its neighbours (OTTAW-41). Windows past 72 h
+    // read the hourly aggregate, as the Vigilance path below does.
+    const path = fb.path === 'wsc_readings' && hours > 72 ? 'wsc_readings_hourly' : fb.path;
     try {
-      const cu = `/history/${fb.path}?${fb.key}=eq.${fb.value}&time=gte.${since}&order=time.asc&select=time,level_m`;
+      const cu = `/history/${path}?${fb.key}=eq.${fb.value}&time=gte.${since}&order=time.asc&select=time,level_m`;
       const cr = await fetch(cu, { cache: 'no-store' });
       if (cr.ok) {
         const crows = (await cr.json()).filter(x => x.level_m != null);
