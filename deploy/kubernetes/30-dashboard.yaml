@@ -437,6 +437,14 @@ data:
     .drawdown-total .dd-big { font-size: 26px; font-weight: 700; line-height: 1.1; }
     .drawdown-total .dd-big-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
     .res-section { margin-top: 18px; }
+    .flow-h3 { font-size: 15px; margin: 26px 0 4px; }
+    .flow-sm-row { display: grid; grid-template-columns: 190px minmax(0, 1fr) 96px; align-items: center; gap: 12px; padding: 8px 14px; border-bottom: 1px solid var(--border); }
+    .flow-sm-row:last-child { border-bottom: 0; }
+    .flow-sm-row .nm { font-size: 14px; font-weight: 600; }
+    .flow-sm-row .pk { font-size: 12px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+    .flow-sm-row .now { text-align: right; font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .flow-sm-row .now span { display: block; font-size: 11px; font-weight: 400; color: var(--text-muted); }
+    @media (max-width: 600px) { .flow-sm-row { grid-template-columns: 96px minmax(0, 1fr) 70px; gap: 8px; padding: 8px 10px; } }
     .res-table { min-width: 760px; }
     .res-table.has-dd { min-width: 1000px; }
     .res-table td { font-variant-numeric: tabular-nums; }
@@ -1006,12 +1014,9 @@ data:
     </div>
 
     <div class="tab-panel" data-tab="flow">
-      <div class="section-title" style="margin-top: 4px;">Wave propagation — three views</div>
-      <div class="section-subtitle">
-        The Ottawa is a system, not a place. A freshet pulse that hits Témiscaming arrives at Carillon several days later — the river carries the wave downstream as a physical signal. Each panel below tells the same story with a different visual grammar; this page exists so the community can tell us which is most useful.
-        <br><br>
-        Source: <strong>mean daily discharge (m³/s)</strong> from the ORRPB main stem (Témiscaming → Carillon), backfilled from <a href="https://www.ottawariver.ca/conditions/?display=river" target="_blank">ORRPB's per-location archive</a> for the past year. Pick a window below — short windows show the current 2026 freshet, longer windows include the 2025 freshet and summer/fall recession for context.
-      </div>
+      <h2 class="section-title" style="margin-top: 4px;" data-i18n="flow_h">Wave propagation</h2>
+      <p class="section-subtitle" data-i18n="flow_sub">A freshet pulse that hits Témiscaming reaches Carillon days later: the river carries the wave downstream. Both views show the same daily flows, upstream at the top, so the wave reads as a shift to the right as you go down.</p>
+      <p class="section-subtitle" style="font-size: 12px;">Source: <strong>mean daily discharge (m³/s)</strong> from the ORRPB main stem (Témiscaming → Carillon), backfilled from <a href="https://www.ottawariver.ca/conditions/?display=river" target="_blank">ORRPB's per-location archive</a> for the past year. Pick a window below — short windows show the current 2026 freshet, longer windows include the 2025 freshet and summer/fall recession for context.</p>
       <div class="range-picker" id="range-picker-flow" style="margin-top: 14px;">
         <span class="label">Window</span>
         <button class="range-btn" data-days="7">7d</button>
@@ -1023,26 +1028,13 @@ data:
         <button class="range-btn" data-days="400">1 yr</button>
       </div>
 
-      <!-- Viz 1: Multi-line time series -->
-      <div class="section-title" style="margin-top: 22px; font-size: 13px;">1 · Multi-line time series <span style="font-weight:400;color:var(--text-muted);font-size:11px;">· last 30 days · one line per station</span></div>
-      <div class="section-subtitle" style="margin-bottom: 8px;">The familiar form. Magnitude differences (upstream = thinner river, downstream = bigger) and day-to-day changes are both readable, but you have to mentally trace each line to spot the wave moving downstream.</div>
-      <div style="position: relative; height: 340px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px;">
-        <canvas id="flow-multiline"></canvas>
-      </div>
+      <h3 class="section-title flow-h3" data-i18n="flow_sm_h">Daily flow, station by station</h3>
+      <p class="section-subtitle" data-i18n="flow_sm_sub">One row per station, each scaled to its own range, with its peak and the latest value. Watch a peak move down the stack.</p>
+      <div class="corr-wrap" id="flow-smallmultiples"></div>
 
-      <!-- Viz 2: Stacked small multiples -->
-      <div class="section-title" style="margin-top: 22px; font-size: 13px;">2 · Stacked small multiples <span style="font-weight:400;color:var(--text-muted);font-size:11px;">· each panel = one station · top is upstream, bottom is downstream</span></div>
-      <div class="section-subtitle" style="margin-bottom: 8px;">The page itself becomes a map of the river. Watch the peak march down the stack — what you see at the top arrives at the bottom several days later.</div>
-      <div id="flow-smallmultiples" style="background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 6px 0;"></div>
-
-      <!-- Viz 3: Hovmöller heatmap -->
-      <div class="section-title" style="margin-top: 22px; font-size: 13px;">3 · Hovmöller heatmap <span style="font-weight:400;color:var(--text-muted);font-size:11px;">· station × day · color = flow (per-station normalized)</span></div>
-      <div class="section-subtitle" style="margin-bottom: 8px;">A meteorologist's tool, repurposed. Stations stack vertically (upstream at top), days run left-to-right. A diagonal stripe of bright cells <em>is</em> the freshet wave moving through the system — its slope tells you the direction. A textbook upper-basin snowmelt freshet would slope <em>down</em> and to the right (upper stations peak first, lower later). On longer windows that include 2026 you'll see the opposite: the stripe slopes <em>up</em> and to the right because the lower-basin tributaries (Gatineau, Madawaska, etc.) peaked around Apr 21-22 while upper-basin Témiscaming didn't peak until May 2. The slope <em>is</em> the story of where the water came from. Each row is normalized to its own station so smaller upstream stations stay legible alongside Carillon.</div>
-      <div id="flow-hovmoller" style="background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px;"></div>
-
-      <div class="section-subtitle" style="margin-top: 18px; font-size: 11px; color: var(--text-faint);">
-        Which of these did you find clearest? Let us know in the community discussion — the most useful view will be promoted into the main Overview tab.
-      </div>
+      <h3 class="section-title flow-h3" data-i18n="flow_hov_h">Wave map</h3>
+      <p class="section-subtitle" data-i18n="flow_hov_sub">Stations down, days across; each row's colour runs from its own low to its own high flow (legend below). A diagonal band of high-flow cells is the wave moving downstream: sloping down to the right means the upper basin peaked first, sloping up means the lower tributaries did (the 2026 freshet).</p>
+      <div class="corr-wrap" id="flow-hovmoller" style="padding: 14px;"></div>
     </div>
 
     <div class="bar-detail-modal" id="bar-detail-modal" onclick="closeBarDetail(event)" aria-hidden="true">
@@ -1249,6 +1241,15 @@ data:
       stations_h:     { en: 'All stations — upstream to downstream', fr: 'Toutes les stations — d\'amont en aval' },
       stations_sub:   { en: 'Every main-stem gauge plus the Coulonge River, with its level, flood state, trace over the selected window, 24 h change and low-water advisory. Low-water notes are informational, boater-beware: there is no official minimum navigable level and conditions vary locally. Select a row for the full detail.',
                         fr: 'Chaque jauge du cours principal et la rivière Coulonge : niveau, état de crue, tracé sur la période choisie, variation sur 24 h et avis de basses eaux. Les avis de basses eaux sont informatifs, à la prudence des plaisanciers : il n\'existe aucun niveau minimal navigable officiel et les conditions varient localement. Sélectionnez une ligne pour le détail.' },
+      flow_h:         { en: 'Wave propagation', fr: 'Propagation de l\'onde' },
+      flow_sub:       { en: 'A freshet pulse that hits Témiscaming reaches Carillon days later: the river carries the wave downstream. Both views show the same daily flows, upstream at the top, so the wave reads as a shift to the right as you go down.',
+                        fr: 'Une crue qui atteint Témiscaming arrive à Carillon quelques jours plus tard : la rivière porte l\'onde vers l\'aval. Les deux vues montrent les mêmes débits quotidiens, l\'amont en haut; l\'onde se lit comme un décalage vers la droite en descendant.' },
+      flow_sm_h:      { en: 'Daily flow, station by station', fr: 'Débit quotidien, station par station' },
+      flow_sm_sub:    { en: 'One row per station, each scaled to its own range, with its peak and the latest value. Watch a peak move down the stack.',
+                        fr: 'Une ligne par station, chacune à sa propre échelle, avec sa pointe et la dernière valeur. Suivez une pointe qui descend la pile.' },
+      flow_hov_h:     { en: 'Wave map', fr: 'Carte de l\'onde' },
+      flow_hov_sub:   { en: 'Stations down, days across; each row\'s colour runs from its own low to its own high flow (legend below). A diagonal band of high-flow cells is the wave moving downstream: sloping down to the right means the upper basin peaked first, sloping up means the lower tributaries did (the 2026 freshet).',
+                        fr: 'Les stations de haut en bas, les jours de gauche à droite; la couleur de chaque ligne va de son propre débit bas à son propre débit haut (légende ci-dessous). Une bande diagonale de cases à débit élevé est l\'onde qui descend : une pente vers le bas à droite signifie que le haut bassin a culminé en premier, une pente vers le haut que ce sont les tributaires aval (la crue de 2026).' },
       freeze_foot:    { en: 'Shaded cells are overnight lows below 0 °C. Last night is observed; later nights are forecast (Open-Meteo).',
                         fr: 'Les cases ombrées sont des minimums nocturnes sous 0 °C. La nuit dernière est observée; les nuits suivantes sont des prévisions (Open-Meteo).' }
     };
@@ -1280,6 +1281,9 @@ data:
       // Tables built in JS carry their own bilingual text; repaint the visible ones.
       if (typeof lastWeatherCache !== 'undefined' && lastWeatherCache) renderFreezePanel(lastWeatherCache);
       if (typeof paintThresholds === 'function') paintThresholds();
+      if (document.querySelector('.tab-panel[data-tab="flow"].active') && typeof flowTabState !== 'undefined' && flowTabState.data) {
+        renderFlowSmallMultiples(flowTabState.data); renderFlowHovmoller(flowTabState.data);
+      }
       if (typeof paintForecastTab === 'function') paintForecastTab();
       if (document.querySelector('.tab-panel[data-tab="stations"].active') && typeof renderStationsTab === 'function') renderStationsTab();
       if (typeof refreshBrysonTurbine === 'function' && document.querySelector('.bryson-turbine')) refreshBrysonTurbine();
@@ -5237,34 +5241,33 @@ data:
       }
     }
 
-    // ---- Flow tab: three propagation visualizations sharing one fetch ----
+    // ---- Flow tab: two propagation views sharing one fetch ----
     // Stations are the 7 ORRPB main-stem reporting points, upstream → downstream.
     // Data source: orrpb_river_flows (daily mean discharge, m³/s). Britannia and
     // Carillon are backfilled to mid-April from WSC realtime / dam_releases; the
     // 5 OPG stations only have data from May 5 onward because ORRPB only publishes
-    // an 8-day rolling window. Colors run cool→warm to hint at flow direction.
+    // an 8-day rolling window. Lines are ink and the heatmap one water-blue ramp:
+    // on this dashboard colour is reserved for flood state.
     const FLOW_TAB_STATIONS = [
-      ['temiscaming',  'Témiscaming',  '#7A5ED8'],
-      ['otto-holden',  'Otto Holden',  '#5B8BD0'],
-      ['des-joachims', 'Des Joachims', '#3AAFD4'],
-      ['chenaux',      'Chenaux',      '#3CB371'],
-      ['chats-falls',  'Chats Falls',  '#E0A93C'],
-      ['britannia',    'Britannia',    '#D85A30'],
-      ['carillon',     'Carillon',     '#C44545'],
+      ['temiscaming',  'Témiscaming'],
+      ['otto-holden',  'Otto Holden'],
+      ['des-joachims', 'Des Joachims'],
+      ['chenaux',      'Chenaux'],
+      ['chats-falls',  'Chats Falls'],
+      ['britannia',    'Britannia'],
+      ['carillon',     'Carillon'],
     ];
     let flowTabDays = 30;  // default window — full 2026 freshet now that ORRPB year-back is scraped
     const flowTabState = { lastFetchTs: 0, data: null, daysAtFetch: 0 };
-    let flowMultilineChart = null;
     let flowSmallMultipleCharts = {};
 
     async function renderFlowTab() {
-      const containers = ['flow-multiline', 'flow-smallmultiples', 'flow-hovmoller']
+      const containers = ['flow-smallmultiples', 'flow-hovmoller']
         .map(id => document.getElementById(id));
       if (!containers.every(Boolean)) return;
 
       const now = Date.now();
       if (flowTabState.data && flowTabState.daysAtFetch === flowTabDays && (now - flowTabState.lastFetchTs) < 300000) {
-        renderFlowMultiline(flowTabState.data);
         renderFlowSmallMultiples(flowTabState.data);
         renderFlowHovmoller(flowTabState.data);
         return;
@@ -5291,109 +5294,63 @@ data:
         flowTabState.lastFetchTs = now;
         flowTabState.daysAtFetch = flowTabDays;
 
-        renderFlowMultiline(flowTabState.data);
         renderFlowSmallMultiples(flowTabState.data);
         renderFlowHovmoller(flowTabState.data);
       } catch (e) {
+        // Drop the cache so a language switch or resize can't repaint the
+        // previous window's charts over this message.
+        flowTabState.data = null;
         containers.forEach(c => {
-          c.innerHTML = `<div style="padding:20px;color:var(--text-muted);font-size:12px;">Flow data unavailable: ${e.message}</div>`;
+          c.innerHTML = `<p class="corr-msg" style="padding:14px 16px;">${L('Flow data unavailable:', 'Débits indisponibles :')} ${e.message}</p>`;
         });
       }
     }
 
-    // Viz 1 — Multi-line: every station on one chart, shared time axis.
-    function renderFlowMultiline({ byStation, dates }) {
-      const isDark = isDarkMode();
-      const grid = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
-      const txt  = isDark ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.55)';
-      const datasets = FLOW_TAB_STATIONS.map(([slug, name, color]) => {
-        const byDate = Object.fromEntries((byStation[slug] || []).map(p => [p.date, p.flow]));
-        return {
-          label: name,
-          data: dates.map(d => byDate[d] ?? null),
-          borderColor: color,
-          backgroundColor: color + '22',
-          borderWidth: 2,
-          pointRadius: 0,
-          pointHoverRadius: 4,
-          tension: 0.25,
-          spanGaps: true,
-        };
-      });
-      const canvas = document.getElementById('flow-multiline');
-      if (!canvas) return;
-      if (flowMultilineChart) flowMultilineChart.destroy();
-      flowMultilineChart = new Chart(canvas, {
-        type: 'line',
-        data: { labels: dates.map(d => d.slice(5)), datasets },
-        options: {
-          responsive: true, maintainAspectRatio: false, animation: false,
-          interaction: { mode: 'index', intersect: false },
-          plugins: {
-            legend: { position: 'top', align: 'end',
-              labels: { color: txt, boxWidth: 14, boxHeight: 2, font: { size: 11 }, padding: 10 } },
-            tooltip: {
-              backgroundColor: isDark ? 'rgba(30,30,30,0.95)' : 'rgba(255,255,255,0.98)',
-              titleColor: isDark ? '#f0f0f0' : '#1a1a1a',
-              bodyColor:  isDark ? '#f0f0f0' : '#1a1a1a',
-              borderColor: isDark ? '#444' : '#ddd', borderWidth: 1,
-              callbacks: {
-                label: (ctx) => `${ctx.dataset.label}: ${Math.round(ctx.parsed.y).toLocaleString()} m³/s`
-              }
-            }
-          },
-          scales: {
-            x: { grid: { color: grid }, ticks: { color: txt, font: { size: 10 }, maxTicksLimit: 10 } },
-            y: { grid: { color: grid }, ticks: { color: txt, font: { size: 10 },
-                   callback: v => v.toLocaleString() }, beginAtZero: true,
-                 title: { display: true, text: 'm³/s', color: txt, font: { size: 10 } } }
-          }
-        }
-      });
-    }
-
-    // Viz 2 — Stacked small multiples: one mini chart per station, geographic order.
+    // Stacked small multiples: one mini chart per station, geographic order,
+    // each scaled to its own range. Ink, like every other trace on the dashboard.
     function renderFlowSmallMultiples({ byStation, dates }) {
       const isDark = isDarkMode();
       const txt = isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.5)';
+      const ink = getComputedStyle(document.documentElement).getPropertyValue('--ink-bar').trim() || (isDark ? '#cfcfca' : '#3d3d3a');
+      const nf = v => Math.round(v).toLocaleString(L('en-CA', 'fr-CA'));
+      const md = d => new Intl.DateTimeFormat(L('en-GB', 'fr-CA'), { day: 'numeric', month: 'short', timeZone: 'UTC' }).format(new Date(d + 'T12:00:00Z'));
       const container = document.getElementById('flow-smallmultiples');
       if (!container) return;
       Object.values(flowSmallMultipleCharts).forEach(c => { try { c.destroy(); } catch (_) {} });
       flowSmallMultipleCharts = {};
       container.innerHTML = '';
 
-      FLOW_TAB_STATIONS.forEach(([slug, name, color], idx) => {
+      FLOW_TAB_STATIONS.forEach(([slug, name], idx) => {
         const byDate = Object.fromEntries((byStation[slug] || []).map(p => [p.date, p.flow]));
         const data = dates.map(d => byDate[d] ?? null);
         const valid = data.filter(v => v != null);
-        let peakLabel = '';
+        let peakLabel = '', nowLabel = '<span class="muted">—</span>';
         if (valid.length) {
           const max = Math.max(...valid);
           const peakIdx = data.indexOf(max);
-          peakLabel = `peak ${Math.round(max).toLocaleString()} m³/s · ${dates[peakIdx].slice(5)}`;
+          peakLabel = L(`peak ${nf(max)} m³/s · ${md(dates[peakIdx])}`, `pointe ${nf(max)} m³/s · ${md(dates[peakIdx])}`);
+          let li = data.length - 1;
+          while (li >= 0 && data[li] == null) li--;
+          nowLabel = `${nf(data[li])}<span>m³/s · ${md(dates[li])}</span>`;
         }
         const isLast = idx === FLOW_TAB_STATIONS.length - 1;
         const row = document.createElement('div');
-        row.style.cssText = `display:flex; align-items:center; gap:10px; padding: 6px 14px ${isLast ? '10px' : '6px'} 14px; border-bottom: ${isLast ? 'none' : '1px solid var(--border)'};`;
+        row.className = 'flow-sm-row';
         row.innerHTML = `
-          <div style="flex: 0 0 120px; font-size: 11px; line-height: 1.25;">
-            <div style="font-weight: 600; color: var(--text);">${name}</div>
-            <div style="font-size: 9.5px; color: var(--text-faint); font-variant-numeric: tabular-nums;">${peakLabel}</div>
-          </div>
-          <div style="flex: 1; position: relative; height: 46px;">
-            <canvas></canvas>
-          </div>
+          <div><div class="nm">${name}</div><div class="pk">${peakLabel}</div></div>
+          <div style="position: relative; height: ${isLast ? 64 : 46}px;"><canvas></canvas></div>
+          <div class="now">${nowLabel}</div>
         `;
         container.appendChild(row);
         const canvas = row.querySelector('canvas');
         flowSmallMultipleCharts[slug] = new Chart(canvas, {
           type: 'line',
           data: {
-            labels: dates.map(d => d.slice(5)),
+            labels: dates.map(md),
             datasets: [{
               data,
-              borderColor: color,
-              backgroundColor: color + '28',
+              borderColor: ink,
+              backgroundColor: ink + '1f',
               borderWidth: 1.6,
               fill: true,
               pointRadius: 0,
@@ -5426,7 +5383,9 @@ data:
       });
     }
 
-    // Viz 3 — Hovmöller heatmap: station × day grid, per-station normalized color.
+    // Hovmöller heatmap: station × day grid, per-station normalized. One
+    // sequential ramp from the empty track to the gauge's blue — red is flood
+    // state elsewhere, so it can't mean "high flow" here.
     function renderFlowHovmoller({ byStation, dates }) {
       const isDark = isDarkMode();
       const container = document.getElementById('flow-hovmoller');
@@ -5446,8 +5405,8 @@ data:
         if (vals.length) stationMinMax[slug] = { min: Math.min(...vals), max: Math.max(...vals) };
       }
       const stops = isDark
-        ? [[0.0,[36,46,62]], [0.5,[80,130,200]], [1.0,[220,90,70]]]
-        : [[0.0,[238,236,228]], [0.5,[100,160,220]], [1.0,[196,60,60]]];
+        ? [[0.0,[44,44,42]], [0.5,[45,84,121]], [1.0,[133,183,235]]]
+        : [[0.0,[238,238,234]], [0.5,[150,190,226]], [1.0,[31,78,121]]];
       function colorFor(t) {
         if (!Number.isFinite(t)) return isDark ? '#252525' : '#f0eee9';
         t = Math.max(0, Math.min(1, t));
@@ -5464,10 +5423,11 @@ data:
 
       let svg = `<svg viewBox="0 0 ${cw} ${totalH}" preserveAspectRatio="none" style="width:100%; height:${totalH}px; font-family: inherit; display:block;" xmlns="http://www.w3.org/2000/svg">`;
       const labelEvery = Math.max(1, Math.ceil(dates.length / 8));
+      const lastIdx = dates.length - 1;
       dates.forEach((d, i) => {
-        if (i % labelEvery === 0 || i === dates.length - 1) {
+        if (i % labelEvery === 0 || (i === lastIdx && lastIdx % labelEvery >= labelEvery / 2)) {
           const x = labelW + i * cellW + cellW / 2;
-          svg += `<text x="${x}" y="${headerH - 8}" font-size="9" fill="${txt}" text-anchor="middle">${d.slice(5)}</text>`;
+          svg += `<text x="${x}" y="${headerH - 8}" font-size="10" fill="${txt}" text-anchor="middle">${new Intl.DateTimeFormat(L('en-GB', 'fr-CA'), { day: 'numeric', month: 'short', timeZone: 'UTC' }).format(new Date(d + 'T12:00:00Z'))}</text>`;
         }
       });
       FLOW_TAB_STATIONS.forEach(([slug, name], rowIdx) => {
@@ -5480,18 +5440,21 @@ data:
           const t = (mm && v != null && mm.max > mm.min) ? (v - mm.min) / (mm.max - mm.min) : NaN;
           const x = labelW + i * cellW;
           const fill = colorFor(t);
-          const titleText = v != null ? `${name} · ${d}: ${Math.round(v).toLocaleString()} m³/s` : `${name} · ${d}: no data`;
+          const titleText = v != null ? `${name} · ${d}: ${Math.round(v).toLocaleString(L('en-CA', 'fr-CA'))} m³/s` : `${name} · ${d}: ${L('no data', 'aucune donnée')}`;
           svg += `<rect x="${x}" y="${y + 2}" width="${cellW - 0.5}" height="${cellH - 4}" fill="${fill}"><title>${titleText}</title></rect>`;
         });
       });
       svg += '</svg>';
 
-      const legend = `<div style="display:flex; align-items:center; gap:8px; margin-top:10px; font-size:10.5px; color:var(--text-muted);">
-        <span>per-station scale: low</span>
+      // Name the window the data was fetched for, not whatever is selected now.
+      const days = flowTabState.daysAtFetch || flowTabDays;
+      const windowTxt = days >= 365 ? L('1-year', 'd\'un an') : days >= 180 ? L('6-month', 'de 6 mois') : L(`${days}-day`, `de ${days} jours`);
+      const legend = `<div style="display:flex; align-items:center; gap:8px; margin-top:10px; font-size:12px; color:var(--text-muted); flex-wrap:wrap;">
+        <span>${L('Each station: low', 'Chaque station : bas')}</span>
         <svg width="160" height="12" style="border-radius:2px; overflow:hidden;">
           ${Array.from({length: 32}, (_, i) => `<rect x="${i*5}" y="0" width="5" height="12" fill="${colorFor(i/31)}"/>`).join('')}
         </svg>
-        <span>high (within its own 30-day range)</span>
+        <span>${L(`high, within its own ${windowTxt} range`, `haut, dans sa propre plage ${windowTxt}`)}</span>
       </div>`;
       container.innerHTML = svg + legend;
     }
