@@ -146,12 +146,7 @@ data:
       .range-btn { flex: 1 1 0; min-width: 0; padding: 0 2px; }
     }
 
-    .thresh-row .eta { font-size: 11px; color: var(--text-faint); font-variant-numeric: tabular-nums; margin-left: 6px; }
-    .thresh-row .eta.rising { color: var(--orange); font-weight: 500; }
 
-    /* Basin freeze & precipitation outlook: the corridor table's grammar. Every
-       temperature is ink; a sub-zero night is the one marked cell, in the gauge's
-       water blue, which is not on the flood-state scale. */
     .freeze-tracker { margin-top: 28px; }
     .freeze-tracker .section-title { margin: 0; }
     .freeze-tracker .section-subtitle { margin: 4px 0 12px; font-size: 14px; max-width: 760px; }
@@ -165,10 +160,6 @@ data:
     .freeze-table td.night span { display: inline-block; min-width: 46px; padding: 3px 6px; border-radius: 6px; font-size: 14px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
     .freeze-table td.night.freeze span { background: var(--water); color: var(--text); font-weight: 700; }
     .freeze-table .has-note { cursor: help; border-bottom: 1px dotted var(--text-faint); }
-    .precip-chip { display: inline-block; margin-top: 3px; padding: 2px 7px; border-radius: 4px; font-size: 10px; font-weight: 500; font-variant-numeric: tabular-nums; }
-    .precip-chip.rain-light { background: var(--surface-2); color: var(--text-muted); }
-    .precip-chip.rain-moderate { background: var(--amber-light); color: var(--amber); }
-    .precip-chip.rain-heavy { background: var(--red-light); color: var(--red); font-weight: 600; }
 
 
     .station-id { font-size: 0.78em; font-weight: 500; color: var(--text-faint); vertical-align: sub; margin-left: 3px; font-variant-numeric: tabular-nums; letter-spacing: 0.3px; }
@@ -351,8 +342,6 @@ data:
     .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin-bottom: 20px; }
     .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; }
     .card.stale { opacity: 0.78; border-left: 3px solid var(--amber); }
-    .station-card-mini.stale { opacity: 0.78; }
-    .river-row.stale { opacity: 0.78; }
     .deactivated-strip { background: var(--amber-light); border: 1px solid var(--border); border-left: 3px solid var(--amber); border-radius: 10px; padding: 10px 14px; margin: 16px 0 8px; font-size: 12px; color: var(--text-muted); line-height: 1.55; }
     .deactivated-strip[hidden] { display: none; }
     .deactivated-strip .strip-title { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--amber); margin-bottom: 6px; }
@@ -389,23 +378,16 @@ data:
     .thresh-item { display: flex; align-items: center; gap: 5px; }
     .thresh-line { width: 18px; height: 0; border-top: 2px dashed currentColor; }
 
-    .property { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; margin-top: 16px; }
-    .property h3 { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
-    .thresh-row { display: grid; grid-template-columns: 80px 1fr auto; gap: 12px; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 13px; align-items: center; }
-    .thresh-row:last-child { border-bottom: none; }
-    .thresh-row .level { font-weight: 600; font-variant-numeric: tabular-nums; }
-    .thresh-row .desc { color: var(--text-muted); font-size: 12px; }
-    .thresh-row .base-rate { display: inline-block; margin-left: 4px; padding: 1px 6px; border-radius: 4px; background: var(--surface-2); color: var(--text-faint); font-size: 10px; font-variant-numeric: tabular-nums; white-space: nowrap; cursor: help; }
-    .thresh-row .status { font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 500; white-space: nowrap; }
-    .status.flooded { background: var(--red-light); color: var(--red); }
-    .status.safe { background: var(--green-light); color: var(--green); }
-    .status.close { background: var(--amber-light); color: var(--amber); }
+    .thresh-section { margin-top: 28px; }
+    .thresh-section .section-title { margin: 0 0 12px; }
+    .thresh-table { min-width: 760px; }
+    .thresh-table td { font-variant-numeric: tabular-nums; }
+    .thresh-table td.lvl { font-size: 15px; font-weight: 700; white-space: nowrap; }
+    .thresh-table tr.official td.desc { color: var(--text-muted); }
+    .thresh-table tr.crossed td { background: var(--surface-2); }
+    .thresh-mini { position: relative; width: 90px; height: 8px; margin-top: 4px; border-radius: 2px; background: var(--track); overflow: hidden; }
+    .thresh-mini b { position: absolute; left: 0; top: 0; bottom: 0; background: var(--ink-bar); }
 
-    /* V3 Bayesian season-end forecast panel */
-    .forecast { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; margin-top: 16px; }
-    .forecast h3 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
-    .forecast .sub { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; }
-    .forecast .resolved-badge { display: inline-block; margin-left: 6px; padding: 1px 7px; border-radius: 4px; background: var(--surface-2); color: var(--text-faint); font-size: 10px; font-weight: 600; vertical-align: middle; }
     .fc-row { display: grid; grid-template-columns: 150px 1fr 44px; gap: 12px; align-items: center; padding: 5px 0; font-size: 12px; }
     .fc-label { color: var(--text-muted); font-variant-numeric: tabular-nums; }
     .fc-label .lvl { color: var(--text); font-weight: 600; }
@@ -446,8 +428,13 @@ data:
     .tab-panel { display: none; }
     .tab-panel.active { display: block; }
 
-    .stations-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 12px; }
-    @media (max-width: 800px) { .stations-grid { grid-template-columns: 1fr; } }
+    .stations-table { min-width: 960px; }
+    .stations-table .corr-role { max-width: 180px; }
+    .stations-table tbody tr[onclick] { cursor: pointer; }
+    .stations-table tbody tr[onclick]:hover td { background: var(--surface-2); }
+    .stn-notes { min-width: 160px; font-size: 12px; line-height: 1.45; color: var(--text-muted); }
+    .stn-notes .lw { color: var(--text); }
+    .stn-notes .lw.strong { font-weight: 700; }
 
     .reservoirs-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 12px; }
     @media (max-width: 1000px) { .reservoirs-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
@@ -553,59 +540,13 @@ data:
     .res-map-card .res-op-state.paused { background: var(--red-light); color: var(--red); }
     .res-map-card .res-op-state.refill { background: var(--green-light); color: var(--green); }
 
-    /* Tributaries tab — grouped by river, same 2-col card grid as Stations */
+    /* Tributaries tab — one table grouped by river */
     #tributaries-content { margin-top: 12px; }
 
 
 
-    .station-card-mini { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; cursor: pointer; transition: box-shadow 0.15s, transform 0.15s; }
-    .station-card-mini:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.15); transform: translateY(-1px); }
-    .station-card-mini .header-row { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 2px; }
-    .station-card-mini .name { font-weight: 600; font-size: 14px; }
-    .station-card-mini .name .station-id { font-size: 0.78em; }
-    .station-card-mini .level { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.1; }
-    .station-card-mini .level .unit { font-size: 12px; color: var(--text-muted); margin-left: 3px; font-weight: 400; }
-    .station-card-mini .level .change { font-size: 13px; margin-left: 8px; font-weight: 600; }
-    .station-card-mini .level .change.up, .station-card-mini .level .change.down { color: var(--text); }
-    .station-card-mini .level .change.flat { color: var(--text-muted); }
-    .station-card-mini .meta { font-size: 11px; color: var(--text-muted); margin: 2px 0 8px; }
-    .station-card-mini .chart-wrap { height: 130px; position: relative; }
-    .station-card-mini .badge-row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin-top: 8px; }
-    .station-card-mini .badge-row .precip-chip { font-size: 10px; padding: 2px 7px; }
-    .station-card-mini .badge-row .pctl-chip { font-size: 10px; padding: 2px 7px; border-radius: 4px; background: var(--surface-2); color: var(--text-muted); font-variant-numeric: tabular-nums; }
-    .station-card-mini .badge-row .pctl-chip.high { background: var(--red-light); color: var(--red); }
-    .station-card-mini .badge-row .orrpb-chip { font-size: 10px; padding: 2px 7px; border-radius: 4px; background: var(--surface-2); color: var(--text-muted); }
-    /* Summer low-water / drawdown advisory chips (informational — no official
-       navigation datum exists). watch=below seasonal median, warn=near the bottom
-       of the seasonal band, alert=record-low territory or very fast drop. */
-    .lowwater-chip { display: inline-block; font-size: 10px; padding: 2px 7px; border-radius: 4px; font-weight: 600; font-variant-numeric: tabular-nums; }
-    .lowwater-chip.watch { background: var(--amber-light);  color: var(--amber); }
-    .lowwater-chip.warn  { background: var(--orange-light); color: var(--orange); }
-    .lowwater-chip.alert { background: var(--red-light);    color: var(--red); }
-    /* River profile tab — compact N→S longitudinal strip (Buffalo-style). */
-    .river-ends { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin: 4px 2px 8px; }
-    .river-list { display: flex; flex-direction: column; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
-    .river-row { display: grid; grid-template-columns: 12px minmax(110px, 1.5fr) 96px minmax(64px, 0.7fr) minmax(96px, 0.9fr) minmax(108px, 1fr); align-items: center; gap: 10px; padding: 8px 12px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.12s; }
-    .river-row:last-child { border-bottom: none; }
-    .river-row:hover { background: var(--surface-2); }
-    .river-row.nodata { opacity: 0.55; cursor: default; }
-    .river-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--green); }
-    .river-dot.watch { background: var(--amber); }
-    .river-dot.warn  { background: var(--orange); }
-    .river-dot.alert { background: var(--red); }
-    .river-name { font-weight: 600; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .river-name .station-id { font-weight: 400; font-size: 10px; color: var(--text-muted); margin-left: 5px; }
-    .river-spark { display: block; }
-    .river-level { font-weight: 700; font-variant-numeric: tabular-nums; text-align: right; }
-    .river-level .unit { font-weight: 400; font-size: 10px; color: var(--text-muted); margin-left: 2px; }
-    .river-change { font-size: 12px; font-variant-numeric: tabular-nums; text-align: right; color: var(--text-muted); }
-    .river-change.down { color: var(--green); }
-    .river-change.up { color: var(--red); }
-    .river-change .rate-unit { font-size: 10px; opacity: 0.65; }
-    .river-status { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 4px; text-align: center; background: var(--surface-2); color: var(--text-muted); }
-    .river-status.watch { background: var(--amber-light);  color: var(--amber); }
-    .river-status.warn  { background: var(--orange-light); color: var(--orange); }
-    .river-status.alert { background: var(--red-light);    color: var(--red); }
+
+
     @media (max-width: 640px) {
       .river-row { grid-template-columns: 12px minmax(80px, 1.4fr) minmax(60px, 0.8fr) minmax(96px, 1fr); gap: 8px; }
       .river-spark-wrap, .river-change { display: none; }
@@ -832,8 +773,6 @@ data:
 
     @media (max-width: 600px) {
       .card .value { font-size: 22px; }
-      .thresh-row { grid-template-columns: 70px 1fr; }
-      .thresh-row .status { grid-column: 1 / -1; justify-self: start; margin-top: 4px; }
       .map-drawer { width: 100vw; }
     }
     </style>
@@ -922,10 +861,6 @@ data:
       <a href="#tributaries" data-tab="tributaries" data-group="tributaries">Tributaries</a>
     </nav>
     </div>
-    <nav class="subtabs seg" data-group="stations" aria-label="Stations views">
-      <a href="#stations" data-tab="stations">All stations</a>
-      <a href="#river" data-tab="river">River profile</a>
-    </nav>
     <nav class="subtabs seg" data-group="dams" aria-label="Dams and reservoirs views">
       <a href="#reservoirs" data-tab="reservoirs">Reservoirs</a>
       <a href="#operations" data-tab="operations">Dam operations</a>
@@ -983,10 +918,11 @@ data:
 
     <div id="local-gauge-strip" class="deactivated-strip" hidden></div>
 
-    <div class="property">
-      <h3 data-i18n="property_t">Property thresholds &amp; surveyed flood lines</h3>
-      <div id="thresh-list" class="skeleton">Loading…</div>
-    </div>
+    <section class="thresh-section" aria-labelledby="thresh-h">
+      <h2 class="section-title" id="thresh-h" data-i18n="property_t">Property thresholds &amp; surveyed flood lines</h2>
+      <div class="corr-wrap" id="thresh-list"><p class="corr-msg" style="padding: 14px 16px;">Loading…</p></div>
+      <p class="corr-foot" id="thresh-foot"></p>
+    </section>
 
     <section class="freeze-tracker" aria-labelledby="freeze-h">
       <h2 class="section-title" id="freeze-h" data-i18n="freeze_h">Basin freeze &amp; precipitation outlook</h2>
@@ -1006,8 +942,8 @@ data:
     </div>
 
     <div class="tab-panel" data-tab="stations">
-      <div class="section-title" style="margin-top: 4px;">All stations — corridor view</div>
-      <div class="section-subtitle">Each card has its own time-series chart, daily change, flood-state badge, ORRPB reference label, percentile (where available), and 48 h precipitation forecast at the nearest weather station. Click a card to open the full detail. <strong>Low-water flags</strong> (↓ fast drop, below seasonal median, near seasonal low) are <em>informational, boater-beware</em> advisories — there is no official minimum-navigable level and conditions vary locally.</div>
+      <h2 class="section-title" style="margin-top: 4px;" data-i18n="stations_h">All stations — upstream to downstream</h2>
+      <p class="section-subtitle" data-i18n="stations_sub">Every main-stem gauge plus the Coulonge River, with its level, flood state, trace over the selected window, 24 h change and low-water advisory. Low-water notes are informational, boater-beware: there is no official minimum navigable level and conditions vary locally. Select a row for the full detail.</p>
       <div class="range-picker" id="range-picker-stations">
         <span class="label" data-i18n="window">Window</span>
         <button class="range-btn" data-hours="1">1h</button>
@@ -1020,14 +956,8 @@ data:
         <button class="range-btn" data-hours="720">30d</button>
         <button class="range-btn" data-hours="1440">60d</button>
       </div>
-      <div class="stations-grid" id="stations-grid"></div>
-    </div>
-
-    <div class="tab-panel" data-tab="river">
-      <div class="section-title" style="margin-top: 4px;">River profile — upstream to downstream (N → S)</div>
-      <div class="section-subtitle">The Ottawa River corridor at a glance, headwaters to outlet. Each gauge shows its current level, 24 h change, a trend sparkline, and a low-water status band. <strong>Status colours</strong> are <em>informational, boater-beware</em>: green normal · amber below seasonal median / dropping · orange near seasonal low / fast drop · red record-low territory or very fast drop. There is no official minimum-navigable level and conditions vary locally. Click a row for the full gauge detail.</div>
-      <div class="river-ends"><span>↑ Upstream · North (Témiscaming)</span><span>Downstream · South (Carillon outlet) ↓</span></div>
-      <div class="river-list" id="river-list"></div>
+      <div class="corr-wrap" id="stations-table"><p class="corr-msg" style="padding: 14px 16px;">Loading…</p></div>
+      <p class="corr-foot" id="stations-foot"></p>
     </div>
 
     <div class="tab-panel" data-tab="reservoirs">
@@ -1222,14 +1152,29 @@ data:
     // is a real signal: the surveyor's "20-yr" line has been reached only once in
     // 54 years of record and the "100-yr" line never.
     const PROPERTY_THRESHOLDS = [
-      { level: 108.30, desc: 'Water approaching property (2019: Apr 25)',     histCount: 6 },
-      { level: 108.48, desc: 'Water in backyard, driveway, big tree (2019: Apr 26)', histCount: 4 },
-      { level: 108.52, desc: 'Crawl space to floor joists (2017 peak)',       histCount: 4 },
-      { level: 108.75, desc: 'Water at end of bricks on cottage (2019: Apr 27)', histCount: 3 },
-      { level: 109.01, desc: 'WATER INSIDE cottage, garage, RV (2019: Apr 28)', histCount: 1 },
-      { level: 109.05, desc: '20-year flood line (2019 Lebel land survey)',   histCount: 1 },
-      { level: 109.17, desc: '2019 record — all-time high',                   histCount: 1 },
-      { level: 109.34, desc: '100-year flood line — whole lot below (2019 survey)', histCount: 0 }
+      { level: 108.30, desc: 'Water approaching property (2019: Apr 25)',     histCount: 6,
+        fr: 'Eau qui approche du terrain (2019 : 25 avr.)' },
+      { level: 108.48, desc: 'Water in backyard, driveway, big tree (2019: Apr 26)', histCount: 4,
+        fr: 'Eau dans la cour, l\'entrée et au gros arbre (2019 : 26 avr.)' },
+      { level: 108.52, desc: 'Crawl space to floor joists (2017 peak)',       histCount: 4,
+        fr: 'Vide sanitaire jusqu\'aux solives (pointe de 2017)' },
+      { level: 108.75, desc: 'Water at end of bricks on cottage (2019: Apr 27)', histCount: 3,
+        fr: 'Eau au bout des briques du chalet (2019 : 27 avr.)' },
+      { level: 109.01, desc: 'WATER INSIDE cottage, garage, RV (2019: Apr 28)', histCount: 1,
+        fr: 'EAU À L\'INTÉRIEUR du chalet, du garage, du VR (2019 : 28 avr.)' },
+      { level: 109.05, desc: '20-year flood line (2019 Lebel land survey)',   histCount: 1,
+        fr: 'Cote de crue de 20 ans (arpentage Lebel 2019)' },
+      { level: 109.17, desc: '2019 record — all-time high',                   histCount: 1,
+        fr: 'Record de 2019 — plus haut niveau connu' },
+      { level: 109.34, desc: '100-year flood line — whole lot below (2019 survey)', histCount: 0,
+        fr: 'Cote de crue de 100 ans — tout le terrain en dessous (arpentage 2019)' }
+    ];
+    // Vigilance's flood lines at the property gauge, listed with the property
+    // lines so the thresholds table runs from first official flood stage up. The
+    // hero staff gauge and the season-end forecast use the same two levels.
+    const LC_FLOOD_LINES = [
+      { level: 107.50, desc: 'Minor flood (Vigilance)',    fr: 'Crue mineure (Vigilance)',  official: true },
+      { level: 108.00, desc: 'Moderate flood (Vigilance)', fr: 'Crue modérée (Vigilance)', official: true },
     ];
     const HISTORICAL_RECORD_YEARS = 54; // 1972-2025
 
@@ -1243,6 +1188,13 @@ data:
       107.05, 107.02, 107.01, 107.00, 106.94, 106.78, 106.77, 106.74, 106.67, 106.66,
       106.65, 106.64, 106.61, 106.60
     ];
+
+    // Years in the 1972–2025 record whose annual peak reached `level`. Equals each
+    // property line's hand-entered histCount; computed so the Vigilance lines get
+    // the same figure.
+    function yearsReached(level) {
+      return HISTORICAL_ANNUAL_MAX_DESC.filter(p => p >= level - 1e-9).length;
+    }
 
     function rankPeak(level) {
       // 1-indexed rank: number of historical years with peak > level, plus 1.
@@ -1343,6 +1295,9 @@ data:
       ops_all:        { en: 'Hydro-Québec generating stations', fr: 'Centrales d\'Hydro-Québec' },
       ops_all_sub:    { en: 'Upstream to downstream within each cascade. Release now, how it splits between turbines and spillway, and the same split over the selected window.',
                         fr: 'D\'amont en aval dans chaque cascade. Débit évacué actuel, sa répartition entre turbines et évacuateur, et la même répartition sur la période choisie.' },
+      stations_h:     { en: 'All stations — upstream to downstream', fr: 'Toutes les stations — d\'amont en aval' },
+      stations_sub:   { en: 'Every main-stem gauge plus the Coulonge River, with its level, flood state, trace over the selected window, 24 h change and low-water advisory. Low-water notes are informational, boater-beware: there is no official minimum navigable level and conditions vary locally. Select a row for the full detail.',
+                        fr: 'Chaque jauge du cours principal et la rivière Coulonge : niveau, état de crue, tracé sur la période choisie, variation sur 24 h et avis de basses eaux. Les avis de basses eaux sont informatifs, à la prudence des plaisanciers : il n\'existe aucun niveau minimal navigable officiel et les conditions varient localement. Sélectionnez une ligne pour le détail.' },
       freeze_foot:    { en: 'Shaded cells are overnight lows below 0 °C. Last night is observed; later nights are forecast (Open-Meteo).',
                         fr: 'Les cases ombrées sont des minimums nocturnes sous 0 °C. La nuit dernière est observée; les nuits suivantes sont des prévisions (Open-Meteo).' }
     };
@@ -1373,6 +1328,8 @@ data:
       if (lastData && typeof renderCorridor === 'function') renderCorridor();
       // Tables built in JS carry their own bilingual text; repaint the visible ones.
       if (typeof lastWeatherCache !== 'undefined' && lastWeatherCache) renderFreezePanel(lastWeatherCache);
+      if (typeof paintThresholds === 'function') paintThresholds();
+      if (document.querySelector('.tab-panel[data-tab="stations"].active') && typeof renderStationsTab === 'function') renderStationsTab();
       if (typeof refreshBrysonTurbine === 'function' && document.querySelector('.bryson-turbine')) refreshBrysonTurbine();
       if (document.querySelector('.tab-panel[data-tab="tributaries"].active') && typeof renderTributariesTab === 'function') renderTributariesTab();
       if (document.querySelector('.tab-panel[data-tab="operations"].active') && typeof renderOperationsTab === 'function') renderOperationsTab();
@@ -1959,16 +1916,16 @@ data:
       let context;
       if (etat === 6) {
         const dCm = Math.round((masl - refs[0].level) * 100);
-        context = dCm < 5 ? `at ${recordYear.year} record` : `${dCm} cm above ${recordYear.year} record`;
+        context = dCm < 5 ? L(`at ${recordYear.year} record`, `au record de ${recordYear.year}`) : L(`${dCm} cm above ${recordYear.year} record`, `${dCm} cm au-dessus du record de ${recordYear.year}`);
       } else if (etat === 5 || etat === 4) {
         const lower = refs.filter(r => masl >= r.level).slice(-1)[0];
         const higher = refs.filter(r => r.level > masl).slice(-1)[0];
         const dHigher = Math.round((higher.level - masl) * 100);
-        context = `above ${lower.year}, ${dHigher} cm below ${higher.year}`;
+        context = L(`above ${lower.year}, ${dHigher} cm below ${higher.year}`, `au-dessus de ${lower.year}, ${dHigher} cm sous ${higher.year}`);
       } else {
         const lowest = refs[refs.length - 1];
         const dCm = Math.round((lowest.level - masl) * 100);
-        context = `${dCm} cm below ${lowest.year} freshet peak`;
+        context = L(`${dCm} cm below ${lowest.year} freshet peak`, `${dCm} cm sous la pointe de crue de ${lowest.year}`);
       }
       return { etat, context };
     }
@@ -2452,7 +2409,7 @@ data:
           const peakWord = yearWins ? 'high' : (windowPk.isPeaked ? 'peak' : 'high so far');
           note = dropCm >= 1 ? `${dropCm} cm below its ${dayMonth(peak.date_prise_valeur)} ${peakWord}.` : '';
           const orrpb = getOrrpbContext(m);
-          if (orrpb) note += ` ORRPB ref: ${orrpb.context}.`;
+          if (orrpb) note += ` ${L('ORRPB ref:', 'Réf. CPRBO :')} ${orrpb.context}.`;
         }
         return `
           <article class="card watch" data-station-id="${item.id}">
@@ -2632,26 +2589,87 @@ data:
       ).join('');
     }
 
+    // Property thresholds and Vigilance flood lines in one table: what each level
+    // means, how often the annual peak has reached it, how far the lake is from it
+    // now, and this season — the V3 forecast's chance while it is live, otherwise
+    // whether the season's peak reached the line.
+    let thresholdsNow = null;          // { lcLatest, trendPerHour } from the last refresh
+    let freshetForecastData = null;    // last V3 forecast JSON (renderFreshetForecast)
     function renderProperty(lcLatest, trendPerHour) {
+      thresholdsNow = { lcLatest, trendPerHour };
+      paintThresholds();
+    }
+    // The forecast counts as live only while it is being updated and the season
+    // is still open; a June file showing 100% / 0% in November is history.
+    function forecastIsLive(d) {
+      if (!d || d.season_resolved || !d.asof || !d.thresholds?.length) return false;
+      const ageD = (Date.now() - new Date(d.asof + 'T12:00:00Z').getTime()) / 86400000;
+      if (ageD > 3) return false;
+      return !d.thresholds.every(t => t.posterior === 0 || t.posterior === 1);
+    }
+    function paintThresholds() {
       const el = document.getElementById('thresh-list');
-      el.classList.remove('skeleton');
-      el.innerHTML = PROPERTY_THRESHOLDS.map(t => {
-        let status, cls;
-        if (lcLatest >= t.level) { status = 'Exceeded'; cls = 'flooded'; }
-        else if (lcLatest >= t.level - 0.05) { status = 'Very close'; cls = 'close'; }
-        else if (lcLatest >= t.level - 0.15) { status = `${((t.level - lcLatest) * 100).toFixed(0)} cm below`; cls = 'close'; }
-        else { status = `${((t.level - lcLatest) * 100).toFixed(0)} cm below`; cls = 'safe'; }
-        const eta = etaToThreshold(lcLatest, t.level, trendPerHour);
-        let etaHtml = '';
-        if (cls !== 'flooded') {
-          if (eta) etaHtml = `<span class="eta rising">ETA ${eta}</span>`;
-          else if (trendPerHour != null && trendPerHour < -0.00005) etaHtml = `<span class="eta">↓ declining</span>`;
-          else if (trendPerHour != null && Math.abs(trendPerHour) <= 0.00005) etaHtml = `<span class="eta">→ stable</span>`;
+      const foot = document.getElementById('thresh-foot');
+      if (!el || !thresholdsNow) return;
+      const { lcLatest, trendPerHour } = thresholdsNow;
+      const fc = freshetForecastData;
+      const live = forecastIsLive(fc);
+      const yrMax = lastYearRanges[1195]?.max || null;
+      const year = new Date().getFullYear();
+      const lines = [...LC_FLOOD_LINES, ...PROPERTY_THRESHOLDS].sort((a, b) => a.level - b.level);
+      const rows = lines.map(t => {
+        const n = yearsReached(t.level);
+        const crossed = lcLatest >= t.level;
+        const cm = Math.round(Math.abs(t.level - lcLatest) * 100);
+        let now;
+        if (crossed) now = `<strong>${L(`Exceeded by ${cm} cm`, `Dépassé de ${cm} cm`)}</strong>`;
+        else {
+          const eta = etaToThreshold(lcLatest, t.level, trendPerHour);
+          const trend = eta ? `<strong>${L('ETA', 'Atteint dans')} ${eta}</strong>`
+            : trendPerHour != null && trendPerHour < -0.00005 ? L('↓ falling', '↓ en baisse')
+            : trendPerHour != null && Math.abs(trendPerHour) <= 0.00005 ? L('→ steady', '→ stable') : '';
+          now = `${cm} cm ${L('below', 'sous la cote')}${trend ? `<div class="op-sub">${trend}</div>` : ''}`;
         }
-        const rate = ((t.histCount / HISTORICAL_RECORD_YEARS) * 100).toFixed(t.histCount < 4 ? 1 : 0);
-        const baseRate = `<span class="base-rate" title="Annual peak ≥ this level in ${t.histCount} of ${HISTORICAL_RECORD_YEARS} years on record (1972–2025)">${t.histCount}/${HISTORICAL_RECORD_YEARS} yrs · ${rate}%</span>`;
-        return `<div class="thresh-row"><span class="level">${t.level.toFixed(2)} m</span><span class="desc">${t.desc} ${baseRate}</span><span class="status ${cls}">${status}${etaHtml}</span></div>`;
+        let season;
+        if (live) {
+          // The forecast models its own set of lines (107.50, 108.00, 108.30,
+          // 108.48, the case-file 108.50 super-flood line, 108.75, 109.01, 109.17).
+          // A line it doesn't model gets the chance of the nearest modelled line
+          // below it as an upper bound: the peak can't reach the higher line
+          // without passing the lower one.
+          const exact = fc.thresholds.find(x => Math.abs(x.threshold_m - t.level) < 0.005);
+          const below = exact ? null : fc.thresholds.filter(x => x.threshold_m < t.level).sort((a, b) => b.threshold_m - a.threshold_m)[0];
+          const f = exact || below;
+          if (f) {
+            const pct = Math.round((f.posterior || 0) * 100);
+            const bound = exact ? '' : '≤ ';
+            const tip = exact ? '' : ` title="${L(`Not modelled by the forecast; at most the chance for ${f.threshold_m.toFixed(2)} m (${f.label}).`, `Non modélisée par la prévision; au plus la probabilité pour ${f.threshold_m.toFixed(2)} m.`)}"`;
+            season = `<span${tip}>${bound}${pct} %</span><div class="thresh-mini" aria-hidden="true"><b style="width:${pct}%"></b></div>`;
+          } else season = '<span class="muted">—</span>';
+        } else if (yrMax) {
+          season = yrMax.valeur >= t.level - 1e-9 ? `<strong>${L('Reached', 'Atteinte')}</strong>` : `<span class="muted">${L('Not reached', 'Non atteinte')}</span>`;
+        } else season = '<span class="muted">—</span>';
+        return `<tr class="${t.official ? 'official' : ''}${crossed ? ' crossed' : ''}">
+          <td class="lvl">${t.level.toFixed(2)} m</td>
+          <td class="desc">${L(t.desc, t.fr || t.desc)}</td>
+          <td title="${L(`Annual peak reached this level in ${n} of ${HISTORICAL_RECORD_YEARS} years (1972–2025)`, `La pointe annuelle a atteint ce niveau ${n} années sur ${HISTORICAL_RECORD_YEARS} (1972–2025)`)}">${L(`${n} of ${HISTORICAL_RECORD_YEARS} years`, `${n} ans sur ${HISTORICAL_RECORD_YEARS}`)}</td>
+          <td>${now}</td>
+          <td>${season}</td>
+        </tr>`;
       }).join('');
+      el.innerHTML = `<table class="corr-table thresh-table"><thead><tr>
+          <th scope="col">${L('Level', 'Niveau')}</th><th scope="col">${L('What it means', 'Ce que cela signifie')}</th>
+          <th scope="col">${L('Record, 1972–2025', 'Historique, 1972–2025')}</th><th scope="col">${L('Lac Coulonge now', 'Lac Coulonge actuel')}</th>
+          <th scope="col">${live ? L('Chance this season', 'Probabilité cette saison') : L(`${year} season`, `Saison ${year}`)}</th>
+        </tr></thead><tbody>${rows}</tbody></table>`;
+      if (!foot) return;
+      const peakTxt = yrMax ? L(`The ${year} peak was ${yrMax.valeur.toFixed(2)} m on ${dayMonth(yrMax.date_prise_valeur)}.`,
+                                `La pointe de ${year} a été de ${yrMax.valeur.toFixed(2)} m le ${dayMonth(yrMax.date_prise_valeur)}.`) : '';
+      foot.innerHTML = live
+        ? L(`Record = years whose annual peak reached the level. Chance this season = V3 season-end forecast as of ${fc.asof} (see the Forecast tab); ≤ marks a line the forecast doesn't model, bounded by the nearest modelled line below it. ${peakTxt}`,
+            `Historique = années dont la pointe annuelle a atteint le niveau. Probabilité = prévision V3 de fin de saison au ${fc.asof} (voir l'onglet Prévision); ≤ indique une cote non modélisée, bornée par la cote modélisée la plus proche en dessous. ${peakTxt}`)
+        : L(`Record = years whose annual peak reached the level. ${peakTxt} Property lines are personal observations and the 2019 Lebel survey; Vigilance lines are the provincial flood stages at this gauge.`,
+            `Historique = années dont la pointe annuelle a atteint le niveau. ${peakTxt} Les cotes de la propriété viennent d'observations personnelles et de l'arpentage Lebel 2019; les cotes Vigilance sont les seuils provinciaux de cette jauge.`);
     }
 
     // ---- V3 Bayesian season-end forecast -------------------------------------
@@ -2672,6 +2690,8 @@ data:
         const r = await fetch(FRESHET_FORECAST_URL, { cache: 'no-store' });
         if (!r.ok) throw new Error('http ' + r.status);
         d = await r.json();
+        freshetForecastData = d;
+        paintThresholds();
       } catch (e) {
         // Don't blank a previously-rendered panel on a transient refresh failure.
         if (!freshetForecastLoaded) el.innerHTML = '<span class="skeleton">Forecast unavailable.</span>';
@@ -3880,16 +3900,20 @@ data:
     });
 
     // ---- Section navigation (hash-routed) ----
-    // Five top-level sections. Stations and Dams & reservoirs group several views
-    // behind a segmented sub-nav; every view keeps its own hash (`#river`,
-    // `#operations`, `#flow`, …) so existing deep links still land.
-    const TAB_GROUPS = { stations: ['stations', 'river'], dams: ['reservoirs', 'operations', 'flow'] };
+    // Five top-level sections. Dams & reservoirs groups three views behind a
+    // segmented sub-nav; every view keeps its own hash (`#operations`, `#flow`, …)
+    // so existing deep links still land. `#river` (the retired River profile)
+    // aliases to Stations.
+    const TAB_GROUPS = { dams: ['reservoirs', 'operations', 'flow'] };
+    // Retired views whose hashes still arrive from old links and bookmarks.
+    const TAB_ALIASES = { river: 'stations' };
     function tabGroupOf(name) {
       for (const [group, ids] of Object.entries(TAB_GROUPS)) if (ids.includes(name)) return group;
       return name;
     }
     function activateTab(name) {
-      if (!['overview', 'forecast', 'stations', 'river', 'reservoirs', 'tributaries', 'operations', 'flow'].includes(name)) name = 'overview';
+      name = TAB_ALIASES[name] || name;
+      if (!['overview', 'forecast', 'stations', 'reservoirs', 'tributaries', 'operations', 'flow'].includes(name)) name = 'overview';
       const group = tabGroupOf(name);
       const mark = (a, on) => {
         a.classList.toggle('active', on);
@@ -3907,7 +3931,6 @@ data:
       }
       if (location.hash !== '#' + name) history.replaceState(null, '', '#' + name);
       if (name === 'stations') renderStationsTab();
-      if (name === 'river') renderRiverTab();
       if (name === 'reservoirs') renderReservoirsTab();
       if (name === 'tributaries') renderTributariesTab();
       if (name === 'operations') renderOperationsTab();
@@ -3934,7 +3957,6 @@ data:
       984: 'Ottawa-Gatineau', 548: 'Ottawa-Gatineau', 550: 'Ottawa-Gatineau',
       981: 'Hawkesbury, ON', 1264: 'Hawkesbury, ON'
     };
-    let stationMiniCharts = {};
     let lastWeatherCache = null;
 
     // ---- Summer low-water / drawdown advisory ----------------------------------
@@ -3983,287 +4005,147 @@ data:
     // When a station has no seed, its range starts here rather than 1 January.
     const LIVE_TIER_START_LABEL = '19 Apr';
 
-    // Build 0–2 low-water advisory chips for a station card.
+    // Low-water advisory signals for a gauge: rate of fall (all gauges) and the
+    // seasonal median band (gauges with a baked climatology). Each is
+    // { sev: 1 watch | 2 warn | 3 alert, text, title }. Informational and
+    // boater-beware: there is no official minimum navigable level.
     //   level     — displayed level (MASL), same datum as the band
     //   change24  — cm change over 24 h (negative = falling); may be null
-    function lowWaterChips(id, level, change24) {
-      let out = '';
-
-      // (1) Rate of fall — all gauges. Tiers: dropping / fast drop / very fast drop.
+    function lowWaterSignals(id, level, change24) {
+      const out = [];
       if (change24 != null && change24 <= -8) {
-        const drop = Math.abs(change24);
-        const cls  = change24 <= -30 ? 'alert' : change24 <= -15 ? 'warn' : 'watch';
-        const word = change24 <= -30 ? 'very fast drop' : change24 <= -15 ? 'fast drop' : 'dropping';
-        out += `<span class="lowwater-chip ${cls}" title="Level fell ${drop.toFixed(0)} cm in the last 24 h — informational drawdown advisory; conditions vary locally, boater beware">↓ ${drop.toFixed(0)} cm/24h · ${word}</span>`;
+        const drop = Math.abs(change24).toFixed(0);
+        const sev = change24 <= -30 ? 3 : change24 <= -15 ? 2 : 1;
+        const word = sev === 3 ? L('very fast drop', 'baisse très rapide') : sev === 2 ? L('fast drop', 'baisse rapide') : L('dropping', 'en baisse');
+        out.push({ sev, text: `↓ ${drop} cm / 24 h · ${word}`,
+          title: L(`Level fell ${drop} cm in the last 24 h. Informational drawdown advisory; conditions vary locally, boater beware.`,
+                   `Le niveau a baissé de ${drop} cm en 24 h. Avis informatif; les conditions varient localement.`) });
       }
-
-      // (2) Seasonal median band — gauges with a baked climatology.
-      const band = SEASONAL_LOW_BAND[id];
-      if (band && level != null) {
-        const mo = new Date().getMonth() + 1;
-        const mb = band[mo];
-        if (mb) {
-          const [med, low] = mb;
-          const nearBottom = low + 0.25 * (med - low);   // bottom quartile of the band
-          const bandTxt = `${med.toFixed(2)}–${low.toFixed(2)} m`;
-          if (level <= low + 0.05) {
-            out += `<span class="lowwater-chip alert" title="At or below the record low for this month (record ${low.toFixed(2)} m across 1990–2026). Informational; conditions vary locally.">⚠ record-low territory</span>`;
-          } else if (level <= nearBottom) {
-            out += `<span class="lowwater-chip warn" title="Near the bottom of the seasonal band (this month: median ${med.toFixed(2)} m down to record low ${low.toFixed(2)} m). Informational low-water advisory.">near seasonal low (band ${bandTxt})</span>`;
-          } else if (level < med) {
-            const cm = Math.round((med - level) * 100);
-            out += `<span class="lowwater-chip watch" title="Below the seasonal median for this month (${med.toFixed(2)} m). Informational.">${cm} cm below seasonal median</span>`;
-          }
+      const mb = SEASONAL_LOW_BAND[id]?.[new Date().getMonth() + 1];
+      if (mb && level != null) {
+        const [med, low] = mb;
+        if (level <= low + 0.05) {
+          out.push({ sev: 3, text: L('record-low territory', 'niveau record bas'),
+            title: L(`At or below the record low for this month (${low.toFixed(2)} m, 1990–2026).`, `Au niveau record bas du mois ou en dessous (${low.toFixed(2)} m, 1990–2026).`) });
+        } else if (level <= low + 0.25 * (med - low)) {
+          out.push({ sev: 2, text: L('near seasonal low', 'près du bas saisonnier'),
+            title: L(`Bottom quarter of this month's band: median ${med.toFixed(2)} m down to record low ${low.toFixed(2)} m.`, `Quart inférieur de la plage du mois : médiane ${med.toFixed(2)} m, record bas ${low.toFixed(2)} m.`) });
+        } else if (level < med) {
+          const cm = Math.round((med - level) * 100);
+          out.push({ sev: 1, text: L(`${cm} cm below seasonal median`, `${cm} cm sous la médiane saisonnière`),
+            title: L(`This month's median is ${med.toFixed(2)} m.`, `La médiane du mois est de ${med.toFixed(2)} m.`) });
         }
       }
-      return out;
+      return out.sort((a, b) => b.sev - a.sev);
     }
 
-    function buildStationCard(id) {
+    // One row per gauge. Change and low water are ink; flood state is the only
+    // colour, as everywhere else.
+    function stationRowHTML(id, i) {
       const station = lastData?.[id];
-      if (!station?.metadata) return `<div class="station-card-mini" data-station-id="${id}"><div class="meta">Loading ${id}…</div></div>`;
-      const m = station.metadata;
-      const latest = station.readings?.[station.readings.length - 1];
-      // A station can return metadata with no readings (e.g. its Vigilance feed is
-      // mid-outage and no cluster fallback covers that gauge). Render a graceful
-      // "no recent data" card rather than throwing — one dataless gauge must never
-      // blank the entire grid (it used to: the throw aborted the whole .map()).
-      if (!latest) {
-        const nm = (STATION_NAMES[id] && STATION_NAMES[id][mapLang]) || m.label || `${id}`;
-        const idChip = m.label ? `<span class="station-id">${m.label}</span>` : '';
-        return `<div class="station-card-mini" data-station-id="${id}" onclick="openBarDetail(${id})">
-          <div class="header-row"><div class="name">${nm}${idChip}</div></div>
-          <div class="meta">${m.description || ''}</div>
-          <div class="meta" style="opacity:0.7;">No recent data</div>
-        </div>`;
+      const m = station?.metadata;
+      const name = (STATION_NAMES[id] && STATION_NAMES[id][pageLang]) || m?.label || `${id}`;
+      const idChip = m?.label ? ` <span class="station-id">${m.label}</span>` : '';
+      const first = off => `<td><span class="corr-name${off ? ' off' : ''}" style="cursor:inherit">${name}${idChip}</span><div class="corr-role">${m?.description || ''}</div></td>`;
+      // Rows for gauges with metadata but no current reading still open the
+      // detail dialog (last-known levels, references), as the old cards did.
+      const msgRow = (msg, clickable = true) => `<tr data-station-id="${id}"${clickable ? ` onclick="openBarDetail(${id})" title="${L('Details for', 'Détails pour')} ${name}"` : ''}>${first(true)}<td colspan="5"><span class="corr-msg">${msg}</span></td></tr>`;
+      if (!m) return msgRow(L('Loading…', 'Chargement…'), false);
+      const readings = station.readings || [];
+      const latest = readings[readings.length - 1];
+      if (!latest) return msgRow(`${hydroMeteoDeactivatedChip(id)} ${L('No recent data published.', 'Aucune donnée récente publiée.')}`);
+      const level = displayLevel(m, latest.valeur);
+      if (isSeriesStale(station)) {
+        return msgRow(`${hydroMeteoDeactivatedChip(id)} ${L('No current reading. Last known', 'Aucune lecture actuelle. Dernière valeur connue :')} ${level.toFixed(2)} m, ${ago(latest.date_prise_valeur)}.`);
       }
-      const stale = isSeriesStale(station);
-      const dispCurrent = displayLevel(m, latest.valeur);
-      const change = stale ? null : dailyChangeCm(station.readings);
-      const changeArrow = change == null ? '' : (change > 0.5 ? '↑' : change < -0.5 ? '↓' : '→');
-      const changeCls = change == null ? '' : (change > 0.5 ? 'up' : change < -0.5 ? 'down' : 'flat');
-      const changeText = change == null ? '' : `<span class="change ${changeCls}">${changeArrow} ${change > 0 ? '+' : ''}${change.toFixed(1)} cm/24h</span>`;
-
-      const eff = getEffectiveEtat(m);
-      const ETAT_NAMES = { 6: 'Major flood', 5: 'Near major', 4: 'Moderate', 3: 'Minor', 2: 'Pre-alert', 1: 'Normal', 0: 'No threshold' };
-      const synthetic = isEffectiveEtatSynthetic(m);
-      const stateBadgeCls = eff >= 5 ? 'badge major' : eff >= 3 ? 'badge near' : 'badge peaked';
-      const stateBadge = eff != null ? `<span class="${stateBadgeCls}">${ETAT_NAMES[eff] || ''}${synthetic ? ' (est.)' : ''}</span>` : '';
-
-      const orrpb = getOrrpbContext(m);
-      const orrpbChip = orrpb ? `<span class="orrpb-chip" title="ORRPB reference">${orrpb.context}</span>` : '';
-
-      // Percentile chip (Lac Coulonge against 54-yr ORRPB record; others against ECCC peaks if available).
-      let pctlChip = '';
+      const change = dailyChangeCm(readings);
+      const lw = lowWaterSignals(id, level, change);
+      // Low-water advisories lead the notes, in ink; the stronger ones are bold.
+      const notes = lw.map(x => `<div class="lw${x.sev >= 2 ? ' strong' : ''}" title="${x.title}">${x.sev === 3 ? '⚠ ' : ''}${x.text}</div>`);
+      // Context: year-peak rank (Lac Coulonge) or ECCC percentile, ORRPB reference, 48 h precipitation.
+      const ctx = [];
       if (id === 1195) {
-        const yrMax = lastYearRanges[1195] && lastYearRanges[1195].max;
-        const peakLevel = (yrMax && yrMax.valeur > latest.valeur) ? yrMax.valeur : latest.valeur;
-        const rank = rankPeak(peakLevel);
-        const pctl = Math.round(((HISTORICAL_RECORD_YEARS - rank + 1) / HISTORICAL_RECORD_YEARS) * 100);
-        pctlChip = `<span class="pctl-chip ${pctl >= 90 ? 'high' : ''}" title="Year's peak ${peakLevel.toFixed(2)} m ranks ${ordinal(rank)} of ${HISTORICAL_RECORD_YEARS} on record (1972–2025)">${ordinal(pctl)} %ile (1972–2025)</span>`;
+        const yrMax = lastYearRanges[1195]?.max;
+        const peak = yrMax && yrMax.valeur > latest.valeur ? yrMax.valeur : latest.valeur;
+        const rank = rankPeak(peak);
+        ctx.push(L(`Year's peak ${ordinal(rank)} highest of ${HISTORICAL_RECORD_YEARS}`, `Pointe de l'année : ${rank}e plus haute sur ${HISTORICAL_RECORD_YEARS}`));
       } else if (m.label && WSC_ID_PATTERN.test(m.label) && eccPeakCache[m.label]) {
         const peaks = eccPeakCache[m.label];
-        const above = peaks.filter(p => latest.valeur >= p).length;
-        const pctl = Math.round((above / peaks.length) * 100);
-        pctlChip = `<span class="pctl-chip ${pctl >= 90 ? 'high' : ''}" title="Current reading vs. ECCC ${peaks.length}-yr annual peak record">${pctl}th %ile (ECCC ${peaks.length}-yr)</span>`;
+        const pctl = Math.round(peaks.filter(p => latest.valeur >= p).length / peaks.length * 100);
+        ctx.push(pctl === 0
+          ? L(`Below every ECCC annual peak (${peaks.length} yr)`, `Sous toutes les pointes annuelles ECCC (${peaks.length} ans)`)
+          : L(`Above ${pctl}% of ECCC annual peaks (${peaks.length} yr)`, `Au-dessus de ${pctl} % des pointes annuelles ECCC (${peaks.length} ans)`));
       }
-
-      // 48 h precip forecast at the nearest weather station.
-      let precipChip = '';
+      const orrpb = getOrrpbContext(m);
+      if (orrpb) ctx.push(`${L('ORRPB:', 'CPRBO :')} ${orrpb.context}`);
       const wxName = GAUGE_TO_WX[id];
-      if (wxName && lastWeatherCache) {
-        const wx = lastWeatherCache.find(w => w.station.name === wxName);
-        if (wx?.hourly) {
-          const mm = next48hPrecip(wx.hourly);
-          const cls = mm >= 20 ? 'rain-heavy' : mm >= 5 ? 'rain-moderate' : 'rain-light';
-          precipChip = `<span class="precip-chip ${cls}" title="Forecast precipitation next 48 hours at ${wxName}">☔ ${mm.toFixed(1)} mm/48h · ${wxName}</span>`;
-        }
-      }
-
-      const labelChip = m.label ? `<span class="station-id">${m.label}</span>` : '';
-      const stationName = (STATION_NAMES[id] && STATION_NAMES[id][mapLang]) || m.label || `${id}`;
-      const lastKnown = stale ? `<span class="meta" style="font-style:italic;opacity:0.8">Last known ${ago(latest.date_prise_valeur)}</span>` : '';
-      return `<div class="station-card-mini${stale ? ' stale' : ''}" data-station-id="${id}" onclick="openBarDetail(${id})">
-        <div class="header-row">
-          <div class="name">${stationName}${labelChip}</div>
-          <div class="level">${dispCurrent.toFixed(2)}<span class="unit">m</span>${changeText}</div>
-        </div>
-        <div class="meta">${m.description || ''}</div>
-        ${lastKnown}
-        <div class="chart-wrap"><canvas id="stn-chart-${id}"></canvas></div>
-        <div class="badge-row">${hydroMeteoDeactivatedChip(id)}${stateBadge}${lowWaterChips(id, dispCurrent, change)}${orrpbChip}${pctlChip}${precipChip}</div>
-      </div>`;
+      const wx = wxName && lastWeatherCache?.find(w => w.station.name === wxName);
+      if (wx?.hourly) ctx.push(L(`${next48hPrecip(wx.hourly).toFixed(1)} mm rain / 48 h · ${wxName}`, `${next48hPrecip(wx.hourly).toFixed(1)} mm de pluie / 48 h · ${wxName}`));
+      return `<tr data-station-id="${id}" onclick="openBarDetail(${id})" title="${L('Details for', 'Détails pour')} ${name}"${id === 1195 ? ' class="is-home"' : ''}>${first(false)}
+        <td><span class="corr-level">${level.toFixed(2)}</span><span class="corr-unit"> m</span></td>
+        <td>${stateChip(getEffectiveEtat(m), isEffectiveEtatSynthetic(m))}</td>
+        ${tributarySparkCell(tributarySeries(id, readings))}
+        ${corridorDeltaCell(change, i * 70)}
+        <td class="stn-notes">${[...notes, ...ctx.map(c => `<div>${c}</div>`)].join('') || '<span class="muted">—</span>'}</td>
+      </tr>`;
     }
 
-    // Bumped on every renderStationsTab() call so in-flight async station/history
-    // fetches from a previous render (or a previous window selection) know to drop
-    // their result instead of patching a card that's since been rebuilt.
+    // Bumped on every renderStationsTab() call so fetches from a previous render
+    // (or a previous window) drop their result instead of repainting stale data.
     let stationsRenderGen = 0;
 
-    // Replace a single card's DOM node in place and (re)draw its mini-chart. Used
-    // when an async station or history fetch lands after the grid was painted.
-    function refreshStationCard(id) {
-      const grid = document.getElementById('stations-grid');
-      const el = grid?.querySelector(`.station-card-mini[data-station-id="${id}"]`);
-      if (!el) return;
-      if (stationMiniCharts[id]) { try { stationMiniCharts[id].destroy(); } catch (_) {} delete stationMiniCharts[id]; }
-      el.outerHTML = buildStationCard(id);
-      renderStationMiniChart(id);
+    // Repaint the Stations table if it is showing: weather, ECCC peaks and the
+    // regional gauges all land after it is first drawn.
+    function repaintStationsIfShown() {
+      if (document.querySelector('.tab-panel[data-tab="stations"].active')) paintStationsTable();
+    }
+    function paintStationsTable() {
+      const wrap = document.getElementById('stations-table');
+      if (!wrap) return;
+      const w = windowLabel(windowHours);
+      // Build each row defensively: one bad gauge must never blank the table.
+      const rows = STATIONS_TAB_IDS.map((id, i) => {
+        try { return stationRowHTML(id, i); }
+        catch (e) {
+          console.warn(`station row ${id} failed to build: ${e.message}`);
+          return `<tr><td>${id}</td><td colspan="5"><span class="corr-msg">${L('Unavailable.', 'Indisponible.')}</span></td></tr>`;
+        }
+      }).join('');
+      wrap.innerHTML = `<table class="corr-table stations-table"><thead><tr>
+          <th scope="col">Station</th><th scope="col">${L('Level', 'Niveau')}</th>
+          <th scope="col">${L('Flood state', 'État de crue')}</th><th scope="col">${L(`Last ${w}`, `Sur ${w}`)}</th>
+          ${corridorScaleHead(L('24 h change, cm', 'Variation 24 h, cm'))}
+          <th scope="col">${L('Low water and context', 'Basses eaux et contexte')}</th>
+        </tr></thead><tbody>${rows}</tbody></table>`;
+      const foot = document.getElementById('stations-foot');
+      if (foot) foot.innerHTML = L(`Each trace is scaled to its own row; read its size from the range beside it (highest minus lowest over the last ${w}). The 24 h bars share the corridor table's ±${CORRIDOR_SCALE_CM} cm scale. Low-water advisories come first in the last column; ⚠ and bold mark the stronger ones. (est.) = no official threshold, estimated from ORRPB / ECCC peaks.`,
+        `Chaque tracé est mis à l'échelle de sa ligne; son ampleur se lit dans l'étendue indiquée à côté (maximum moins minimum sur ${w}). Les barres 24 h utilisent l'échelle de ±${CORRIDOR_SCALE_CM} cm du tableau du corridor. Les avis de basses eaux viennent en premier dans la dernière colonne; ⚠ et le gras marquent les plus forts. (est.) = aucun seuil officiel, estimé à partir des pointes du CPRBO / ECCC.`);
     }
 
     function renderStationsTab() {
-      const grid = document.getElementById('stations-grid');
-      if (!grid || !lastData) return;
+      if (!document.getElementById('stations-table') || !lastData) return;
       const gen = ++stationsRenderGen;
-
-      // Paint immediately with whatever's already cached — stations without data
-      // yet show a "Loading…" placeholder card (see buildStationCard). One slow or
-      // unreachable upstream no longer blocks the whole grid.
-      Object.values(stationMiniCharts).forEach(c => { try { c.destroy(); } catch (_) {} });
-      stationMiniCharts = {};
-      // Build each card defensively — a throw in one card must never abort the
-      // whole .map() and leave the grid blank (the bug this guards against).
-      grid.innerHTML = STATIONS_TAB_IDS.map(id => {
-        try { return buildStationCard(id); }
-        catch (e) {
-          console.warn(`station card ${id} failed to build: ${e.message}`);
-          return `<div class="station-card-mini" data-station-id="${id}"><div class="meta">${id}: unavailable</div></div>`;
-        }
-      }).join('');
-      STATIONS_TAB_IDS.forEach(id => renderStationMiniChart(id));
-
-      // Fill in the rest asynchronously, patching each card as its data arrives.
-      // (Overview's regional fetch also populates lastData; first-to-finish wins.)
+      paintStationsTable();
+      // Fill in gauges not loaded yet, then longer history for >72 h windows,
+      // repainting as each lands. (Overview's regional fetch also fills lastData.)
+      const repaint = () => { if (gen === stationsRenderGen) paintStationsTable(); };
       STATIONS_TAB_IDS.forEach(async id => {
         if (lastData[id]) return;
         const mvcaSpec = REGIONAL_STATIONS.find(s => s.id === id && s.source === 'mvca');
         try {
-          const d = mvcaSpec ? await fetchKiwisStation(mvcaSpec) : await fetchStation(id);
-          lastData[id] = d;
-          if (gen === stationsRenderGen) refreshStationCard(id);
+          lastData[id] = mvcaSpec ? await fetchKiwisStation(mvcaSpec) : await fetchStation(id);
+          repaint();
         } catch (e) { console.warn(`stn ${id}: ${e.message}`); }
       });
-
-      // History for >72h windows — cards render off live readings first, then
-      // upgrade to the full series once history lands.
       if (windowHours > 72) {
         const histWindow = windowHours;
         STATIONS_TAB_IDS.forEach(async id => {
           const key = `${id}:${histWindow}`;
           if (historyCache[key]) return;
-          try {
-            historyCache[key] = await fetchStationHistory(id, histWindow);
-            if (gen === stationsRenderGen && lastData[id]) refreshStationCard(id);
-          } catch (e) { console.warn(`history ${id}: ${e.message}`); }
+          try { historyCache[key] = await fetchStationHistory(id, histWindow); repaint(); }
+          catch (e) { console.warn(`history ${id}: ${e.message}`); }
         });
       }
-    }
-
-    // ---- River profile tab (compact N→S longitudinal strip) -------------------
-    // One slim row per gauge in upstream→downstream (≈N→S) order — a Buffalo-style
-    // glance-able strip of the whole corridor. Shares STATIONS_TAB_IDS (already
-    // curated N→S) and the low-water logic with the All-stations grid.
-    const SEV = { normal: 0, watch: 1, warn: 2, alert: 3 };
-    const RIVER_TIER_COLOR = { normal: 'var(--green)', watch: 'var(--amber)', warn: 'var(--orange)', alert: 'var(--red)' };
-
-    // Single dominant low-water status for a gauge: most severe of rate-of-fall and
-    // seasonal-band signals, with the flood side winning if a real high-water state
-    // is set (so a flooding gauge is never mislabelled "Normal").
-    function lowWaterStatus(id, m, level, change24) {
-      let tier = 'normal', label = 'Normal';
-      const bump = (t, l) => { if (SEV[t] > SEV[tier]) { tier = t; label = l; } };
-      if (change24 != null && change24 <= -8) {
-        if (change24 <= -30) bump('alert', 'very fast drop');
-        else if (change24 <= -15) bump('warn', 'fast drop');
-        else bump('watch', 'dropping');
-      }
-      const band = SEASONAL_LOW_BAND[id];
-      if (band && level != null) {
-        const mb = band[new Date().getMonth() + 1];
-        if (mb) {
-          const [med, low] = mb;
-          if (level <= low + 0.05) bump('alert', 'record-low territory');
-          else if (level <= low + 0.25 * (med - low)) bump('warn', 'near seasonal low');
-          else if (level < med) bump('watch', 'below seasonal median');
-        }
-      }
-      const eff = m ? getEffectiveEtat(m) : null;
-      if (eff != null && eff >= 3) { tier = 'alert'; label = eff >= 5 ? 'major flood' : eff >= 4 ? 'moderate flood' : 'minor flood'; }
-      return { tier, label };
-    }
-
-    // Lightweight inline-SVG sparkline from a reading series (no Chart.js — these
-    // rows are slim and there can be a dozen of them).
-    function sparklineSVG(readings, color, w = 96, h = 22) {
-      const series = (readings || []).map(r => r.valeur).filter(v => v != null).slice(-120);
-      if (series.length < 2) return `<svg class="river-spark" width="${w}" height="${h}"></svg>`;
-      const min = Math.min(...series), max = Math.max(...series), range = (max - min) || 1, pad = 2;
-      const pts = series.map((v, i) => {
-        const x = pad + (i / (series.length - 1)) * (w - 2 * pad);
-        const y = pad + (1 - (v - min) / range) * (h - 2 * pad);
-        return `${x.toFixed(1)},${y.toFixed(1)}`;
-      }).join(' ');
-      return `<svg class="river-spark" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><polyline points="${pts}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linejoin="round"/></svg>`;
-    }
-
-    function buildRiverRow(id) {
-      const station = lastData?.[id];
-      const name = (STATION_NAMES[id] && STATION_NAMES[id][mapLang]) || station?.metadata?.label || `${id}`;
-      const idChip = station?.metadata?.label ? `<span class="station-id">${station.metadata.label}</span>` : '';
-      if (!station?.metadata || !station.readings?.length) {
-        return `<div class="river-row nodata" data-station-id="${id}"><span class="river-dot normal"></span><span class="river-name">${name}${idChip}</span><span class="river-spark-wrap"></span><span class="river-level">—</span><span class="river-change"></span><span class="river-status">No recent data</span></div>`;
-      }
-      const stale = isSeriesStale(station);
-      const m = station.metadata;
-      const latest = station.readings[station.readings.length - 1];
-      const level = displayLevel(m, latest.valeur);
-      const change = stale ? null : dailyChangeCm(station.readings);
-      const st = stale
-        ? { tier: 'watch', label: LOCAL_HYDRO_METEO_IDS.includes(id)
-            ? 'Last known · Hydro Météo deactivated'
-            : `Last known ${ago(latest.date_prise_valeur)}` }
-        : lowWaterStatus(id, m, level, change);
-      const arrow = change == null ? '' : (change > 0.5 ? '↑' : change < -0.5 ? '↓' : '→');
-      const chCls = change == null ? '' : (change > 0.5 ? 'up' : change < -0.5 ? 'down' : 'flat');
-      const chTxt = change == null ? (stale ? ago(latest.date_prise_valeur) : '') : `${arrow} ${change > 0 ? '+' : ''}${change.toFixed(1)}`;
-      return `<div class="river-row${stale ? ' stale' : ''}" data-station-id="${id}" onclick="openBarDetail(${id})">
-        <span class="river-dot ${st.tier}"></span>
-        <span class="river-name">${name}${idChip}</span>
-        <span class="river-spark-wrap">${sparklineSVG(station.readings, RIVER_TIER_COLOR[st.tier])}</span>
-        <span class="river-level">${level.toFixed(2)}<span class="unit">m</span></span>
-        <span class="river-change ${chCls}">${chTxt}${change != null ? '<span class="rate-unit"> cm/24h</span>' : ''}</span>
-        <span class="river-status ${st.tier}">${st.label}</span>
-      </div>`;
-    }
-
-    function refreshRiverRow(id) {
-      const list = document.getElementById('river-list');
-      const row = list?.querySelector(`.river-row[data-station-id="${id}"]`);
-      if (row) row.outerHTML = buildRiverRow(id);
-    }
-
-    let riverRenderGen = 0;
-    function renderRiverTab() {
-      const list = document.getElementById('river-list');
-      if (!list || !lastData) return;
-      const gen = ++riverRenderGen;
-      list.innerHTML = STATIONS_TAB_IDS.map(id => {
-        try { return buildRiverRow(id); }
-        catch (e) {
-          console.warn(`river row ${id} failed to build: ${e.message}`);
-          return `<div class="river-row nodata" data-station-id="${id}"><span class="river-dot normal"></span><span class="river-name">${id}</span><span class="river-spark-wrap"></span><span class="river-level">—</span><span class="river-change"></span><span class="river-status">unavailable</span></div>`;
-        }
-      }).join('');
-      // Fill any gauges not yet in lastData, patching each row as it lands.
-      STATIONS_TAB_IDS.forEach(async id => {
-        if (lastData[id]) return;
-        const mvcaSpec = REGIONAL_STATIONS.find(s => s.id === id && s.source === 'mvca');
-        try {
-          const d = mvcaSpec ? await fetchKiwisStation(mvcaSpec) : await fetchStation(id);
-          lastData[id] = d;
-          if (gen === riverRenderGen) refreshRiverRow(id);
-        } catch (e) { console.warn(`river fetch ${id}: ${e.message}`); }
-      });
     }
 
     // ---- Reservoirs tab ----
@@ -4974,78 +4856,6 @@ data:
         return { cls: 'refill', label: 'Active refill — buffering' };
       }
       return null;
-    }
-
-    function renderStationMiniChart(id) {
-      const canvas = document.getElementById(`stn-chart-${id}`);
-      if (!canvas || !lastData?.[id]) return;
-      const station = lastData[id];
-      const m = station.metadata;
-      const offset = ORRPB_HISTORIC_PEAKS[id]?.datumOffset || 0;
-      // Build the value series for the active window.
-      let vals;
-      if (windowHours <= 72) {
-        vals = station.readings.slice(-windowHours);
-      } else {
-        const hist = historyCache[`${id}:${windowHours}`];
-        vals = hist ? mergeHistory(hist, station.readings) : station.readings;
-      }
-      if (!vals.length) return;
-      const isDark = isDarkMode();
-      const txt = isDark ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.55)';
-      const grid = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
-      const eff = getEffectiveEtat(m);
-      const lineColors = { 6: 'rgb(156,26,26)', 5: 'rgb(224,75,74)', 4: 'rgb(224,127,47)', 3: 'rgb(239,159,39)', 2: 'rgb(245,200,66)', 1: 'rgb(76,175,80)', 0: 'rgb(79,163,199)' };
-      const lineColor = lineColors[eff ?? 0];
-      // Threshold lines from Vigilance seuils_niv (already in API datum, so add offset for MASL display).
-      const thresholds = ((m.seuils_niv) || []).map(s => ({
-        val: s.valeur + offset, label: THRESHOLD_COLORS[s.type]?.label || s.type, color: THRESHOLD_COLORS[s.type]?.color || '#888'
-      }));
-      if (stationMiniCharts[id]) stationMiniCharts[id].destroy();
-      stationMiniCharts[id] = new Chart(canvas, {
-        type: 'line',
-        data: {
-          labels: vals.map(v => timeLabel(v.date_prise_valeur)),
-          datasets: [{
-            data: vals.map(v => v.valeur + offset),
-            borderColor: lineColor,
-            backgroundColor: lineColor.replace('rgb', 'rgba').replace(')', ',0.12)'),
-            borderWidth: 1.5, pointRadius: 0, pointHoverRadius: 4, tension: 0.2, fill: true
-          }]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false, animation: false,
-          interaction: { mode: 'index', intersect: false, axis: 'x' },
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              backgroundColor: isDark ? 'rgba(30,30,30,0.95)' : 'rgba(255,255,255,0.98)',
-              titleColor: isDark ? '#f0f0f0' : '#1a1a1a',
-              bodyColor: isDark ? '#f0f0f0' : '#1a1a1a',
-              borderColor: isDark ? '#444' : '#ddd', borderWidth: 1, padding: 6, displayColors: false,
-              callbacks: { label: c => `${c.parsed.y.toFixed(2)} m` }
-            }
-          },
-          scales: {
-            x: { grid: { display: false }, ticks: { color: txt, font: { size: 9 }, maxTicksLimit: 5, maxRotation: 0 } },
-            y: { grid: { color: grid }, ticks: { color: txt, font: { size: 9 }, callback: v => v.toFixed(2) } }
-          }
-        },
-        plugins: [{
-          id: 'thresholdLines',
-          afterDraw: (chart) => {
-            const { ctx, scales: { x: xA, y: yA } } = chart;
-            thresholds.forEach(t => {
-              const y = yA.getPixelForValue(t.val);
-              if (y < yA.top || y > yA.bottom) return;
-              ctx.save(); ctx.beginPath(); ctx.setLineDash([3, 3]);
-              ctx.strokeStyle = t.color; ctx.lineWidth = 1;
-              ctx.moveTo(xA.left, y); ctx.lineTo(xA.right, y); ctx.stroke();
-              ctx.restore();
-            });
-          }
-        }]
-      });
     }
 
     // ---- Operations tab ----
@@ -5790,7 +5600,6 @@ data:
         renderCards(data, yearRanges);
         renderCorridor();
         if (document.querySelector('.tab-panel[data-tab="stations"].active')) renderStationsTab();
-        if (document.querySelector('.tab-panel[data-tab="river"].active')) renderRiverTab();
         // Reservoirs / Tributaries tabs depend on lastData[545] (Mattawa) for the
         // Des Joachims state pill — refresh them too so the pill appears once
         // Mattawa data is available.
@@ -5805,15 +5614,15 @@ data:
           // renderProperty is the only writer of #thresh-list — without this the
           // panel stays a "Loading…" skeleton (fresh load) or silently freezes
           // pre-outage distances (mid-session) with no stale indicator.
-          const tl = document.getElementById('thresh-list');
-          tl.classList.remove('skeleton');
-          tl.innerHTML = '<div class="thresh-row"><span class="desc" style="color:var(--text-muted)">No recent readings — threshold distances unavailable during the source feed outage.</span></div>';
+          thresholdsNow = null;
+          document.getElementById('thresh-list').innerHTML = `<p class="corr-msg" style="padding: 14px 16px;">${L('No recent readings — threshold distances unavailable during the source feed outage.', 'Aucune lecture récente — distances aux seuils indisponibles pendant la panne de la source.')}</p>`;
+          document.getElementById('thresh-foot').textContent = '';
         }
         updateChartTitles();
 
         // Freeze + precipitation tracker (non-blocking). Cache the result so the
         // Stations tab can pull per-gauge precip context off the same fetch.
-        fetchWeather().then(w => { lastWeatherCache = w; renderFreezePanel(w); }).catch(err => {
+        fetchWeather().then(w => { lastWeatherCache = w; renderFreezePanel(w); repaintStationsIfShown(); }).catch(err => {
           const sum = document.getElementById('freeze-summary');
           sum.className = 'freeze-lede';
           sum.innerHTML = `<strong>${L('Weather unavailable:', 'Météo indisponible :')}</strong> ${err.message}`;
@@ -5836,6 +5645,7 @@ data:
             // Refresh as each arrives so rows fill in progressively instead of
             // in one batch.
             renderCorridor();
+            repaintStationsIfShown();
           }).catch(err => {
             console.warn(`regional render failed for ${p}:`, err);
           });
