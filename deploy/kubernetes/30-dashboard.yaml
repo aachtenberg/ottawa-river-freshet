@@ -1253,8 +1253,11 @@ data:
       freeze_foot:    { en: 'Shaded cells are overnight lows below 0 °C. Last night is observed; later nights are forecast (Open-Meteo).',
                         fr: 'Les cases ombrées sont des minimums nocturnes sous 0 °C. La nuit dernière est observée; les nuits suivantes sont des prévisions (Open-Meteo).' }
     };
-    // Inline bilingual text for markup built in JS: L('Level', 'Niveau').
-    const L = (en, fr) => (pageLang === 'fr' ? fr : en);
+    // Inline bilingual text for markup built in JS: enfr('Level', 'Niveau').
+    // Never name a top-level binding `L`: it shadows Leaflet's window.L for every
+    // script on the page and the map drawer dies with "L.map is not a function"
+    // (2026-11-12 to 11-13). tests/test_dashboard_globals.mjs enforces this.
+    const enfr = (en, fr) => (pageLang === 'fr' ? fr : en);
     const MONTHS_SHORT = {
       en: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
       fr: ['janv.','févr.','mars','avr.','mai','juin','juill.','août','sept.','oct.','nov.','déc.'],
@@ -1440,10 +1443,10 @@ data:
     function dayMonth(iso) {
       const d = parseVigilance(iso);
       if (!d) return '';
-      return new Intl.DateTimeFormat(L('en-GB', 'fr-CA'), { timeZone: 'America/Toronto', day: 'numeric', month: 'short' }).format(d);
+      return new Intl.DateTimeFormat(enfr('en-GB', 'fr-CA'), { timeZone: 'America/Toronto', day: 'numeric', month: 'short' }).format(d);
     }
     // "50%" in English, "50 %" in French.
-    function pctText(n) { return L(`${n}%`, `${n} %`); }
+    function pctText(n) { return enfr(`${n}%`, `${n} %`); }
     // Change over time is always ink: a glyph plus a signed number, never colour.
     function changeArrow(cm) { return cm > 0.5 ? '↑' : cm < -0.5 ? '↓' : '→'; }
     function signedCm(cm) {
@@ -1457,8 +1460,8 @@ data:
     function stateChip(etat, synthetic) {
       const k = ETAT_LABELS[etat] ? etat : 0;
       const est = synthetic && k !== 0
-        ? ` <span title="${L('No official threshold — estimated from the ORRPB / ECCC historical record', 'Aucun seuil officiel — estimé à partir des données historiques du CPRBO / ECCC')}">(est.)</span>` : '';
-      return `<span class="chip ${ETAT_CHIP_CLASS[k]}">${L(ETAT_LABELS[k], ETAT_LABELS_FR[k])}${est}</span>`;
+        ? ` <span title="${enfr('No official threshold — estimated from the ORRPB / ECCC historical record', 'Aucun seuil officiel — estimé à partir des données historiques du CPRBO / ECCC')}">(est.)</span>` : '';
+      return `<span class="chip ${ETAT_CHIP_CLASS[k]}">${enfr(ETAT_LABELS[k], ETAT_LABELS_FR[k])}${est}</span>`;
     }
     function formatTrend(t) {
       if (t === null || t === undefined || Math.abs(t) < 0.001) return { text: '<span class="arrow">→</span>', cls: 'flat' };
@@ -1591,13 +1594,13 @@ data:
 
       const sumBox = document.getElementById('freeze-summary');
       sumBox.className = 'freeze-lede';
-      const tally = L(`<strong>${basinFreezeNights} of ${trackedNights}</strong> nights freeze basin-wide in the 7-day outlook.`,
+      const tally = enfr(`<strong>${basinFreezeNights} of ${trackedNights}</strong> nights freeze basin-wide in the 7-day outlook.`,
         `<strong>${basinFreezeNights} nuits sur ${trackedNights}</strong> avec gel dans tout le bassin selon l'aperçu de 7 jours.`);
       sumBox.innerHTML = basinFreezeNights >= 3
-        ? `${tally} ${L('Snowmelt paused or expected to pause — conditions favour a capped freshet.', 'Fonte interrompue ou sur le point de l\'être — conditions favorables à une crue plafonnée.')}`
+        ? `${tally} ${enfr('Snowmelt paused or expected to pause — conditions favour a capped freshet.', 'Fonte interrompue ou sur le point de l\'être — conditions favorables à une crue plafonnée.')}`
         : basinFreezeNights >= 1
-          ? `${tally} ${L('Partial melt slowdown — watch forecast for additional freezes.', 'Ralentissement partiel de la fonte — surveiller les prévisions pour d\'autres nuits de gel.')}`
-          : `${tally} ${L('Active snowmelt ongoing or expected — monitor river rise rate closely.', 'Fonte active en cours ou prévue — surveiller de près le rythme de montée de la rivière.')}`;
+          ? `${tally} ${enfr('Partial melt slowdown — watch forecast for additional freezes.', 'Ralentissement partiel de la fonte — surveiller les prévisions pour d\'autres nuits de gel.')}`
+          : `${tally} ${enfr('Active snowmelt ongoing or expected — monitor river rise rate closely.', 'Fonte active en cours ou prévue — surveiller de près le rythme de montée de la rivière.')}`;
 
       // One column per night, so a cold snap reads down the basin as well as
       // across the week. Columns come from every station's nights, not just the
@@ -1607,7 +1610,7 @@ data:
       const nightLabel = date => {
         const diff = (new Date(date) - new Date(todayKey)) / 86400000;
         const d = new Date(date);
-        return diff === 0 ? L('Last night', 'Nuit dernière') : diff === 1 ? L('Tonight', 'Cette nuit') : diff === 2 ? L('Tomorrow', 'Demain') : `${d.getUTCDate()} ${MONTHS[d.getUTCMonth()]}`;
+        return diff === 0 ? enfr('Last night', 'Nuit dernière') : diff === 1 ? enfr('Tonight', 'Cette nuit') : diff === 2 ? enfr('Tomorrow', 'Demain') : `${d.getUTCDate()} ${MONTHS[d.getUTCMonth()]}`;
       };
       const degrees = t => {
         const r = Math.round(t);
@@ -1617,7 +1620,7 @@ data:
       const rows = perStation.map(({ station, nights, precipMm }) => {
         const groupKey = station.group || 'upstream';
         const groupHeader = lastGroup !== groupKey
-          ? `<tr class="group"><th colspan="${cols.length + 2}" scope="colgroup">${groupKey === 'upstream' ? L('Upstream — drives freeze-night counter', 'Amont — alimente le compteur de nuits de gel') : L('Downstream — local forecast', 'Aval — prévisions locales')}</th></tr>`
+          ? `<tr class="group"><th colspan="${cols.length + 2}" scope="colgroup">${groupKey === 'upstream' ? enfr('Upstream — drives freeze-night counter', 'Amont — alimente le compteur de nuits de gel') : enfr('Downstream — local forecast', 'Aval — prévisions locales')}</th></tr>`
           : '';
         lastGroup = groupKey;
         const cells = cols.map(date => {
@@ -1631,14 +1634,14 @@ data:
         return `${groupHeader}<tr>
           <td><span class="corr-name" style="cursor:default">${station.name}</span>${role}</td>
           ${cells}
-          <td class="num${precipMm >= 20 ? ' heavy' : ''}" title="${L('Forecast precipitation, next 48 hours', 'Précipitations prévues, 48 prochaines heures')}">${precipMm.toFixed(1)}</td>
+          <td class="num${precipMm >= 20 ? ' heavy' : ''}" title="${enfr('Forecast precipitation, next 48 hours', 'Précipitations prévues, 48 prochaines heures')}">${precipMm.toFixed(1)}</td>
         </tr>`;
       }).join('');
       grid.innerHTML = `<table class="corr-table freeze-table">
         <thead><tr>
-          <th scope="col">${L('Weather station', 'Station météo')}</th>
+          <th scope="col">${enfr('Weather station', 'Station météo')}</th>
           ${cols.map(c => `<th scope="col" class="night">${nightLabel(c)}</th>`).join('')}
-          <th scope="col" class="num">${L('48 h precip, mm', 'Précip. 48 h, mm')}</th>
+          <th scope="col" class="num">${enfr('48 h precip, mm', 'Précip. 48 h, mm')}</th>
         </tr></thead>
         <tbody>${rows}</tbody>
       </table>`;
@@ -1874,16 +1877,16 @@ data:
       let context;
       if (etat === 6) {
         const dCm = Math.round((masl - refs[0].level) * 100);
-        context = dCm < 5 ? L(`at ${recordYear.year} record`, `au record de ${recordYear.year}`) : L(`${dCm} cm above ${recordYear.year} record`, `${dCm} cm au-dessus du record de ${recordYear.year}`);
+        context = dCm < 5 ? enfr(`at ${recordYear.year} record`, `au record de ${recordYear.year}`) : enfr(`${dCm} cm above ${recordYear.year} record`, `${dCm} cm au-dessus du record de ${recordYear.year}`);
       } else if (etat === 5 || etat === 4) {
         const lower = refs.filter(r => masl >= r.level).slice(-1)[0];
         const higher = refs.filter(r => r.level > masl).slice(-1)[0];
         const dHigher = Math.round((higher.level - masl) * 100);
-        context = L(`above ${lower.year}, ${dHigher} cm below ${higher.year}`, `au-dessus de ${lower.year}, ${dHigher} cm sous ${higher.year}`);
+        context = enfr(`above ${lower.year}, ${dHigher} cm below ${higher.year}`, `au-dessus de ${lower.year}, ${dHigher} cm sous ${higher.year}`);
       } else {
         const lowest = refs[refs.length - 1];
         const dCm = Math.round((lowest.level - masl) * 100);
-        context = L(`${dCm} cm below ${lowest.year} freshet peak`, `${dCm} cm sous la pointe de crue de ${lowest.year}`);
+        context = enfr(`${dCm} cm below ${lowest.year} freshet peak`, `${dCm} cm sous la pointe de crue de ${lowest.year}`);
       }
       return { etat, context };
     }
@@ -2303,11 +2306,11 @@ data:
     function brysonTurbineText() {
       const t = brysonTurbine;
       if (!t) return '';
-      const dur = t.sinceMs ? ` ${L('for', 'depuis')} ${opDuration(t.nowMs - t.sinceMs + 3600000)}` : '';
-      const link = `<a href="#operations">${L('Turbine log', 'Journal des turbines')}</a>.`;
+      const dur = t.sinceMs ? ` ${enfr('for', 'depuis')} ${opDuration(t.nowMs - t.sinceMs + 3600000)}` : '';
+      const link = `<a href="#operations">${enfr('Turbine log', 'Journal des turbines')}</a>.`;
       return t.off
-        ? `<strong>${L('Turbines off', 'Turbines à l\'arrêt')}${dur}</strong>${L(', all flow over the spillway.', ', tout le débit passe par l\'évacuateur.')} ${link}`
-        : `${L('Turbines running', 'Turbines en marche')}${dur}. ${link}`;
+        ? `<strong>${enfr('Turbines off', 'Turbines à l\'arrêt')}${dur}</strong>${enfr(', all flow over the spillway.', ', tout le débit passe par l\'évacuateur.')} ${link}`
+        : `${enfr('Turbines running', 'Turbines en marche')}${dur}. ${link}`;
     }
 
     // Watch points: the supporting gauges under the Lac Coulonge hero.
@@ -2367,7 +2370,7 @@ data:
           const peakWord = yearWins ? 'high' : (windowPk.isPeaked ? 'peak' : 'high so far');
           note = dropCm >= 1 ? `${dropCm} cm below its ${dayMonth(peak.date_prise_valeur)} ${peakWord}.` : '';
           const orrpb = getOrrpbContext(m);
-          if (orrpb) note += ` ${L('ORRPB ref:', 'Réf. CPRBO :')} ${orrpb.context}.`;
+          if (orrpb) note += ` ${enfr('ORRPB ref:', 'Réf. CPRBO :')} ${orrpb.context}.`;
         }
         return `
           <article class="card watch" data-station-id="${item.id}">
@@ -2581,13 +2584,13 @@ data:
         const crossed = lcLatest >= t.level;
         const cm = Math.round(Math.abs(t.level - lcLatest) * 100);
         let now;
-        if (crossed) now = `<strong>${L(`Exceeded by ${cm} cm`, `Dépassé de ${cm} cm`)}</strong>`;
+        if (crossed) now = `<strong>${enfr(`Exceeded by ${cm} cm`, `Dépassé de ${cm} cm`)}</strong>`;
         else {
           const eta = etaToThreshold(lcLatest, t.level, trendPerHour);
-          const trend = eta ? `<strong>${L('ETA', 'Atteint dans')} ${eta}</strong>`
-            : trendPerHour != null && trendPerHour < -0.00005 ? L('↓ falling', '↓ en baisse')
-            : trendPerHour != null && Math.abs(trendPerHour) <= 0.00005 ? L('→ steady', '→ stable') : '';
-          now = `${cm} cm ${L('below', 'sous la cote')}${trend ? `<div class="op-sub">${trend}</div>` : ''}`;
+          const trend = eta ? `<strong>${enfr('ETA', 'Atteint dans')} ${eta}</strong>`
+            : trendPerHour != null && trendPerHour < -0.00005 ? enfr('↓ falling', '↓ en baisse')
+            : trendPerHour != null && Math.abs(trendPerHour) <= 0.00005 ? enfr('→ steady', '→ stable') : '';
+          now = `${cm} cm ${enfr('below', 'sous la cote')}${trend ? `<div class="op-sub">${trend}</div>` : ''}`;
         }
         let season;
         if (live) {
@@ -2602,32 +2605,32 @@ data:
           if (f) {
             const pct = Math.round((f.posterior || 0) * 100);
             const bound = exact ? '' : '≤ ';
-            const tip = exact ? '' : ` title="${L(`Not modelled by the forecast; at most the chance for ${f.threshold_m.toFixed(2)} m (${f.label}).`, `Non modélisée par la prévision; au plus la probabilité pour ${f.threshold_m.toFixed(2)} m.`)}"`;
+            const tip = exact ? '' : ` title="${enfr(`Not modelled by the forecast; at most the chance for ${f.threshold_m.toFixed(2)} m (${f.label}).`, `Non modélisée par la prévision; au plus la probabilité pour ${f.threshold_m.toFixed(2)} m.`)}"`;
             season = `<span${tip}>${bound}${pctText(pct)}</span><div class="thresh-mini" aria-hidden="true"><b style="width:${pct}%"></b></div>`;
           } else season = '<span class="muted">—</span>';
         } else if (yrMax) {
-          season = yrMax.valeur >= t.level - 1e-9 ? `<strong>${L('Reached', 'Atteinte')}</strong>` : `<span class="muted">${L('Not reached', 'Non atteinte')}</span>`;
+          season = yrMax.valeur >= t.level - 1e-9 ? `<strong>${enfr('Reached', 'Atteinte')}</strong>` : `<span class="muted">${enfr('Not reached', 'Non atteinte')}</span>`;
         } else season = '<span class="muted">—</span>';
         return `<tr class="${t.official ? 'official' : ''}${crossed ? ' crossed' : ''}">
           <td class="lvl">${t.level.toFixed(2)} m</td>
-          <td class="desc">${L(t.desc, t.fr || t.desc)}</td>
-          <td title="${L(`Annual peak reached this level in ${n} of ${HISTORICAL_RECORD_YEARS} years (1972–2025)`, `La pointe annuelle a atteint ce niveau ${n} années sur ${HISTORICAL_RECORD_YEARS} (1972–2025)`)}">${L(`${n} of ${HISTORICAL_RECORD_YEARS} years`, `${n} ans sur ${HISTORICAL_RECORD_YEARS}`)}</td>
+          <td class="desc">${enfr(t.desc, t.fr || t.desc)}</td>
+          <td title="${enfr(`Annual peak reached this level in ${n} of ${HISTORICAL_RECORD_YEARS} years (1972–2025)`, `La pointe annuelle a atteint ce niveau ${n} années sur ${HISTORICAL_RECORD_YEARS} (1972–2025)`)}">${enfr(`${n} of ${HISTORICAL_RECORD_YEARS} years`, `${n} ans sur ${HISTORICAL_RECORD_YEARS}`)}</td>
           <td>${now}</td>
           <td>${season}</td>
         </tr>`;
       }).join('');
       el.innerHTML = `<table class="corr-table thresh-table"><thead><tr>
-          <th scope="col">${L('Level', 'Niveau')}</th><th scope="col">${L('What it means', 'Ce que cela signifie')}</th>
-          <th scope="col">${L('Record, 1972–2025', 'Historique, 1972–2025')}</th><th scope="col">${L('Lac Coulonge now', 'Lac Coulonge actuel')}</th>
-          <th scope="col">${live ? L('Chance this season', 'Probabilité cette saison') : L(`${year} season`, `Saison ${year}`)}</th>
+          <th scope="col">${enfr('Level', 'Niveau')}</th><th scope="col">${enfr('What it means', 'Ce que cela signifie')}</th>
+          <th scope="col">${enfr('Record, 1972–2025', 'Historique, 1972–2025')}</th><th scope="col">${enfr('Lac Coulonge now', 'Lac Coulonge actuel')}</th>
+          <th scope="col">${live ? enfr('Chance this season', 'Probabilité cette saison') : enfr(`${year} season`, `Saison ${year}`)}</th>
         </tr></thead><tbody>${rows}</tbody></table>`;
       if (!foot) return;
-      const peakTxt = yrMax ? L(`The ${year} peak was ${yrMax.valeur.toFixed(2)} m on ${dayMonth(yrMax.date_prise_valeur)}.`,
+      const peakTxt = yrMax ? enfr(`The ${year} peak was ${yrMax.valeur.toFixed(2)} m on ${dayMonth(yrMax.date_prise_valeur)}.`,
                                 `La pointe de ${year} a été de ${yrMax.valeur.toFixed(2)} m le ${dayMonth(yrMax.date_prise_valeur)}.`) : '';
       foot.innerHTML = live
-        ? L(`Record = years whose annual peak reached the level. Chance this season = V3 season-end forecast as of ${fc.asof} (see the Forecast tab); ≤ marks a line the forecast doesn't model, bounded by the nearest modelled line below it. ${peakTxt}`,
+        ? enfr(`Record = years whose annual peak reached the level. Chance this season = V3 season-end forecast as of ${fc.asof} (see the Forecast tab); ≤ marks a line the forecast doesn't model, bounded by the nearest modelled line below it. ${peakTxt}`,
             `Historique = années dont la pointe annuelle a atteint le niveau. Probabilité = prévision V3 de fin de saison au ${fc.asof} (voir l'onglet Prévision); ≤ indique une cote non modélisée, bornée par la cote modélisée la plus proche en dessous. ${peakTxt}`)
-        : L(`Record = years whose annual peak reached the level. ${peakTxt} Property lines are personal observations and the 2019 Lebel survey; Vigilance lines are the provincial flood stages at this gauge.`,
+        : enfr(`Record = years whose annual peak reached the level. ${peakTxt} Property lines are personal observations and the 2019 Lebel survey; Vigilance lines are the provincial flood stages at this gauge.`,
             `Historique = années dont la pointe annuelle a atteint le niveau. ${peakTxt} Les cotes de la propriété viennent d'observations personnelles et de l'arpentage Lebel 2019; les cotes Vigilance sont les seuils provinciaux de cette jauge.`);
     }
 
@@ -2650,7 +2653,7 @@ data:
         freshetForecastData = await r.json();
       } catch (e) {
         // Don't blank a previously-rendered panel on a transient refresh failure.
-        if (!freshetForecastLoaded) document.getElementById('forecast-status').textContent = L('Forecast unavailable.', 'Prévision indisponible.');
+        if (!freshetForecastLoaded) document.getElementById('forecast-status').textContent = enfr('Forecast unavailable.', 'Prévision indisponible.');
         return;
       }
       freshetForecastLoaded = true;
@@ -2662,8 +2665,8 @@ data:
     // property line, otherwise the forecast's own label.
     function forecastLineText(t) {
       const known = [...LC_FLOOD_LINES, ...PROPERTY_THRESHOLDS].find(x => Math.abs(x.level - t.threshold_m) < 0.005);
-      if (known) return L(known.desc, known.fr || known.desc);
-      if (Math.abs(t.threshold_m - 108.50) < 0.005) return L('Super-flood line (case file)', 'Cote de « super-crue » (dossier)');
+      if (known) return enfr(known.desc, known.fr || known.desc);
+      if (Math.abs(t.threshold_m - 108.50) < 0.005) return enfr('Super-flood line (case file)', 'Cote de « super-crue » (dossier)');
       const lbl = String(t.label || '');
       return lbl.charAt(0).toUpperCase() + lbl.slice(1);
     }
@@ -2685,7 +2688,7 @@ data:
       const yrMax = lastYearRanges[1195]?.max;
       const peakOn = yrMax && peak != null && Math.abs(yrMax.valeur - peak) < 0.02
         && String(yrMax.date_prise_valeur).startsWith(year) ? dayMonth(yrMax.date_prise_valeur) : null;
-      const asofTxt = d.asof ? new Intl.DateTimeFormat(L('en-GB', 'fr-CA'), { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(d.asof + 'T12:00:00Z')) : '—';
+      const asofTxt = d.asof ? new Intl.DateTimeFormat(enfr('en-GB', 'fr-CA'), { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(d.asof + 'T12:00:00Z')) : '—';
       const reached = t => peak != null && peak >= t.threshold_m - 1e-9;
       const pct = v => Math.max(0, Math.min(100, Math.round((v || 0) * 100)));
 
@@ -2696,7 +2699,7 @@ data:
           const post = pct(t.posterior);
           last = `${pctText(post)}<div class="thresh-mini" aria-hidden="true"><b style="width:${post}%"></b><i style="left:${prior}%"></i></div>`;
         } else {
-          last = reached(t) ? `<strong>${L('Reached', 'Atteinte')}</strong>` : `<span class="muted">${L('Not reached', 'Non atteinte')}</span>`;
+          last = reached(t) ? `<strong>${enfr('Reached', 'Atteinte')}</strong>` : `<span class="muted">${enfr('Not reached', 'Non atteinte')}</span>`;
         }
         return `<tr${!live && reached(t) ? ' class="reached"' : ''}>
           <td class="lvl">${t.threshold_m.toFixed(2)} m</td>
@@ -2706,24 +2709,24 @@ data:
         </tr>`;
       }).join('');
       el.innerHTML = `<table class="corr-table fc-table"><thead><tr>
-          <th scope="col">${L('Level', 'Niveau')}</th><th scope="col">${L('Line', 'Cote')}</th>
-          <th scope="col">${L('Pre-freshet chance', 'Probabilité avant la crue')}</th>
-          <th scope="col">${live ? L('Chance now', 'Probabilité actuelle') : L(`${year} outcome`, `Résultat ${year}`)}</th>
+          <th scope="col">${enfr('Level', 'Niveau')}</th><th scope="col">${enfr('Line', 'Cote')}</th>
+          <th scope="col">${enfr('Pre-freshet chance', 'Probabilité avant la crue')}</th>
+          <th scope="col">${live ? enfr('Chance now', 'Probabilité actuelle') : enfr(`${year} outcome`, `Résultat ${year}`)}</th>
         </tr></thead><tbody>${rows}</tbody></table>`;
 
       const lvl = d.state?.level_m != null ? `${d.state.level_m.toFixed(2)} m` : '—';
       const peakTxt = peak != null ? `${peak.toFixed(2)} m` : '—';
       const n = lines.filter(reached).length;
       status.innerHTML = live
-        ? L(`As of <strong>${asofTxt}</strong>: Lac Coulonge at <strong>${lvl}</strong>, peak so far <strong>${peakTxt}</strong>.`,
+        ? enfr(`As of <strong>${asofTxt}</strong>: Lac Coulonge at <strong>${lvl}</strong>, peak so far <strong>${peakTxt}</strong>.`,
             `Au <strong>${asofTxt}</strong> : lac Coulonge à <strong>${lvl}</strong>, pointe jusqu'ici <strong>${peakTxt}</strong>.`)
-        : L(`<strong>Off season.</strong> The ${year} freshet peaked at <strong>${peakTxt}</strong>${peakOn ? ` on ${peakOn}` : ''}, reaching ${n} of the ${lines.length} lines below. The forecast runs daily through the freshet; it was last updated on ${asofTxt} and resumes with the next one.`,
+        : enfr(`<strong>Off season.</strong> The ${year} freshet peaked at <strong>${peakTxt}</strong>${peakOn ? ` on ${peakOn}` : ''}, reaching ${n} of the ${lines.length} lines below. The forecast runs daily through the freshet; it was last updated on ${asofTxt} and resumes with the next one.`,
             `<strong>Hors saison.</strong> La crue de ${year} a culminé à <strong>${peakTxt}</strong>${peakOn ? ` le ${peakOn}` : ''}, atteignant ${n} des ${lines.length} cotes ci-dessous. La prévision est mise à jour chaque jour pendant la crue; sa dernière mise à jour date du ${asofTxt} et elle reprendra à la prochaine crue.`);
       const method = `<a href="https://github.com/aachtenberg/ottawa-river-freshet/blob/main/ingesters/climate-history/FRESHET_PROBABILITY.md" target="_blank" rel="noopener noreferrer">FRESHET_PROBABILITY.md</a>`;
       if (foot) foot.innerHTML = live
-        ? L(`Pre-freshet chance = the seasonal prior (V1) made before the freshet; it is the tick on each bar. Chance now = that prior updated daily on the lake's trajectory (V3). Method: ${method}.`,
+        ? enfr(`Pre-freshet chance = the seasonal prior (V1) made before the freshet; it is the tick on each bar. Chance now = that prior updated daily on the lake's trajectory (V3). Method: ${method}.`,
             `Probabilité avant la crue = l'a priori saisonnier (V1) établi avant la crue; c'est le repère sur chaque barre. Probabilité actuelle = cet a priori mis à jour chaque jour selon la trajectoire du lac (V3). Méthode : ${method}.`)
-        : L(`Pre-freshet chance = the seasonal prior (V1) made before the ${year} freshet. Outcome = whether the season's peak reached the line. Method: ${method}.`,
+        : enfr(`Pre-freshet chance = the seasonal prior (V1) made before the ${year} freshet. Outcome = whether the season's peak reached the line. Method: ${method}.`,
             `Probabilité avant la crue = l'a priori saisonnier (V1) établi avant la crue de ${year}. Résultat = si la pointe de la saison a atteint la cote. Méthode : ${method}.`);
     }
 
@@ -3159,10 +3162,10 @@ data:
         corridorShape = shape;
         for (const k of Object.keys(corridorRowCache)) delete corridorRowCache[k];
         wrap.innerHTML = `<table class="corr-table${withState ? '' : ' no-state'}${withSpark ? ' has-spark' : ''}"><thead><tr>
-          <th scope="col">${L('Station, upstream → downstream', 'Station, amont → aval')}</th><th scope="col">${L('Level', 'Niveau')}</th>
-          ${withState ? `<th scope="col">${L('Flood state', 'État de crue')}</th>` : ''}
-          ${withSpark ? `<th scope="col">${L('Last 72 h', 'Sur 72 h')}</th>` : ''}
-          ${corridorScaleHead(L('24 h change, cm', 'Variation 24 h, cm'))}${corridorScaleHead(L('72 h change, cm', 'Variation 72 h, cm'))}
+          <th scope="col">${enfr('Station, upstream → downstream', 'Station, amont → aval')}</th><th scope="col">${enfr('Level', 'Niveau')}</th>
+          ${withState ? `<th scope="col">${enfr('Flood state', 'État de crue')}</th>` : ''}
+          ${withSpark ? `<th scope="col">${enfr('Last 72 h', 'Sur 72 h')}</th>` : ''}
+          ${corridorScaleHead(enfr('24 h change, cm', 'Variation 24 h, cm'))}${corridorScaleHead(enfr('72 h change, cm', 'Variation 72 h, cm'))}
         </tr></thead><tbody></tbody></table>`;
       }
       const tbody = wrap.querySelector('tbody');
@@ -3193,17 +3196,17 @@ data:
           name: (STATION_NAMES[id] && STATION_NAMES[id][pageLang]) || s?.metadata?.label || `${id}`,
           role: (CORRIDOR_ROLES[id] && CORRIDOR_ROLES[id][pageLang]) || '',
         };
-        if (!s) return { ...base, level: null, msg: regionalSettled.has(id) ? L('No current reading.', 'Aucune lecture actuelle.') : L('Loading…', 'Chargement…') };
+        if (!s) return { ...base, level: null, msg: regionalSettled.has(id) ? enfr('No current reading.', 'Aucune lecture actuelle.') : enfr('Loading…', 'Chargement…') };
         const latest = s.readings?.length ? s.readings[s.readings.length - 1] : null;
         const raw = s.metadata?.dern_valeur_niv ?? latest?.valeur;
-        if (raw == null) return { ...base, level: null, msg: L('No current reading.', 'Aucune lecture actuelle.') };
+        if (raw == null) return { ...base, level: null, msg: enfr('No current reading.', 'Aucune lecture actuelle.') };
         const masl = raw + (ORRPB_HISTORIC_PEAKS[id]?.datumOffset || 0);
         // A stale series has no meaningful "now" or change — say so rather than
         // plot a days-old level beside live ones.
         if (isSeriesStale(s)) {
           const when = latest ? `, ${ago(latest.date_prise_valeur)}` : '';
-          const why = LOCAL_HYDRO_METEO_IDS.includes(id) ? L(' Hydro Météo gauge deactivated.', ' Jauge Hydro Météo désactivée.') : '';
-          return { ...base, level: null, msg: `${L('No current reading. Last known', 'Aucune lecture actuelle. Dernière valeur connue :')} ${masl.toFixed(2)} m${when}.${why}` };
+          const why = LOCAL_HYDRO_METEO_IDS.includes(id) ? enfr(' Hydro Météo gauge deactivated.', ' Jauge Hydro Météo désactivée.') : '';
+          return { ...base, level: null, msg: `${enfr('No current reading. Last known', 'Aucune lecture actuelle. Dernière valeur connue :')} ${masl.toFixed(2)} m${when}.${why}` };
         }
         times.push(latestReadingMs(s));
         return {
@@ -3213,18 +3216,18 @@ data:
           c24: dailyChangeCm(s.readings), c72: changeCm(s.readings, 72),
         };
       });
-      const et = (ms, opts) => new Intl.DateTimeFormat(L('en-GB', 'fr-CA'), { timeZone: 'America/Toronto', hour12: false, ...opts }).format(new Date(ms));
+      const et = (ms, opts) => new Intl.DateTimeFormat(enfr('en-GB', 'fr-CA'), { timeZone: 'America/Toronto', hour12: false, ...opts }).format(new Date(ms));
       const hm = { hour: '2-digit', minute: '2-digit' };
       const dmy = { day: 'numeric', month: 'short', year: 'numeric' };
       let span = '';
       if (times.length) {
         const lo = Math.min(...times), hi = Math.max(...times);
         span = et(lo, dmy) === et(hi, dmy)
-          ? ` ${L('Readings', 'Lectures du')} ${et(hi, dmy)}, ${et(lo, hm)} ${L('to', 'à')} ${et(hi, hm)} ${L('ET', 'HE')}.`
-          : ` ${L('Readings', 'Lectures du')} ${et(lo, { ...dmy, ...hm })} ${L('to', 'au')} ${et(hi, { ...dmy, ...hm })} ${L('ET', 'HE')}.`;
+          ? ` ${enfr('Readings', 'Lectures du')} ${et(hi, dmy)}, ${et(lo, hm)} ${enfr('to', 'à')} ${et(hi, hm)} ${enfr('ET', 'HE')}.`
+          : ` ${enfr('Readings', 'Lectures du')} ${et(lo, { ...dmy, ...hm })} ${enfr('to', 'au')} ${et(hi, { ...dmy, ...hm })} ${enfr('ET', 'HE')}.`;
       }
       paintCorridor(rows, true,
-        L(`Both change columns share one ±${CORRIDOR_SCALE_CM} cm scale, so 24 h and 72 h bars compare directly. Left of zero is falling, right is rising; → means under 0.5 cm. A notch at the end marks a change beyond ${CORRIDOR_SCALE_CM} cm. The 72 h trace uses that scale too, drawn against the latest reading (dotted line).${span} (est.) = no official threshold, estimated from ORRPB peaks. Select a station name for its 2017 / 2019 / 2023 references.`,
+        enfr(`Both change columns share one ±${CORRIDOR_SCALE_CM} cm scale, so 24 h and 72 h bars compare directly. Left of zero is falling, right is rising; → means under 0.5 cm. A notch at the end marks a change beyond ${CORRIDOR_SCALE_CM} cm. The 72 h trace uses that scale too, drawn against the latest reading (dotted line).${span} (est.) = no official threshold, estimated from ORRPB peaks. Select a station name for its 2017 / 2019 / 2023 references.`,
           `Les deux colonnes de variation partagent une même échelle de ±${CORRIDOR_SCALE_CM} cm : les barres 24 h et 72 h se comparent directement. À gauche de zéro le niveau baisse, à droite il monte; → signifie moins de 0,5 cm. Une encoche au bout indique une variation de plus de ${CORRIDOR_SCALE_CM} cm. Le tracé sur 72 h utilise la même échelle, par rapport à la dernière lecture (ligne pointillée).${span} (est.) = aucun seuil officiel, estimé à partir des pointes du CPRBO. Sélectionnez un nom de station pour ses références 2017 / 2019 / 2023.`));
     }
 
@@ -3339,7 +3342,7 @@ data:
       } catch (e) {
         if (corridorMode !== 'orrpb') return;
         corridorShape = '';
-        wrap.innerHTML = `<p class="corr-msg" style="padding: 14px 16px;">${L('ORRPB daily levels unavailable:', 'Niveaux quotidiens du CPRBO indisponibles :')} ${e.message}</p>`;
+        wrap.innerHTML = `<p class="corr-msg" style="padding: 14px 16px;">${enfr('ORRPB daily levels unavailable:', 'Niveaux quotidiens du CPRBO indisponibles :')} ${e.message}</p>`;
         if (foot) foot.textContent = '';
         return;
       }
@@ -3350,9 +3353,9 @@ data:
         const res = live ? cehqStationLatest(cfg.stationId) : orrpbStationLatest(levels, cfg.slug);
         const base = {
           key: `orrpb:${cfg.slug}`, name: cfg.label, home: cfg.slug === 'lake-coulonge', live,
-          role: live ? L('Live gauge · not published by ORRPB', 'Jauge en direct · non publiée par le CPRBO') : L('ORRPB 24:00 h', 'CPRBO 24 h 00'),
+          role: live ? enfr('Live gauge · not published by ORRPB', 'Jauge en direct · non publiée par le CPRBO') : enfr('ORRPB 24:00 h', 'CPRBO 24 h 00'),
         };
-        if (!res.latest) return { ...base, level: null, msg: L('No current reading.', 'Aucune lecture actuelle.') };
+        if (!res.latest) return { ...base, level: null, msg: enfr('No current reading.', 'Aucune lecture actuelle.') };
         return {
           ...base, level: res.latest.level_m, time: res.latest.time,
           c24: res.deltaM == null ? null : res.deltaM * 100,
@@ -3363,14 +3366,14 @@ data:
       const shown = rows.filter(r => r.level != null);
       if (!shown.length) {
         corridorShape = '';
-        wrap.innerHTML = `<p class="corr-msg" style="padding: 14px 16px;">${L('No ORRPB daily levels yet — has the scrape run?', 'Aucun niveau quotidien du CPRBO pour l\'instant — l\'extraction a-t-elle été exécutée?')}</p>`;
+        wrap.innerHTML = `<p class="corr-msg" style="padding: 14px 16px;">${enfr('No ORRPB daily levels yet — has the scrape run?', 'Aucun niveau quotidien du CPRBO pour l\'instant — l\'extraction a-t-elle été exécutée?')}</p>`;
         if (foot) foot.textContent = '';
         return;
       }
       const orrpbCount = shown.filter(r => !r.live).length;
       const newest = shown.map(r => r.time).filter(Boolean).sort().pop();
       paintCorridor(rows, false,
-        `${tPage('corridor_orrpb').replace('target="_blank"', 'target="_blank" rel="noopener noreferrer"')} ${L(`${orrpbCount} ORRPB + ${shown.length - orrpbCount} live · most recent ${newest || '—'}. Same ±${CORRIDOR_SCALE_CM} cm scale as the live view.`,
+        `${tPage('corridor_orrpb').replace('target="_blank"', 'target="_blank" rel="noopener noreferrer"')} ${enfr(`${orrpbCount} ORRPB + ${shown.length - orrpbCount} live · most recent ${newest || '—'}. Same ±${CORRIDOR_SCALE_CM} cm scale as the live view.`,
             `${orrpbCount} CPRBO + ${shown.length - orrpbCount} en direct · plus récent : ${newest || '—'}. Même échelle de ±${CORRIDOR_SCALE_CM} cm que la vue en direct.`)}`);
     }
 
@@ -4016,24 +4019,24 @@ data:
       if (change24 != null && change24 <= -8) {
         const drop = Math.abs(change24).toFixed(0);
         const sev = change24 <= -30 ? 3 : change24 <= -15 ? 2 : 1;
-        const word = sev === 3 ? L('very fast drop', 'baisse très rapide') : sev === 2 ? L('fast drop', 'baisse rapide') : L('dropping', 'en baisse');
+        const word = sev === 3 ? enfr('very fast drop', 'baisse très rapide') : sev === 2 ? enfr('fast drop', 'baisse rapide') : enfr('dropping', 'en baisse');
         out.push({ sev, text: `↓ ${drop} cm / 24 h · ${word}`,
-          title: L(`Level fell ${drop} cm in the last 24 h. Informational drawdown advisory; conditions vary locally, boater beware.`,
+          title: enfr(`Level fell ${drop} cm in the last 24 h. Informational drawdown advisory; conditions vary locally, boater beware.`,
                    `Le niveau a baissé de ${drop} cm en 24 h. Avis informatif; les conditions varient localement.`) });
       }
       const mb = SEASONAL_LOW_BAND[id]?.[new Date().getMonth() + 1];
       if (mb && level != null) {
         const [med, low] = mb;
         if (level <= low + 0.05) {
-          out.push({ sev: 3, text: L('record-low territory', 'niveau record bas'),
-            title: L(`At or below the record low for this month (${low.toFixed(2)} m, 1990–2026).`, `Au niveau record bas du mois ou en dessous (${low.toFixed(2)} m, 1990–2026).`) });
+          out.push({ sev: 3, text: enfr('record-low territory', 'niveau record bas'),
+            title: enfr(`At or below the record low for this month (${low.toFixed(2)} m, 1990–2026).`, `Au niveau record bas du mois ou en dessous (${low.toFixed(2)} m, 1990–2026).`) });
         } else if (level <= low + 0.25 * (med - low)) {
-          out.push({ sev: 2, text: L('near seasonal low', 'près du bas saisonnier'),
-            title: L(`Bottom quarter of this month's band: median ${med.toFixed(2)} m down to record low ${low.toFixed(2)} m.`, `Quart inférieur de la plage du mois : médiane ${med.toFixed(2)} m, record bas ${low.toFixed(2)} m.`) });
+          out.push({ sev: 2, text: enfr('near seasonal low', 'près du bas saisonnier'),
+            title: enfr(`Bottom quarter of this month's band: median ${med.toFixed(2)} m down to record low ${low.toFixed(2)} m.`, `Quart inférieur de la plage du mois : médiane ${med.toFixed(2)} m, record bas ${low.toFixed(2)} m.`) });
         } else if (level < med) {
           const cm = Math.round((med - level) * 100);
-          out.push({ sev: 1, text: L(`${cm} cm below seasonal median`, `${cm} cm sous la médiane saisonnière`),
-            title: L(`This month's median is ${med.toFixed(2)} m.`, `La médiane du mois est de ${med.toFixed(2)} m.`) });
+          out.push({ sev: 1, text: enfr(`${cm} cm below seasonal median`, `${cm} cm sous la médiane saisonnière`),
+            title: enfr(`This month's median is ${med.toFixed(2)} m.`, `La médiane du mois est de ${med.toFixed(2)} m.`) });
         }
       }
       return out.sort((a, b) => b.sev - a.sev);
@@ -4049,14 +4052,14 @@ data:
       const first = off => `<td><span class="corr-name${off ? ' off' : ''}" style="cursor:inherit">${name}${idChip}</span><div class="corr-role">${m?.description || ''}</div></td>`;
       // Rows for gauges with metadata but no current reading still open the
       // detail dialog (last-known levels, references), as the old cards did.
-      const msgRow = (msg, clickable = true) => `<tr data-station-id="${id}"${clickable ? ` onclick="openBarDetail(${id})" title="${L('Details for', 'Détails pour')} ${name}"` : ''}>${first(true)}<td colspan="5"><span class="corr-msg">${msg}</span></td></tr>`;
-      if (!m) return msgRow(L('Loading…', 'Chargement…'), false);
+      const msgRow = (msg, clickable = true) => `<tr data-station-id="${id}"${clickable ? ` onclick="openBarDetail(${id})" title="${enfr('Details for', 'Détails pour')} ${name}"` : ''}>${first(true)}<td colspan="5"><span class="corr-msg">${msg}</span></td></tr>`;
+      if (!m) return msgRow(enfr('Loading…', 'Chargement…'), false);
       const readings = station.readings || [];
       const latest = readings[readings.length - 1];
-      if (!latest) return msgRow(`${hydroMeteoDeactivatedChip(id)} ${L('No recent data published.', 'Aucune donnée récente publiée.')}`);
+      if (!latest) return msgRow(`${hydroMeteoDeactivatedChip(id)} ${enfr('No recent data published.', 'Aucune donnée récente publiée.')}`);
       const level = displayLevel(m, latest.valeur);
       if (isSeriesStale(station)) {
-        return msgRow(`${hydroMeteoDeactivatedChip(id)} ${L('No current reading. Last known', 'Aucune lecture actuelle. Dernière valeur connue :')} ${level.toFixed(2)} m, ${ago(latest.date_prise_valeur)}.`);
+        return msgRow(`${hydroMeteoDeactivatedChip(id)} ${enfr('No current reading. Last known', 'Aucune lecture actuelle. Dernière valeur connue :')} ${level.toFixed(2)} m, ${ago(latest.date_prise_valeur)}.`);
       }
       const change = dailyChangeCm(readings);
       const lw = lowWaterSignals(id, level, change);
@@ -4068,20 +4071,20 @@ data:
         const yrMax = lastYearRanges[1195]?.max;
         const peak = yrMax && yrMax.valeur > latest.valeur ? yrMax.valeur : latest.valeur;
         const rank = rankPeak(peak);
-        ctx.push(L(`Year's peak ${ordinal(rank)} highest of ${HISTORICAL_RECORD_YEARS}`, `Pointe de l'année : ${rank}e plus haute sur ${HISTORICAL_RECORD_YEARS}`));
+        ctx.push(enfr(`Year's peak ${ordinal(rank)} highest of ${HISTORICAL_RECORD_YEARS}`, `Pointe de l'année : ${rank}e plus haute sur ${HISTORICAL_RECORD_YEARS}`));
       } else if (m.label && WSC_ID_PATTERN.test(m.label) && eccPeakCache[m.label]) {
         const peaks = eccPeakCache[m.label];
         const pctl = Math.round(peaks.filter(p => latest.valeur >= p).length / peaks.length * 100);
         ctx.push(pctl === 0
-          ? L(`Below every ECCC annual peak (${peaks.length} yr)`, `Sous toutes les pointes annuelles ECCC (${peaks.length} ans)`)
-          : L(`Above ${pctl}% of ECCC annual peaks (${peaks.length} yr)`, `Au-dessus de ${pctl} % des pointes annuelles ECCC (${peaks.length} ans)`));
+          ? enfr(`Below every ECCC annual peak (${peaks.length} yr)`, `Sous toutes les pointes annuelles ECCC (${peaks.length} ans)`)
+          : enfr(`Above ${pctl}% of ECCC annual peaks (${peaks.length} yr)`, `Au-dessus de ${pctl} % des pointes annuelles ECCC (${peaks.length} ans)`));
       }
       const orrpb = getOrrpbContext(m);
-      if (orrpb) ctx.push(`${L('ORRPB:', 'CPRBO :')} ${orrpb.context}`);
+      if (orrpb) ctx.push(`${enfr('ORRPB:', 'CPRBO :')} ${orrpb.context}`);
       const wxName = GAUGE_TO_WX[id];
       const wx = wxName && lastWeatherCache?.find(w => w.station.name === wxName);
-      if (wx?.hourly) ctx.push(L(`${next48hPrecip(wx.hourly).toFixed(1)} mm rain / 48 h · ${wxName}`, `${next48hPrecip(wx.hourly).toFixed(1)} mm de pluie / 48 h · ${wxName}`));
-      return `<tr data-station-id="${id}" onclick="openBarDetail(${id})" title="${L('Details for', 'Détails pour')} ${name}"${id === 1195 ? ' class="is-home"' : ''}>${first(false)}
+      if (wx?.hourly) ctx.push(enfr(`${next48hPrecip(wx.hourly).toFixed(1)} mm rain / 48 h · ${wxName}`, `${next48hPrecip(wx.hourly).toFixed(1)} mm de pluie / 48 h · ${wxName}`));
+      return `<tr data-station-id="${id}" onclick="openBarDetail(${id})" title="${enfr('Details for', 'Détails pour')} ${name}"${id === 1195 ? ' class="is-home"' : ''}>${first(false)}
         <td><span class="corr-level">${level.toFixed(2)}</span><span class="corr-unit"> m</span></td>
         <td>${stateChip(getEffectiveEtat(m), isEffectiveEtatSynthetic(m))}</td>
         ${tributarySparkCell(tributarySeries(id, readings))}
@@ -4108,17 +4111,17 @@ data:
         try { return stationRowHTML(id, i); }
         catch (e) {
           console.warn(`station row ${id} failed to build: ${e.message}`);
-          return `<tr><td>${id}</td><td colspan="5"><span class="corr-msg">${L('Unavailable.', 'Indisponible.')}</span></td></tr>`;
+          return `<tr><td>${id}</td><td colspan="5"><span class="corr-msg">${enfr('Unavailable.', 'Indisponible.')}</span></td></tr>`;
         }
       }).join('');
       wrap.innerHTML = `<table class="corr-table stations-table"><thead><tr>
-          <th scope="col">Station</th><th scope="col">${L('Level', 'Niveau')}</th>
-          <th scope="col">${L('Flood state', 'État de crue')}</th><th scope="col">${L(`Last ${w}`, `Sur ${w}`)}</th>
-          ${corridorScaleHead(L('24 h change, cm', 'Variation 24 h, cm'))}
-          <th scope="col">${L('Low water and context', 'Basses eaux et contexte')}</th>
+          <th scope="col">Station</th><th scope="col">${enfr('Level', 'Niveau')}</th>
+          <th scope="col">${enfr('Flood state', 'État de crue')}</th><th scope="col">${enfr(`Last ${w}`, `Sur ${w}`)}</th>
+          ${corridorScaleHead(enfr('24 h change, cm', 'Variation 24 h, cm'))}
+          <th scope="col">${enfr('Low water and context', 'Basses eaux et contexte')}</th>
         </tr></thead><tbody>${rows}</tbody></table>`;
       const foot = document.getElementById('stations-foot');
-      if (foot) foot.innerHTML = L(`Each trace is scaled to its own row; read its size from the range beside it (highest minus lowest over the last ${w}). The 24 h bars share the corridor table's ±${CORRIDOR_SCALE_CM} cm scale. Low-water advisories come first in the last column; ⚠ and bold mark the stronger ones. (est.) = no official threshold, estimated from ORRPB / ECCC peaks.`,
+      if (foot) foot.innerHTML = enfr(`Each trace is scaled to its own row; read its size from the range beside it (highest minus lowest over the last ${w}). The 24 h bars share the corridor table's ±${CORRIDOR_SCALE_CM} cm scale. Low-water advisories come first in the last column; ⚠ and bold mark the stronger ones. (est.) = no official threshold, estimated from ORRPB / ECCC peaks.`,
         `Chaque tracé est mis à l'échelle de sa ligne; son ampleur se lit dans l'étendue indiquée à côté (maximum moins minimum sur ${w}). Les barres 24 h utilisent l'échelle de ±${CORRIDOR_SCALE_CM} cm du tableau du corridor. Les avis de basses eaux viennent en premier dans la dernière colonne; ⚠ et le gras marquent les plus forts. (est.) = aucun seuil officiel, estimé à partir des pointes du CPRBO / ECCC.`);
     }
 
@@ -4252,26 +4255,26 @@ data:
       const pct = pctFull(snap.level_m, cfg.low_limit, cfg.high_limit);
       const priorPct = pctFull(snap.prior_level_m, cfg.low_limit, cfg.high_limit);
       const change = (pct != null && priorPct != null) ? pct - priorPct : null;
-      const nf = v => Math.round(v).toLocaleString(L('en-CA', 'fr-CA'));
-      const pctText = n => L(`${n}%`, `${n} %`);    // "50%" / "50 %"
+      const nf = v => Math.round(v).toLocaleString(enfr('en-CA', 'fr-CA'));
+      const pctText = n => enfr(`${n}%`, `${n} %`);    // "50%" / "50 %"
       const volume = (pct != null && cfg.capacity_mcm != null) ? `${nf(cfg.capacity_mcm * pct / 100)} / ${nf(cfg.capacity_mcm)} M m³` : '';
       const changeText = change == null ? '<span class="muted">—</span>'
-        : Math.abs(change) < 0.05 ? L('→ flat', '→ stable')
+        : Math.abs(change) < 0.05 ? enfr('→ flat', '→ stable')
         : `${change > 0 ? '↑ +' : '↓ −'}${Math.abs(change).toFixed(2)} pp`;
       // Des Joachims carries its operating state (see desJoachimsOpState()).
       let opState = '';
       if (snap.reservoir_id === 'des_joachims') {
         const st = desJoachimsOpState(change);
-        if (st) opState = `<div class="op-sub" title="${L('Triggered when Des Joachims is about stable and Mattawa is at near-major or major flood: storing water here would back up Mattawa further.', 'Déclenché lorsque Des Joachims est à peu près stable et que Mattawa est en crue quasi majeure ou majeure.')}"><strong>${st.label}</strong></div>`;
+        if (st) opState = `<div class="op-sub" title="${enfr('Triggered when Des Joachims is about stable and Mattawa is at near-major or major flood: storing water here would back up Mattawa further.', 'Déclenché lorsque Des Joachims est à peu près stable et que Mattawa est en crue quasi majeure ou majeure.')}"><strong>${st.label}</strong></div>`;
       }
       // Outflow: Hydro-Québec live with the spill share where the config names a
       // site, otherwise ORRPB's average daily flow.
       let outflow = '<span class="muted">—</span>';
       if (release && release.total_cms != null) {
         const spillFrac = release.spilled_cms && release.total_cms ? Math.round(release.spilled_cms / release.total_cms * 100) : 0;
-        outflow = `${nf(release.total_cms)} m³/s${spillFrac > 0 ? `<div class="op-sub">${spillFrac >= 50 ? '<strong>' : ''}${L(`${spillFrac}% spilled`, `${spillFrac} % déversé`)}${spillFrac >= 50 ? '</strong>' : ''}</div>` : ''}`;
+        outflow = `${nf(release.total_cms)} m³/s${spillFrac > 0 ? `<div class="op-sub">${spillFrac >= 50 ? '<strong>' : ''}${enfr(`${spillFrac}% spilled`, `${spillFrac} % déversé`)}${spillFrac >= 50 ? '</strong>' : ''}</div>` : ''}`;
       } else if (snap.flow_cms != null) {
-        outflow = `${nf(snap.flow_cms)} m³/s<div class="op-sub">${L('ORRPB daily average', 'moyenne quotidienne CPRBO')}</div>`;
+        outflow = `${nf(snap.flow_cms)} m³/s<div class="op-sub">${enfr('ORRPB daily average', 'moyenne quotidienne CPRBO')}</div>`;
       }
       const clamp = v => Math.max(0, Math.min(100, v));
       let bar = '<span class="muted">—</span>';
@@ -4279,7 +4282,7 @@ data:
         if (dd) {
           const now = clamp(dd.nowPct), typ = clamp(dd.typicalPct);
           const base = Math.min(now, typ), ex = Math.max(0, now - typ);
-          bar = `<div class="rb" title="${L(`${dd.nowPct.toFixed(1)}% full now · typical April 1 ${dd.typicalPct.toFixed(1)}%`, `${dd.nowPct.toFixed(1)} % plein · 1er avril typique ${dd.typicalPct.toFixed(1)} %`)}${dd.lastPct != null ? L(` · April 1, ${season.refYear}: ${dd.lastPct.toFixed(1)}%`, ` · 1er avril ${season.refYear} : ${dd.lastPct.toFixed(1)} %`) : ''}">
+          bar = `<div class="rb" title="${enfr(`${dd.nowPct.toFixed(1)}% full now · typical April 1 ${dd.typicalPct.toFixed(1)}%`, `${dd.nowPct.toFixed(1)} % plein · 1er avril typique ${dd.typicalPct.toFixed(1)} %`)}${dd.lastPct != null ? enfr(` · April 1, ${season.refYear}: ${dd.lastPct.toFixed(1)}%`, ` · 1er avril ${season.refYear} : ${dd.lastPct.toFixed(1)} %`) : ''}">
             <b class="base" style="width:${base.toFixed(1)}%"></b><b style="left:${typ.toFixed(1)}%;width:${ex.toFixed(1)}%"></b>
             ${dd.lastPct != null ? `<i style="left:${clamp(dd.lastPct).toFixed(1)}%"></i>` : ''}</div>`;
         } else {
@@ -4296,7 +4299,7 @@ data:
         } else ddCells = '<td class="num"><span class="muted">—</span></td>'.repeat(3);
       }
       const reading = snap.level_m != null ? `${snap.level_m.toFixed(2)} m` : '—';
-      return `<tr data-reservoir-id="${snap.reservoir_id}" onclick="openReservoirDetail('${snap.reservoir_id}')" title="${cfg.name} (${cfg.agency}) · ${L('level', 'niveau')} ${reading} · ${L('band', 'plage')} ${cfg.low_limit}–${cfg.high_limit} m · ${L('select for detail', 'sélectionnez pour le détail')}">
+      return `<tr data-reservoir-id="${snap.reservoir_id}" onclick="openReservoirDetail('${snap.reservoir_id}')" title="${cfg.name} (${cfg.agency}) · ${enfr('level', 'niveau')} ${reading} · ${enfr('band', 'plage')} ${cfg.low_limit}–${cfg.high_limit} m · ${enfr('select for detail', 'sélectionnez pour le détail')}">
         <td><span class="corr-name" style="cursor:inherit">${cfg.name}</span><div class="corr-role">${cfg.agency}</div>${opState}</td>
         <td><span class="corr-level">${pct != null ? pctText(pct.toFixed(1)) : '—'}</span><div class="op-sub">${volume}</div></td>
         <td>${bar}</td>
@@ -4325,25 +4328,25 @@ data:
         if (group !== below) {
           group = below;
           rows.push(`<tr class="group"><th colspan="${cols}" scope="colgroup">${below
-            ? L('Downstream of Mansfield — drain to the Madawaska, Gatineau and Lièvre', 'En aval de Mansfield — se déversent dans la Madawaska, la Gatineau et la Lièvre')
-            : L('Upstream of Lac Coulonge', 'En amont du lac Coulonge')}</th></tr>`);
+            ? enfr('Downstream of Mansfield — drain to the Madawaska, Gatineau and Lièvre', 'En aval de Mansfield — se déversent dans la Madawaska, la Gatineau et la Lièvre')
+            : enfr('Upstream of Lac Coulonge', 'En amont du lac Coulonge')}</th></tr>`);
         }
         const release = item.cfg.outflow_site_id ? releaseBySite[item.cfg.outflow_site_id] : null;
         rows.push(reservoirRowHTML(item.snap, item.cfg, release, byId[item.snap.reservoir_id], season));
       }
       const scale = `<div class="rb-scale" aria-hidden="true"><span>0</span><span>50</span><span>100%</span></div>`;
       wrap.innerHTML = `<table class="corr-table res-table${season ? ' has-dd' : ''}"><thead><tr>
-          <th scope="col">${L('Reservoir', 'Réservoir')}</th><th scope="col">${L('Full', 'Rempli')}</th>
-          <th scope="col">${L('Operating band', "Plage d'exploitation")}${scale}</th>
-          <th scope="col">24 h</th><th scope="col">${L('Outflow', 'Débit sortant')}</th>
-          ${season ? `<th scope="col" class="num">${L('Typical Apr 1', '1er avril typique')}</th><th scope="col" class="num">${L('Excess', 'Excédent')}</th><th scope="col" class="num">Volume</th>` : ''}
+          <th scope="col">${enfr('Reservoir', 'Réservoir')}</th><th scope="col">${enfr('Full', 'Rempli')}</th>
+          <th scope="col">${enfr('Operating band', "Plage d'exploitation")}${scale}</th>
+          <th scope="col">24 h</th><th scope="col">${enfr('Outflow', 'Débit sortant')}</th>
+          ${season ? `<th scope="col" class="num">${enfr('Typical Apr 1', '1er avril typique')}</th><th scope="col" class="num">${enfr('Excess', 'Excédent')}</th><th scope="col" class="num">Volume</th>` : ''}
         </tr></thead><tbody>${rows.join('')}</tbody></table>`;
       if (!foot) return;
-      const base = L('Full = position in the operating band, linear on level. 24 h = change in percentage points (pp) of the band, day over day between ORRPB daily values. Outflow = Hydro-Québec live, with the spilled share, where available; otherwise ORRPB\'s average daily flow.',
+      const base = enfr('Full = position in the operating band, linear on level. 24 h = change in percentage points (pp) of the band, day over day between ORRPB daily values. Outflow = Hydro-Québec live, with the spilled share, where available; otherwise ORRPB\'s average daily flow.',
         'Rempli = position dans la plage d\'exploitation, linéaire selon le niveau. 24 h = variation en points de pourcentage (pp) de la plage, d\'un jour à l\'autre selon les valeurs quotidiennes du CPRBO. Débit sortant = Hydro-Québec en direct, avec la part déversée, sinon le débit moyen quotidien du CPRBO.');
       foot.innerHTML = season
-        ? `<span class="res-legend"><span><i class="base"></i>${L('Up to typical Apr 1', "Jusqu'au 1er avril typique")}</span><span><i></i>${L('Excess to release', 'Excédent à évacuer')}</span><span><i class="last"></i>${L(`Level on Apr 1, ${season.refYear}`, `Niveau au 1er avril ${season.refYear}`)}</span></span><br>`
-          + `${base} ${L(`Typical = ORRPB's long-term median level for April 1, not an operator target. Excess and volume use the same linear estimate; ${season.daysLeft} days to April 1, ${season.nextYear}.`,
+        ? `<span class="res-legend"><span><i class="base"></i>${enfr('Up to typical Apr 1', "Jusqu'au 1er avril typique")}</span><span><i></i>${enfr('Excess to release', 'Excédent à évacuer')}</span><span><i class="last"></i>${enfr(`Level on Apr 1, ${season.refYear}`, `Niveau au 1er avril ${season.refYear}`)}</span></span><br>`
+          + `${base} ${enfr(`Typical = ORRPB's long-term median level for April 1, not an operator target. Excess and volume use the same linear estimate; ${season.daysLeft} days to April 1, ${season.nextYear}.`,
             `Typique = niveau médian à long terme du CPRBO pour le 1er avril, pas une cible d'exploitation. L'excédent et le volume utilisent la même estimation linéaire; ${season.daysLeft} jours avant le 1er avril ${season.nextYear}.`)}`
         : base;
     }
@@ -4478,7 +4481,7 @@ data:
       const { rows, surplusMcm, counted } = computeDrawdown(items, refRows);
       if (!rows.length) { if (head) head.hidden = true; return null; }
       document.getElementById('drawdown-total').textContent = `${(surplusMcm / 1000).toFixed(1)} B m³`;
-      document.getElementById('drawdown-total-sub').textContent = L(`above typical April 1, ${counted} reservoirs`, `au-dessus du 1er avril typique, ${counted} réservoirs`);
+      document.getElementById('drawdown-total-sub').textContent = enfr(`above typical April 1, ${counted} reservoirs`, `au-dessus du 1er avril typique, ${counted} réservoirs`);
       if (head) head.hidden = false;
       return { rows, season };
     }
@@ -4737,11 +4740,11 @@ data:
           `<tr class="group"><th colspan="6" scope="colgroup">${group.river}</th></tr>`
           + group.stations.map((meta, i) => tributaryRowHTML(meta, i)).join('')).join('');
         container.innerHTML = `<div class="corr-wrap"><table class="corr-table trib-table"><thead><tr>
-            <th scope="col">Station</th><th scope="col">${L('Level', 'Niveau')}</th><th scope="col">${L('Flood state', 'État de crue')}</th>
-            <th scope="col">${L(`Last ${w}`, `Sur ${w}`)}</th>${corridorScaleHead(L('24 h change, cm', 'Variation 24 h, cm'))}
-            <th scope="col" class="num">${L('Flow, m³/s', 'Débit, m³/s')}</th>
+            <th scope="col">Station</th><th scope="col">${enfr('Level', 'Niveau')}</th><th scope="col">${enfr('Flood state', 'État de crue')}</th>
+            <th scope="col">${enfr(`Last ${w}`, `Sur ${w}`)}</th>${corridorScaleHead(enfr('24 h change, cm', 'Variation 24 h, cm'))}
+            <th scope="col" class="num">${enfr('Flow, m³/s', 'Débit, m³/s')}</th>
           </tr></thead><tbody>${body}</tbody></table></div>
-          <p class="corr-foot">${L(`Each trace is scaled to its own row, so read its size from the range beside it (highest minus lowest over the last ${w}); the dot is the latest reading. The 24 h bars share the corridor table's ±${CORRIDOR_SCALE_CM} cm scale. Select a row for that station's references.`,
+          <p class="corr-foot">${enfr(`Each trace is scaled to its own row, so read its size from the range beside it (highest minus lowest over the last ${w}); the dot is the latest reading. The 24 h bars share the corridor table's ±${CORRIDOR_SCALE_CM} cm scale. Select a row for that station's references.`,
             `Chaque tracé est mis à l'échelle de sa propre ligne : son ampleur se lit dans l'étendue indiquée à côté (maximum moins minimum sur ${w}); le point est la dernière lecture. Les barres 24 h utilisent l'échelle de ±${CORRIDOR_SCALE_CM} cm du tableau du corridor. Sélectionnez une ligne pour les références de la station.`)}</p>`;
       };
       paint();
@@ -4805,7 +4808,7 @@ data:
       const line = thin.map(q => `${x(q.t).toFixed(1)},${y(q.v).toFixed(1)}`).join(' ');
       return `<td><div class="spark-cell"><svg class="spark" width="${SPARK_W}" height="${SPARK_H}" viewBox="0 0 ${SPARK_W} ${SPARK_H}" aria-hidden="true">
         <polyline points="${line}"/><circle cx="${x(end.t).toFixed(1)}" cy="${y(end.v).toFixed(1)}" r="2.5"/></svg>
-        <span class="dtext" title="${L('Highest minus lowest reading in the window', 'Lecture maximale moins minimale sur la période')}">${rangeCm < 10 ? rangeCm.toFixed(1) : Math.round(rangeCm)} cm</span></div></td>`;
+        <span class="dtext" title="${enfr('Highest minus lowest reading in the window', 'Lecture maximale moins minimale sur la période')}">${rangeCm < 10 ? rangeCm.toFixed(1) : Math.round(rangeCm)} cm</span></div></td>`;
     }
 
     function tributaryRowHTML(meta, i) {
@@ -4815,18 +4818,18 @@ data:
       const idChip = m?.label ? ` <span class="station-id">${m.label}</span>` : '';
       const first = off => `<td><span class="corr-name${off ? ' off' : ''}" style="cursor:inherit">${meta.name}${idChip}</span><div class="corr-role">${meta.subtitle}</div></td>`;
       const msgRow = msg => `<tr>${first(true)}<td colspan="5"><span class="corr-msg">${msg}</span></td></tr>`;
-      if (!m) return msgRow(L('No data yet.', 'Aucune donnée pour l\'instant.'));
+      if (!m) return msgRow(enfr('No data yet.', 'Aucune donnée pour l\'instant.'));
       // station.readings can legitimately be null when Vigilance has metadata but
       // no live buffer (e.g., 994 La Pêche on Rivière Gatineau).
       const readings = station.readings || [];
       const latest = readings.length ? readings[readings.length - 1] : null;
-      if (!latest) return msgRow(`${hydroMeteoDeactivatedChip(id)} ${L('No live readings published.', 'Aucune lecture en direct publiée.')}`);
+      if (!latest) return msgRow(`${hydroMeteoDeactivatedChip(id)} ${enfr('No live readings published.', 'Aucune lecture en direct publiée.')}`);
       const level = displayLevel(m, latest.valeur);
       if (isSeriesStale(station)) {
-        return msgRow(`${hydroMeteoDeactivatedChip(id)} ${L('No current reading. Last known', 'Aucune lecture actuelle. Dernière valeur connue :')} ${level.toFixed(2)} m, ${ago(latest.date_prise_valeur)}.`);
+        return msgRow(`${hydroMeteoDeactivatedChip(id)} ${enfr('No current reading. Last known', 'Aucune lecture actuelle. Dernière valeur connue :')} ${level.toFixed(2)} m, ${ago(latest.date_prise_valeur)}.`);
       }
       const flow = m.dern_valeur_deb;
-      return `<tr data-station-id="${id}" onclick="openBarDetail(${id})" title="${L('References for', 'Références pour')} ${meta.name}">${first(false)}
+      return `<tr data-station-id="${id}" onclick="openBarDetail(${id})" title="${enfr('References for', 'Références pour')} ${meta.name}">${first(false)}
         <td><span class="corr-level">${level.toFixed(2)}</span><span class="corr-unit"> m</span></td>
         <td>${stateChip(getEffectiveEtat(m), isEffectiveEtatSynthetic(m))}</td>
         ${tributarySparkCell(tributarySeries(id, readings))}
@@ -4962,14 +4965,14 @@ data:
     const TURBINE_OFF_CMS = 1;   // below this the units are treated as stopped
     function opDuration(ms) {
       const h = Math.max(1, Math.round(ms / 3600000));
-      return h < 48 ? `${h} h` : `${Math.floor(h / 24)} ${L('d', 'j')} ${h % 24} h`;
+      return h < 48 ? `${h} h` : `${Math.floor(h / 24)} ${enfr('d', 'j')} ${h % 24} h`;
     }
     function opWhen(ms) {
-      return new Intl.DateTimeFormat(L('en-GB', 'fr-CA'), { timeZone: 'America/Toronto', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date(ms));
+      return new Intl.DateTimeFormat(enfr('en-GB', 'fr-CA'), { timeZone: 'America/Toronto', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date(ms));
     }
     // Day and month only, for "since 22 Apr".
     function opDay(ms) {
-      return new Intl.DateTimeFormat(L('en-GB', 'fr-CA'), { timeZone: 'America/Toronto', day: 'numeric', month: 'short' }).format(new Date(ms));
+      return new Intl.DateTimeFormat(enfr('en-GB', 'fr-CA'), { timeZone: 'America/Toronto', day: 'numeric', month: 'short' }).format(new Date(ms));
     }
     // Consecutive hours with the turbines running / stopped. Rows with no
     // turbined value say nothing about the units and are skipped.
@@ -5041,9 +5044,9 @@ data:
       if (!el) return;
       let log;
       try { log = await fetchBrysonLog(); }
-      catch (e) { el.className = 'op-feature'; el.innerHTML = `<p class="corr-msg">${L('Bryson turbine log unavailable:', 'Journal des turbines de Bryson indisponible :')} ${e.message}</p>`; return; }
+      catch (e) { el.className = 'op-feature'; el.innerHTML = `<p class="corr-msg">${enfr('Bryson turbine log unavailable:', 'Journal des turbines de Bryson indisponible :')} ${e.message}</p>`; return; }
       const { rel, lvl } = log;
-      if (rel.length < 2) { el.className = 'op-feature'; el.innerHTML = `<p class="corr-msg">${L('No Bryson release history yet.', 'Aucun historique de débit pour Bryson pour l\'instant.')}</p>`; return; }
+      if (rel.length < 2) { el.className = 'op-feature'; el.innerHTML = `<p class="corr-msg">${enfr('No Bryson release history yet.', 'Aucun historique de débit pour Bryson pour l\'instant.')}</p>`; return; }
       const runs = turbineRuns(rel);
       const cur = runs[runs.length - 1];
       const now = rel[rel.length - 1];
@@ -5053,11 +5056,11 @@ data:
       const total = Math.round(now.total_cms ?? ((now.turbined_cms ?? 0) + (now.spilled_cms ?? 0)));
       const spillPct = total ? Math.round((now.spilled_cms ?? 0) / total * 100) : 0;
       const curFor = opDuration(new Date(now.time).getTime() - cur.start + 3600000);
-      const nf = v => Math.round(v).toLocaleString(L('en-CA', 'fr-CA'));
+      const nf = v => Math.round(v).toLocaleString(enfr('en-CA', 'fr-CA'));
       const lede = cur.off
-        ? L(`Turbines <strong>off for ${curFor}</strong>, since ${opWhen(cur.start)}. All <strong>${nf(total)} m³/s</strong> is going over the spillway.`,
+        ? enfr(`Turbines <strong>off for ${curFor}</strong>, since ${opWhen(cur.start)}. All <strong>${nf(total)} m³/s</strong> is going over the spillway.`,
             `Turbines <strong>à l'arrêt depuis ${curFor}</strong>, soit depuis le ${opWhen(cur.start)}. La totalité des <strong>${nf(total)} m³/s</strong> passe par l'évacuateur.`)
-        : L(`Turbines <strong>running for ${curFor}</strong>, since ${opWhen(cur.start)}. <strong>${nf(now.turbined_cms)}</strong> of ${nf(total)} m³/s is turbined; ${spillPct}% is spilled.`,
+        : enfr(`Turbines <strong>running for ${curFor}</strong>, since ${opWhen(cur.start)}. <strong>${nf(now.turbined_cms)}</strong> of ${nf(total)} m³/s is turbined; ${spillPct}% is spilled.`,
             `Turbines <strong>en marche depuis ${curFor}</strong>, soit depuis le ${opWhen(cur.start)}. <strong>${nf(now.turbined_cms)}</strong> des ${nf(total)} m³/s sont turbinés; ${spillPct} % sont déversés.`);
 
       // Timeline: headpond level, turbined / spilled flow, and the on/off strip
@@ -5065,7 +5068,7 @@ data:
       const W = 1000;
       const flow = opAreas(rel, W, 72, 58, 500);
       const lv = lvl.filter(l => { const t = new Date(l.time).getTime(); return t >= flow.t0 && t <= flow.t1; });
-      let lvlSvg = '', lvlCap = L('Headpond level', 'Niveau du bief amont');
+      let lvlSvg = '', lvlCap = enfr('Headpond level', 'Niveau du bief amont');
       if (lv.length > 1) {
         const vals = lv.map(l => l.level_m);
         const lo = Math.min(...vals, BRYSON_CEILING_M), hi = Math.max(...vals, BRYSON_CEILING_M);
@@ -5074,7 +5077,7 @@ data:
         const pts = lv.filter((_, i) => i % step === 0 || i === lv.length - 1)
           .map(l => `${flow.x(new Date(l.time).getTime()).toFixed(1)},${yl(l.level_m).toFixed(1)}`).join(' ');
         lvlSvg = `<line class="ceil" x1="0" x2="${W}" y1="${yl(BRYSON_CEILING_M).toFixed(1)}" y2="${yl(BRYSON_CEILING_M).toFixed(1)}"/><polyline class="lvl" points="${pts}"/>`;
-        lvlCap = L(`Headpond ${Math.min(...vals).toFixed(2)} to ${Math.max(...vals).toFixed(2)} m (dashed: ${BRYSON_CEILING_M.toFixed(2)} ceiling)`,
+        lvlCap = enfr(`Headpond ${Math.min(...vals).toFixed(2)} to ${Math.max(...vals).toFixed(2)} m (dashed: ${BRYSON_CEILING_M.toFixed(2)} ceiling)`,
           `Bief amont ${Math.min(...vals).toFixed(2)} à ${Math.max(...vals).toFixed(2)} m (pointillé : plafond ${BRYSON_CEILING_M.toFixed(2)})`);
       }
       const months = [];
@@ -5089,9 +5092,9 @@ data:
         const ongoing = r === cur;
         const spill = r.rows.reduce((a, x) => a + (x.spilled_cms ?? 0), 0) / r.rows.length;
         const hp = lvlIn(r.start, r.end);
-        return `<tr><td>${opWhen(r.start)}</td><td>${ongoing ? `<strong>${L('ongoing', 'en cours')}</strong>` : opWhen(r.end + 3600000)}</td>
+        return `<tr><td>${opWhen(r.start)}</td><td>${ongoing ? `<strong>${enfr('ongoing', 'en cours')}</strong>` : opWhen(r.end + 3600000)}</td>
           <td><strong>${opDuration(r.end - r.start + 3600000)}</strong></td><td>${nf(spill)}</td>
-          <td>${hp.length ? `${Math.min(...hp).toFixed(2)} ${L('to', 'à')} ${Math.max(...hp).toFixed(2)}` : '—'}</td></tr>`;
+          <td>${hp.length ? `${Math.min(...hp).toFixed(2)} ${enfr('to', 'à')} ${Math.max(...hp).toFixed(2)}` : '—'}</td></tr>`;
       }).join('');
       const first = new Date(rel[0].time).getTime();
       const since = opDay(first);
@@ -5099,28 +5102,28 @@ data:
       const hpDelta = hpNow == null ? null : Math.round((hpNow - BRYSON_CEILING_M) * 100);
       el.className = 'op-feature';
       el.innerHTML = `
-        <div class="hero-head"><h2 class="eyebrow">${L('Bryson · turbine log', 'Bryson · journal des turbines')}</h2><span class="hero-note">${L(`The dam that holds Lac Coulonge. Hourly, since ${since}.`, `Le barrage qui retient le lac Coulonge. Données horaires depuis le ${since}`)}</span></div>
+        <div class="hero-head"><h2 class="eyebrow">${enfr('Bryson · turbine log', 'Bryson · journal des turbines')}</h2><span class="hero-note">${enfr(`The dam that holds Lac Coulonge. Hourly, since ${since}.`, `Le barrage qui retient le lac Coulonge. Données horaires depuis le ${since}`)}</span></div>
         <p class="hero-lede">${lede}</p>
         <div class="hero-stats">
-          <div class="hero-stat"><div class="v">${outages.length}</div><div class="l">${L(`Turbine stoppages since ${since}`, `Arrêts des turbines depuis le ${since}`)}</div></div>
-          <div class="hero-stat"><div class="v">${opDuration(offMs)}</div><div class="l">${L(`Total time stopped, ${Math.round(offMs / spanMs * 100)}% of the record`, `Durée totale d'arrêt, ${Math.round(offMs / spanMs * 100)} % de la période`)}</div></div>
-          <div class="hero-stat"><div class="v">${hpNow != null ? hpNow.toFixed(2) + ' m' : '—'}</div><div class="l">${L('Headpond now', 'Bief amont actuel')}${hpDelta == null ? '' : L(`, ${Math.abs(hpDelta)} cm ${hpDelta >= 0 ? 'above' : 'below'} ${BRYSON_CEILING_M.toFixed(2)} m ceiling`, `, ${Math.abs(hpDelta)} cm ${hpDelta >= 0 ? 'au-dessus' : 'en dessous'} du plafond de ${BRYSON_CEILING_M.toFixed(2)} m`)}</div></div>
+          <div class="hero-stat"><div class="v">${outages.length}</div><div class="l">${enfr(`Turbine stoppages since ${since}`, `Arrêts des turbines depuis le ${since}`)}</div></div>
+          <div class="hero-stat"><div class="v">${opDuration(offMs)}</div><div class="l">${enfr(`Total time stopped, ${Math.round(offMs / spanMs * 100)}% of the record`, `Durée totale d'arrêt, ${Math.round(offMs / spanMs * 100)} % de la période`)}</div></div>
+          <div class="hero-stat"><div class="v">${hpNow != null ? hpNow.toFixed(2) + ' m' : '—'}</div><div class="l">${enfr('Headpond now', 'Bief amont actuel')}${hpDelta == null ? '' : enfr(`, ${Math.abs(hpDelta)} cm ${hpDelta >= 0 ? 'above' : 'below'} ${BRYSON_CEILING_M.toFixed(2)} m ceiling`, `, ${Math.abs(hpDelta)} cm ${hpDelta >= 0 ? 'au-dessus' : 'en dessous'} du plafond de ${BRYSON_CEILING_M.toFixed(2)} m`)}</div></div>
         </div>
         <div>
           <div class="tlog">
-            <svg viewBox="0 0 ${W} 150" preserveAspectRatio="none" role="img" aria-label="${L('Bryson headpond level, turbined and spilled flow, and turbine state since', 'Bryson : niveau du bief amont, débits turbiné et déversé, et état des turbines depuis le')} ${since}">
+            <svg viewBox="0 0 ${W} 150" preserveAspectRatio="none" role="img" aria-label="${enfr('Bryson headpond level, turbined and spilled flow, and turbine state since', 'Bryson : niveau du bief amont, débits turbiné et déversé, et état des turbines depuis le')} ${since}">
               ${grid}${lvlSvg}${flow.svg}${opStrip(rel, flow.x, W, 136, 12)}
             </svg>
             <span class="lane" style="top:0">${lvlCap}</span>
-            <span class="lane" style="top:54px">${L('Release, peak', 'Débit évacué, pointe de')} ${nf(flow.ymax)} m³/s</span>
+            <span class="lane" style="top:54px">${enfr('Release, peak', 'Débit évacué, pointe de')} ${nf(flow.ymax)} m³/s</span>
           </div>
           <div class="tlog-axis">${axis}</div>
         </div>
-        <div class="op-legend"><span><i class="sw turb"></i>${L('Turbined, and turbines running on the bottom strip', 'Turbiné; turbines en marche sur la bande du bas')}</span><span><i class="sw spill"></i>${L('Spilled, and turbines stopped on the bottom strip', 'Déversé; turbines à l\'arrêt sur la bande du bas')}</span></div>
+        <div class="op-legend"><span><i class="sw turb"></i>${enfr('Turbined, and turbines running on the bottom strip', 'Turbiné; turbines en marche sur la bande du bas')}</span><span><i class="sw spill"></i>${enfr('Spilled, and turbines stopped on the bottom strip', 'Déversé; turbines à l\'arrêt sur la bande du bas')}</span></div>
         ${rows ? `<div class="corr-wrap"><table class="corr-table outage-table"><thead><tr>
-          <th scope="col">${L('Turbines stopped', 'Arrêt des turbines')}</th><th scope="col">${L('Restarted', 'Remise en marche')}</th><th scope="col">${L('Duration', 'Durée')}</th>
-          <th scope="col">${L('Spilled, avg m³/s', 'Déversé, moy. m³/s')}</th><th scope="col">${L('Headpond range, m', 'Bief amont, étendue, m')}</th></tr></thead><tbody>${rows}</tbody></table></div>` : ''}
-        <p class="hero-foot">${L(`Stopped means under ${TURBINE_OFF_CMS} m³/s turbined in Hydro-Québec's hourly feed. The feed does not say why the units are off.`,
+          <th scope="col">${enfr('Turbines stopped', 'Arrêt des turbines')}</th><th scope="col">${enfr('Restarted', 'Remise en marche')}</th><th scope="col">${enfr('Duration', 'Durée')}</th>
+          <th scope="col">${enfr('Spilled, avg m³/s', 'Déversé, moy. m³/s')}</th><th scope="col">${enfr('Headpond range, m', 'Bief amont, étendue, m')}</th></tr></thead><tbody>${rows}</tbody></table></div>` : ''}
+        <p class="hero-foot">${enfr(`Stopped means under ${TURBINE_OFF_CMS} m³/s turbined in Hydro-Québec's hourly feed. The feed does not say why the units are off.`,
           `« À l'arrêt » signifie moins de ${TURBINE_OFF_CMS} m³/s turbiné dans les données horaires d'Hydro-Québec. Ces données n'indiquent pas pourquoi les groupes sont arrêtés.`)}</p>`;
     }
 
@@ -5131,35 +5134,35 @@ data:
       const a = opAreas(series, OP_SPARK_W, 1, OP_SPARK_H, 120);
       const strip = noTurbine ? '' : opStrip(series, a.x, OP_SPARK_W, OP_SPARK_H + 4, 4);
       return `<td><div class="spark-cell"><svg width="${OP_SPARK_W}" height="${OP_SPARK_H + 9}" viewBox="0 0 ${OP_SPARK_W} ${OP_SPARK_H + 9}" aria-hidden="true">${a.svg}${strip}</svg>
-        <span class="dtext" title="${L('Highest release in the window', 'Débit évacué maximal sur la période')}">max ${Math.round(a.ymax).toLocaleString(L('en-CA', 'fr-CA'))}</span></div></td>`;
+        <span class="dtext" title="${enfr('Highest release in the window', 'Débit évacué maximal sur la période')}">max ${Math.round(a.ymax).toLocaleString(enfr('en-CA', 'fr-CA'))}</span></div></td>`;
     }
     function opRowHTML(meta, byId) {
       const first = `<td><span class="corr-name" style="cursor:inherit">${meta.name}</span><div class="corr-role">${meta.subtitle || ''}</div></td>`;
       const rel = byId['rel:' + meta.id];
-      if (!rel) return `<tr>${first}<td colspan="5"><span class="corr-msg">${L('Awaiting first ingest.', 'En attente de la première ingestion.')}</span></td></tr>`;
+      if (!rel) return `<tr>${first}<td colspan="5"><span class="corr-msg">${enfr('Awaiting first ingest.', 'En attente de la première ingestion.')}</span></td></tr>`;
       const turb = rel.turbined_cms ?? 0, spill = rel.spilled_cms ?? 0;
       const total = rel.total_cms ?? (turb + spill);
       const denom = (turb + spill) || total || 1;
       const spillFrac = total ? spill / total : 0;
       const series = byId._series?.[meta.id] || [];
-      const nf = v => Math.round(v).toLocaleString(L('en-CA', 'fr-CA'));
+      const nf = v => Math.round(v).toLocaleString(enfr('en-CA', 'fr-CA'));
       let split, state;
       if (meta.noTurbine) {
-        split = `<div class="op-sub" style="margin:0">${L('Controlled release, no turbine', 'Évacuation contrôlée, sans turbine')}</div>`;
+        split = `<div class="op-sub" style="margin:0">${enfr('Controlled release, no turbine', 'Évacuation contrôlée, sans turbine')}</div>`;
         state = '<span class="muted">—</span>';
       } else {
         split = `<div class="op-split" aria-hidden="true"><i style="width:${(turb / denom * 100).toFixed(1)}%"></i><b style="width:${(spill / denom * 100).toFixed(1)}%"></b></div>
           <div class="op-sub">${rel.turbined_cms == null
-            ? L(`${nf(spill)} spilled · turbined not reported`, `${nf(spill)} déversé · turbiné non publié`)
-            : L(`${nf(turb)} turbined · ${nf(spill)} spilled (${Math.round(spillFrac * 100)}%)`, `${nf(turb)} turbiné · ${nf(spill)} déversé (${Math.round(spillFrac * 100)} %)`)}</div>`;
+            ? enfr(`${nf(spill)} spilled · turbined not reported`, `${nf(spill)} déversé · turbiné non publié`)
+            : enfr(`${nf(turb)} turbined · ${nf(spill)} spilled (${Math.round(spillFrac * 100)}%)`, `${nf(turb)} turbiné · ${nf(spill)} déversé (${Math.round(spillFrac * 100)} %)`)}</div>`;
         const runs = turbineRuns(series);
         const cur = runs[runs.length - 1];
         if (!cur) state = '<span class="muted">—</span>';
         else {
           // A run that starts with the window began before it: its true length is unknown.
           const whole = runs.length === 1;
-          const dur = `${L('for', 'depuis')} ${whole ? L('over ', 'plus de ') : ''}${opDuration(cur.end - cur.start + 3600000)}`;
-          state = cur.off ? `<strong>${L('Off', 'À l\'arrêt')}</strong><div class="op-sub">${dur}</div>` : `${L('Running', 'En marche')}<div class="op-sub">${dur}</div>`;
+          const dur = `${enfr('for', 'depuis')} ${whole ? enfr('over ', 'plus de ') : ''}${opDuration(cur.end - cur.start + 3600000)}`;
+          state = cur.off ? `<strong>${enfr('Off', 'À l\'arrêt')}</strong><div class="op-sub">${dur}</div>` : `${enfr('Running', 'En marche')}<div class="op-sub">${dur}</div>`;
         }
       }
       // Headpond / tailwater pair, the held band, and Carillon's directive check.
@@ -5174,19 +5177,19 @@ data:
           // A tight band while most of the flow is spilled is the case-file
           // signal: the operator is holding this elevation by choice.
           const flat = rangeCm <= 15 && spillFrac >= 0.5;
-          head += `<div class="op-sub"${flat ? ` title="${L('Headpond held in a tight band while over half the flow is spilled.', 'Bief amont maintenu dans une bande étroite alors que plus de la moitié du débit est déversée.')}"` : ''}>${L(`held within ${rangeCm.toFixed(0)} cm`, `maintenu à ${rangeCm.toFixed(0)} cm près`)}${flat ? ` · <strong>${L('flat while spilling', 'stable malgré le déversement')}</strong>` : ''}</div>`;
+          head += `<div class="op-sub"${flat ? ` title="${enfr('Headpond held in a tight band while over half the flow is spilled.', 'Bief amont maintenu dans une bande étroite alors que plus de la moitié du débit est déversée.')}"` : ''}>${enfr(`held within ${rangeCm.toFixed(0)} cm`, `maintenu à ${rangeCm.toFixed(0)} cm près`)}${flat ? ` · <strong>${enfr('flat while spilling', 'stable malgré le déversement')}</strong>` : ''}</div>`;
         }
         // Carillon §15.3.5.1: spring-flood operating maximum of 40.08 m at the
         // headpond when the Hull dock exceeds the 42.61 m servitude (2004 IWMP).
         const hull = byId['lvl:' + HULL_DOCK_STATION];
         if (meta.id === '3-60' && hull) {
           const over = Math.round((a.level_m - CARILLON_SPRING_CEILING_M) * 100);
-          const txt = hull.level_m <= HULL_DOCK_TRIGGER_M ? `§15.3.5.1 ${L('inactive', 'inactif')}, Hull ${hull.level_m.toFixed(2)} m`
-            : over > 0 ? `<strong>§15.3.5.1 ${L('overshoot', 'dépassement')} +${over} cm</strong>` : `§15.3.5.1 ${L('compliant', 'conforme')}, ${over} cm`;
-          head += `<div class="op-sub" title="${L(`IWMP spring-flood operating maximum is ${CARILLON_SPRING_CEILING_M} m at Carillon when the Hull dock exceeds ${HULL_DOCK_TRIGGER_M} m.`, `Le maximum d'exploitation en crue printanière du PGIE est de ${CARILLON_SPRING_CEILING_M} m à Carillon lorsque le quai de Hull dépasse ${HULL_DOCK_TRIGGER_M} m.`)}">${txt}</div>`;
+          const txt = hull.level_m <= HULL_DOCK_TRIGGER_M ? `§15.3.5.1 ${enfr('inactive', 'inactif')}, Hull ${hull.level_m.toFixed(2)} m`
+            : over > 0 ? `<strong>§15.3.5.1 ${enfr('overshoot', 'dépassement')} +${over} cm</strong>` : `§15.3.5.1 ${enfr('compliant', 'conforme')}, ${over} cm`;
+          head += `<div class="op-sub" title="${enfr(`IWMP spring-flood operating maximum is ${CARILLON_SPRING_CEILING_M} m at Carillon when the Hull dock exceeds ${HULL_DOCK_TRIGGER_M} m.`, `Le maximum d'exploitation en crue printanière du PGIE est de ${CARILLON_SPRING_CEILING_M} m à Carillon lorsque le quai de Hull dépasse ${HULL_DOCK_TRIGGER_M} m.`)}">${txt}</div>`;
         }
       }
-      return `<tr data-site="${meta.id}" onclick="openOpDetail('${meta.id}')" title="${meta.name} · ${L('updated', 'mis à jour')} ${ago(rel.time)} · ${L('select for detail', 'sélectionnez pour le détail')}">${first}
+      return `<tr data-site="${meta.id}" onclick="openOpDetail('${meta.id}')" title="${meta.name} · ${enfr('updated', 'mis à jour')} ${ago(rel.time)} · ${enfr('select for detail', 'sélectionnez pour le détail')}">${first}
         <td><span class="corr-level">${total != null ? nf(total) : '—'}</span><span class="corr-unit"> m³/s</span></td>
         <td>${split}</td>${opSparkCell(series, meta.noTurbine)}<td>${state}</td><td>${head}</td></tr>`;
     }
@@ -5301,7 +5304,7 @@ data:
         // previous window's charts over this message.
         flowTabState.data = null;
         containers.forEach(c => {
-          c.innerHTML = `<p class="corr-msg" style="padding:14px 16px;">${L('Flow data unavailable:', 'Débits indisponibles :')} ${e.message}</p>`;
+          c.innerHTML = `<p class="corr-msg" style="padding:14px 16px;">${enfr('Flow data unavailable:', 'Débits indisponibles :')} ${e.message}</p>`;
         });
       }
     }
@@ -5312,8 +5315,8 @@ data:
       const isDark = isDarkMode();
       const txt = isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.5)';
       const ink = getComputedStyle(document.documentElement).getPropertyValue('--ink-bar').trim() || (isDark ? '#cfcfca' : '#3d3d3a');
-      const nf = v => Math.round(v).toLocaleString(L('en-CA', 'fr-CA'));
-      const md = d => new Intl.DateTimeFormat(L('en-GB', 'fr-CA'), { day: 'numeric', month: 'short', timeZone: 'UTC' }).format(new Date(d + 'T12:00:00Z'));
+      const nf = v => Math.round(v).toLocaleString(enfr('en-CA', 'fr-CA'));
+      const md = d => new Intl.DateTimeFormat(enfr('en-GB', 'fr-CA'), { day: 'numeric', month: 'short', timeZone: 'UTC' }).format(new Date(d + 'T12:00:00Z'));
       const container = document.getElementById('flow-smallmultiples');
       if (!container) return;
       Object.values(flowSmallMultipleCharts).forEach(c => { try { c.destroy(); } catch (_) {} });
@@ -5328,7 +5331,7 @@ data:
         if (valid.length) {
           const max = Math.max(...valid);
           const peakIdx = data.indexOf(max);
-          peakLabel = L(`peak ${nf(max)} m³/s · ${md(dates[peakIdx])}`, `pointe ${nf(max)} m³/s · ${md(dates[peakIdx])}`);
+          peakLabel = enfr(`peak ${nf(max)} m³/s · ${md(dates[peakIdx])}`, `pointe ${nf(max)} m³/s · ${md(dates[peakIdx])}`);
           let li = data.length - 1;
           while (li >= 0 && data[li] == null) li--;
           nowLabel = `${nf(data[li])}<span>m³/s · ${md(dates[li])}</span>`;
@@ -5427,7 +5430,7 @@ data:
       dates.forEach((d, i) => {
         if (i % labelEvery === 0 || (i === lastIdx && lastIdx % labelEvery >= labelEvery / 2)) {
           const x = labelW + i * cellW + cellW / 2;
-          svg += `<text x="${x}" y="${headerH - 8}" font-size="10" fill="${txt}" text-anchor="middle">${new Intl.DateTimeFormat(L('en-GB', 'fr-CA'), { day: 'numeric', month: 'short', timeZone: 'UTC' }).format(new Date(d + 'T12:00:00Z'))}</text>`;
+          svg += `<text x="${x}" y="${headerH - 8}" font-size="10" fill="${txt}" text-anchor="middle">${new Intl.DateTimeFormat(enfr('en-GB', 'fr-CA'), { day: 'numeric', month: 'short', timeZone: 'UTC' }).format(new Date(d + 'T12:00:00Z'))}</text>`;
         }
       });
       FLOW_TAB_STATIONS.forEach(([slug, name], rowIdx) => {
@@ -5440,7 +5443,7 @@ data:
           const t = (mm && v != null && mm.max > mm.min) ? (v - mm.min) / (mm.max - mm.min) : NaN;
           const x = labelW + i * cellW;
           const fill = colorFor(t);
-          const titleText = v != null ? `${name} · ${d}: ${Math.round(v).toLocaleString(L('en-CA', 'fr-CA'))} m³/s` : `${name} · ${d}: ${L('no data', 'aucune donnée')}`;
+          const titleText = v != null ? `${name} · ${d}: ${Math.round(v).toLocaleString(enfr('en-CA', 'fr-CA'))} m³/s` : `${name} · ${d}: ${enfr('no data', 'aucune donnée')}`;
           svg += `<rect x="${x}" y="${y + 2}" width="${cellW - 0.5}" height="${cellH - 4}" fill="${fill}"><title>${titleText}</title></rect>`;
         });
       });
@@ -5448,13 +5451,13 @@ data:
 
       // Name the window the data was fetched for, not whatever is selected now.
       const days = flowTabState.daysAtFetch || flowTabDays;
-      const windowTxt = days >= 365 ? L('1-year', 'd\'un an') : days >= 180 ? L('6-month', 'de 6 mois') : L(`${days}-day`, `de ${days} jours`);
+      const windowTxt = days >= 365 ? enfr('1-year', 'd\'un an') : days >= 180 ? enfr('6-month', 'de 6 mois') : enfr(`${days}-day`, `de ${days} jours`);
       const legend = `<div style="display:flex; align-items:center; gap:8px; margin-top:10px; font-size:12px; color:var(--text-muted); flex-wrap:wrap;">
-        <span>${L('Each station: low', 'Chaque station : bas')}</span>
+        <span>${enfr('Each station: low', 'Chaque station : bas')}</span>
         <svg width="160" height="12" style="border-radius:2px; overflow:hidden;">
           ${Array.from({length: 32}, (_, i) => `<rect x="${i*5}" y="0" width="5" height="12" fill="${colorFor(i/31)}"/>`).join('')}
         </svg>
-        <span>${L(`high, within its own ${windowTxt} range`, `haut, dans sa propre plage ${windowTxt}`)}</span>
+        <span>${enfr(`high, within its own ${windowTxt} range`, `haut, dans sa propre plage ${windowTxt}`)}</span>
       </div>`;
       container.innerHTML = svg + legend;
     }
@@ -5475,20 +5478,20 @@ data:
       try {
         byId = await fetchHqOperations();
       } catch (e) {
-        wrap.innerHTML = `<p class="corr-msg" style="padding: 14px 16px;">${L('Could not load HQ release data:', 'Impossible de charger les données de débit d\'HQ :')} ${e.message}.<br>Has the hq-ingest cron run yet? <code>kubectl -n data create job --from=cronjob/hq-ingest hq-ingest-now</code></p>`;
+        wrap.innerHTML = `<p class="corr-msg" style="padding: 14px 16px;">${enfr('Could not load HQ release data:', 'Impossible de charger les données de débit d\'HQ :')} ${e.message}.<br>Has the hq-ingest cron run yet? <code>kubectl -n data create job --from=cronjob/hq-ingest hq-ingest-now</code></p>`;
         return;
       }
       const w = windowLabel(opWindowHours);
       const GROUP_FR = { 'Ottawa main stem': 'Cours principal de l\'Outaouais', 'Gatineau': 'Gatineau', 'Lower St-Lawrence': 'Saint-Laurent, en aval de Carillon' };
       const body = Object.values(HQ_OPERATIONS).map(group =>
-        `<tr class="group"><th colspan="6" scope="colgroup">${L(group.label, GROUP_FR[group.label] || group.label)}</th></tr>`
+        `<tr class="group"><th colspan="6" scope="colgroup">${enfr(group.label, GROUP_FR[group.label] || group.label)}</th></tr>`
         + group.sites.map(s => opRowHTML(s, byId)).join('')).join('');
       wrap.innerHTML = `<table class="corr-table op-table"><thead><tr>
-          <th scope="col">${L('Station', 'Centrale')}</th><th scope="col">${L('Release now', 'Débit évacué actuel')}</th><th scope="col">${L('Turbined / spilled now', 'Turbiné / déversé actuel')}</th>
-          <th scope="col">${L(`Last ${w}, m³/s`, `Sur ${w}, m³/s`)}</th><th scope="col">Turbines</th><th scope="col">${L('Headpond', 'Bief amont')}</th>
+          <th scope="col">${enfr('Station', 'Centrale')}</th><th scope="col">${enfr('Release now', 'Débit évacué actuel')}</th><th scope="col">${enfr('Turbined / spilled now', 'Turbiné / déversé actuel')}</th>
+          <th scope="col">${enfr(`Last ${w}, m³/s`, `Sur ${w}, m³/s`)}</th><th scope="col">Turbines</th><th scope="col">${enfr('Headpond', 'Bief amont')}</th>
         </tr></thead><tbody>${body}</tbody></table>`;
-      document.getElementById('op-foot').innerHTML = `<span class="op-legend"><span><i class="sw turb"></i>${L('Turbined', 'Turbiné')}</span><span><i class="sw spill"></i>${L('Spilled', 'Déversé')}</span></span>
-        ${L(`Each trace is scaled to its own maximum, printed beside it; the thin strip under it is the turbine state hour by hour. A duration marked "over" started before the ${w} window. Select a row for detail.`,
+      document.getElementById('op-foot').innerHTML = `<span class="op-legend"><span><i class="sw turb"></i>${enfr('Turbined', 'Turbiné')}</span><span><i class="sw spill"></i>${enfr('Spilled', 'Déversé')}</span></span>
+        ${enfr(`Each trace is scaled to its own maximum, printed beside it; the thin strip under it is the turbine state hour by hour. A duration marked "over" started before the ${w} window. Select a row for detail.`,
             `Chaque tracé est mis à l'échelle de son propre maximum, indiqué à côté; la fine bande en dessous montre l'état des turbines heure par heure. Une durée précédée de « plus de » a commencé avant la période de ${w}. Sélectionnez une ligne pour le détail.`)}`;
     }
 
@@ -5573,7 +5576,7 @@ data:
           // panel stays a "Loading…" skeleton (fresh load) or silently freezes
           // pre-outage distances (mid-session) with no stale indicator.
           thresholdsNow = null;
-          document.getElementById('thresh-list').innerHTML = `<p class="corr-msg" style="padding: 14px 16px;">${L('No recent readings — threshold distances unavailable during the source feed outage.', 'Aucune lecture récente — distances aux seuils indisponibles pendant la panne de la source.')}</p>`;
+          document.getElementById('thresh-list').innerHTML = `<p class="corr-msg" style="padding: 14px 16px;">${enfr('No recent readings — threshold distances unavailable during the source feed outage.', 'Aucune lecture récente — distances aux seuils indisponibles pendant la panne de la source.')}</p>`;
           document.getElementById('thresh-foot').textContent = '';
         }
         updateChartTitles();
@@ -5583,7 +5586,7 @@ data:
         fetchWeather().then(w => { lastWeatherCache = w; renderFreezePanel(w); repaintStationsIfShown(); }).catch(err => {
           const sum = document.getElementById('freeze-summary');
           sum.className = 'freeze-lede';
-          sum.innerHTML = `<strong>${L('Weather unavailable:', 'Météo indisponible :')}</strong> ${err.message}`;
+          sum.innerHTML = `<strong>${enfr('Weather unavailable:', 'Météo indisponible :')}</strong> ${err.message}`;
         });
 
         // Regional stations feed the corridor table. Each fetch was kicked off at
