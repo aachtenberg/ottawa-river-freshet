@@ -388,18 +388,12 @@ data:
     .thresh-mini { position: relative; width: 90px; height: 8px; margin-top: 4px; border-radius: 2px; background: var(--track); overflow: hidden; }
     .thresh-mini b { position: absolute; left: 0; top: 0; bottom: 0; background: var(--ink-bar); }
 
-    .fc-row { display: grid; grid-template-columns: 150px 1fr 44px; gap: 12px; align-items: center; padding: 5px 0; font-size: 12px; }
-    .fc-label { color: var(--text-muted); font-variant-numeric: tabular-nums; }
-    .fc-label .lvl { color: var(--text); font-weight: 600; }
-    .fc-track { position: relative; height: 14px; border-radius: 7px; background: var(--surface-2); overflow: hidden; }
-    .fc-fill { position: absolute; top: 0; left: 0; height: 100%; border-radius: 7px; transition: width .3s ease; }
-    .fc-fill.sev-low { background: var(--green); }
-    .fc-fill.sev-mid { background: var(--amber); }
-    .fc-fill.sev-high { background: var(--red); }
-    .fc-prior { position: absolute; top: -2px; bottom: -2px; width: 2px; background: var(--text-faint); opacity: .8; }
-    .fc-pct { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--text); }
-    .fc-legend { margin-top: 10px; font-size: 11px; color: var(--text-faint); line-height: 1.5; }
-    .fc-legend .prior-key { display: inline-block; width: 2px; height: 10px; background: var(--text-faint); vertical-align: middle; margin: 0 3px; }
+    .fc-table { min-width: 640px; }
+    .fc-table td { font-variant-numeric: tabular-nums; }
+    .fc-table td.lvl { font-size: 15px; font-weight: 700; white-space: nowrap; }
+    .fc-table .thresh-mini { width: 140px; overflow: visible; }
+    .fc-table .thresh-mini i { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--text-muted); }
+    .fc-table tr.reached td { background: var(--surface-2); }
 
     .footer { margin-top: 28px; padding-top: 14px; border-top: 1px solid var(--border); font-size: 11px; color: var(--text-faint); line-height: 1.6; }
     .footer a { color: var(--text-muted); }
@@ -934,11 +928,11 @@ data:
     </div> <!-- /tab-panel overview -->
 
     <div class="tab-panel" data-tab="forecast">
-      <div class="forecast">
-        <h3 data-i18n="forecast_t">Season-end forecast — chance of crossing each threshold</h3>
-        <div class="sub" id="forecast-sub" data-i18n="forecast_sub">Bayesian posterior (V3): this winter's seasonal prior, continuously updated by the lake's day-to-day trajectory. The bar is today's chance the annual peak crosses each line; the tick marks where the pre-freshet prior started, so the bar visibly tightens as the season resolves.</div>
-        <div id="freshet-forecast" class="skeleton">Loading forecast…</div>
-      </div>
+      <h2 class="section-title" style="margin-top: 4px;" data-i18n="forecast_t">Season-end forecast — chance of crossing each threshold</h2>
+      <p class="section-subtitle" data-i18n="forecast_sub">Bayesian (V3): a seasonal prior made before the freshet, updated each day on the lake's trajectory. During the freshet each row gives today's chance that the season's peak reaches the line, with the prior marked on the bar; off season, the table sets the prior beside what happened.</p>
+      <p class="freeze-lede" id="forecast-status">Loading forecast…</p>
+      <div class="corr-wrap" id="freshet-forecast"></div>
+      <p class="corr-foot" id="forecast-foot"></p>
     </div>
 
     <div class="tab-panel" data-tab="stations">
@@ -1286,7 +1280,8 @@ data:
                         fr: 'Les 14 stations du graphique diffusé sur Facebook chaque matin. Source : table « Niveaux d\'eau à 24:00h en mètres » du CPRBO à <a href="https://www.ottawariver.ca/conditions/" target="_blank">ottawariver.ca/conditions</a>, extraction quotidienne. Constance Bay (CVRM) et Aval-Carillon (CEHQ) proviennent des flux en direct car le CPRBO ne les publie pas.' },
       property_t:     { en: 'Property thresholds & surveyed flood lines', fr: 'Seuils de la propriété et cotes de crue relevées' },
       forecast_t:     { en: 'Season-end forecast — chance of crossing each threshold', fr: 'Prévision de fin de saison — probabilité de franchir chaque seuil' },
-      forecast_sub:   { en: "Bayesian posterior (V3): this winter's seasonal prior, continuously updated by the lake's day-to-day trajectory. The bar is today's chance the annual peak crosses each line; the tick marks where the pre-freshet prior started, so the bar visibly tightens as the season resolves.", fr: "Postérieure bayésienne (V3) : l'a priori saisonnier de l'hiver, mis à jour en continu par la trajectoire quotidienne du lac. La barre indique la probabilité actuelle que le pic annuel franchisse chaque cote; le repère montre l'a priori d'avant-crue, de sorte que la barre se resserre à mesure que la saison se précise." },
+      forecast_sub:   { en: "Bayesian (V3): a seasonal prior made before the freshet, updated each day on the lake's trajectory. During the freshet each row gives today's chance that the season's peak reaches the line, with the prior marked on the bar; off season, the table sets the prior beside what happened.",
+                        fr: "Bayésien (V3) : un a priori saisonnier établi avant la crue, mis à jour chaque jour selon la trajectoire du lac. Pendant la crue, chaque ligne donne la probabilité actuelle que la pointe de la saison atteigne la cote, l'a priori étant marqué sur la barre; hors saison, le tableau met l'a priori en regard de ce qui s'est produit." },
       freeze_h:       { en: 'Basin freeze & precipitation outlook', fr: 'Aperçu du gel et précipitations dans le bassin' },
       freeze_sub:     { en: 'Overnight lows + 48 h precipitation across the basin. The freeze-night counter uses upstream stations only (snowmelt signal); downstream rows are local forecast for visitors watching the lower-corridor gauges.',
                         fr: 'Minimums nocturnes + précipitations sur 48 h dans le bassin. Le compteur de nuits de gel n\'utilise que les stations en amont (signal de fonte); les stations en aval sont des prévisions locales pour les visiteurs surveillant les jauges du corridor inférieur.' },
@@ -1329,6 +1324,7 @@ data:
       // Tables built in JS carry their own bilingual text; repaint the visible ones.
       if (typeof lastWeatherCache !== 'undefined' && lastWeatherCache) renderFreezePanel(lastWeatherCache);
       if (typeof paintThresholds === 'function') paintThresholds();
+      if (typeof paintForecastTab === 'function') paintForecastTab();
       if (document.querySelector('.tab-panel[data-tab="stations"].active') && typeof renderStationsTab === 'function') renderStationsTab();
       if (typeof refreshBrysonTurbine === 'function' && document.querySelector('.bryson-turbine')) refreshBrysonTurbine();
       if (document.querySelector('.tab-panel[data-tab="tributaries"].active') && typeof renderTributariesTab === 'function') renderTributariesTab();
@@ -1484,8 +1480,10 @@ data:
     function dayMonth(iso) {
       const d = parseVigilance(iso);
       if (!d) return '';
-      return new Intl.DateTimeFormat('en-GB', { timeZone: 'America/Toronto', day: 'numeric', month: 'short' }).format(d);
+      return new Intl.DateTimeFormat(L('en-GB', 'fr-CA'), { timeZone: 'America/Toronto', day: 'numeric', month: 'short' }).format(d);
     }
+    // "50%" in English, "50 %" in French.
+    function pctText(n) { return L(`${n}%`, `${n} %`); }
     // Change over time is always ink: a glyph plus a signed number, never colour.
     function changeArrow(cm) { return cm > 0.5 ? '↑' : cm < -0.5 ? '↓' : '→'; }
     function signedCm(cm) {
@@ -2598,6 +2596,7 @@ data:
     function renderProperty(lcLatest, trendPerHour) {
       thresholdsNow = { lcLatest, trendPerHour };
       paintThresholds();
+      paintForecastTab();    // the season peak's date comes from the same refresh
     }
     // The forecast counts as live only while it is being updated and the season
     // is still open; a June file showing 100% / 0% in November is history.
@@ -2644,7 +2643,7 @@ data:
             const pct = Math.round((f.posterior || 0) * 100);
             const bound = exact ? '' : '≤ ';
             const tip = exact ? '' : ` title="${L(`Not modelled by the forecast; at most the chance for ${f.threshold_m.toFixed(2)} m (${f.label}).`, `Non modélisée par la prévision; au plus la probabilité pour ${f.threshold_m.toFixed(2)} m.`)}"`;
-            season = `<span${tip}>${bound}${pct} %</span><div class="thresh-mini" aria-hidden="true"><b style="width:${pct}%"></b></div>`;
+            season = `<span${tip}>${bound}${pctText(pct)}</span><div class="thresh-mini" aria-hidden="true"><b style="width:${pct}%"></b></div>`;
           } else season = '<span class="muted">—</span>';
         } else if (yrMax) {
           season = yrMax.valeur >= t.level - 1e-9 ? `<strong>${L('Reached', 'Atteinte')}</strong>` : `<span class="muted">${L('Not reached', 'Non atteinte')}</span>`;
@@ -2685,50 +2684,87 @@ data:
     async function renderFreshetForecast() {
       const el = document.getElementById('freshet-forecast');
       if (!el) return;
-      let d;
       try {
         const r = await fetch(FRESHET_FORECAST_URL, { cache: 'no-store' });
         if (!r.ok) throw new Error('http ' + r.status);
-        d = await r.json();
-        freshetForecastData = d;
-        paintThresholds();
+        freshetForecastData = await r.json();
       } catch (e) {
         // Don't blank a previously-rendered panel on a transient refresh failure.
-        if (!freshetForecastLoaded) el.innerHTML = '<span class="skeleton">Forecast unavailable.</span>';
+        if (!freshetForecastLoaded) document.getElementById('forecast-status').textContent = L('Forecast unavailable.', 'Prévision indisponible.');
         return;
       }
-
-      const sev = (p) => p >= 0.66 ? 'sev-high' : p >= 0.33 ? 'sev-mid' : 'sev-low';
-      const rows = (d.thresholds || []).map(t => {
-        const post = Math.round((t.posterior || 0) * 100);
-        const prior = Math.max(0, Math.min(100, Math.round((t.prior || 0) * 100)));
-        return `<div class="fc-row">
-          <span class="fc-label"><span class="lvl">${t.threshold_m.toFixed(2)} m</span> · ${t.label}</span>
-          <div class="fc-track">
-            <div class="fc-fill ${sev(t.posterior || 0)}" style="width:${post}%"></div>
-            <div class="fc-prior" style="left:${prior}%" title="pre-freshet prior: ${prior}%"></div>
-          </div>
-          <span class="fc-pct">${post}%</span>
-        </div>`;
-      }).join('');
-
-      const peak = (d.actual_peak_m != null) ? `${d.actual_peak_m.toFixed(2)} m` : '—';
-      const lvl = (d.state && d.state.level_m != null) ? `${d.state.level_m.toFixed(2)} m` : '—';
-      const crested = d.thresholds && d.thresholds.every(t => t.posterior === 0 || t.posterior === 1);
-      const badge = crested
-        ? '<span class="resolved-badge" title="Lake has crested and receded — the season peak is settled">SEASON CRESTED</span>'
-        : '';
-      const subEl = document.getElementById('forecast-sub');
-      if (subEl) {
-        subEl.innerHTML = `As of <strong>${d.asof}</strong> · level <strong>${lvl}</strong> · `
-          + `peak so far <strong>${peak}</strong>${badge}`;
-      }
-      el.classList.remove('skeleton');
-      el.innerHTML = rows
-        + `<div class="fc-legend"><span class="prior-key"></span> = pre-freshet seasonal prior (V1). `
-        + `Bar = posterior after updating on the lake's trajectory through the freshet (V2). `
-        + `Method: <a href="https://github.com/aachtenberg/ottawa-river-freshet/blob/main/ingesters/climate-history/FRESHET_PROBABILITY.md" target="_blank" rel="noopener noreferrer">FRESHET_PROBABILITY.md</a>.</div>`;
       freshetForecastLoaded = true;
+      paintThresholds();
+      paintForecastTab();
+    }
+
+    // Line descriptions: the property table's wording where the forecast models a
+    // property line, otherwise the forecast's own label.
+    function forecastLineText(t) {
+      const known = [...LC_FLOOD_LINES, ...PROPERTY_THRESHOLDS].find(x => Math.abs(x.level - t.threshold_m) < 0.005);
+      if (known) return L(known.desc, known.fr || known.desc);
+      if (Math.abs(t.threshold_m - 108.50) < 0.005) return L('Super-flood line (case file)', 'Cote de « super-crue » (dossier)');
+      const lbl = String(t.label || '');
+      return lbl.charAt(0).toUpperCase() + lbl.slice(1);
+    }
+
+    // Live during the freshet: today's chance per line, with the pre-freshet
+    // prior marked on the bar. Off season: the season's outcome per line beside
+    // what the prior said before it started — a June file showing 100% / 0% in
+    // November is history, not a forecast.
+    function paintForecastTab() {
+      const d = freshetForecastData;
+      const el = document.getElementById('freshet-forecast');
+      const status = document.getElementById('forecast-status');
+      const foot = document.getElementById('forecast-foot');
+      if (!d || !el || !status) return;
+      const live = forecastIsLive(d);
+      const lines = (d.thresholds || []).slice().sort((a, b) => a.threshold_m - b.threshold_m);
+      const year = String(d.asof || '').slice(0, 4);
+      const peak = d.actual_peak_m;
+      const yrMax = lastYearRanges[1195]?.max;
+      const peakOn = yrMax && peak != null && Math.abs(yrMax.valeur - peak) < 0.02
+        && String(yrMax.date_prise_valeur).startsWith(year) ? dayMonth(yrMax.date_prise_valeur) : null;
+      const asofTxt = d.asof ? new Intl.DateTimeFormat(L('en-GB', 'fr-CA'), { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(d.asof + 'T12:00:00Z')) : '—';
+      const reached = t => peak != null && peak >= t.threshold_m - 1e-9;
+      const pct = v => Math.max(0, Math.min(100, Math.round((v || 0) * 100)));
+
+      const rows = lines.map(t => {
+        const prior = pct(t.prior);
+        let last;
+        if (live) {
+          const post = pct(t.posterior);
+          last = `${pctText(post)}<div class="thresh-mini" aria-hidden="true"><b style="width:${post}%"></b><i style="left:${prior}%"></i></div>`;
+        } else {
+          last = reached(t) ? `<strong>${L('Reached', 'Atteinte')}</strong>` : `<span class="muted">${L('Not reached', 'Non atteinte')}</span>`;
+        }
+        return `<tr${!live && reached(t) ? ' class="reached"' : ''}>
+          <td class="lvl">${t.threshold_m.toFixed(2)} m</td>
+          <td>${forecastLineText(t)}</td>
+          <td>${pctText(prior)}</td>
+          <td>${last}</td>
+        </tr>`;
+      }).join('');
+      el.innerHTML = `<table class="corr-table fc-table"><thead><tr>
+          <th scope="col">${L('Level', 'Niveau')}</th><th scope="col">${L('Line', 'Cote')}</th>
+          <th scope="col">${L('Pre-freshet chance', 'Probabilité avant la crue')}</th>
+          <th scope="col">${live ? L('Chance now', 'Probabilité actuelle') : L(`${year} outcome`, `Résultat ${year}`)}</th>
+        </tr></thead><tbody>${rows}</tbody></table>`;
+
+      const lvl = d.state?.level_m != null ? `${d.state.level_m.toFixed(2)} m` : '—';
+      const peakTxt = peak != null ? `${peak.toFixed(2)} m` : '—';
+      const n = lines.filter(reached).length;
+      status.innerHTML = live
+        ? L(`As of <strong>${asofTxt}</strong>: Lac Coulonge at <strong>${lvl}</strong>, peak so far <strong>${peakTxt}</strong>.`,
+            `Au <strong>${asofTxt}</strong> : lac Coulonge à <strong>${lvl}</strong>, pointe jusqu'ici <strong>${peakTxt}</strong>.`)
+        : L(`<strong>Off season.</strong> The ${year} freshet peaked at <strong>${peakTxt}</strong>${peakOn ? ` on ${peakOn}` : ''}, reaching ${n} of the ${lines.length} lines below. The forecast runs daily through the freshet; it was last updated on ${asofTxt} and resumes with the next one.`,
+            `<strong>Hors saison.</strong> La crue de ${year} a culminé à <strong>${peakTxt}</strong>${peakOn ? ` le ${peakOn}` : ''}, atteignant ${n} des ${lines.length} cotes ci-dessous. La prévision est mise à jour chaque jour pendant la crue; sa dernière mise à jour date du ${asofTxt} et elle reprendra à la prochaine crue.`);
+      const method = `<a href="https://github.com/aachtenberg/ottawa-river-freshet/blob/main/ingesters/climate-history/FRESHET_PROBABILITY.md" target="_blank" rel="noopener noreferrer">FRESHET_PROBABILITY.md</a>`;
+      if (foot) foot.innerHTML = live
+        ? L(`Pre-freshet chance = the seasonal prior (V1) made before the freshet; it is the tick on each bar. Chance now = that prior updated daily on the lake's trajectory (V3). Method: ${method}.`,
+            `Probabilité avant la crue = l'a priori saisonnier (V1) établi avant la crue; c'est le repère sur chaque barre. Probabilité actuelle = cet a priori mis à jour chaque jour selon la trajectoire du lac (V3). Méthode : ${method}.`)
+        : L(`Pre-freshet chance = the seasonal prior (V1) made before the ${year} freshet. Outcome = whether the season's peak reached the line. Method: ${method}.`,
+            `Probabilité avant la crue = l'a priori saisonnier (V1) établi avant la crue de ${year}. Résultat = si la pointe de la saison a atteint la cote. Méthode : ${method}.`);
     }
 
     // ---- ORRPB forecast snapshot ---------------------------------------------
