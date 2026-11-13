@@ -410,72 +410,38 @@ button.corr-name:hover { text-decoration: underline; }
 .stn-notes .lw { color: var(--text); }
 .stn-notes .lw.strong { font-weight: 700; }
 
-.reservoirs-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 12px; }
-@media (max-width: 1000px) { .reservoirs-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 600px)  { .reservoirs-grid { grid-template-columns: 1fr; } }
-.res-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; position: relative; cursor: pointer; transition: box-shadow 0.15s, transform 0.15s; }
-.res-card:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.15); transform: translateY(-1px); }
-.res-card .res-name { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; gap: 6px; }
-.res-card .res-name .agency { font-size: 9px; font-weight: 500; padding: 1px 6px; border-radius: 3px; background: var(--surface-2); color: var(--text-faint); letter-spacing: 0.3px; }
-.res-card .res-pct { font-size: 26px; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
-.res-card .res-pct .unit { font-size: 11px; font-weight: 400; color: var(--text-muted); margin-left: 3px; }
-.res-card .res-volume { font-size: 11px; color: var(--text-muted); margin-top: 2px; font-variant-numeric: tabular-nums; }
-.res-card .res-change { font-size: 11px; font-weight: 500; margin-top: 6px; font-variant-numeric: tabular-nums; }
-.res-card .res-change.up, .res-card .res-change.down { color: var(--text); }
-.res-card .res-change.flat { color: var(--text-muted); }
-.res-card.fill-low { border-left: 3px solid var(--green); }
-.res-card.fill-mid { border-left: 3px solid var(--amber); }
-.res-card.fill-high { border-left: 3px solid var(--orange); }
-.res-card.fill-near { border-left: 3px solid var(--red); }
-.res-card.fill-unknown { border-left: 3px solid var(--text-faint); }
-.res-card .res-bar { position: absolute; bottom: 0; left: 0; right: 0; height: 4px; background: var(--border); border-radius: 0 0 10px 10px; overflow: hidden; }
-.res-card .res-bar-fill { height: 100%; transition: width 0.4s ease; }
-.reservoir-boundary { grid-column: 1 / -1; padding: 10px 14px; margin: 6px 0 4px; background: var(--blue-light); color: var(--blue); border-radius: 6px; font-size: 12px; font-weight: 600; letter-spacing: 0.4px; text-align: center; }
-.reservoir-boundary span { display: block; font-size: 10px; font-weight: 400; letter-spacing: 0; opacity: 0.85; margin-top: 2px; }
-/* Drawdown-to-April-1 table (Reservoirs tab, shown Sep 1 – Mar 31) */
 .drawdown-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; margin-top: 18px; }
 .drawdown-head .section-title { margin: 0 0 4px; }
 .drawdown-head .section-subtitle { margin: 0; }
 .drawdown-total { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .drawdown-total .dd-big { font-size: 26px; font-weight: 700; line-height: 1.1; }
 .drawdown-total .dd-big-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-.drawdown-legend { display: flex; flex-wrap: wrap; gap: 6px 22px; align-items: center; font-size: 11px; color: var(--text-muted); margin: 12px 0 6px; }
-.drawdown-legend span { display: inline-flex; align-items: center; gap: 7px; }
-.drawdown-legend i { display: inline-block; width: 18px; height: 10px; border-radius: 2px; }
-.drawdown-legend i.typ { background: var(--blue); opacity: 0.28; }
-.drawdown-legend i.ex { background: var(--blue); }
-.drawdown-legend i.last { width: 2px; height: 16px; border-radius: 0; background: var(--orange); }
-.drawdown-row { display: grid; grid-template-columns: 130px minmax(0, 1fr) 60px 66px 76px 96px; column-gap: 18px; align-items: center; min-height: 38px; border-top: 1px solid var(--border); font-size: 13px; font-variant-numeric: tabular-nums; }
-.drawdown-row > div:nth-child(n+3) { text-align: right; }
-.drawdown-row.dd-header { min-height: 26px; align-items: end; padding-bottom: 4px; border-top: none; font-size: 10px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); }
-.drawdown-row .dd-scale { display: flex; justify-content: space-between; text-transform: none; letter-spacing: 0; font-weight: 500; }
-.drawdown-row abbr { text-decoration: underline dotted; text-underline-offset: 3px; cursor: help; }
-.drawdown-row .dd-name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.drawdown-row .dd-track { position: relative; height: 14px; background: var(--surface-2); border-radius: 3px; }
-.drawdown-row .dd-typ { position: absolute; left: 0; top: 0; bottom: 0; background: var(--blue); opacity: 0.28; border-radius: 3px 0 0 3px; }
-.drawdown-row .dd-ex { position: absolute; top: 0; bottom: 0; background: var(--blue); }
-.drawdown-row .dd-last { position: absolute; top: -5px; bottom: -5px; width: 2px; margin-left: -1px; background: var(--orange); }
-.drawdown-row .dd-now { font-weight: 600; }
-.drawdown-row .dd-typtxt { color: var(--text-muted); }
-.drawdown-row .dd-gap { font-weight: 600; color: var(--blue); }
-.drawdown-row .dd-gap.below { color: var(--text-muted); }
-.drawdown-foot { font-size: 11px; color: var(--text-muted); line-height: 1.5; margin: 10px 0 0; }
+.res-section { margin-top: 18px; }
+.res-table { min-width: 760px; }
+.res-table.has-dd { min-width: 1000px; }
+.res-table td { font-variant-numeric: tabular-nums; }
+.res-table tbody tr[data-reservoir-id] { cursor: pointer; }
+.res-table tbody tr[data-reservoir-id]:hover td { background: var(--surface-2); }
+.res-table td.num, .res-table th.num { text-align: right; white-space: nowrap; }
+/* Operating-band bar, ink: light up to typical April 1, dark for the excess
+   above it, a tick at last April 1. Outside the drawdown season, one fill. */
+.rb { position: relative; width: 150px; height: 10px; border-radius: 2px; background: var(--track); }
+.rb b { position: absolute; top: 0; bottom: 0; background: var(--ink-bar); }
+.rb b.base { left: 0; opacity: 0.35; }
+.rb i { position: absolute; top: -4px; bottom: -4px; width: 2px; margin-left: -1px; background: var(--text); }
+.rb-scale { display: flex; justify-content: space-between; width: 150px; margin-top: 4px; font-size: 10px; font-weight: 500; letter-spacing: 0; text-transform: none; }
+.res-legend { display: inline-flex; flex-wrap: wrap; gap: 4px 14px; margin-right: 6px; }
+.res-legend i { display: inline-block; width: 14px; height: 8px; margin-right: 5px; border-radius: 1px; background: var(--ink-bar); vertical-align: 0; }
+.res-legend i.base { opacity: 0.35; }
+.res-legend i.last { width: 2px; height: 12px; background: var(--text); vertical-align: -2px; }
 @media (max-width: 700px) {
-  .drawdown-row { grid-template-columns: minmax(0, 1fr) 56px 70px 88px; column-gap: 10px; row-gap: 6px; padding: 8px 0; font-size: 12px; }
-  .drawdown-row .dd-track, .drawdown-row .dd-scale { grid-column: 1 / -1; grid-row: 2; }
-  .drawdown-row .dd-typtxt, .drawdown-row.dd-header .dd-typhead { display: none; }
-  .drawdown-row > div:nth-child(2) { text-align: left; }
   .drawdown-head { flex-direction: column; align-items: flex-start; gap: 8px; }
   .drawdown-total { text-align: left; }
 }
 
 /* Operational-state pill on the Des Joachims reservoir card */
-.res-card .res-op-state { display: inline-block; margin-top: 6px; padding: 3px 9px; border-radius: 4px; font-size: 10px; font-weight: 600; letter-spacing: 0.3px; text-transform: uppercase; line-height: 1.3; }
-.res-card .res-op-state.paused  { background: var(--red-light);   color: var(--red); border: 1px solid var(--red); }
-.res-card .res-op-state.refill  { background: var(--green-light); color: var(--green); border: 1px solid var(--green); }
-.res-card .res-outflow { font-size: 11px; color: var(--text-muted); margin-top: 4px; font-variant-numeric: tabular-nums; }
 
-/* HQ generating-station release cards (Operations tab). Reuses .res-card layout
+
    but the bottom bar is split between turbined (blue) and spilled (orange/red)
    instead of a percent-full indicator. */
 /* Dam operations: turbined water is blue, spilled water is ink. Neither is on
@@ -537,9 +503,8 @@ button.corr-name:hover { text-decoration: underline; }
 .bar-detail-modal.open { display: flex; }
 .bar-detail-content { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px 22px 16px; max-width: 520px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
 .bar-detail-content.wide { max-width: 720px; }
-/* Clickable-card affordance — applied to .res-card / .op-card click targets */
-.res-card.clickable, .op-card.clickable { cursor: pointer; transition: transform 0.12s ease-out, box-shadow 0.12s ease-out; }
-.res-card.clickable:hover, .op-card.clickable:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.18); }
+
+
 /* Detail-modal section blocks */
 .detail-section { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); }
 .detail-section:first-of-type { border-top: none; padding-top: 4px; }
@@ -956,29 +921,20 @@ button.corr-name:hover { text-decoration: underline; }
   <div class="section-subtitle" id="storage-proxy-sub">Loading storage proxy…</div>
   <div class="chart-wrap"><div class="chart-container" style="height: 240px;"><canvas id="storageProxyChart"></canvas></div></div>
   <div id="storage-proxy-note" style="font-size:11px; color:var(--text-faint); margin: 6px 0 2px; line-height:1.5;"></div>
-  <div class="section-title" style="margin-top: 16px; font-size: 13px;">Per-reservoir percent-full <span style="font-weight:400;color:var(--text-muted);font-size:11px;">· upstream → downstream · linear on level, see methodology</span></div>
-  <div class="reservoirs-grid" id="reservoirs-grid">
-    <div class="skeleton">Loading reservoir data…</div>
-  </div>
-  <div id="drawdown-section" style="display:none;">
+  <section class="res-section" aria-labelledby="res-h">
     <div class="drawdown-head">
       <div>
-        <div class="section-title" style="font-size: 13px;">Drawdown to April 1</div>
-        <div class="section-subtitle" id="drawdown-sub"></div>
+        <h2 class="section-title" id="res-h">Per-reservoir percent-full</h2>
+        <p class="section-subtitle" id="res-sub">Upstream → downstream. Percent of each reservoir's operating band, linear on level (see methodology above).</p>
       </div>
-      <div class="drawdown-total">
+      <div class="drawdown-total" id="drawdown-headline" hidden>
         <div class="dd-big" id="drawdown-total" title="B m³ = billion cubic metres. Sum of the volume above typical April 1 levels."></div>
         <div class="dd-big-sub" id="drawdown-total-sub"></div>
       </div>
     </div>
-    <div class="drawdown-legend">
-      <span><i class="typ"></i>Level up to typical Apr 1</span>
-      <span><i class="ex"></i>Excess to release</span>
-      <span><i class="last"></i><span id="drawdown-legend-last"></span></span>
-    </div>
-    <div id="drawdown-list"></div>
-    <p class="drawdown-foot">Typical = ORRPB long-term median level for April 1, not an operator target. Excess in percentage points of the operating band; volume uses the same linear estimate as the cards. Sorted by volume.</p>
-  </div>
+    <div class="corr-wrap" id="reservoirs-table"><p class="corr-msg" style="padding: 14px 16px;">Loading reservoir data…</p></div>
+    <p class="corr-foot" id="reservoirs-foot"></p>
+  </section>
 </div>
 
 <div class="tab-panel" data-tab="tributaries">
@@ -4262,66 +4218,110 @@ function fillBarColor(pct) {
   return 'rgb(76,175,80)';
 }
 
-function buildReservoirCard(snap, cfg, release) {
+// One row per reservoir. dd = this reservoir's drawdown figures (drawdown
+// season only), season = drawdownSeason() when they apply.
+function reservoirRowHTML(snap, cfg, release, dd, season) {
   const pct = pctFull(snap.level_m, cfg.low_limit, cfg.high_limit);
   const priorPct = pctFull(snap.prior_level_m, cfg.low_limit, cfg.high_limit);
   const change = (pct != null && priorPct != null) ? pct - priorPct : null;
-  const cls = fillClass(pct);
-  const barColor = fillBarColor(pct);
-  const barWidth = pct != null ? Math.min(100, pct) : 0;
-  const volume = (pct != null && cfg.capacity_mcm != null) ? Math.round(cfg.capacity_mcm * pct / 100) : null;
-  const volumeStr = volume != null
-    ? `${volume.toLocaleString()} M m³ / ${Math.round(cfg.capacity_mcm).toLocaleString()}`
-    : (cfg.capacity_mcm == null ? '—' : '—');
-  const changeText = change == null
-    ? '—'
-    : Math.abs(change) < 0.05
-      ? '→ flat'
-      : change > 0
-        ? `↑ +${change.toFixed(2)} pp/24h`
-        : `↓ ${change.toFixed(2)} pp/24h`;
-  const changeCls = change == null
-    ? 'flat'
-    : Math.abs(change) < 0.05 ? 'flat' : change > 0 ? 'up' : 'down';
-  const reading = snap.level_m != null ? `${snap.level_m.toFixed(2)} m` : '—';
-  // Des Joachims gets an operational-state pill — see desJoachimsOpState().
-  let opStateLine = '';
+  const nf = v => Math.round(v).toLocaleString(L('en-CA', 'fr-CA'));
+  const pctText = n => L(`${n}%`, `${n} %`);    // "50%" / "50 %"
+  const volume = (pct != null && cfg.capacity_mcm != null) ? `${nf(cfg.capacity_mcm * pct / 100)} / ${nf(cfg.capacity_mcm)} M m³` : '';
+  const changeText = change == null ? '<span class="muted">—</span>'
+    : Math.abs(change) < 0.05 ? L('→ flat', '→ stable')
+    : `${change > 0 ? '↑ +' : '↓ −'}${Math.abs(change).toFixed(2)} pp`;
+  // Des Joachims carries its operating state (see desJoachimsOpState()).
+  let opState = '';
   if (snap.reservoir_id === 'des_joachims') {
-    const state = desJoachimsOpState(change);
-    if (state) opStateLine = `<div class="res-op-state ${state.cls}" title="Triggered when Des Joachims is approximately stable AND Mattawa is at near-major (etat 5) or major (6) flood. Storing water at Des Joachims would back up Mattawa further, so the reservoir is run as pure run-of-river.">${state.label}</div>`;
+    const st = desJoachimsOpState(change);
+    if (st) opState = `<div class="op-sub" title="${L('Triggered when Des Joachims is about stable and Mattawa is at near-major or major flood: storing water here would back up Mattawa further.', 'Déclenché lorsque Des Joachims est à peu près stable et que Mattawa est en crue quasi majeure ou majeure.')}"><strong>${st.label}</strong></div>`;
   }
-  // Live outflow line — only shown when reservoir-limits.json declared an
-  // outflow_site_id AND the hq-ingest cron has populated dam_releases for it.
-  // Total m³/s + spill share, since high spill at a constrained reservoir is
-  // the operational signal worth flagging.
-  let outflowLine = '';
+  // Outflow: Hydro-Québec live with the spill share where the config names a
+  // site, otherwise ORRPB's average daily flow.
+  let outflow = '<span class="muted">—</span>';
   if (release && release.total_cms != null) {
-    const total = Math.round(release.total_cms).toLocaleString();
-    const spillFrac = release.spilled_cms && release.total_cms
-      ? Math.round((release.spilled_cms / release.total_cms) * 100) : 0;
-    const spillTag = spillFrac >= 50 ? `<span style="color:var(--orange);font-weight:600;"> · ${spillFrac}% spill</span>`
-                    : spillFrac > 0  ? ` · ${spillFrac}% spill` : '';
-    outflowLine = `<div class="res-outflow" title="Total release at the dam (turbined + spilled), live from Hydro-Québec open data.&#10;Last update: ${ago(release.time)}">↳ ${total} m³/s out${spillTag}</div>`;
+    const spillFrac = release.spilled_cms && release.total_cms ? Math.round(release.spilled_cms / release.total_cms * 100) : 0;
+    outflow = `${nf(release.total_cms)} m³/s${spillFrac > 0 ? `<div class="op-sub">${spillFrac >= 50 ? '<strong>' : ''}${L(`${spillFrac}% spilled`, `${spillFrac} % déversé`)}${spillFrac >= 50 ? '</strong>' : ''}</div>` : ''}`;
   } else if (snap.flow_cms != null) {
-    // Fallback: outflow scraped from the ORRPB conditions page (no spill
-    // breakdown). Covers the OPG / MELCC / PSPC dams not in the HQ open data.
-    outflowLine = `<div class="res-outflow" title="Outflow at the dam — ORRPB conditions page, average daily flow.&#10;Last update: ${ago(snap.time)}">↳ ${Math.round(snap.flow_cms).toLocaleString()} m³/s out</div>`;
+    outflow = `${nf(snap.flow_cms)} m³/s<div class="op-sub">${L('ORRPB daily average', 'moyenne quotidienne CPRBO')}</div>`;
   }
-  return `
-    <div class="res-card clickable ${cls}" data-reservoir-id="${snap.reservoir_id}" onclick="openReservoirDetail('${snap.reservoir_id}')" title="${cfg.name} (${cfg.agency}) — click for detail&#10;Reading: ${reading}&#10;Range: ${cfg.low_limit.toFixed(2)} – ${cfg.high_limit.toFixed(2)} m">
-      <div class="res-name">${cfg.name}<span class="agency">${cfg.agency}</span></div>
-      <div class="res-pct">${pct != null ? pct.toFixed(1) : '—'}<span class="unit">% full</span></div>
-      <div class="res-volume">${volumeStr}</div>
-      <div class="res-change ${changeCls}" title="pp = percentage points of the operating band, day over day between ORRPB daily values">${changeText}</div>
-      ${outflowLine}
-      ${opStateLine}
-      <div class="res-bar"><div class="res-bar-fill" style="width:${barWidth}%; background:${barColor}"></div></div>
-    </div>
-  `;
+  const clamp = v => Math.max(0, Math.min(100, v));
+  let bar = '<span class="muted">—</span>';
+  if (pct != null) {
+    if (dd) {
+      const now = clamp(dd.nowPct), typ = clamp(dd.typicalPct);
+      const base = Math.min(now, typ), ex = Math.max(0, now - typ);
+      bar = `<div class="rb" title="${L(`${dd.nowPct.toFixed(1)}% full now · typical April 1 ${dd.typicalPct.toFixed(1)}%`, `${dd.nowPct.toFixed(1)} % plein · 1er avril typique ${dd.typicalPct.toFixed(1)} %`)}${dd.lastPct != null ? L(` · April 1, ${season.refYear}: ${dd.lastPct.toFixed(1)}%`, ` · 1er avril ${season.refYear} : ${dd.lastPct.toFixed(1)} %`) : ''}">
+        <b class="base" style="width:${base.toFixed(1)}%"></b><b style="left:${typ.toFixed(1)}%;width:${ex.toFixed(1)}%"></b>
+        ${dd.lastPct != null ? `<i style="left:${clamp(dd.lastPct).toFixed(1)}%"></i>` : ''}</div>`;
+    } else {
+      bar = `<div class="rb"><b style="left:0;width:${clamp(pct).toFixed(1)}%"></b></div>`;
+    }
+  }
+  let ddCells = '';
+  if (season) {
+    if (dd) {
+      const below = dd.gapPp < 0;
+      ddCells = `<td class="num">${pctText(dd.typicalPct.toFixed(1))}</td>
+        <td class="num"${below ? ' style="color:var(--text-muted)"' : ''}>${below ? '' : '<strong>'}${below ? '−' : '+'}${Math.abs(dd.gapPp).toFixed(1)} pp${below ? '' : '</strong>'}</td>
+        <td class="num">${dd.gapMcm == null ? '<span class="muted">—</span>' : `${dd.gapMcm < 0 ? '−' : ''}${nf(Math.abs(dd.gapMcm))} M m³`}</td>`;
+    } else ddCells = '<td class="num"><span class="muted">—</span></td>'.repeat(3);
+  }
+  const reading = snap.level_m != null ? `${snap.level_m.toFixed(2)} m` : '—';
+  return `<tr data-reservoir-id="${snap.reservoir_id}" onclick="openReservoirDetail('${snap.reservoir_id}')" title="${cfg.name} (${cfg.agency}) · ${L('level', 'niveau')} ${reading} · ${L('band', 'plage')} ${cfg.low_limit}–${cfg.high_limit} m · ${L('select for detail', 'sélectionnez pour le détail')}">
+    <td><span class="corr-name" style="cursor:inherit">${cfg.name}</span><div class="corr-role">${cfg.agency}</div>${opState}</td>
+    <td><span class="corr-level">${pct != null ? pctText(pct.toFixed(1)) : '—'}</span><div class="op-sub">${volume}</div></td>
+    <td>${bar}</td>
+    <td>${changeText}</td>
+    <td>${outflow}</td>
+    ${ddCells}
+  </tr>`;
+}
+
+// Paint the table; called once with the snapshot and again when the
+// drawdown reference lands (drawdown season only).
+let reservoirTableState = null;   // { enriched, releaseBySite, drawdown }
+function paintReservoirTable() {
+  const wrap = document.getElementById('reservoirs-table');
+  const foot = document.getElementById('reservoirs-foot');
+  if (!wrap || !reservoirTableState) return;
+  const { enriched, releaseBySite, drawdown } = reservoirTableState;
+  const season = drawdown ? drawdown.season : null;
+  const byId = drawdown ? Object.fromEntries(drawdown.rows.map(r => [r.id, r])) : {};
+  const desJoachimsIdx = RESERVOIR_ORDER_INDEX['des_joachims'];
+  const cols = season ? 8 : 5;
+  const rows = [];
+  let group = null;
+  for (const item of enriched) {
+    const below = (RESERVOIR_ORDER_INDEX[item.snap.reservoir_id] ?? 999) > desJoachimsIdx;
+    if (group !== below) {
+      group = below;
+      rows.push(`<tr class="group"><th colspan="${cols}" scope="colgroup">${below
+        ? L('Downstream of Mansfield — drain to the Madawaska, Gatineau and Lièvre', 'En aval de Mansfield — se déversent dans la Madawaska, la Gatineau et la Lièvre')
+        : L('Upstream of Lac Coulonge', 'En amont du lac Coulonge')}</th></tr>`);
+    }
+    const release = item.cfg.outflow_site_id ? releaseBySite[item.cfg.outflow_site_id] : null;
+    rows.push(reservoirRowHTML(item.snap, item.cfg, release, byId[item.snap.reservoir_id], season));
+  }
+  const scale = `<div class="rb-scale" aria-hidden="true"><span>0</span><span>50</span><span>100%</span></div>`;
+  wrap.innerHTML = `<table class="corr-table res-table${season ? ' has-dd' : ''}"><thead><tr>
+      <th scope="col">${L('Reservoir', 'Réservoir')}</th><th scope="col">${L('Full', 'Rempli')}</th>
+      <th scope="col">${L('Operating band', "Plage d'exploitation")}${scale}</th>
+      <th scope="col">24 h</th><th scope="col">${L('Outflow', 'Débit sortant')}</th>
+      ${season ? `<th scope="col" class="num">${L('Typical Apr 1', '1er avril typique')}</th><th scope="col" class="num">${L('Excess', 'Excédent')}</th><th scope="col" class="num">Volume</th>` : ''}
+    </tr></thead><tbody>${rows.join('')}</tbody></table>`;
+  if (!foot) return;
+  const base = L('Full = position in the operating band, linear on level. 24 h = change in percentage points (pp) of the band, day over day between ORRPB daily values. Outflow = Hydro-Québec live, with the spilled share, where available; otherwise ORRPB\'s average daily flow.',
+    'Rempli = position dans la plage d\'exploitation, linéaire selon le niveau. 24 h = variation en points de pourcentage (pp) de la plage, d\'un jour à l\'autre selon les valeurs quotidiennes du CPRBO. Débit sortant = Hydro-Québec en direct, avec la part déversée, sinon le débit moyen quotidien du CPRBO.');
+  foot.innerHTML = season
+    ? `<span class="res-legend"><span><i class="base"></i>${L('Up to typical Apr 1', "Jusqu'au 1er avril typique")}</span><span><i></i>${L('Excess to release', 'Excédent à évacuer')}</span><span><i class="last"></i>${L(`Level on Apr 1, ${season.refYear}`, `Niveau au 1er avril ${season.refYear}`)}</span></span><br>`
+      + `${base} ${L(`Typical = ORRPB's long-term median level for April 1, not an operator target. Excess and volume use the same linear estimate; ${season.daysLeft} days to April 1, ${season.nextYear}.`,
+        `Typique = niveau médian à long terme du CPRBO pour le 1er avril, pas une cible d'exploitation. L'excédent et le volume utilisent la même estimation linéaire; ${season.daysLeft} jours avant le 1er avril ${season.nextYear}.`)}`
+    : base;
 }
 
 async function renderReservoirsTab() {
-  const grid = document.getElementById('reservoirs-grid');
+  const grid = document.getElementById('reservoirs-table');
   const status = document.getElementById('reservoir-status-line');
   const calibWarn = document.getElementById('reservoir-calibration-warning');
   if (!grid) return;
@@ -4341,12 +4341,12 @@ async function renderReservoirsTab() {
     ]);
     reservoirSnapshotCache = snapshot;
   } catch (e) {
-    grid.innerHTML = `<div class="error" style="grid-column:1/-1;color:var(--red);font-size:13px;padding:14px;">Could not load reservoir data: ${e.message}.<br>Has the daily scrape run yet? <code>kubectl -n data get cronjobs reservoir-ingest</code></div>`;
+    grid.innerHTML = `<p class="corr-msg" style="padding:14px 16px;">Could not load reservoir data: ${e.message}.<br>Has the daily scrape run yet? <code>kubectl -n data get cronjobs reservoir-ingest</code></p>`;
     return;
   }
   const releaseBySite = Object.fromEntries((releases || []).map(r => [r.site_id, r]));
   if (!snapshot.length) {
-    grid.innerHTML = `<div style="grid-column:1/-1;color:var(--text-muted);font-size:13px;padding:14px;">No reservoir readings in the database yet — the daily scrape runs at 21:30 UTC. Trigger a manual run with: <code>kubectl -n data create job --from=cronjob/reservoir-ingest reservoir-ingest-now</code></div>`;
+    grid.innerHTML = `<p class="corr-msg" style="padding:14px 16px;">No reservoir readings in the database yet — the daily scrape runs at 21:30 UTC. Trigger a manual run with: <code>kubectl -n data create job --from=cronjob/reservoir-ingest reservoir-ingest-now</code></p>`;
     return;
   }
   const cfg = limitsCfg.reservoirs || {};
@@ -4363,23 +4363,13 @@ async function renderReservoirsTab() {
       return ai - bi;
     });
 
-  // Insert a "Mansfield" boundary row between des_joachims and the first
-  // downstream-of-Mansfield reservoir (bark_lake).
-  const html = [];
-  let boundaryEmitted = false;
-  const desJoachimsIdx = RESERVOIR_ORDER_INDEX['des_joachims'];
-  for (const item of enriched) {
-    const itemIdx = RESERVOIR_ORDER_INDEX[item.snap.reservoir_id] ?? 999;
-    if (!boundaryEmitted && itemIdx > desJoachimsIdx) {
-      html.push('<div class="reservoir-boundary">▼ Lac Coulonge / Mansfield ▼<span>Reservoirs below this line drain into tributaries that join the Ottawa downstream of Mansfield (Madawaska / Gatineau / Lièvre).</span></div>');
-      boundaryEmitted = true;
-    }
-    const release = item.cfg.outflow_site_id ? releaseBySite[item.cfg.outflow_site_id] : null;
-    html.push(buildReservoirCard(item.snap, item.cfg, release));
-  }
-  grid.innerHTML = html.join('');
-  // Best-effort and self-hiding: never awaited into the card render path.
-  renderDrawdown(enriched);
+  reservoirTableState = { enriched, releaseBySite, drawdown: null };
+  paintReservoirTable();
+  // Drawdown figures join the table when their reference lands; best-effort
+  // and never awaited into the first paint.
+  renderDrawdown(enriched).then(dd => {
+    if (dd && reservoirTableState?.enriched === enriched) { reservoirTableState.drawdown = dd; paintReservoirTable(); }
+  });
   if (status && snapshot.length) {
     const newest = snapshot.reduce((acc, s) => new Date(s.time) > new Date(acc.time) ? s : acc, snapshot[0]);
     status.textContent = `${snapshot.length} reservoirs · most recent reading ${ago(newest.time)}`;
@@ -4435,11 +4425,12 @@ function computeDrawdown(items, refRows) {
   return { rows, surplusMcm, counted };
 }
 
+// Sets the drawdown headline and returns { rows, season } for the table, or
+// null outside the drawdown season or when the April 1 reference is missing.
 async function renderDrawdown(enriched) {
-  const section = document.getElementById('drawdown-section');
-  if (!section) return;
+  const head = document.getElementById('drawdown-headline');
   const season = drawdownSeason(new Date());
-  if (!season.inSeason) { section.style.display = 'none'; return; }
+  if (!season.inSeason) { if (head) head.hidden = true; return null; }
   let refRows;
   try {
     const y = season.refYear;
@@ -4447,57 +4438,21 @@ async function renderDrawdown(enriched) {
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     refRows = await r.json();
   } catch (e) {
-    // A missing history table must not take the cards down with it.
+    // A missing history table must not take the reservoir table with it.
     console.warn(`drawdown reference fetch: ${e.message}`);
-    section.style.display = 'none';
-    return;
+    if (head) head.hidden = true;
+    return null;
   }
   const items = enriched.map(x => ({
     id: x.snap.reservoir_id, name: x.cfg.name, level_m: x.snap.level_m,
     low: x.cfg.low_limit, high: x.cfg.high_limit, capacity_mcm: x.cfg.capacity_mcm,
   }));
   const { rows, surplusMcm, counted } = computeDrawdown(items, refRows);
-  if (!rows.length) { section.style.display = 'none'; return; }
-  const clamp = v => Math.max(0, Math.min(100, v));
-  document.getElementById('drawdown-sub').textContent =
-    `${season.daysLeft} days to April 1, ${season.nextYear}. The dark segment is water sitting above each reservoir's typical April 1 level.`;
+  if (!rows.length) { if (head) head.hidden = true; return null; }
   document.getElementById('drawdown-total').textContent = `${(surplusMcm / 1000).toFixed(1)} B m³`;
-  document.getElementById('drawdown-total-sub').textContent = `above typical, ${counted} reservoirs`;
-  document.getElementById('drawdown-legend-last').textContent = `Level on Apr 1, ${season.refYear}`;
-  // Largest volume first; reservoirs with no capacity figure sink to the end.
-  const sorted = rows.slice().sort((a, b) => (b.gapMcm ?? -Infinity) - (a.gapMcm ?? -Infinity));
-  const header = `
-    <div class="drawdown-row dd-header">
-      <div>Reservoir</div>
-      <div class="dd-scale"><span>0%</span><span>50% full</span><span>100%</span></div>
-      <div><abbr title="Percent full today, on the operating band">Now</abbr></div><div class="dd-typhead dd-typtxt"><abbr title="Percent full at ORRPB's long-term median level for April 1. Not an operator target.">Typical</abbr></div><div><abbr title="Now minus typical, in percentage points (pp): 75% full now against 15% typical is +60 pp">Excess</abbr></div><div><abbr title="The excess as water volume. M m³ = million cubic metres; B m³ = billion.">Volume</abbr></div>
-    </div>`;
-  document.getElementById('drawdown-list').innerHTML = header + sorted.map(r => {
-    const now = clamp(r.nowPct), typ = clamp(r.typicalPct);
-    const base = Math.min(now, typ), ex = Math.max(0, now - typ);
-    const below = r.gapPp < 0;
-    const gap = `${below ? '−' : '+'}${Math.abs(r.gapPp).toFixed(1)} pp`;
-    const vol = r.gapMcm == null ? '—'
-      : `${r.gapMcm < 0 ? '−' : ''}${Math.abs(Math.round(r.gapMcm)).toLocaleString()} M m³`;
-    const last = r.lastPct != null
-      ? `<div class="dd-last" style="left:${clamp(r.lastPct).toFixed(1)}%"></div>` : '';
-    const tip = `${r.name}: ${r.nowPct.toFixed(1)}% full now · typical April 1 ${r.typicalPct.toFixed(1)}%` +
-      (r.lastPct != null ? ` · April 1, ${season.refYear}: ${r.lastPct.toFixed(1)}%` : '');
-    return `
-      <div class="drawdown-row" title="${tip}">
-        <div class="dd-name">${r.name}</div>
-        <div class="dd-track">
-          <div class="dd-typ" style="width:${base.toFixed(1)}%"></div>
-          <div class="dd-ex" style="left:${typ.toFixed(1)}%;width:${ex.toFixed(1)}%"></div>
-          ${last}
-        </div>
-        <div class="dd-now">${r.nowPct.toFixed(1)}%</div>
-        <div class="dd-typtxt">${r.typicalPct.toFixed(1)}%</div>
-        <div class="dd-gap${below ? ' below' : ''}" title="pp = percentage points: ${r.nowPct.toFixed(1)}% now minus ${r.typicalPct.toFixed(1)}% typical">${gap}</div>
-        <div title="M m³ = million cubic metres">${vol}</div>
-      </div>`;
-  }).join('');
-  section.style.display = '';
+  document.getElementById('drawdown-total-sub').textContent = L(`above typical April 1, ${counted} reservoirs`, `au-dessus du 1er avril typique, ${counted} réservoirs`);
+  if (head) head.hidden = false;
+  return { rows, season };
 }
 
 // ---- Cascade storage proxy (Reservoirs tab chart) ----
